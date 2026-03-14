@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-14c">
+          <span class="session-date">2026-03-14</span>
+          <span class="session-title">UI Polish &amp; Mobile Restriction</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-14b">
           <span class="session-date">2026-03-14</span>
           <span class="session-title">Git &amp; GitHub Pages</span>
@@ -455,6 +461,58 @@
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-14c — UI Polish & Mobile Restriction
+    ══════════════════════════════════════════ -->
+    <div id="session-march-14c" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-14</span>
+          <span class="badge badge-green">Done</span>
+        </div>
+        <h1>UI Polish &amp; Mobile Restriction</h1>
+        <p>Improved landing page copy and README, restricted the card editors to tablet landscape and larger screens, and polished form field readability and the Export PNG button.</p>
+      </div>
+
+      <section id="march-14c-done" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Landing page copy</strong> — title updated to "Warcry Card Creator 2026"; descriptive text added: project summary + fan disclaimer, combined into one paragraph. <code>&lt;svelte:head&gt;</code> title tag added.</li>
+          <li><strong>README rewritten</strong> — replaced SvelteKit boilerplate with a proper project description mirroring the landing page copy, plus concise dev instructions.</li>
+          <li><strong>Mobile restriction</strong> — phone screens (&lt;640px) and portrait tablet screens (&lt;1024px wide, portrait) see a "requires tablet in landscape or larger screen" notice with a back link instead of the editor. Reactive to window resize and orientation change.</li>
+          <li><strong>Index page note</strong> — same restriction note shown conditionally on the landing page for restricted screen sizes (JS-driven, same logic as the editor pages).</li>
+          <li><strong>Ability page restriction</strong> — same mobile restriction applied to the ability card placeholder page.</li>
+          <li><strong>Form readability</strong> — sublabel color bumped from zinc-500 to zinc-400; upload hint text from zinc-400/zinc-600 to zinc-300/zinc-400.</li>
+          <li><strong>Export PNG button</strong> — slightly larger padding, <code>text-sm</code> font size, lightened base color one step for more visual prominence.</li>
+        </ul>
+      </section>
+
+      <section id="march-14c-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Portrait tablet breakpoint: &lt;1024px wide + height &gt; width</div>
+          <div class="decision-a">The editor needs ~1000px+ width to be usable (480px form panel + 574px card). Portrait tablets (e.g. iPad 768px wide) can't fit this. Landscape tablets (~1024px) can. The condition checks both width and orientation rather than a fixed breakpoint alone.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">One shared message across all restricted views</div>
+          <div class="decision-a">Keeps the UX consistent and avoids maintaining separate copy. The same sentence appears on phones, portrait tablets, and the index page note. Future mobile support mentioned as a possibility, not a promise.</div>
+        </div>
+      </section>
+
+      <section id="march-14c-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>README.md</code></td><td>Rewritten with project description, fan disclaimer, dev instructions</td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td>Updated title, copy, page title tag, mobile restriction note</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice; Export PNG button polish</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Sublabel and upload hint text color improvements</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-14c -->
 
     <!-- ══════════════════════════════════════════
          2026-03-14b — Git & GitHub Pages
@@ -1033,7 +1091,7 @@
 </div>
 
 <script>
-  const sessions = ["march-14b", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-14c", "march-14b", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
