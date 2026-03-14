@@ -234,7 +234,7 @@
 				<div>
 					<span class="sublabel">Damage (DMG)</span>
 					{#if data.isMonster}
-						<input class="field-input text-center opacity-40 cursor-not-allowed" value="*" disabled />
+						<input class="field-input text-center opacity-40 cursor-not-allowed" value="*/*" disabled />
 					{:else}
 						<input class="field-input text-center" bind:value={weapon.damage} placeholder="2/4" />
 					{/if}

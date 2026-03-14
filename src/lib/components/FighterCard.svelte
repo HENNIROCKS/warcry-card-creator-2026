@@ -5,7 +5,7 @@
 
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 
-	let { data }: { data: FighterCardData } = $props();
+	let { data, printerFriendly = false }: { data: FighterCardData; printerFriendly?: boolean } = $props();
 
 	function fittext(node: HTMLElement, _value?: unknown) {
 		function fit() {
@@ -24,7 +24,7 @@
 	}
 </script>
 
-<div class="card" class:is-monster={data.isMonster}>
+<div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly}>
 	<!-- IMAGE SECTION -->
 	<div class="image-section">
 		<div class="image-inner" style="mask-image: {maskUrl}; -webkit-mask-image: {maskUrl};">
@@ -122,7 +122,7 @@
 					<div class="wcol weapon-val" use:fittext={weapon.range}>{weapon.range}</div>
 					<div class="wcol weapon-val" use:fittext={weapon.attacks}>{weapon.attacks}</div>
 					<div class="wcol weapon-val" use:fittext={weapon.strength}>{weapon.strength}</div>
-					<div class="wcol weapon-val" use:fittext={weapon.damage}>{data.isMonster ? '*' : weapon.damage}</div>
+					<div class="wcol weapon-val" use:fittext={weapon.damage}>{data.isMonster ? '*/*' : weapon.damage}</div>
 				</div>
 			{/each}
 		</div>
@@ -130,14 +130,14 @@
 		<!-- Monster damage brackets -->
 		{#if data.isMonster}
 			<div class="damage-box">
-				<div class="damage-row damage-header-row">
-					<div class="dcol dcol-wide"></div>
+				<div class="damage-row">
+					<div class="dcol dcol-wide">* DAMAGE POINTS ALLOCATED</div>
 					<div class="dcol dcol-stat">MOVE</div>
 					<div class="dcol dcol-stat">DAMAGE</div>
 				</div>
-				{#each data.damageBrackets.slice(0, 5) as bracket}
-					<div class="damage-row">
-						<div class="dcol dcol-wide bracket-range">{bracket.damageRange}</div>
+				{#each data.damageBrackets.slice(0, 5) as bracket, i}
+					<div class="damage-row" class:damage-row-alt={i % 2 === 0}>
+						<div class="dcol dcol-wide">{bracket.damageRange}</div>
 						<div class="dcol dcol-stat">{bracket.move}</div>
 						<div class="dcol dcol-stat">{bracket.damage}</div>
 					</div>
@@ -335,10 +335,8 @@
 		flex-shrink: 0;
 		display: flex;
 		flex-direction: column;
-		border-top: 1px solid black;
-		border-bottom: 1px solid black;
-		border-left: 0;
-		border-right: 0;
+		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
+		border: 0;
 		outline: none;
 		background: transparent;
 	}
@@ -359,6 +357,8 @@
 	.stats-header {
 		background: #5a0a14;
 		border-radius: 14px 14px 0 0;
+		border: 0;
+		outline: none;
 	}
 
 	.stat-col {
@@ -386,6 +386,14 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		border: 0;
+		outline: none;
+	}
+
+	.label-col span {
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.stat-val {
@@ -414,6 +422,8 @@
 		border-radius: 14px 14px 0 0;
 		display: flex;
 		height: 55px;
+		border: 0;
+		outline: none;
 	}
 
 	.wcol {
@@ -541,23 +551,18 @@
 
 	.damage-row {
 		display: flex;
-		align-items: center;
 		height: 23px;
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
+	.damage-row-alt {
+		background: rgba(90, 10, 20, 0.04);
+	}
+
 	.damage-row:not(:first-child) {
 		box-shadow: inset 0 1px 0 0 #000;
-	}
-
-	.damage-row:nth-child(even):not(.damage-header-row) {
-		background: rgba(90, 10, 20, 0.05);
-	}
-
-	.damage-header-row {
-		background: none;
 	}
 
 	.dcol {
@@ -582,16 +587,72 @@
 		background: transparent;
 	}
 
-
 	.dcol-stat {
-		flex: 1;
+		flex: 0 0 100px;
 		font-family: 'Oldrichium', serif;
 		font-size: 15px;
 		font-weight: 300;
 		color: #000;
-		letter-spacing: 1px;
 		border: 0;
 		outline: none;
+		background: transparent;
+	}
+
+	/* ── PRINTER-FRIENDLY OVERRIDES ────────────── */
+
+	.is-printer-friendly {
+		background: #fff;
+	}
+
+	.is-printer-friendly .image-inner {
+		background: #e8e8e8;
+	}
+
+	.is-printer-friendly .stats-box,
+	.is-printer-friendly .weapons-box {
+		border-color: #000;
+	}
+
+	.is-printer-friendly .stats-header,
+	.is-printer-friendly .weapons-header {
+		background: transparent;
+	}
+
+	.is-printer-friendly .label-col {
+		background: none;
+		-webkit-background-clip: unset;
+		background-clip: unset;
+		color: #000;
+	}
+
+	.is-printer-friendly .header-text {
+		color: #000;
+	}
+
+	.is-printer-friendly .header-runemark :global(svg) {
+		fill: #000;
+	}
+
+	.is-printer-friendly .runemark-badge {
+		background: #fff;
+		border-color: #000;
+	}
+
+	.is-printer-friendly .runemark-badge :global(svg) {
+		fill: #000;
+	}
+
+	.is-printer-friendly .runemark-pill {
+		background: #fff;
+		border-color: #000;
+		color: #000;
+	}
+
+	.is-printer-friendly .weapon-row:nth-child(odd) {
+		background: transparent;
+	}
+
+	.is-printer-friendly .damage-row-alt {
 		background: transparent;
 	}
 </style>

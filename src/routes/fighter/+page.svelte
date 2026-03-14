@@ -5,6 +5,8 @@
 	import FighterForm from '$lib/components/FighterForm.svelte';
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
+	let printerFriendly = $state(false);
+	let showDropdown = $state(false);
 	let viewportHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
 	let viewportWidth = $state(typeof window !== 'undefined' ? window.innerWidth : 1024);
 	$effect(() => {
@@ -46,7 +48,14 @@
 		]
 	});
 
-	async function exportCard() {
+	function makeSlug() {
+		const slug = (data.name || 'fighter').toLowerCase().replace(/\s+/g, '-');
+		const now = new Date();
+		const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`;
+		return `${slug}_${ts}`;
+	}
+
+	async function doExport(suffix: string) {
 		if (!cardEl || exporting) return;
 		exporting = true;
 		try {
@@ -54,14 +63,23 @@
 			const dataUrl = await domtoimage.toPng(cardEl, { scale: 2 });
 			const a = document.createElement('a');
 			a.href = dataUrl;
-			const slug = (data.name || 'fighter').toLowerCase().replace(/\s+/g, '-');
-			const now = new Date();
-			const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`;
-			a.download = `${slug}_${ts}.png`;
+			a.download = `${makeSlug()}${suffix}.png`;
 			a.click();
 		} finally {
 			exporting = false;
 		}
+	}
+
+	async function exportCard() {
+		await doExport('');
+	}
+
+	async function exportPrinterFriendly() {
+		showDropdown = false;
+		printerFriendly = true;
+		await new Promise(r => requestAnimationFrame(r));
+		await doExport('_print');
+		printerFriendly = false;
 	}
 </script>
 
@@ -80,13 +98,39 @@
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
 				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Fighter Card</h1>
 			</div>
-			<button
-				onclick={exportCard}
-				disabled={exporting}
-				class="rounded-md bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
-			>
-				{exporting ? 'Exporting…' : 'Export PNG'}
-			</button>
+			<div class="relative">
+				<div class="flex rounded-md overflow-hidden">
+					<button
+						onclick={exportCard}
+						disabled={exporting}
+						class="bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
+					>
+						{exporting ? 'Exporting…' : 'Export PNG'}
+					</button>
+					<button
+						onclick={() => showDropdown = !showDropdown}
+						disabled={exporting}
+						class="bg-red-800 border-l border-red-900 px-2 py-2 text-white transition hover:bg-red-700 disabled:opacity-50"
+						aria-label="More export options"
+					>
+						<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+					</button>
+				</div>
+				{#if showDropdown}
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<div
+						class="absolute right-0 top-full mt-1 z-10 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg"
+						onmouseleave={() => showDropdown = false}
+					>
+						<button
+							onclick={exportPrinterFriendly}
+							class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md"
+						>
+							Export printer-friendly PNG
+						</button>
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<!-- Scrollable form -->
@@ -99,7 +143,7 @@
 	<main class="flex flex-1 items-center justify-center h-full">
 		<div style="transform: scale({cardScale}); transform-origin: center center; display:inline-block; line-height:0;">
 			<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-				<FighterCard {data} />
+				<FighterCard {data} {printerFriendly} />
 			</div>
 		</div>
 	</main>
