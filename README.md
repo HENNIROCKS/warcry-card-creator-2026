@@ -1,42 +1,11 @@
-# sv
+# Warcry Card Creator 2026
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+An updated version of my original card creator for Warhammer Age of Sigmar: Warcry, now rebuilt with a modern stack for sharper exports and easier customisation. This is a fan project made for the community; it is not commercial and has no affiliation with or endorsement from Games Workshop.
 
-## Creating a project
+## What it does
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-npx sv@0.12.5 create --template minimal --types ts --install npm .
-```
+Browser-based tool for creating Warcry fighter and ability cards with custom image uploads and editable values. No backend, no login, everything runs client-side.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Requires Node v22+. Run `make dev` to start the dev server at http://localhost:5173.
