@@ -17,6 +17,7 @@ import reachWeapon  from './svg/weapons-reach-weapon.svg?raw';
 import scythe       from './svg/weapons-scythe.svg?raw';
 import spear        from './svg/weapons-spear.svg?raw';
 import sword        from './svg/weapons-sword.svg?raw';
+import pistol       from './svg/weapons-pistol.svg?raw';
 import unarmed      from './svg/weapons-unarmed.svg?raw';
 
 export const weaponRunemarks: Record<string, string> = {
@@ -30,6 +31,7 @@ export const weaponRunemarks: Record<string, string> = {
 	Hammer:         hammer,
 	Hook:           hook,
 	Mace:           mace,
+	'Pistol':        pistol,
 	'Ranged Weapon': rangedWeapon,
 	'Reach Weapon':  reachWeapon,
 	Scythe:         scythe,

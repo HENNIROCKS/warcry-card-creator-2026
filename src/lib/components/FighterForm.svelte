@@ -210,6 +210,7 @@
 						<option value="Hammer">Hammer</option>
 						<option value="Hook">Hook</option>
 						<option value="Mace">Mace</option>
+						<option value="Pistol">Pistol</option>
 						<option value="Ranged Weapon">Ranged Weapon</option>
 						<option value="Reach Weapon">Reach Weapon</option>
 						<option value="Scythe">Scythe</option>
