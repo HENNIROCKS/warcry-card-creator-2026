@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-14b">
+          <span class="session-date">2026-03-14</span>
+          <span class="session-title">Git &amp; GitHub Pages</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-14">
           <span class="session-date">2026-03-14</span>
           <span class="session-title">Fighter Runemarks &amp; Pills</span>
@@ -442,12 +448,74 @@
           <tbody>
             <tr><td><a href="#march-11-node" onclick="activateSession('march-11')">Node v22 required — Herd path / <code>make dev</code></a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-11-built" onclick="activateSession('march-11')">File structure &amp; route scaffold</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-14b-decisions" onclick="activateSession('march-14b')">GitHub Pages: <code>adapter-static</code>, <code>paths.base</code>, GitHub Actions deploy workflow</a></td><td>Mar 14</td></tr>
           </tbody>
         </table>
       </section>
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-14b — Git & GitHub Pages
+    ══════════════════════════════════════════ -->
+    <div id="session-march-14b" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-14</span>
+          <span class="badge badge-green">Git repo done</span>
+          <span class="badge badge-green">GitHub Pages live</span>
+        </div>
+        <h1>Git Repo &amp; GitHub Pages Deployment</h1>
+        <p>Initialized the Git repository, verified the <code>.gitignore</code>, and wired up automatic deployment to GitHub Pages via GitHub Actions on every push to <code>main</code>.</p>
+      </div>
+
+      <section id="march-14b-done" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Git repo initialized</strong> — <code>git init</code> run in project root; <code>.claude/</code> added to <code>.gitignore</code> (contains local Claude Code permission settings, not for version control).</li>
+          <li><strong>adapter-static</strong> — swapped <code>@sveltejs/adapter-auto</code> for <code>@sveltejs/adapter-static</code>; <code>svelte.config.js</code> sets <code>paths.base = '/warcry-card-creator-2026'</code> when <code>NODE_ENV === 'production'</code>.</li>
+          <li><strong>Prerendering</strong> — <code>src/routes/+layout.ts</code> added with <code>export const prerender = true</code>; all pages are fully static.</li>
+          <li><strong>Base-path links</strong> — all internal <code>href</code>s updated to use <code>base</code> from <code>$app/paths</code> (<code>/fighter</code> → <code>{base}/fighter</code> etc.) in <code>+page.svelte</code>, <code>fighter/+page.svelte</code>, and <code>ability/+page.svelte</code>.</li>
+          <li><strong><code>static/.nojekyll</code></strong> — prevents GitHub Pages from ignoring the <code>_app/</code> directory.</li>
+          <li><strong>GitHub Actions deploy workflow</strong> — <code>.github/workflows/deploy.yml</code>; triggers on push to <code>main</code>; builds with Node 22 + <code>npm ci</code>; uploads <code>build/</code> via <code>actions/upload-pages-artifact</code> and deploys via <code>actions/deploy-pages</code>.</li>
+          <li><strong>Pages source set to "GitHub Actions"</strong> — not a branch; the official actions handle deployment directly.</li>
+          <li><strong>Site live</strong> at <a href="https://hennirocks.github.io/warcry-card-creator-2026/">hennirocks.github.io/warcry-card-creator-2026/</a></li>
+        </ul>
+      </section>
+
+      <section id="march-14b-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">GitHub Actions source, not a branch</div>
+          <div class="decision-a">The <code>peaceiris/actions-gh-pages</code> approach (push to <code>gh-pages</code> branch) failed silently — the branch was never created despite a green action run. Switched to the official <code>actions/upload-pages-artifact</code> + <code>actions/deploy-pages</code> pair with Pages source set to "GitHub Actions". This is GitHub's recommended modern approach and worked first time.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q"><code>paths.base</code> only in production</div>
+          <div class="decision-a">Setting <code>base</code> unconditionally would break the local dev server (links would point to <code>/warcry-card-creator-2026/fighter</code> which the dev server doesn't serve). Guarded by <code>process.env.NODE_ENV === 'production'</code> so dev works at <code>localhost:5173</code> and the build works on GitHub Pages.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Never commit or push from Claude</div>
+          <div class="decision-a">User handles all git operations. Claude stages nothing and never runs <code>git commit</code> or <code>git push</code>.</div>
+        </div>
+      </section>
+
+      <section id="march-14b-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>.gitignore</code></td><td>Added <code>.claude/</code> exclusion</td></tr>
+          <tr><td><code>svelte.config.js</code></td><td>Switched to <code>adapter-static</code>; added <code>paths.base</code> (production only)</td></tr>
+          <tr><td><code>src/routes/+layout.ts</code></td><td>New — <code>export const prerender = true</code></td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td>Links use <code>{base}/fighter</code> and <code>{base}/ability</code></td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Back link uses <code>{base}/</code></td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Back link uses <code>{base}/</code></td></tr>
+          <tr><td><code>static/.nojekyll</code></td><td>New — prevents Jekyll from hiding <code>_app/</code></td></tr>
+          <tr><td><code>.github/workflows/deploy.yml</code></td><td>New — GitHub Actions build &amp; deploy workflow</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-14b -->
 
     <!-- ══════════════════════════════════════════
          2026-03-14 — Fighter Runemarks & Pills
@@ -537,7 +605,7 @@
             </tr>
             <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor — <code>/ability</code> route</td></tr>
             <tr><td><span class="badge badge-amber">todo</span></td><td>Export: <code>background-clip: text</code> headers may still render differently vs preview</td></tr>
-            <tr><td><span class="badge badge-amber">later</span></td><td>GitHub Pages deployment — swap <code>adapter-auto</code> → <code>adapter-static</code>, set <code>paths.base</code>, add <code>.github/workflows/deploy.yml</code></td></tr>
+            <tr><td><span class="badge badge-green">done</span></td><td>GitHub Pages deployment — live at <a href="https://hennirocks.github.io/warcry-card-creator-2026/">hennirocks.github.io/warcry-card-creator-2026/</a></td></tr>
           </tbody>
         </table>
       </section>
@@ -965,7 +1033,7 @@
 </div>
 
 <script>
-  const sessions = ["march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-14b", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
