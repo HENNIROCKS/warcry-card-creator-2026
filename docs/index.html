@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warcry Card Creator — Dev Session Logs</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3350;
+      --accent: #6c8ef7;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --muted: #8892b0;
+      --code-bg: #0d1117;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .page { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    nav .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    nav .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #7f1d1d, #a78bfa);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    nav .logo-text { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    nav .logo-sub { font-size: 0.72rem; color: var(--muted); }
+
+    nav ul { list-style: none; }
+    nav li + li { margin-top: 2px; }
+
+    nav a {
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: all 0.15s;
+    }
+    nav a:hover { background: var(--surface2); color: var(--text); }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 10px 4px;
+      margin-top: 1rem;
+    }
+
+    .session-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 7px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-family: inherit;
+      line-height: 1.4;
+      transition: all 0.15s;
+    }
+    .session-btn:hover { background: var(--surface2); color: var(--text); }
+    .session-btn.active { background: rgba(108, 142, 247, 0.12); color: var(--accent); }
+    .session-btn .session-date { display: block; font-size: 0.7rem; color: var(--muted); margin-bottom: 1px; }
+    .session-btn.active .session-date { color: rgba(108, 142, 247, 0.7); }
+    .session-btn .session-title { font-weight: 600; }
+
+    /* ── Main ── */
+    main { padding: 3rem 3.5rem; max-width: 900px; }
+
+    .session-panel { display: none; }
+    .session-panel.active { display: block; }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 3rem; }
+    .hero .meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #e2e8f0 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p { font-size: 1rem; color: var(--muted); max-width: 640px; }
+
+    /* ── Sections ── */
+    section { margin-bottom: 2.5rem; scroll-margin-top: 2rem; }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 1.25rem 0 0.5rem; }
+
+    p { color: var(--muted); margin-bottom: 0.75rem; }
+
+    ul, ol { color: var(--muted); padding-left: 1.5rem; margin-bottom: 0.75rem; }
+    li + li { margin-top: 0.2rem; }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-blue  { background: rgba(108,142,247,0.15); color: var(--accent);  border: 1px solid rgba(108,142,247,0.3); }
+    .badge-green { background: rgba(52,211,153,0.12);  color: var(--green);   border: 1px solid rgba(52,211,153,0.25); }
+    .badge-amber { background: rgba(251,191,36,0.12);  color: var(--amber);   border: 1px solid rgba(251,191,36,0.25); }
+    .badge-red   { background: rgba(248,113,113,0.12); color: var(--red);     border: 1px solid rgba(248,113,113,0.25); }
+    .badge-purple{ background: rgba(167,139,250,0.12); color: var(--accent2); border: 1px solid rgba(167,139,250,0.25); }
+
+    /* ── Callout ── */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    .callout.warn    { border-left-color: var(--amber); }
+    .callout.success { border-left-color: var(--green); }
+    .callout.danger  { border-left-color: var(--red); }
+    .callout strong  { color: var(--text); }
+    .callout p { margin: 0; }
+
+    /* ── Decision blocks ── */
+    .decision {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .decision-q { font-weight: 600; font-size: 0.875rem; color: var(--text); margin-bottom: 0.4rem; }
+    .decision-a { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+    /* ── Component list ── */
+    .comp-list { display: grid; gap: 0.5rem; margin-top: 0.75rem; }
+    .comp {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      align-items: start;
+    }
+    .comp-name { font-family: monospace; font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+    .comp-desc { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── File tree ── */
+    .tree {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      white-space: pre;
+      margin: 0.75rem 0;
+    }
+    .tree-dir  { color: var(--accent); font-weight: 600; }
+    .tree-file { color: var(--text); }
+    .tree-note { color: var(--muted); font-style: italic; }
+    .tree-new  { color: var(--green); }
+
+    /* ── Code ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 0.75rem 0;
+    }
+    code { font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 0.82rem; }
+    :not(pre) > code {
+      background: rgba(108,142,247,0.12);
+      color: var(--accent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.75rem 0; }
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      background: var(--surface2);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+    td:first-child { color: var(--text); font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Todo list ── */
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 780px) {
+      .page { grid-template-columns: 1fr; }
+      nav { display: none; }
+      main { padding: 2rem 1.25rem; }
+      h1 { font-size: 1.6rem; }
+      .comp { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Sidebar ── -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">⚔️</div>
+      <div>
+        <div class="logo-text">Warcry Card Creator</div>
+        <div class="logo-sub">Dev Session Logs</div>
+      </div>
+    </div>
+
+    <div class="section-label">Sessions</div>
+    <ul id="session-list">
+      <li>
+        <button class="session-btn" data-session="index">
+          <span class="session-date">Index</span>
+          <span class="session-title">Topic Reference</span>
+        </button>
+      </li>
+      <li>
+        <button class="session-btn" data-session="march-14">
+          <span class="session-date">2026-03-14</span>
+          <span class="session-title">Fighter Runemarks &amp; Pills</span>
+        </button>
+      </li>
+      <li>
+        <button class="session-btn" data-session="march-13">
+          <span class="session-date">2026-03-13</span>
+          <span class="session-title">Fighter Card Polish</span>
+        </button>
+      </li>
+      <li>
+        <button class="session-btn" data-session="march-12">
+          <span class="session-date">2026-03-12</span>
+          <span class="session-title">Visual Polish &amp; Mask</span>
+        </button>
+      </li>
+      <li>
+        <button class="session-btn" data-session="march-11">
+          <span class="session-date">2026-03-11</span>
+          <span class="session-title">Scaffold, Architecture &amp; Fighter Card</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="section-label">This session</div>
+    <ul id="section-links"></ul>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         INDEX — Topic Reference
+    ══════════════════════════════════════════ -->
+    <div id="session-index" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">📋 Reference</span>
+          <span class="badge badge-purple">Topic Index</span>
+        </div>
+        <h1>Topic Reference</h1>
+        <p>Quick lookup table — find specific decisions, patterns, and configurations across all session logs.</p>
+      </div>
+
+      <section id="index-architecture" data-nav="Architecture">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">🏛️</span> Architecture</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#march-11-decisions" onclick="activateSession('march-11')">Stack: SvelteKit 2 + Tailwind v4 + dom-to-image-more</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-decisions" onclick="activateSession('march-11')">CSS/HTML card rendering (not Canvas)</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-decisions" onclick="activateSession('march-11')">Separate routes: /fighter and /ability</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-reactivity" onclick="activateSession('march-11')">Svelte 5 runes: <code>$state</code> prop mutation pattern</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-12-decisions" onclick="activateSession('march-12')">dom-to-image-more: dynamic import to avoid SSR crash</a></td><td>Mar 12</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Runemarks bundled via <code>import.meta.glob + ?raw</code> — reliable export</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Runemark hierarchy: explicit Alliance → Faction → Subfaction in <code>hierarchy.ts</code>; all alliances complete, A→Z sorted</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Fighter runemarks: 26 SVGs, 3 selects, Hero/Monster mutual exclusion + always-top sort</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Pills mode when "Show Runemarks" unchecked — image-inner for mask, image-section unmasked for pills</a></td><td>Mar 14</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="index-card-design" data-nav="Card Design">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">🃏</span> Card Design</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#march-11-cards" onclick="activateSession('march-11')">Card types: Fighter vs Ability</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-cards" onclick="activateSession('march-11')">Card dimensions: 76×121mm → 574×915px at 2× scale</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-cards" onclick="activateSession('march-11')">Image section: 52.6mm (non-monster) / 37.9mm (monster)</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">Full dimension table: card, image area, columns, rows, gaps</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">2× scale: 1mm = 7.559px; all values fixed in px</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">Monster layout: reduced image height + damage bracket table</a></td><td>Mar 11</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="index-visual" data-nav="Visual &amp; CSS">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">🎨</span> Visual &amp; CSS</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#march-11-decisions" onclick="activateSession('march-11')">Color palette: maroon <code>#5a0a14</code>, dark <code>#1a0408</code></a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-12-decisions" onclick="activateSession('march-12')">Parchment texture on <code>.card</code> (not <code>.parchment</code>)</a></td><td>Mar 12</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">SVG mask on <code>.image-section</code> — <code>image-mask-1-cropped.svg</code>, torn edges all sides, layout unchanged</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')"><code>background-clip: text</code> for parchment texture in table headers</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-12-done" onclick="activateSession('march-12')">Fonts: Warcry (RodchenkoCTT) + Oldrichium (ITC Std Light)</a></td><td>Mar 12</td></tr>
+            <tr><td><a href="#march-13-done" onclick="activateSession('march-13')">Named Fighter: chevrons pinned to title edges, text padded clear</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Image height flexible: <code>flex:1</code> image + <code>flex:0 0 auto</code> parchment</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')"><code>fittext</code> Svelte action — shrinks font until text fits cell width</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Runemark circles: card-level positioning, 76px, <code>#5a0a14</code>, 1px white border</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Monster bottom spacing: remove max-height cap, let flex handle it</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Alliance names: Allies of Chaos / Bringers of Death / Harbingers of Destruction / Sentinels of Order</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Placeholder X badge for entries with <code>svg: null</code></a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Cascading selects reset children on parent change (onchange handler)</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-export-decisions" onclick="activateSession('march-13')">dom-to-image-more: SVG mask-image must be inlined as data URL (URLs not resolved)</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-export-decisions" onclick="activateSession('march-13')">dom-to-image-more: <code>.card *</code> wildcard CSS does NOT propagate — add resets per-element</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-13-export-decisions" onclick="activateSession('march-13')">dom-to-image-more: <code>overflow: hidden</code> on containers → white-box artifact — remove and move border-radius to inner rows</a></td><td>Mar 13</td></tr>
+            <tr><td><a href="#march-14-export-decisions" onclick="activateSession('march-14')">dom-to-image-more: <code>border-top</code> on child rows not rendered — use <code>box-shadow: inset 0 1px 0 0 #000</code></a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-export-decisions" onclick="activateSession('march-14')">dom-to-image-more: SVG icon <code>width: auto</code> unreliable — use explicit px (28px) on both span and svg</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Colors: all dark fills → <code>#000</code>; all white fills → <code>#FAF6F3</code> (parchment approximation)</a></td><td>Mar 14</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="index-ops" data-nav="Config &amp; Ops">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">🛠️</span> Config &amp; Ops</h2>
+        <table>
+          <thead><tr><th>Topic</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#march-11-node" onclick="activateSession('march-11')">Node v22 required — Herd path / <code>make dev</code></a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-11-built" onclick="activateSession('march-11')">File structure &amp; route scaffold</a></td><td>Mar 11</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+    <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-14 — Fighter Runemarks & Pills
+    ══════════════════════════════════════════ -->
+    <div id="session-march-14" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-14</span>
+          <span class="badge badge-green">Fighter runemarks done</span>
+          <span class="badge badge-green">Monster factions done</span>
+          <span class="badge badge-green">Pills mode done</span>
+          <span class="badge badge-green">Export fidelity improved</span>
+          <span class="badge badge-amber">Ability card pending</span>
+        </div>
+        <h1>Fighter Runemarks, Monster Factions &amp; Pills Mode</h1>
+        <p>Added 26 fighter runemark SVGs with smart deduplication and Hero/Monster mutual-exclusion logic, wired 4 new monster factions, implemented a pills fallback for the "Show Runemarks" off state, and completed a final round of PNG export fidelity fixes (damage table row dividers, header icon sizing, card border, color corrections).</p>
+      </div>
+
+      <section id="march-14-done" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Fighter runemarks (right column)</strong> — 26 SVG files imported (<code>fighters-agile.svg</code> → <code>fighters-warrior.svg</code>, A–Z); <code>fighterRunemarks</code> export added to <code>index.ts</code>; 3 select dropdowns in form; card shows up to 3 circles in the right column, sorted Hero/Monster first.</li>
+          <li><strong>Deduplication via disabled options</strong> — already-selected runemark stays visible in the other dropdowns but is <code>disabled</code>; Hero and Monster are mutually exclusive (selecting one disables the other across all three selects).</li>
+          <li><strong>Hero/Monster always on top</strong> — <code>$effect</code> sorts selected runemarks so Hero or Monster always appears first in the right column.</li>
+          <li><strong>4 new monster factions</strong> — "Chaotic Beasts" in Allies of Chaos, "Monsters of Death" in Bringers of Death, "Monsters of Destruction" in Harbingers of Destruction, "Monsters of Order" in Sentinels of Order; 4 new SVGs added to <code>src/lib/runemarks/svg/</code>.</li>
+          <li><strong>Pills mode</strong> — when "Show Runemarks" is unchecked, alliance/faction/bladeborn and fighter runemarks are shown as styled pills at the bottom of the image area instead of circles; fighter runemarks start on a new line; centered with 24px bottom spacing.</li>
+          <li><strong>Image mask restructured</strong> — mask moved from <code>.image-section</code> to a new <code>.image-inner</code> wrapper so absolutely-positioned pills are not clipped by the mask.</li>
+          <li><strong>Header text fallback labels</strong> — when "Show Runemarks" is off, M / T / W / RNG / A / S / DMG text labels are wrapped in <code>&lt;span class="header-text"&gt;</code> with explicit <code>color: #FAF6F3</code> to be visible against the dark header (previously invisible because the parent had <code>color: transparent</code> for <code>background-clip: text</code>).</li>
+          <li><strong>Color pass</strong> — all <code>#1a0408</code> occurrences replaced with <code>#000</code>; all <code>fill: white</code> replaced with <code>fill: #FAF6F3</code> (warm off-white matching parchment).</li>
+          <li><strong>Code cleanup</strong> — <code>$props()</code> declaration moved before <code>$effect()</code> in <code>FighterForm.svelte</code> (was logically unsafe ordering).</li>
+        </ul>
+        <h3 id="march-14-export-done">Export fidelity fixes</h3>
+        <ul>
+          <li><strong>White dot top-left</strong> — <code>.runemarks</code> container always in DOM even when empty; added <code>border: 0; outline: none; background: transparent</code> to its CSS rule.</li>
+          <li><strong>White frame around card</strong> — <code>.card * {}</code> wildcard doesn't reset <code>.card</code> itself; added <code>border: 0; outline: none</code> directly to <code>.card</code>. Added same reset to <code>#cardEl</code> wrapper in <code>+page.svelte</code>.</li>
+          <li><strong>White frame around model image</strong> — <code>.image-section</code> and <code>.image-inner</code> and <code>.model-img</code> all needed per-element explicit resets.</li>
+          <li><strong>Damage table horizontal white lines</strong> — <code>border-top: 1px solid black</code> on <code>.damage-row</code> is silently dropped by dom-to-image-more; replaced with <code>box-shadow: inset 0 1px 0 0 #000</code>.</li>
+          <li><strong>Header runemark icons smaller in export</strong> — <code>.header-runemark</code> span lacked reset; SVG had <code>width: auto</code> which behaves differently in SVG foreignObject; changed to explicit <code>width: 28px; height: 28px</code>.</li>
+          <li><strong>Weapon runemark SVG fill</strong> — added <code>fill: #000</code> to <code>.weapon-runemark :global(svg)</code> for export consistency.</li>
+        </ul>
+      </section>
+
+      <section id="march-14-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Fighter runemark deduplication: disabled options, not hidden</div>
+          <div class="decision-a">Options that are already selected in another slot stay visible in the dropdown but are set to <code>disabled</code>. This keeps the full list scannable while preventing duplicates — the user can see what exists and what's taken. Hiding selected options was the alternative but made the list feel inconsistent.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Hero/Monster always sorted to top</div>
+          <div class="decision-a">These are special "rank" runemarks in the game that conventionally appear first on cards. A priority comparator in the <code>$effect</code> sorts them to index 0 regardless of which select slot they were chosen in.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Pills mode: mask on <code>.image-inner</code>, pills on <code>.image-section</code></div>
+          <div class="decision-a">The original mask was on <code>.image-section</code>, which clipped absolutely-positioned pills inside it. Solution: wrap the image/placeholder in <code>.image-inner</code>, apply mask there, and keep <code>.image-section</code> unmasked as the positioning context. Pills render outside the torn-edge mask without any layout changes to the card.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Color #FAF6F3 for white fills/icons</div>
+          <div class="decision-a">Pure white on the parchment background felt harsh. <code>#FAF6F3</code> is a warm off-white sampled from the parchment texture highlights — visually softer while remaining clearly legible on the dark maroon headers.</div>
+        </div>
+        <h3 id="march-14-export-decisions">Export fidelity — additional learnings</h3>
+        <div class="decision">
+          <div class="decision-q"><code>border-top</code> on child rows is not rendered by dom-to-image-more</div>
+          <div class="decision-a">Per-row <code>border-top: 1px solid black</code> (inside a flex container) is silently dropped during dom-to-image-more serialization. Container-level borders work fine. Fix: replace per-row <code>border-top</code> with <code>box-shadow: inset 0 1px 0 0 #000</code> on rows that need a top divider — box shadows survive the foreignObject context.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">SVG icon <code>width: auto</code> is unreliable in export</div>
+          <div class="decision-a">SVG elements with <code>width: auto</code> can render at an unexpected size inside dom-to-image-more's SVG foreignObject context — icons appeared smaller than in the browser preview. Fix: set explicit <code>width: Npx; height: Npx</code> on SVG elements (and resets on their wrapper spans).</div>
+        </div>
+      </section>
+
+      <section id="march-14-next" data-nav="Still Pending">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+        <table>
+          <thead><tr><th style="width:6rem">Status</th><th>Item</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-amber">todo</span></td>
+              <td>
+                Missing SVGs — 22 entries with <code>svg: null</code><br>
+                <span style="font-size:0.85em;color:var(--muted)">
+                  <strong>Chaos:</strong> Gorechosen of Dromm, Kamandora's Blades, Brand's Oathbound, Ephilim's Pandaemonium, Blood of the Bull, Grandfather's Gardeners, Zikkit's Tunnelpack, Borgit's Beastgrabbaz, Blades of the Hollow King, Darkoath, Helsmiths of Hashut<br>
+                  <strong>Death:</strong> Pyregheists, Teratic Cohort &nbsp;·&nbsp; <strong>Destruction:</strong> Gobbapalooza<br>
+                  <strong>Order:</strong> Ruination Chamber, Twistweald, Ydrilan Riverblades, The Knives of the Crone, Jaws of Itzl, Gladitorium Fighters, The Emberwatch, Heralds of Kurnoth
+                </span>
+              </td>
+            </tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor — <code>/ability</code> route</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Export: <code>background-clip: text</code> headers may still render differently vs preview</td></tr>
+            <tr><td><span class="badge badge-amber">later</span></td><td>GitHub Pages deployment — swap <code>adapter-auto</code> → <code>adapter-static</code>, set <code>paths.base</code>, add <code>.github/workflows/deploy.yml</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="march-14-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/runemarks/svg/fighters-*.svg</code> (×26)</td><td>Added — Agile → Warrior fighter runemark SVGs</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/monsters-*.svg</code> (×4)</td><td>Added — Chaotic Beasts, Monsters of Death/Destruction/Order</td></tr>
+          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Added <code>fighterRunemarks</code> export (26 entries)</td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added 4 monster faction entries across all four alliances</td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pills mode, image-inner mask restructure, header-text spans, color pass (#000/#FAF6F3), export resets (card, image, damage rows, header icons)</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fighter runemark selects (3×) with disabled logic; <code>$props()</code> moved before <code>$effect()</code></td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Export wrapper reset: <code>border:0; outline:none; background:transparent</code></td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-14 -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-13 — Fighter Card Polish
+    ══════════════════════════════════════════ -->
+    <div id="session-march-13" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-13</span>
+          <span class="badge badge-green">Image layout done</span>
+          <span class="badge badge-green">Tables styled</span>
+          <span class="badge badge-green">Named fighter done</span>
+          <span class="badge badge-green">Runemarks wired</span>
+          <span class="badge badge-green">Weapon types done</span>
+          <span class="badge badge-green">Runemark hierarchy done</span>
+          <span class="badge badge-green">Order hierarchy complete</span>
+          <span class="badge badge-green">SVG mask done</span>
+          <span class="badge badge-green">Housekeeping done</span>
+          <span class="badge badge-green">Export fidelity improved</span>
+          <span class="badge badge-amber">Ability card pending</span>
+        </div>
+        <h1>Fighter Card Polish + Runemarks + Runemark Hierarchy + Export Fixes</h1>
+        <p>Full pass over the fighter card UI, weapon type select, runemark infrastructure (SVGs inlined via Vite glob), image repositioning/zoom, Grand Alliance / Faction / Subfaction circles, form layout housekeeping, and a complete 3-level runemark hierarchy with cascading selects. Second session: significant PNG export fidelity improvements — model image now appears, cell frames eliminated.</p>
+      </div>
+
+      <section id="march-13-done" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Image area inset</strong> — dark area sits with 16px margins on top/left/right, parchment background visible around it.</li>
+          <li><strong>SVG mask on image section</strong> — <code>static/image-mask-1-cropped.svg</code> applied as <code>mask-image</code> on <code>.image-section</code>; torn/rough edges on all four sides. The mask stretches with the div (<code>mask-size: 100% 100%</code>); image section layout is completely unchanged.</li>
+          <li><strong>Runemark directory renamed</strong> — <code>src/lib/runemarks/weapons/</code> → <code>src/lib/runemarks/svg/</code>; all imports updated.</li>
+          <li><strong>Dead asset cleanup</strong> — 5 orphaned files removed: <code>static/image-area.svg</code>, two old mask SVGs, <code>factions-chaos-everchosen.svg</code>, <code>factions-death-legions-of-nagash.svg</code>, <code>factions-chaos-bladeborn-dread-pagent.svg</code> (misspelled duplicate).</li>
+          <li><strong>Image height is flexible</strong> — <code>.image-section</code> uses <code>flex: 1 1 0</code>; parchment is <code>flex: 0 0 auto</code> so the image grows/shrinks with content.</li>
+          <li><strong>Table headers</strong> — SVG icons replaced with text labels: BASE SIZE, POINTS VALUE, M, T, W / (empty), RNG, A, S, DMG.</li>
+          <li><strong>Header text style</strong> — Warcry font, weight 400, parchment texture via <code>background-clip: text</code>.</li>
+          <li><strong>Table borders</strong> — outer border 1px, all inner column/row borders removed.</li>
+          <li><strong>Row height</strong> — reduced from 64px to 55px across stats and weapons boxes.</li>
+          <li><strong>Table width</strong> — changed from fixed 500px to <code>width: 100%</code>, matching parchment padding (38px each side).</li>
+          <li><strong>Auto-fit text</strong> — <code>fittext</code> Svelte action on all value cells; shrinks font in 0.5px steps on content change via <code>requestAnimationFrame</code>.</li>
+          <li><strong>Cell padding</strong> — 10px horizontal padding on stat/weapon value cells.</li>
+          <li><strong>Damage bracket columns</strong> — all three columns equally distributed (<code>flex: 1</code>), form inputs also equal-width (<code>grid-cols-3</code>).</li>
+          <li><strong>Weapon type field</strong> — added <code>name</code> to <code>Weapon</code> interface; form shows Type as first column.</li>
+          <li><strong>Form field order</strong> — characteristics: Base Size → Points → Move → Toughness → Wounds; weapons: Type → RNG → A → S → DMG.</li>
+          <li><strong>Fighter name wraps</strong> — long names wrap to multiple lines; image area shrinks to absorb extra height.</li>
+          <li><strong>Download naming</strong> — exported PNG named <code>slug_YYYY-MM-DD_HH-MM.png</code>.</li>
+          <li><strong>Checkbox grouping</strong> — Named Fighter and Monster checkboxes grouped together between Fighter Name and Model Image in the form.</li>
+          <li><strong>Weapon type select</strong> — Type column is now a <code>&lt;select&gt;</code> with 16 options (Axe → Unarmed); unselected shows em dash (—) on card.</li>
+          <li><strong>Show Runemarks toggle</strong> — checkbox swaps M/T/W and RNG/A/S/DMG column headers and weapon type cells between text labels and SVG runemarks.</li>
+          <li><strong>Characteristic runemarks</strong> — 7 SVGs (move, toughness, wounds, range, attacks, strength, damage) inlined via <code>?raw</code> import; white fill applied via CSS.</li>
+          <li><strong>Weapon runemarks</strong> — 16 SVGs inlined; displayed in weapon type cell when runemark mode active.</li>
+          <li><strong>SVG optimisation</strong> — all runemarks run through SVGO (5–22% reduction); moved from <code>static/</code> to <code>src/lib/runemarks/</code> so Vite bundles them — no separate HTTP requests, reliable export.</li>
+          <li><strong>Grand Alliance circles</strong> — 4 SVGs (Allies of Chaos / Bringers of Death / Harbingers of Destruction / Sentinels of Order); top-left circle on card; select in form.</li>
+          <li><strong>Faction circles</strong> — 123 faction SVGs loaded; displayed as middle and bottom circles in the left runemark column.</li>
+          <li><strong>Runemark circles</strong> — 76px (10mm at 2×), <code>#5a0a14</code> background, 1px white border; card-level positioning so they never clip.</li>
+          <li><strong>3-level runemark hierarchy</strong> — new <code>src/lib/runemarks/hierarchy.ts</code>; explicit Alliance → Faction → Subfaction/Bladeborn mapping for all four alliances; all 21 Sentinels of Order factions wired with correct subfaction/Bladeborn lists (17 new SVG imports); 3 new Order factions (Ruination Chamber, Twistweald, Ydrilan Riverblades) and 5 missing subfaction SVGs (The Knives of the Crone, Jaws of Itzl, Gladitorium Fighters, The Emberwatch, Heralds of Kurnoth) tracked as <code>svg: null</code>; labels corrected: "Lumineth Realm-lords", "Thunderstrike Chamber", "Vanguard Auxiliary Chamber"; all three levels sorted A→Z.</li>
+          <li><strong>Placeholder SVG</strong> — filled X badge shown when an entry is selected but has no SVG yet.</li>
+          <li><strong>Cascading selects</strong> — Faction disabled until Alliance chosen; Subfaction/Bladeborn disabled until Faction chosen; each level resets children on change.</li>
+          <li><strong>index.ts simplified</strong> — old <code>import.meta.glob</code> faction logic removed; re-exports from <code>hierarchy.ts</code> plus weapon/characteristic exports.</li>
+          <li><strong>Image repositioning</strong> — Position X / Y sliders via <code>object-position</code>; Zoom slider via <code>transform: scale()</code> anchored to position origin.</li>
+          <li><strong>Gradient removed</strong> — <code>.img-fade</code> overlay deleted.</li>
+          <li><strong>Monster bottom spacing fixed</strong> — removed <code>max-height: 257px</code> cap; image now shrinks naturally so bottom padding is always consistent.</li>
+          <li><strong>Viewport-fit layout</strong> — outer container is <code>h-screen</code>; card scales to fit via reactive <code>cardScale</code> derived from <code>window.innerHeight</code>; form scrolls independently.</li>
+          <li><strong>Chevrons inline</strong> — named fighter chevrons moved to flow inline next to text (removed absolute positioning).</li>
+          <li><strong>Damage bracket header</strong> — "DMG" renamed to "DAMAGE".</li>
+          <li><strong>Form field labels</strong> — Points Value, Move (M), Toughness (T), Wounds (W), Range (RNG), Attacks (A), Strength (S), Damage (DMG), Wounds Taken.</li>
+          <li><strong>Form section order</strong> — Fighter → Checkboxes → Model Image → Runemarks → Characteristics → Weapons → Damage Brackets.</li>
+        </ul>
+        <h3 id="march-13-export-done">Export fidelity (second session)</h3>
+        <ul>
+          <li><strong>Model image now exports</strong> — <code>mask-image: url('/...')</code> in CSS is not resolved by dom-to-image-more; inlined the SVG mask as a UTF-8 data URL via Vite <code>?raw</code> import (<code>src/lib/image-mask.svg</code>) and applied as an inline <code>style</code> attribute.</li>
+          <li><strong>Fighter name frame eliminated</strong> — added explicit <code>border: 0; outline: none; background: transparent</code> directly to <code>.fighter-name</code> and <code>.chevron</code> CSS rules.</li>
+          <li><strong>All table cell frames eliminated</strong> — added explicit <code>border: 0; outline: none; background: transparent</code> to every transparent cell class: <code>.parchment</code>, <code>.stats-values</code>, <code>.stat-col</code>, <code>.stat-val</code>, <code>.weapon-row</code>, <code>.wcol</code>, <code>.weapon-val</code>, <code>.weapon-art-placeholder</code>, <code>.dcol</code>, <code>.dcol-wide</code>.</li>
+          <li><strong><code>overflow: hidden</code> removed from layout containers</strong> — removed from <code>.stats-box</code>, <code>.weapons-box</code>, <code>.damage-box</code>, <code>.image-section</code>, <code>.runemark-badge</code>, <code>.stat-col</code>, <code>.stat-val</code>, <code>.wcol</code>, <code>.weapon-val</code>, <code>.dcol</code>. Rounded corners preserved by applying <code>border-radius: 14px 14px 0 0</code> to header rows and <code>0 0 14px 14px</code> to last value rows.</li>
+        </ul>
+      </section>
+
+      <section id="march-13-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">SVG mask — the aha moment</div>
+          <div class="decision-a">Many approaches failed: clip-path polygon (too mathematical, can't approximate curves), separate overlay elements (positioning fights the flex layout), wrong SVGs. The correct approach: take <code>image-mask-1-cropped.svg</code> (black filled shape, torn edges on all four sides), remove its internal <code>&lt;clipPath&gt;</code> (it was cutting the tears flush to a rectangle), add <code>preserveAspectRatio="none"</code>, and apply it as <code>mask-image</code> on <code>.image-section</code> with <code>mask-size: 100% 100%</code>. Critically: do NOT change the image section layout at all — flex, margins, overflow all stay exactly as they were.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Flexible image height — <code>flex: 1</code> image, <code>flex: 0 0 auto</code> parchment</div>
+          <div class="decision-a">Instead of a fixed image height that fights the parchment section, the image grows/shrinks to fill remaining space. Fighter name length naturally drives the split.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">fittext via Svelte action with <code>update()</code></div>
+          <div class="decision-a">The action takes the cell value as a parameter so Svelte calls <code>update()</code> on every change. <code>requestAnimationFrame</code> defers the measurement until after the DOM update, avoiding stale layout reads.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">background-clip: text for header labels</div>
+          <div class="decision-a">Shows the parchment texture through the dark maroon header text without pixel-perfect alignment logic — the texture bleeds through naturally.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Runemarks bundled via <code>import.meta.glob + ?raw</code></div>
+          <div class="decision-a">SVGs inlined into the JS bundle at build time — no HTTP requests at runtime, and <code>dom-to-image-more</code> captures them reliably in PNG export.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Explicit hierarchy over <code>import.meta.glob</code> auto-loading</div>
+          <div class="decision-a">The old glob approach mixed factions and bladeborn in a flat dict, making faction→bladeborn dependency impossible. Replacing with an explicit <code>AllianceEntry → FactionEntry → SubfactionEntry</code> structure in <code>hierarchy.ts</code> gives full control over ordering, missing-SVG handling, and future expansion.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q"><code>svg: null</code> + placeholder X for missing entries</div>
+          <div class="decision-a">Several new factions/bladeborn (Gorechosen of Dromm, Helsmiths of Hashut, etc.) exist in the game but have no SVG file yet. Keeping them in the hierarchy with <code>svg: null</code> and rendering a filled-X badge means they're selectable and the card visually indicates a missing runemark — without silently hiding the selection.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Alliance display names updated to canonical Warcry names</div>
+          <div class="decision-a">Changed from "Chaos / Death / Destruction / Order" to "Allies of Chaos / Bringers of Death / Harbingers of Destruction / Sentinels of Order" — matching the actual game terminology.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Runemark circles at card level, not inside image section</div>
+          <div class="decision-a">Image section has <code>overflow: hidden</code>; moving circles to card root ensures they're never clipped regardless of image height.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Monster bottom spacing — remove max-height cap</div>
+          <div class="decision-a">The original <code>max-height: 257px</code> on monster image caused leftover space below the damage brackets. Removing it lets <code>flex: 1 1 0</code> do the right thing naturally.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Hierarchy sorted A→Z at every level</div>
+          <div class="decision-a">Grand Alliances, Factions, and Subfactions/Bladeborn are all sorted alphabetically ascending in <code>hierarchy.ts</code> so UI dropdowns appear in predictable order without any runtime sort logic.</div>
+        </div>
+        <h3 id="march-13-export-decisions">Export fidelity — key learnings</h3>
+        <div class="decision">
+          <div class="decision-q">SVG <code>mask-image</code> URLs are not resolved by dom-to-image-more</div>
+          <div class="decision-a">Relative <code>url('/file.svg')</code> in a CSS <code>mask-image</code> property is not fetched/inlined by dom-to-image-more during serialization — the masked element becomes invisible. Fix: import the SVG with Vite <code>?raw</code>, build a data URL (<code>data:image/svg+xml;charset=utf-8,${encodeURIComponent(raw)}</code>), and apply it as an inline <code>style</code> attribute on the element. The file is kept in both <code>static/</code> (URL serving) and <code>src/lib/</code> (Vite import).</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q"><code>.card * {}</code> wildcard resets do NOT propagate through dom-to-image-more</div>
+          <div class="decision-a">dom-to-image-more copies computed styles per-element as inline styles on the cloned DOM. It appears to skip "zero/default" values like <code>border-width: 0</code> and <code>background: transparent</code> when they come from a wildcard ancestor selector. In the SVG foreignObject context the UA stylesheet then applies its own non-zero defaults (border, white background). Fix: add <code>border: 0; outline: none; background: transparent</code> directly to each element's own CSS rule — not via a wildcard. Elements with explicit non-transparent backgrounds (headers, badges) are unaffected.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q"><code>overflow: hidden</code> on parent containers creates white-box artifacts in export</div>
+          <div class="decision-a">Any element with <code>overflow: hidden</code> renders as an opaque white rectangle in dom-to-image-more's SVG foreignObject context, and its children inherit the white background. Fix: remove <code>overflow: hidden</code> from layout/table containers. For rounded-corner boxes that used it to clip inner backgrounds to the radius, apply <code>border-radius</code> directly to the inner header row (top corners) and last value row (bottom corners) instead. Keep <code>overflow: hidden</code> only on the root <code>.card</code> element.</div>
+        </div>
+      </section>
+
+      <section id="march-13-next" data-nav="Still Pending">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+        <table>
+          <thead><tr><th style="width:6rem">Status</th><th>Item</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Right-column runemarks — SVGs + selection UI for the 3 right-side circles</td></tr>
+            <tr>
+              <td><span class="badge badge-amber">todo</span></td>
+              <td>
+                Missing SVGs — 22 entries with <code>svg: null</code><br>
+                <span style="font-size:0.85em;color:var(--muted)">
+                  <strong>Chaos:</strong> Gorechosen of Dromm, Kamandora's Blades, Brand's Oathbound, Ephilim's Pandaemonium, Blood of the Bull, Grandfather's Gardeners, Zikkit's Tunnelpack, Borgit's Beastgrabbaz, Blades of the Hollow King, Darkoath, Helsmiths of Hashut<br>
+                  <strong>Death:</strong> Pyregheists, Teratic Cohort &nbsp;·&nbsp; <strong>Destruction:</strong> Gobbapalooza<br>
+                  <strong>Order:</strong> Ruination Chamber, Twistweald, Ydrilan Riverblades, The Knives of the Crone, Jaws of Itzl, Gladitorium Fighters, The Emberwatch, Heralds of Kurnoth
+                </span>
+              </td>
+            </tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor — <code>/ability</code> route (runemarks reusable from same index)</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Export: remaining visual differences vs preview (image frame, <code>background-clip: text</code> label headers, font rendering)</td></tr>
+            <tr><td><span class="badge badge-amber">later</span></td><td>GitHub Pages deployment — requires a GitHub repo first. Steps: swap <code>adapter-auto</code> → <code>adapter-static</code>, set <code>paths.base</code> to the repo name, add a <code>.github/workflows/deploy.yml</code> workflow.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="march-13-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/types.ts</code></td><td>Added <code>name</code>, <code>showRunemarks</code>, <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>, <code>imageOffsetX/Y</code>, <code>imageZoom</code></td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>New — full 3-level Alliance → Faction → Subfaction data, SVG imports, lookup helpers, PLACEHOLDER_SVG; updated: Order subfactions wired (17 new imports), 3 new factions, labels corrected, all levels A→Z sorted</td></tr>
+          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Simplified — re-exports hierarchy helpers; keeps weapon/characteristic exports; glob logic removed</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/</code></td><td>Renamed from <code>weapons/</code>; 23 weapon/characteristic SVGs + 4 grand alliance + faction SVGs (5 orphaned files deleted)</td></tr>
+          <tr><td><code>static/image-mask-1-cropped.svg</code></td><td>Added — torn-edge mask, internal clipPath removed, preserveAspectRatio="none"</td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Inline SVG runemarks, runemark toggle, image position/zoom, circle badges, monster spacing fix</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Weapon type select, runemark selects, image sliders, form reorder, label updates</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>h-screen layout, reactive cardScale, updated initial data</td></tr>
+          <tr><td><code>src/lib/image-mask.svg</code></td><td>Added — copy of static mask for Vite <code>?raw</code> import (dom-to-image-more inline data URL fix)</td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code> <em>(export fixes)</em></td><td>Mask inlined as data URL; <code>border: 0; outline: none; background: transparent</code> added to all transparent cell classes; <code>overflow: hidden</code> removed from layout containers; border-radius moved to inner header/value rows</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-13 -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-12 — Visual Polish & Mask
+    ══════════════════════════════════════════ -->
+    <div id="session-march-12" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-12</span>
+          <span class="badge badge-green">Fonts &amp; texture live</span>
+          <span class="badge badge-green">SVG mask working</span> <span class="badge badge-amber">later dropped</span>
+          <span class="badge badge-green">Monster form UX</span>
+          <span class="badge badge-amber">Name centering pending</span>
+        </div>
+        <h1>Visual Polish, Mask &amp; Monster UX</h1>
+        <p>Applied custom fonts, parchment background texture, and an SVG organic mask. Fixed SSR export crash. Locked damage bracket rows to 5 (fixed). Added monster-aware field locking: Move and Damage show * and are non-editable on both form and card when isMonster is true.</p>
+      </div>
+
+      <section id="march-12-done" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li>Added <code>RodchenkoCTT.ttf</code> and <code>OldrichiumITCStdLight.otf</code> to <code>static/fonts/</code> and declared them in <code>app.css</code></li>
+          <li>Applied <code>background.jpg</code> parchment texture to <code>.card</code> (full-card coverage); parchment section and table value rows are now transparent so the texture shows through</li>
+          <li>Added <code>image-area.svg</code> (organic/torn-edge shape) as a CSS <code>mask-image</code> on <code>.image-section</code>; replaced the old solid dark background</li>
+          <li>Iterated on mask sizing and position to hide the organic top edge above the card boundary (<code>mask-position: 0 -40px</code>)</li>
+          <li>Fixed SSR crash (<em>Node is not defined</em>) in <code>/fighter/+page.svelte</code> by switching <code>dom-to-image-more</code> to a dynamic <code>import()</code> inside <code>exportCard()</code></li>
+          <li>Removed redundant CSS: <code>.weapon-art-col</code> (duplicated <code>.wcol</code>), <code>.damage-val</code> (duplicated <code>.dcol-stat</code>), no-op <code>border-right: none</code>, default <code>background: transparent</code> declarations, <code>border-radius: 0</code>, <code>gap: 0</code></li>
+          <li>Fighter name changed to <code>align-items: center; justify-content: center</code> for vertical/horizontal centering (optical balance still being tuned)</li>
+          <li>Damage bracket rows locked to 5 fixed rows — removed Add Row and Remove Row (×) buttons and their handlers from <code>FighterForm.svelte</code></li>
+          <li>Monster field locking: when <code>isMonster</code> is true, Move (characteristics) and Damage (both weapons) render as disabled inputs showing <code>*</code> in the form; card visual also shows <code>*</code> for those cells. Stored values are preserved so unchecking monster restores them.</li>
+          <li>Base Size default changed from <code>ø 32</code> to <code>32</code> (no ø prefix)</li>
+        </ul>
+      </section>
+
+      <section id="march-12-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">background.jpg on <code>.card</code>, not <code>.parchment</code></div>
+          <div class="decision-a">The SVG mask makes parts of <code>.image-section</code> transparent. Putting the texture on the card root means those transparent areas reveal the parchment seamlessly rather than showing a bare browser background.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Dynamic import for dom-to-image-more</div>
+          <div class="decision-a">The library references <code>Node</code> at module evaluation time, which crashes SvelteKit SSR. Moving to <code>await import()</code> inside the click handler defers loading to the browser.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">mask-position: 0 -40px with mask-size: 100% 100%</div>
+          <div class="decision-a">The SVG organic path has bumps that extend ~40px into the image from the top edge. Shifting the mask up hides those bumps above the card boundary, giving a clean straight top while the organic bottom edge forms the torn-paper transition into the parchment.</div>
+        </div>
+      </section>
+
+      <section id="march-12-pending" data-nav="Still Pending">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+        <table>
+          <thead><tr><th style="width:6rem">Status</th><th>Item</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-amber">tweak</span></td><td>Fighter name vertical centering — optical balance still slightly off due to mask overhang into parchment area</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Monster fighter card — image area full-width confirmed; mask scaling for shorter height to be verified visually</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Weapon icons — melee/ranged SVGs (currently placeholder icons)</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Runemark library — SVGs in <code>src/lib/runemarks/svg/</code> + selection UI</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor — <code>/ability</code> route</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="march-12-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>static/fonts/RodchenkoCTT.ttf</code></td><td>Added</td></tr>
+          <tr><td><code>static/fonts/OldrichiumITCStdLight.otf</code></td><td>Added</td></tr>
+          <tr><td><code>static/background.jpg</code></td><td>Added — parchment texture</td></tr>
+          <tr><td><code>static/image-area.svg</code></td><td>Added — organic mask shape</td></tr>
+          <tr><td><code>src/app.css</code></td><td>Added @font-face for Warcry + Oldrichium</td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Mask, background, font, transparency, CSS cleanup; monster * rendering for Move + Damage</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fixed 5-row damage brackets (no add/remove); monster field locking for Move + Damage</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Dynamic import for dom-to-image-more (SSR fix); Base Size default changed to '32'</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-12 -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-11 — Scaffold, Architecture & Fighter Card
+    ══════════════════════════════════════════ -->
+    <div id="session-march-11" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-11</span>
+          <span class="badge badge-green">Scaffold complete</span>
+          <span class="badge badge-green">Fighter card functional</span>
+          <span class="badge badge-amber">CSS polish pending</span>
+        </div>
+        <h1>Scaffold, Architecture &amp; Fighter Card</h1>
+        <p>Project initialized from scratch: stack chosen, types defined, routes created. Fighter card editor built end-to-end — visual card component, editable form, live preview and PNG export.</p>
+      </div>
+
+      <section id="march-11-cards" data-nav="Card Types">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">🃏</span> Card Types (v9 Reference)</h2>
+        <h3>Fighter Card</h3>
+        <ul>
+          <li>Portrait ~830×1300 ratio (approx 0.638 w:h)</li>
+          <li>Top ~55%: full-bleed model photo, runemarks top-left and top-right (up to 3 each)</li>
+          <li>Torn/jagged paper edge divider</li>
+          <li>Bottom ~45%: parchment — fighter name, characteristics table (Base Size, Points, Move, Toughness, Wounds), weapons table (icon, Range, Attacks, Strength, Damage/Crit)</li>
+          <li>Optional monster damage bracket table</li>
+        </ul>
+        <h3>Ability Card (also Heroic Trait / Reaction)</h3>
+        <ul>
+          <li>Same portrait ratio</li>
+          <li>Top ~28%: dark maroon header — runemarks row (1–4), activation badge (DOUBLE/TRIPLE/QUAD), card-type label</li>
+          <li>Torn paper divider</li>
+          <li>Bottom ~72%: parchment — card name, optional italic flavor text, body text</li>
+        </ul>
+        <h3>Typography</h3>
+        <table>
+          <tr><th>Use</th><th>Font</th></tr>
+          <tr><td>Card name, stats, activation badge</td><td>rodchenkoctt (custom, from old repo)</td></tr>
+          <tr><td>Body text, flavor text</td><td>EB Garamond (Google Fonts)</td></tr>
+          <tr><td>Stat header labels</td><td>Small bold condensed caps</td></tr>
+        </table>
+      </section>
+
+      <section id="march-11-layout" data-nav="Sizing &amp; Spacing">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📐</span> Sizing &amp; Spacing — The Long Road</h2>
+        <p>Most of this session was an iterative, sometimes messy process of extracting exact measurements from the v9 SVG reference and translating them into a faithful CSS layout. What looked simple turned into a long back-and-forth — with the user providing physical measurements in mm, then verifying by screenshot, then refining again.</p>
+
+        <h3>Physical dimensions and the 2× scale</h3>
+        <p>The card is <strong>76×121mm</strong> physical. We render at 2× screen scale to get crisp PNG exports at double resolution. Conversion factor: <code>1mm = 7.559px</code> (2 × 96 / 25.4). All measurements were converted once and kept as fixed pixel values — no CSS <code>mm</code> units, which behave unpredictably in browsers.</p>
+        <table>
+          <thead><tr><th>Element</th><th>mm</th><th>px (2×)</th></tr></thead>
+          <tbody>
+            <tr><td>Card width</td><td>76mm</td><td>574px</td></tr>
+            <tr><td>Card height</td><td>121mm</td><td>915px</td></tr>
+            <tr><td>Image area (non-monster)</td><td>52.6mm</td><td>397px</td></tr>
+            <tr><td>Image area (monster)</td><td>28mm (reduced to fit)</td><td>212px</td></tr>
+            <tr><td>Table column width</td><td>13.2mm</td><td>100px</td></tr>
+            <tr><td>Table row height (stats/weapons)</td><td>8.5mm</td><td>64px</td></tr>
+            <tr><td>Damage bracket row height</td><td>3mm</td><td>23px</td></tr>
+            <tr><td>Gap between tables / image</td><td>3.9mm</td><td>29px</td></tr>
+            <tr><td>Parchment side/bottom padding</td><td>~5mm / ~5mm</td><td>38px</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Layout structure</h3>
+        <p>The card is a <code>flex-direction: column</code> container. The image section has a fixed height (<code>flex: 0 0 397px</code>); the parchment fills the rest (<code>flex: 1</code>). Inside the parchment, the fighter name uses <code>flex: 1</code> to fill the space above the tables, which are anchored at the bottom with <code>flex-shrink: 0</code>.</p>
+        <p>The tables are 5 columns × 100px = 500px wide (66mm), centred within the 574px card by the parchment padding.</p>
+
+        <h3>Monster layout</h3>
+        <p>When <code>isMonster: true</code>, the image section shrinks to 212px and a damage bracket table appends below the weapons box. The damage table is full-width (no border-radius, black borders, transparent background) and capped at 5 data rows to prevent overflow. The monster image height was reduced from the spec'd 37.9mm to ~28mm after overflow was observed in practice.</p>
+
+        <h3>Why it took so long</h3>
+        <p>Early attempts used percentage-based or approximate sizes — the card never matched the reference. Progress only clicked once every dimension was derived from the physical mm spec and consistently applied. Screenshots revealed mismatches multiple times before the spacing felt right. The table column and row sizes in particular required several passes: equal-width columns were not obvious from the SVG, and the gap between the image and first table was initially left unspecified then re-derived from the reference.</p>
+      </section>
+
+      <section id="march-11-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+
+        <div class="decision">
+          <div class="decision-q">Stack: SvelteKit 2 + Vite + TypeScript + Tailwind CSS v4</div>
+          <div class="decision-a">Consistent with hobbylog project, reactive, no extra state lib needed.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">CSS/HTML card rendering (not Canvas)</div>
+          <div class="decision-a">Svelte reactivity gives live preview for free; fonts and textures are easier in CSS; dom-to-image-more handles export at 2× for crisp PNGs.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Separate routes: /fighter and /ability</div>
+          <div class="decision-a">Different enough in structure that sharing a route would add complexity for no benefit.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Placeholder backgrounds for now</div>
+          <div class="decision-a"><code>#f5f0e8</code> parchment, <code>#5a0a14</code> dark sections. Texture image to be swapped in later via CSS variable.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Monster toggle on fighter card</div>
+          <div class="decision-a">When checked, appends the damage bracket table below weapons.</div>
+        </div>
+      </section>
+
+      <section id="march-11-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <div class="tree"><span class="tree-dir">src/</span>
+  <span class="tree-dir">lib/</span>
+    <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, AbilityCardData, Weapon, …)</span>
+    <span class="tree-file">index.ts</span>
+    <span class="tree-dir">assets/</span>
+  <span class="tree-dir">routes/</span>
+    <span class="tree-file">+layout.svelte</span>
+    <span class="tree-file">+page.svelte</span>     <span class="tree-note">— landing page</span>
+    <span class="tree-dir">fighter/</span>
+      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
+    <span class="tree-dir">ability/</span>
+      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
+  <span class="tree-file">app.css</span>           <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
+<span class="tree-file">static/fonts/</span>       <span class="tree-note">— empty, awaiting font files</span>
+<span class="tree-file">Makefile</span>            <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
+<span class="tree-file">CLAUDE.md</span></div>
+      </section>
+
+      <section id="march-11-node" data-nav="Node Version">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⚙</span> Node Version Note</h2>
+        <p>System default is Node v16 (Laravel Herd). Project requires v22+. Herd has v22.22.0 at:</p>
+        <pre>~/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/bin</pre>
+        <p>Use <code>make dev</code> which sets PATH automatically, or switch in Herd's UI.</p>
+      </section>
+
+      <section id="march-11-reactivity" data-nav="Reactivity">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">⚡</span> State / Reactivity Pattern</h2>
+        <p>Page creates <code>let data = $state&lt;FighterCardData&gt;({...})</code> and passes the reactive proxy to both <code>FighterForm</code> and <code>FighterCard</code> as a prop. The form mutates properties directly (<code>data.name = x</code>, <code>weapon.range = x</code>) — Svelte 5 deep reactivity propagates all mutations back to the card in real time. No stores, no <code>$bindable</code> needed.</p>
+      </section>
+
+      <section id="march-11-pending" data-nav="Still Pending">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+        <table>
+          <thead><tr><th style="width:6rem">Status</th><th>Item</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Source RodchenkoCTT font → <code>static/fonts/</code></td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>CSS polish — spacing, torn edge, parchment texture</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Weapon icons (melee / ranged SVGs)</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Runemark library + selection UI</td></tr>
+            <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor (<code>/ability</code> route)</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-11 -->
+
+  </main>
+</div>
+
+<script>
+  const sessions = ["march-14", "march-13", "march-12", "march-11", "index"];
+
+  function activateSession(id) {
+    if (!sessions.includes(id)) id = sessions[0];
+
+    sessions.forEach((s) => {
+      document.getElementById("session-" + s).classList.toggle("active", s === id);
+    });
+
+    document.querySelectorAll(".session-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.session === id);
+    });
+
+    const panel = document.getElementById("session-" + id);
+    const ul = document.getElementById("section-links");
+    ul.innerHTML = "";
+    panel.querySelectorAll("section[data-nav]").forEach((section) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = "#" + section.id;
+      a.textContent = section.dataset.nav;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    history.replaceState(null, "", "#" + id);
+  }
+
+  document.querySelectorAll(".session-btn").forEach((btn) => {
+    btn.addEventListener("click", () => activateSession(btn.dataset.session));
+  });
+
+  const hash = location.hash.slice(1);
+  activateSession(sessions.includes(hash) ? hash : sessions[0]);
+</script>
+</body>
+</html>
