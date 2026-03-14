@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import type { FighterCardData } from '$lib/types';
 	import FighterCard from '$lib/components/FighterCard.svelte';
 	import FighterForm from '$lib/components/FighterForm.svelte';
@@ -68,7 +69,7 @@
 		<!-- Header -->
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
 			<div class="flex items-center gap-3">
-				<a href="/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
+				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
 				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Fighter Card</h1>
 			</div>
 			<button
