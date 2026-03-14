@@ -522,6 +522,23 @@
           <li><strong>Pistol weapon type</strong> — added import to <code>index.ts</code> and option to <code>FighterForm.svelte</code> weapon select (between Mace and Ranged Weapon).</li>
           <li><strong>File naming normalised</strong> — 13 <code>bladeborn-*.svg</code> files renamed to the project's <code>factions-{alliance}-bladeborn-*.svg</code> convention; <code>factions-death-teratic_cohort.svg</code> underscore → hyphen; all imports in <code>hierarchy.ts</code> updated.</li>
         </ul>
+
+        <h3 id="march-14-export-dropdown">Export dropdown &amp; printer-friendly mode</h3>
+        <ul>
+          <li><strong>Split dropdown button</strong> — "Export PNG" button replaced with a split button: left part exports normally, right chevron (▾) reveals a dropdown with "Export printer-friendly PNG". Dropdown dismisses on mouseleave.</li>
+          <li><strong>Printer-friendly export</strong> — sets <code>printerFriendly = true</code> on the card, waits a frame, captures PNG with <code>_print</code> suffix, then resets. No separate component needed.</li>
+          <li><strong>Printer-friendly visual overrides</strong> — white card background, gray image area, dark table headers become transparent, all text/SVG fills black, runemark badges white with black border, zebra-stripe tints removed.</li>
+          <li><strong>Export frame fix: <code>.label-col span</code></strong> — in printer-friendly mode the dark header background is removed, exposing UA default borders on the inline <code>&lt;span&gt;</code> elements inside <code>.label-col</code> (covered only by the <code>.card *</code> wildcard which dom-to-image-more ignores). Fix: added <code>border: 0; outline: none; background: transparent</code> directly to a <code>.label-col span</code> CSS rule.</li>
+          <li><strong>All printer-friendly dividers use <code>box-shadow</code></strong> — consistent with the existing pattern; <code>border-*</code> properties are dropped by dom-to-image-more.</li>
+        </ul>
+
+        <h3 id="march-14-damage-table">Damage brackets table improvements</h3>
+        <ul>
+          <li><strong>Header label added</strong> — left column header now reads "* DAMAGE POINTS ALLOCATED".</li>
+          <li><strong>Fixed column widths</strong> — MOVE and DAMAGE stat columns use <code>flex: 0 0 100px</code>; wide column uses <code>flex: 1</code>; consistent across header and all data rows.</li>
+          <li><strong>Alternating row colors</strong> — start on the first data row (<code>i % 2 === 0</code>), matching the weapons table style; suppressed in printer-friendly export.</li>
+          <li><strong>Monster damage <code>*</code> → <code>*/*</code></strong> — both card preview and disabled form field updated to reflect the damage fraction format.</li>
+        </ul>
       </section>
 
       <section id="march-14-decisions" data-nav="Key Decisions">
@@ -587,6 +604,18 @@
           <div class="decision-q">fighters-leader = fighters-hero; fighters-gargantuan = fighters-monster</div>
           <div class="decision-a">The reference repo uses "leader" and "gargantuan" as the canonical names; the project uses "hero" and "monster". User confirmed these are equivalent — no new files needed.</div>
         </div>
+        <div class="decision">
+          <div class="decision-q">HTML <code>&lt;table&gt;</code> is unsuitable for dom-to-image-more export</div>
+          <div class="decision-a">Attempted to use a semantic <code>&lt;table&gt;</code> for the damage brackets to get automatic column-width synchronisation. Two persistent export artifacts emerged that couldn't be resolved: a vertical line between columns 1 and 2 in tbody rows (likely from dom-to-image-more reading computed collapsed-border values and writing them as inline styles), and a <code>border-collapse: collapse</code> interaction that produced unexpected borders. Reverted to div-based flex rows with fixed <code>flex: 0 0 100px</code> stat columns — no table formatting context, no export issues.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Printer-friendly toggle: CSS class on card, not separate component</div>
+          <div class="decision-a">A <code>printerFriendly</code> boolean prop on <code>FighterCard</code> adds the <code>is-printer-friendly</code> class to <code>.card</code>. All overrides hang off that class in the component's scoped CSS. The export function toggles it, waits a frame, captures, then resets. No cloning, no separate render path.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Exposed spans inside <code>.label-col</code> need their own CSS export reset</div>
+          <div class="decision-a">The inline <code>&lt;span&gt;</code> elements inside <code>.label-col</code> (containing the "BASE", "SIZE" etc. text) were only covered by the <code>.card *</code> wildcard reset. In regular exports this was hidden by the dark header background. In printer-friendly exports the header background is removed, exposing UA default borders/backgrounds on those spans. Pattern: add <code>border: 0; outline: none; background: transparent</code> directly to a <code>.label-col span</code> CSS rule — same fix as all other per-element export resets.</div>
+        </div>
       </section>
 
       <section id="march-14-files" data-nav="Files Changed">
@@ -598,9 +627,9 @@
           <tr><td><code>src/lib/runemarks/svg/</code></td><td>20 new faction/bladeborn SVGs added; 14 files renamed for naming consistency</td></tr>
           <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Added <code>fighterRunemarks</code> export (26 entries); added <code>weapons-pistol</code> import and <code>Pistol</code> entry in <code>weaponRunemarks</code></td></tr>
           <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added 4 monster faction entries across all four alliances; all <code>svg: null</code> entries filled; Hexbane's Hunters moved to Order of Azyr; file paths updated for renames</td></tr>
-          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pills mode, image-inner mask restructure, header-text spans, color pass (#000/#FAF6F3), export resets (card, image, damage rows, header icons)</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fighter runemark selects (3×) with disabled logic; <code>$props()</code> moved before <code>$effect()</code>; added Pistol option to weapon type select; sublabel and upload hint text color improvements</td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Export wrapper reset: <code>border:0; outline:none; background:transparent</code>; mobile/portrait restriction logic + notice; Export PNG button polish; back link uses <code>{base}/</code></td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pills mode, image-inner mask restructure, header-text spans, color pass (#000/#FAF6F3), export resets (card, image, damage rows, header icons); printer-friendly CSS class + overrides; <code>.label-col span</code> export reset; damage brackets header label, fixed stat column widths, alternating rows, <code>*/*</code> damage</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fighter runemark selects (3×) with disabled logic; <code>$props()</code> moved before <code>$effect()</code>; added Pistol option to weapon type select; sublabel and upload hint text color improvements; <code>*/*</code> placeholder for monster damage field</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Export wrapper reset: <code>border:0; outline:none; background:transparent</code>; mobile/portrait restriction logic + notice; Export PNG split dropdown button; printer-friendly export function; back link uses <code>{base}/</code></td></tr>
           <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice; back link uses <code>{base}/</code></td></tr>
           <tr><td><code>src/routes/+page.svelte</code></td><td>Updated title, copy, page title tag, mobile restriction note; links use <code>{base}/fighter</code> and <code>{base}/ability</code></td></tr>
           <tr><td><code>src/routes/+layout.ts</code></td><td>New — <code>export const prerender = true</code></td></tr>
