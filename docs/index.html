@@ -330,21 +330,9 @@
         </button>
       </li>
       <li>
-        <button class="session-btn" data-session="march-14c">
-          <span class="session-date">2026-03-14</span>
-          <span class="session-title">UI Polish &amp; Mobile Restriction</span>
-        </button>
-      </li>
-      <li>
-        <button class="session-btn" data-session="march-14b">
-          <span class="session-date">2026-03-14</span>
-          <span class="session-title">Git &amp; GitHub Pages</span>
-        </button>
-      </li>
-      <li>
         <button class="session-btn" data-session="march-14">
           <span class="session-date">2026-03-14</span>
-          <span class="session-title">Fighter Runemarks &amp; Pills</span>
+          <span class="session-title">Fighter Runemarks, Git, UI Polish &amp; Runemark Library</span>
         </button>
       </li>
       <li>
@@ -400,6 +388,8 @@
             <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Runemark hierarchy: explicit Alliance → Faction → Subfaction in <code>hierarchy.ts</code>; all alliances complete, A→Z sorted</a></td><td>Mar 13</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Fighter runemarks: 26 SVGs, 3 selects, Hero/Monster mutual exclusion + always-top sort</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Pills mode when "Show Runemarks" unchecked — image-inner for mask, image-section unmasked for pills</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Runemark SVGs: white versions for faction circles, black for weapon icons</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Hierarchy fully complete — zero <code>svg: null</code> entries; shared icons for Gobbapalooza and Brand's Oathbound</a></td><td>Mar 14</td></tr>
           </tbody>
         </table>
       </section>
@@ -454,7 +444,7 @@
           <tbody>
             <tr><td><a href="#march-11-node" onclick="activateSession('march-11')">Node v22 required — Herd path / <code>make dev</code></a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-11-built" onclick="activateSession('march-11')">File structure &amp; route scaffold</a></td><td>Mar 11</td></tr>
-            <tr><td><a href="#march-14b-decisions" onclick="activateSession('march-14b')">GitHub Pages: <code>adapter-static</code>, <code>paths.base</code>, GitHub Actions deploy workflow</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">GitHub Pages: <code>adapter-static</code>, <code>paths.base</code>, GitHub Actions deploy workflow</a></td><td>Mar 14</td></tr>
           </tbody>
         </table>
       </section>
@@ -463,137 +453,22 @@
     <!-- /session-index -->
 
     <!-- ══════════════════════════════════════════
-         2026-03-14c — UI Polish & Mobile Restriction
-    ══════════════════════════════════════════ -->
-    <div id="session-march-14c" class="session-panel">
-      <div class="hero">
-        <div class="meta">
-          <span class="badge badge-blue">2026-03-14</span>
-          <span class="badge badge-green">Done</span>
-        </div>
-        <h1>UI Polish &amp; Mobile Restriction</h1>
-        <p>Improved landing page copy and README, restricted the card editors to tablet landscape and larger screens, and polished form field readability and the Export PNG button.</p>
-      </div>
-
-      <section id="march-14c-done" data-nav="What Was Built">
-        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
-        <ul>
-          <li><strong>Landing page copy</strong> — title updated to "Warcry Card Creator 2026"; descriptive text added: project summary + fan disclaimer, combined into one paragraph. <code>&lt;svelte:head&gt;</code> title tag added.</li>
-          <li><strong>README rewritten</strong> — replaced SvelteKit boilerplate with a proper project description mirroring the landing page copy, plus concise dev instructions.</li>
-          <li><strong>Mobile restriction</strong> — phone screens (&lt;640px) and portrait tablet screens (&lt;1024px wide, portrait) see a "requires tablet in landscape or larger screen" notice with a back link instead of the editor. Reactive to window resize and orientation change.</li>
-          <li><strong>Index page note</strong> — same restriction note shown conditionally on the landing page for restricted screen sizes (JS-driven, same logic as the editor pages).</li>
-          <li><strong>Ability page restriction</strong> — same mobile restriction applied to the ability card placeholder page.</li>
-          <li><strong>Form readability</strong> — sublabel color bumped from zinc-500 to zinc-400; upload hint text from zinc-400/zinc-600 to zinc-300/zinc-400.</li>
-          <li><strong>Export PNG button</strong> — slightly larger padding, <code>text-sm</code> font size, lightened base color one step for more visual prominence.</li>
-        </ul>
-      </section>
-
-      <section id="march-14c-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-        <div class="decision">
-          <div class="decision-q">Portrait tablet breakpoint: &lt;1024px wide + height &gt; width</div>
-          <div class="decision-a">The editor needs ~1000px+ width to be usable (480px form panel + 574px card). Portrait tablets (e.g. iPad 768px wide) can't fit this. Landscape tablets (~1024px) can. The condition checks both width and orientation rather than a fixed breakpoint alone.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">One shared message across all restricted views</div>
-          <div class="decision-a">Keeps the UX consistent and avoids maintaining separate copy. The same sentence appears on phones, portrait tablets, and the index page note. Future mobile support mentioned as a possibility, not a promise.</div>
-        </div>
-      </section>
-
-      <section id="march-14c-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
-        <table>
-          <tr><th>File</th><th>Change</th></tr>
-          <tr><td><code>README.md</code></td><td>Rewritten with project description, fan disclaimer, dev instructions</td></tr>
-          <tr><td><code>src/routes/+page.svelte</code></td><td>Updated title, copy, page title tag, mobile restriction note</td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice; Export PNG button polish</td></tr>
-          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Sublabel and upload hint text color improvements</td></tr>
-        </table>
-      </section>
-    </div>
-    <!-- /session-march-14c -->
-
-    <!-- ══════════════════════════════════════════
-         2026-03-14b — Git & GitHub Pages
-    ══════════════════════════════════════════ -->
-    <div id="session-march-14b" class="session-panel">
-      <div class="hero">
-        <div class="meta">
-          <span class="badge badge-blue">2026-03-14</span>
-          <span class="badge badge-green">Git repo done</span>
-          <span class="badge badge-green">GitHub Pages live</span>
-        </div>
-        <h1>Git Repo &amp; GitHub Pages Deployment</h1>
-        <p>Initialized the Git repository, verified the <code>.gitignore</code>, and wired up automatic deployment to GitHub Pages via GitHub Actions on every push to <code>main</code>.</p>
-      </div>
-
-      <section id="march-14b-done" data-nav="What Was Built">
-        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
-        <ul>
-          <li><strong>Git repo initialized</strong> — <code>git init</code> run in project root; <code>.claude/</code> added to <code>.gitignore</code> (contains local Claude Code permission settings, not for version control).</li>
-          <li><strong>adapter-static</strong> — swapped <code>@sveltejs/adapter-auto</code> for <code>@sveltejs/adapter-static</code>; <code>svelte.config.js</code> sets <code>paths.base = '/warcry-card-creator-2026'</code> when <code>NODE_ENV === 'production'</code>.</li>
-          <li><strong>Prerendering</strong> — <code>src/routes/+layout.ts</code> added with <code>export const prerender = true</code>; all pages are fully static.</li>
-          <li><strong>Base-path links</strong> — all internal <code>href</code>s updated to use <code>base</code> from <code>$app/paths</code> (<code>/fighter</code> → <code>{base}/fighter</code> etc.) in <code>+page.svelte</code>, <code>fighter/+page.svelte</code>, and <code>ability/+page.svelte</code>.</li>
-          <li><strong><code>static/.nojekyll</code></strong> — prevents GitHub Pages from ignoring the <code>_app/</code> directory.</li>
-          <li><strong>GitHub Actions deploy workflow</strong> — <code>.github/workflows/deploy.yml</code>; triggers on push to <code>main</code>; builds with Node 22 + <code>npm ci</code>; uploads <code>build/</code> via <code>actions/upload-pages-artifact</code> and deploys via <code>actions/deploy-pages</code>.</li>
-          <li><strong>Pages source set to "GitHub Actions"</strong> — not a branch; the official actions handle deployment directly.</li>
-          <li><strong>Site live</strong> at <a href="https://hennirocks.github.io/warcry-card-creator-2026/">hennirocks.github.io/warcry-card-creator-2026/</a></li>
-        </ul>
-      </section>
-
-      <section id="march-14b-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-        <div class="decision">
-          <div class="decision-q">GitHub Actions source, not a branch</div>
-          <div class="decision-a">The <code>peaceiris/actions-gh-pages</code> approach (push to <code>gh-pages</code> branch) failed silently — the branch was never created despite a green action run. Switched to the official <code>actions/upload-pages-artifact</code> + <code>actions/deploy-pages</code> pair with Pages source set to "GitHub Actions". This is GitHub's recommended modern approach and worked first time.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q"><code>paths.base</code> only in production</div>
-          <div class="decision-a">Setting <code>base</code> unconditionally would break the local dev server (links would point to <code>/warcry-card-creator-2026/fighter</code> which the dev server doesn't serve). Guarded by <code>process.env.NODE_ENV === 'production'</code> so dev works at <code>localhost:5173</code> and the build works on GitHub Pages.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Never commit or push from Claude</div>
-          <div class="decision-a">User handles all git operations. Claude stages nothing and never runs <code>git commit</code> or <code>git push</code>.</div>
-        </div>
-      </section>
-
-      <section id="march-14b-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
-        <table>
-          <tr><th>File</th><th>Change</th></tr>
-          <tr><td><code>.gitignore</code></td><td>Added <code>.claude/</code> exclusion</td></tr>
-          <tr><td><code>svelte.config.js</code></td><td>Switched to <code>adapter-static</code>; added <code>paths.base</code> (production only)</td></tr>
-          <tr><td><code>src/routes/+layout.ts</code></td><td>New — <code>export const prerender = true</code></td></tr>
-          <tr><td><code>src/routes/+page.svelte</code></td><td>Links use <code>{base}/fighter</code> and <code>{base}/ability</code></td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Back link uses <code>{base}/</code></td></tr>
-          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Back link uses <code>{base}/</code></td></tr>
-          <tr><td><code>static/.nojekyll</code></td><td>New — prevents Jekyll from hiding <code>_app/</code></td></tr>
-          <tr><td><code>.github/workflows/deploy.yml</code></td><td>New — GitHub Actions build &amp; deploy workflow</td></tr>
-        </table>
-      </section>
-    </div>
-    <!-- /session-march-14b -->
-
-    <!-- ══════════════════════════════════════════
-         2026-03-14 — Fighter Runemarks & Pills
+         2026-03-14 — Fighter Runemarks, Git, UI Polish & Runemark Library
     ══════════════════════════════════════════ -->
     <div id="session-march-14" class="session-panel">
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-14</span>
-          <span class="badge badge-green">Fighter runemarks done</span>
-          <span class="badge badge-green">Monster factions done</span>
-          <span class="badge badge-green">Pills mode done</span>
-          <span class="badge badge-green">Export fidelity improved</span>
-          <span class="badge badge-amber">Ability card pending</span>
+          <span class="badge badge-green">Done</span>
         </div>
-        <h1>Fighter Runemarks, Monster Factions &amp; Pills Mode</h1>
-        <p>Added 26 fighter runemark SVGs with smart deduplication and Hero/Monster mutual-exclusion logic, wired 4 new monster factions, implemented a pills fallback for the "Show Runemarks" off state, and completed a final round of PNG export fidelity fixes (damage table row dividers, header icon sizing, card border, color corrections).</p>
+        <h1>Fighter Runemarks, Git, UI Polish &amp; Runemark Library</h1>
+        <p>Four conversations across the day: added fighter runemarks with pills fallback and export fidelity fixes; initialized git and deployed to GitHub Pages; polished the UI with mobile restrictions and landing page copy; completed the runemark SVG library with all factions wired and file naming normalised.</p>
       </div>
 
       <section id="march-14-done" data-nav="What Was Built">
         <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+
+        <h3>Fighter Runemarks &amp; Pills</h3>
         <ul>
           <li><strong>Fighter runemarks (right column)</strong> — 26 SVG files imported (<code>fighters-agile.svg</code> → <code>fighters-warrior.svg</code>, A–Z); <code>fighterRunemarks</code> export added to <code>index.ts</code>; 3 select dropdowns in form; card shows up to 3 circles in the right column, sorted Hero/Monster first.</li>
           <li><strong>Deduplication via disabled options</strong> — already-selected runemark stays visible in the other dropdowns but is <code>disabled</code>; Hero and Monster are mutually exclusive (selecting one disables the other across all three selects).</li>
@@ -613,6 +488,39 @@
           <li><strong>Damage table horizontal white lines</strong> — <code>border-top: 1px solid black</code> on <code>.damage-row</code> is silently dropped by dom-to-image-more; replaced with <code>box-shadow: inset 0 1px 0 0 #000</code>.</li>
           <li><strong>Header runemark icons smaller in export</strong> — <code>.header-runemark</code> span lacked reset; SVG had <code>width: auto</code> which behaves differently in SVG foreignObject; changed to explicit <code>width: 28px; height: 28px</code>.</li>
           <li><strong>Weapon runemark SVG fill</strong> — added <code>fill: #000</code> to <code>.weapon-runemark :global(svg)</code> for export consistency.</li>
+        </ul>
+
+        <h3>Git &amp; GitHub Pages</h3>
+        <ul>
+          <li><strong>Git repo initialized</strong> — <code>git init</code> run in project root; <code>.claude/</code> added to <code>.gitignore</code> (contains local Claude Code permission settings, not for version control).</li>
+          <li><strong>adapter-static</strong> — swapped <code>@sveltejs/adapter-auto</code> for <code>@sveltejs/adapter-static</code>; <code>svelte.config.js</code> sets <code>paths.base = '/warcry-card-creator-2026'</code> when <code>NODE_ENV === 'production'</code>.</li>
+          <li><strong>Prerendering</strong> — <code>src/routes/+layout.ts</code> added with <code>export const prerender = true</code>; all pages are fully static.</li>
+          <li><strong>Base-path links</strong> — all internal <code>href</code>s updated to use <code>base</code> from <code>$app/paths</code> (<code>/fighter</code> → <code>{base}/fighter</code> etc.) in <code>+page.svelte</code>, <code>fighter/+page.svelte</code>, and <code>ability/+page.svelte</code>.</li>
+          <li><strong><code>static/.nojekyll</code></strong> — prevents GitHub Pages from ignoring the <code>_app/</code> directory.</li>
+          <li><strong>GitHub Actions deploy workflow</strong> — <code>.github/workflows/deploy.yml</code>; triggers on push to <code>main</code>; builds with Node 22 + <code>npm ci</code>; uploads <code>build/</code> via <code>actions/upload-pages-artifact</code> and deploys via <code>actions/deploy-pages</code>.</li>
+          <li><strong>Pages source set to "GitHub Actions"</strong> — not a branch; the official actions handle deployment directly.</li>
+          <li><strong>Site live</strong> at <a href="https://hennirocks.github.io/warcry-card-creator-2026/">hennirocks.github.io/warcry-card-creator-2026/</a></li>
+        </ul>
+
+        <h3>UI Polish &amp; Mobile</h3>
+        <ul>
+          <li><strong>Landing page copy</strong> — title updated to "Warcry Card Creator 2026"; descriptive text added: project summary + fan disclaimer, combined into one paragraph. <code>&lt;svelte:head&gt;</code> title tag added.</li>
+          <li><strong>README rewritten</strong> — replaced SvelteKit boilerplate with a proper project description mirroring the landing page copy, plus concise dev instructions.</li>
+          <li><strong>Mobile restriction</strong> — phone screens (&lt;640px) and portrait tablet screens (&lt;1024px wide, portrait) see a "requires tablet in landscape or larger screen" notice with a back link instead of the editor. Reactive to window resize and orientation change.</li>
+          <li><strong>Index page note</strong> — same restriction note shown conditionally on the landing page for restricted screen sizes (JS-driven, same logic as the editor pages).</li>
+          <li><strong>Ability page restriction</strong> — same mobile restriction applied to the ability card placeholder page.</li>
+          <li><strong>Form readability</strong> — sublabel color bumped from zinc-500 to zinc-400; upload hint text from zinc-400/zinc-600 to zinc-300/zinc-400.</li>
+          <li><strong>Export PNG button</strong> — slightly larger padding, <code>text-sm</code> font size, lightened base color one step for more visual prominence.</li>
+        </ul>
+
+        <h3>Runemark Library</h3>
+        <ul>
+          <li><strong>SVG audit</strong> — compared the project's <code>svg/</code> folder against a reference repo; identified 15 missing bladeborn warbands, 17 missing/new faction icons, and <code>weapons-pistol.svg</code>.</li>
+          <li><strong>New SVGs added</strong> — 20 new files added from the <code>white/</code> set (white versions for use in the maroon runemark circles); <code>weapons-pistol.svg</code> from the <code>black/</code> set (weapon icons are black).</li>
+          <li><strong>All new factions &amp; subfactions wired up</strong> — every <code>svg: null</code> entry in <code>hierarchy.ts</code> filled in; Gobbapalooza shares Gloomspite Gitz icon; Brand's Oathbound shares Darkoath icon; Hexbane's Hunters moved to Order of Azyr.</li>
+          <li><strong>Hexbane's Hunters recovered</strong> — SVG existed in git history but had been inadvertently deleted; restored via <code>git show HEAD:…</code>.</li>
+          <li><strong>Pistol weapon type</strong> — added import to <code>index.ts</code> and option to <code>FighterForm.svelte</code> weapon select (between Mace and Ranged Weapon).</li>
+          <li><strong>File naming normalised</strong> — 13 <code>bladeborn-*.svg</code> files renamed to the project's <code>factions-{alliance}-bladeborn-*.svg</code> convention; <code>factions-death-teratic_cohort.svg</code> underscore → hyphen; all imports in <code>hierarchy.ts</code> updated.</li>
         </ul>
       </section>
 
@@ -643,29 +551,42 @@
           <div class="decision-q">SVG icon <code>width: auto</code> is unreliable in export</div>
           <div class="decision-a">SVG elements with <code>width: auto</code> can render at an unexpected size inside dom-to-image-more's SVG foreignObject context — icons appeared smaller than in the browser preview. Fix: set explicit <code>width: Npx; height: Npx</code> on SVG elements (and resets on their wrapper spans).</div>
         </div>
-      </section>
-
-      <section id="march-14-next" data-nav="Still Pending">
-        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
-        <table>
-          <thead><tr><th style="width:6rem">Status</th><th>Item</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span class="badge badge-amber">todo</span></td>
-              <td>
-                Missing SVGs — 22 entries with <code>svg: null</code><br>
-                <span style="font-size:0.85em;color:var(--muted)">
-                  <strong>Chaos:</strong> Gorechosen of Dromm, Kamandora's Blades, Brand's Oathbound, Ephilim's Pandaemonium, Blood of the Bull, Grandfather's Gardeners, Zikkit's Tunnelpack, Borgit's Beastgrabbaz, Blades of the Hollow King, Darkoath, Helsmiths of Hashut<br>
-                  <strong>Death:</strong> Pyregheists, Teratic Cohort &nbsp;·&nbsp; <strong>Destruction:</strong> Gobbapalooza<br>
-                  <strong>Order:</strong> Ruination Chamber, Twistweald, Ydrilan Riverblades, The Knives of the Crone, Jaws of Itzl, Gladitorium Fighters, The Emberwatch, Heralds of Kurnoth
-                </span>
-              </td>
-            </tr>
-            <tr><td><span class="badge badge-amber">todo</span></td><td>Ability card editor — <code>/ability</code> route</td></tr>
-            <tr><td><span class="badge badge-amber">todo</span></td><td>Export: <code>background-clip: text</code> headers may still render differently vs preview</td></tr>
-            <tr><td><span class="badge badge-green">done</span></td><td>GitHub Pages deployment — live at <a href="https://hennirocks.github.io/warcry-card-creator-2026/">hennirocks.github.io/warcry-card-creator-2026/</a></td></tr>
-          </tbody>
-        </table>
+        <div class="decision">
+          <div class="decision-q">GitHub Actions source, not a branch</div>
+          <div class="decision-a">The <code>peaceiris/actions-gh-pages</code> approach (push to <code>gh-pages</code> branch) failed silently — the branch was never created despite a green action run. Switched to the official <code>actions/upload-pages-artifact</code> + <code>actions/deploy-pages</code> pair with Pages source set to "GitHub Actions". This is GitHub's recommended modern approach and worked first time.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q"><code>paths.base</code> only in production</div>
+          <div class="decision-a">Setting <code>base</code> unconditionally would break the local dev server (links would point to <code>/warcry-card-creator-2026/fighter</code> which the dev server doesn't serve). Guarded by <code>process.env.NODE_ENV === 'production'</code> so dev works at <code>localhost:5173</code> and the build works on GitHub Pages.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Never commit or push from Claude</div>
+          <div class="decision-a">User handles all git operations. Claude stages nothing and never runs <code>git commit</code> or <code>git push</code>.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Portrait tablet breakpoint: &lt;1024px wide + height &gt; width</div>
+          <div class="decision-a">The editor needs ~1000px+ width to be usable (480px form panel + 574px card). Portrait tablets (e.g. iPad 768px wide) can't fit this. Landscape tablets (~1024px) can. The condition checks both width and orientation rather than a fixed breakpoint alone.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">One shared message across all restricted views</div>
+          <div class="decision-a">Keeps the UX consistent and avoids maintaining separate copy. The same sentence appears on phones, portrait tablets, and the index page note. Future mobile support mentioned as a possibility, not a promise.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">White SVGs for runemark circles, black for weapon icons</div>
+          <div class="decision-a">Faction/subfaction runemarks appear in maroon circles and need to be white to be legible. Weapon type icons appear directly on the parchment and need to be black. The reference repo provides both <code>white/</code> and <code>black/</code> versions; new faction icons sourced from <code>white/</code>, pistol from <code>black/</code>.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Gobbapalooza and Brand's Oathbound share parent icons</div>
+          <div class="decision-a">No unique SVGs exist for either warband. Gobbapalooza uses the Gloomspite Gitz icon; Brand's Oathbound uses the Darkoath icon (not Darkoath Savagers). Confirmed by user.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Hexbane's Hunters belongs under Order of Azyr</div>
+          <div class="decision-a">Initially placed under Daughters of Khaine by mistake. User confirmed it belongs under Order of Azyr.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">fighters-leader = fighters-hero; fighters-gargantuan = fighters-monster</div>
+          <div class="decision-a">The reference repo uses "leader" and "gargantuan" as the canonical names; the project uses "hero" and "monster". User confirmed these are equivalent — no new files needed.</div>
+        </div>
       </section>
 
       <section id="march-14-files" data-nav="Files Changed">
@@ -674,11 +595,20 @@
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/lib/runemarks/svg/fighters-*.svg</code> (×26)</td><td>Added — Agile → Warrior fighter runemark SVGs</td></tr>
           <tr><td><code>src/lib/runemarks/svg/monsters-*.svg</code> (×4)</td><td>Added — Chaotic Beasts, Monsters of Death/Destruction/Order</td></tr>
-          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Added <code>fighterRunemarks</code> export (26 entries)</td></tr>
-          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added 4 monster faction entries across all four alliances</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/</code></td><td>20 new faction/bladeborn SVGs added; 14 files renamed for naming consistency</td></tr>
+          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Added <code>fighterRunemarks</code> export (26 entries); added <code>weapons-pistol</code> import and <code>Pistol</code> entry in <code>weaponRunemarks</code></td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added 4 monster faction entries across all four alliances; all <code>svg: null</code> entries filled; Hexbane's Hunters moved to Order of Azyr; file paths updated for renames</td></tr>
           <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pills mode, image-inner mask restructure, header-text spans, color pass (#000/#FAF6F3), export resets (card, image, damage rows, header icons)</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fighter runemark selects (3×) with disabled logic; <code>$props()</code> moved before <code>$effect()</code></td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Export wrapper reset: <code>border:0; outline:none; background:transparent</code></td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Fighter runemark selects (3×) with disabled logic; <code>$props()</code> moved before <code>$effect()</code>; added Pistol option to weapon type select; sublabel and upload hint text color improvements</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Export wrapper reset: <code>border:0; outline:none; background:transparent</code>; mobile/portrait restriction logic + notice; Export PNG button polish; back link uses <code>{base}/</code></td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Mobile/portrait restriction logic + notice; back link uses <code>{base}/</code></td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td>Updated title, copy, page title tag, mobile restriction note; links use <code>{base}/fighter</code> and <code>{base}/ability</code></td></tr>
+          <tr><td><code>src/routes/+layout.ts</code></td><td>New — <code>export const prerender = true</code></td></tr>
+          <tr><td><code>svelte.config.js</code></td><td>Switched to <code>adapter-static</code>; added <code>paths.base</code> (production only)</td></tr>
+          <tr><td><code>.gitignore</code></td><td>Added <code>.claude/</code> exclusion</td></tr>
+          <tr><td><code>static/.nojekyll</code></td><td>New — prevents Jekyll from hiding <code>_app/</code></td></tr>
+          <tr><td><code>.github/workflows/deploy.yml</code></td><td>New — GitHub Actions build &amp; deploy workflow</td></tr>
+          <tr><td><code>README.md</code></td><td>Rewritten with project description, fan disclaimer, dev instructions</td></tr>
         </table>
       </section>
     </div>
@@ -1091,7 +1021,7 @@
 </div>
 
 <script>
-  const sessions = ["march-14c", "march-14b", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
