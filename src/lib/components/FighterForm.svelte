@@ -86,8 +86,8 @@
 			<label
 				class="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 bg-zinc-800/50 p-6 transition hover:border-zinc-500"
 			>
-				<span class="text-zinc-400">Click to upload image</span>
-				<span class="mt-1 text-xs text-zinc-600">PNG, JPG, WebP</span>
+				<span class="text-zinc-300">Click to upload image</span>
+				<span class="mt-1 text-xs text-zinc-400">PNG, JPG, WebP</span>
 				<input type="file" accept="image/*" class="sr-only" onchange={handleImageUpload} />
 			</label>
 		{/if}
@@ -278,7 +278,7 @@
 	.sublabel {
 		display: block;
 		font-size: 0.65rem;
-		color: #6b7280;
+		color: #9ca3af;
 		margin-bottom: 2px;
 	}
 

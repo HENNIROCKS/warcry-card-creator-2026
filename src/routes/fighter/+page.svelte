@@ -6,12 +6,14 @@
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
 	let viewportHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
+	let viewportWidth = $state(typeof window !== 'undefined' ? window.innerWidth : 1024);
 	$effect(() => {
-		const onResize = () => { viewportHeight = window.innerHeight; };
+		const onResize = () => { viewportHeight = window.innerHeight; viewportWidth = window.innerWidth; };
 		window.addEventListener('resize', onResize);
 		return () => window.removeEventListener('resize', onResize);
 	});
 	const cardScale = $derived(Math.min(1, (viewportHeight - 64) / 915));
+	const isRestricted = $derived(viewportWidth < 640 || (viewportWidth < 1024 && viewportHeight > viewportWidth));
 
 	let data = $state<FighterCardData>({
 		name: 'FIGHTER NAME',
@@ -63,6 +65,12 @@
 	}
 </script>
 
+{#if isRestricted}
+<div class="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-4 p-8 text-center">
+	<p class="text-zinc-300">This tool requires a tablet in landscape orientation or a larger screen. Mobile support may come in a future update.</p>
+	<a href="{base}/" class="text-zinc-500 hover:text-white text-sm transition">← Back</a>
+</div>
+{:else}
 <div class="flex h-screen bg-zinc-900 text-white">
 	<!-- LEFT: Form panel -->
 	<aside class="flex w-[480px] shrink-0 flex-col border-r border-zinc-800 h-full">
@@ -75,7 +83,7 @@
 			<button
 				onclick={exportCard}
 				disabled={exporting}
-				class="rounded-md bg-red-900 px-3 py-1.5 text-xs font-semibold tracking-wide text-white transition hover:bg-red-800 disabled:opacity-50"
+				class="rounded-md bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
 			>
 				{exporting ? 'Exporting…' : 'Export PNG'}
 			</button>
@@ -96,3 +104,4 @@
 		</div>
 	</main>
 </div>
+{/if}
