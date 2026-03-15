@@ -23,6 +23,7 @@
 		imageOffsetX: 50,
 		imageOffsetY: 50,
 		imageZoom: 1,
+		imageCaption: '',
 		grandAlliance: '',
 		faction: '',
 		bladeborn: '',
@@ -33,8 +34,8 @@
 		toughness: '4',
 		wounds: '10',
 		weapons: [
-			{ icon: null, name: '', range: '1', attacks: '3', strength: '4', damage: '2/4' },
-			{ icon: null, name: '', range: '1', attacks: '2', strength: '3', damage: '1/3' }
+			{ name: '', range: '1', attacks: '3', strength: '4', damage: '2/4' },
+			{ name: '', range: '1', attacks: '2', strength: '3', damage: '1/3' }
 		],
 		isNamedCharacter: false,
 		isMonster: false,
