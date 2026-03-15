@@ -37,11 +37,12 @@
 			bind:value={data.name}
 			placeholder="FIGHTER"
 		/>
-		<label class="field-label mt-2" for="fighter-subtitle">Subtitle <span class="normal-case font-normal text-zinc-500">(optional)</span></label>
+		<label class="field-label mt-2" for="fighter-subtitle">Subtitle <span class="normal-case font-normal text-zinc-500">(optional)</span> <span class="normal-case font-normal text-zinc-500">{(data.subtitle ?? '').length}/120</span></label>
 		<input
 			id="fighter-subtitle"
 			class="field-input"
 			type="text"
+			maxlength="120"
 			bind:value={data.subtitle}
 		/>
 	</section>
@@ -50,15 +51,15 @@
 	<section class="flex flex-col gap-3">
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">Named Fighter</span>
+			<span class="text-zinc-120">Named Fighter</span>
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">Monster (Damage Table)</span>
+			<span class="text-zinc-120">Monster (Damage Table)</span>
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">Show Runemarks</span>
+			<span class="text-zinc-120">Show Runemarks</span>
 		</label>
 	</section>
 
@@ -206,7 +207,7 @@
 				<input id="points" class="field-input text-center" bind:value={data.points} />
 			</div>
 			<div>
-				<label class="sublabel" for="move">Move (M)</label>
+				<label class="sublabel" for="move">Move</label>
 				{#if data.isMonster}
 					<input id="move" class="field-input text-center opacity-40 cursor-not-allowed" value="*" disabled />
 				{:else}
@@ -214,11 +215,11 @@
 				{/if}
 			</div>
 			<div>
-				<label class="sublabel" for="toughness">Toughness (T)</label>
+				<label class="sublabel" for="toughness">Toughness</label>
 				<input id="toughness" class="field-input text-center" bind:value={data.toughness} />
 			</div>
 			<div>
-				<label class="sublabel" for="wounds">Wounds (W)</label>
+				<label class="sublabel" for="wounds">Wounds</label>
 				<input id="wounds" class="field-input text-center" bind:value={data.wounds} />
 			</div>
 		</div>
@@ -253,19 +254,19 @@
 					</select>
 				</div>
 				<div>
-					<span class="sublabel">Range (RNG)</span>
+					<span class="sublabel">Range</span>
 					<input class="field-input text-center" bind:value={weapon.range} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Attacks (A)</span>
+					<span class="sublabel">Attacks</span>
 					<input class="field-input text-center" bind:value={weapon.attacks} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Strength (S)</span>
+					<span class="sublabel">Strength</span>
 					<input class="field-input text-center" bind:value={weapon.strength} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Damage (DMG)</span>
+					<span class="sublabel">Damage</span>
 					{#if data.isMonster}
 						<input class="field-input text-center opacity-40 cursor-not-allowed" value="*/*" disabled />
 					{:else}
@@ -283,8 +284,8 @@
 			<div class="space-y-2">
 				<div class="grid grid-cols-3 gap-1">
 					<span class="sublabel">Wounds Taken</span>
-					<span class="sublabel text-center">Move (M)</span>
-					<span class="sublabel text-center">Damage (DMG)</span>
+					<span class="sublabel text-center">Move</span>
+					<span class="sublabel text-center">Damage</span>
 				</div>
 				{#each data.damageBrackets as bracket}
 					<div class="grid grid-cols-3 gap-1 items-center">

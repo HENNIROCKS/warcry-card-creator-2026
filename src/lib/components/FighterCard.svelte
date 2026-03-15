@@ -93,9 +93,9 @@
 			<div class="stats-header">
 				<div class="stat-col label-col"><span>BASE</span><span>SIZE</span></div>
 				<div class="stat-col label-col"><span>POINTS</span><span>VALUE</span></div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">M</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">T</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">W</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">MOVE</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">TOUGHNESS</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">WOUNDS</span>{/if}</div>
 			</div>
 			<div class="stats-values">
 				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
@@ -110,10 +110,10 @@
 		<div class="weapons-box">
 			<div class="weapons-header">
 				<div class="wcol label-col"></div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">RNG</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">A</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">S</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">DMG</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">RANGE</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">ATTACKS</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">STRENGTH</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">DAMAGE</span>{/if}</div>
 			</div>
 			{#each data.weapons as weapon}
 				<div class="weapon-row">
@@ -379,11 +379,16 @@
 	}
 
 	.fighter-subtitle {
+		display: block;
+		width: 100%;
 		font-family: 'Germania One', serif;
 		font-size: 18px;
+		line-height: 1.3;
 		color: #000;
 		text-align: center;
 		margin: -12px 0 0;
+		white-space: normal;
+		overflow-wrap: break-word;
 		border: 0;
 		outline: none;
 		background: transparent;
