@@ -268,7 +268,7 @@
 				<div>
 					<span class="sublabel">Damage</span>
 					{#if data.isMonster}
-						<input class="field-input text-center opacity-40 cursor-not-allowed" value="*/*" disabled />
+						<input class="field-input text-center opacity-40 cursor-not-allowed" value={!weapon.range && !weapon.attacks && !weapon.strength ? '—' : '*/*'} disabled />
 					{:else}
 						<input class="field-input text-center" bind:value={weapon.damage} placeholder="—" />
 					{/if}
@@ -280,10 +280,10 @@
 	<!-- Damage brackets -->
 	{#if data.isMonster}
 		<section>
-			<p class="field-label mb-2">Damage Brackets</p>
+			<p class="field-label mb-2">Damage Table</p>
 			<div class="space-y-2">
 				<div class="grid grid-cols-3 gap-1">
-					<span class="sublabel">Wounds Taken</span>
+					<span class="sublabel">Damage Points Allocated</span>
 					<span class="sublabel text-center">Move</span>
 					<span class="sublabel text-center">Damage</span>
 				</div>

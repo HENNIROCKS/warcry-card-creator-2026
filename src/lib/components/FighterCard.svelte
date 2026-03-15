@@ -129,7 +129,7 @@
 					<div class="wcol weapon-val" class:is-empty={!weapon.range} use:fittext={weapon.range}>{weapon.range || "—"}</div>
 					<div class="wcol weapon-val" class:is-empty={!weapon.attacks} use:fittext={weapon.attacks}>{weapon.attacks || "—"}</div>
 					<div class="wcol weapon-val" class:is-empty={!weapon.strength} use:fittext={weapon.strength}>{weapon.strength || "—"}</div>
-					<div class="wcol weapon-val" class:is-empty={!weapon.damage && !data.isMonster} use:fittext={weapon.damage}>{data.isMonster ? '*/*' : (weapon.damage || "—")}</div>
+					<div class="wcol weapon-val" class:is-empty={(!weapon.damage && !data.isMonster) || (data.isMonster && !weapon.range && !weapon.attacks && !weapon.strength)} use:fittext={weapon.damage}>{data.isMonster ? (!weapon.range && !weapon.attacks && !weapon.strength ? '—' : '*/*') : (weapon.damage || '—')}</div>
 				</div>
 			{/each}
 		</div>
@@ -662,7 +662,7 @@
 	.dcol-wide {
 		flex: 1;
 		font-family: 'Alegreya', serif;
-		font-size: 15px;
+		font-size: 17px;
 		font-weight: 400;
 		color: #000;
 		padding: 0 8px;
@@ -674,7 +674,7 @@
 	.dcol-stat {
 		flex: 0 0 100px;
 		font-family: 'Alegreya', serif;
-		font-size: 15px;
+		font-size: 17px;
 		font-weight: 400;
 		color: #000;
 		border: 0;
