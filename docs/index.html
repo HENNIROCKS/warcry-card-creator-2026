@@ -396,6 +396,8 @@
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Pills mode when "Show Runemarks" unchecked — image-inner for mask, image-section unmasked for pills</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Runemark SVGs: white versions for faction circles, black for weapon icons</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Hierarchy fully complete — zero <code>svg: null</code> entries; shared icons for Gobbapalooza and Brand's Oathbound</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Base size field: <code>&lt;select&gt;</code> with 14 round (⌀) + 7 oval options, round-first ascending order</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Fighter card subtitle: optional second line below name, Germania One, conditionally rendered</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card editor: <code>/ability</code> route, <code>AbilityCard.svelte</code> + <code>AbilityForm.svelte</code> built from scratch</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">SVG <code>fill="#FFF"</code> removed from 20 runemark source files — required for printer-friendly CSS override</a></td><td>Mar 15</td></tr>
           </tbody>
@@ -497,6 +499,8 @@
         <li>Printer-friendly ability card: white background, no torn-edge mask, black text, white pills, black runemark fills</li>
         <li>Code cleanup: removed unused <code>has-chevrons</code>/<code>chevron-left</code>/<code>chevron-right</code> classes; removed dead <code>Weapon.icon</code> field from type and all initializations</li>
         <li>Dead asset cleanup: removed <code>static/image-mask-1-cropped.svg</code> and <code>static/runemark-shape.svg</code> (duplicate of <code>src/lib/</code> copies actually used via <code>?raw</code>); removed <code>src/lib/assets/favicon.svg</code> (unreferenced Svelte template artifact)</li>
+        <li><strong>Base size field</strong> changed from free-text input to a <code>&lt;select&gt;</code> — 14 round options (⌀ 20 → ⌀ 160) followed by 7 oval options (50×25 → 170×105), round entries first ascending then oval entries ascending</li>
+        <li><strong>Fighter card subtitle</strong> — optional secondary line below the fighter name; Germania One, same color as name, rendered only when non-empty; form field grouped inside the Fighter name section with <em>(optional)</em> label</li>
       </ul>
 
       <h3 id="march-15-fonts">Font Swap</h3>
@@ -555,6 +559,10 @@
         <tr><td><code>src/app.css</code></td><td>Font-face declarations updated: Germania One + Alegreya (regular + italic) with correct license attributions</td></tr>
         <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Font families → Germania One/Alegreya; weights set; letter-spacing removed; damage table uses Alegreya</td></tr>
         <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Font families → Germania One/Alegreya; weights set; letter-spacing removed</td></tr>
+        <tr><td><code>src/lib/types.ts</code></td><td>Added <code>subtitle: string</code> to <code>FighterCardData</code></td></tr>
+        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Render <code>.fighter-subtitle</code> below fighter name (Germania One, 18px, conditional on non-empty); base size display unchanged</td></tr>
+        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Base size changed to <code>&lt;select&gt;</code> (14 round + 7 oval options, round-first ascending); subtitle input added inside Fighter name section</td></tr>
+        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>subtitle: ''</code> default; base size default updated to <code>⌀ 32</code></td></tr>
       </table>
     </div>
     <!-- /session-march-15 -->
