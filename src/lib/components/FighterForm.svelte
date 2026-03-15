@@ -27,7 +27,7 @@
 </script>
 
 <div class="space-y-10 text-sm">
-	<!-- Fighter Name -->
+	<!-- Fighter Name + Subtitle -->
 	<section>
 		<label class="field-label" for="fighter-name">Fighter</label>
 		<input
@@ -36,6 +36,13 @@
 			type="text"
 			bind:value={data.name}
 			placeholder="FIGHTER"
+		/>
+		<label class="field-label mt-2" for="fighter-subtitle">Subtitle <span class="normal-case font-normal text-zinc-500">(optional)</span></label>
+		<input
+			id="fighter-subtitle"
+			class="field-input"
+			type="text"
+			bind:value={data.subtitle}
 		/>
 	</section>
 

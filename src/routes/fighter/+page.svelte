@@ -19,6 +19,7 @@
 
 	let data = $state<FighterCardData>({
 		name: 'FIGHTER NAME',
+		subtitle: '',
 		modelImage: null,
 		imageOffsetX: 50,
 		imageOffsetY: 50,

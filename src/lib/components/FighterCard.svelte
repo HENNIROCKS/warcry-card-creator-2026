@@ -84,6 +84,9 @@
 			{data.name || 'FIGHTER NAME'}
 			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
 		</h1>
+		{#if data.subtitle}
+			<p class="fighter-subtitle">{data.subtitle}</p>
+		{/if}
 
 		<!-- Characteristics box -->
 		<div class="stats-box">
@@ -370,6 +373,17 @@
 		line-height: 1.1;
 		margin: 0;
 		text-align: center;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.fighter-subtitle {
+		font-family: 'Germania One', serif;
+		font-size: 18px;
+		color: #000;
+		text-align: center;
+		margin: -12px 0 0;
 		border: 0;
 		outline: none;
 		background: transparent;

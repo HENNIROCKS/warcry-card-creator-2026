@@ -20,6 +20,7 @@ export interface DamageBracket {
 
 export interface FighterCardData {
 	name: string;
+	subtitle: string;
 	modelImage: string | null; // data URL from file upload
 	imageOffsetX: number; // 0–100, object-position x
 	imageOffsetY: number; // 0–100, object-position y
