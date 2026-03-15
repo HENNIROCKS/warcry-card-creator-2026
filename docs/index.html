@@ -506,6 +506,10 @@
         <li><strong>Header text changed from abbreviations to full words</strong> — stat headers now read MOVE / TOUGHNESS / WOUNDS and weapon headers RANGE / ATTACKS / STRENGTH / DAMAGE (was M / T / W / RNG / A / S / DMG); form field sub-labels similarly de-abbreviated</li>
         <li><strong>Subtitle polish</strong> — added <code>maxlength="120"</code>, live character counter <code>{length}/120</code> in label; CSS: <code>display: block; width: 100%; line-height: 1.3; white-space: normal; overflow-wrap: break-word</code></li>
         <li><strong>Weapon name font size</strong> raised from 16px → 18px to match header text; <code>use:fittext</code> applied so long names shrink to fit the cell</li>
+        <li><strong>Monster damage field auto-dash</strong> — when Range, Attacks, and Strength are all cleared on a monster weapon row, the disabled Damage field shows <code>—</code> instead of <code>*/*</code>; <code>class:is-empty</code> also applied so the dash gets the same 16px styling as other empty fields</li>
+        <li><strong>Form label renames</strong> — "Damage Brackets" → "Damage Table"; "Wounds Taken" → "Damage Points Allocated"</li>
+        <li><strong>Damage table font size</strong> bumped from 15px → 17px on both <code>.dcol-wide</code> and <code>.dcol-stat</code></li>
+        <li><strong>Page titles</strong> — added <code>&lt;svelte:head&gt;&lt;title&gt;</code> to <code>/fighter</code> and <code>/ability</code> routes; both showed a blank tab title on hard-reload</li>
       </ul>
 
       <h3 id="march-15-fonts">Font Swap</h3>
@@ -570,6 +574,10 @@
         <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>subtitle: ''</code> default; base size default updated to <code>⌀ 32</code></td></tr>
         <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Stat + weapon header text changed from abbreviations to full words (MOVE/TOUGHNESS/WOUNDS/RANGE/ATTACKS/STRENGTH/DAMAGE); weapon name font 16px → 18px; <code>use:fittext</code> on weapon name span</td></tr>
         <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Subtitle: <code>maxlength="120"</code> + live counter; sub-labels de-abbreviated (Move, Toughness, Wounds, Range, Attacks, Strength, Damage)</td></tr>
+        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Monster damage shows <code>—</code> (+ <code>is-empty</code> class) when range/attacks/strength all empty; damage table font 15px → 17px</td></tr>
+        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Monster damage disabled field shows <code>—</code> when row is empty; labels "Damage Table" + "Damage Points Allocated"</td></tr>
+        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>&lt;svelte:head&gt;&lt;title&gt;Fighter Card — Warcry Card Creator&lt;/title&gt;</code></td></tr>
+        <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Added <code>&lt;svelte:head&gt;&lt;title&gt;Ability Card — Warcry Card Creator&lt;/title&gt;</code></td></tr>
       </table>
     </div>
     <!-- /session-march-15 -->
