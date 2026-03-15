@@ -317,7 +317,7 @@
 		border-radius: 20px;
 		padding: 5px 10px;
 		color: #FAF6F3;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-weight: 400;
 		font-size: 13px;
 
@@ -361,7 +361,7 @@
 	}
 
 	.fighter-name {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-weight: 600;
 		font-size: 42px;
 		text-transform: uppercase;
@@ -432,7 +432,7 @@
 	.label-col {
 		flex-direction: column;
 		line-height: 1.15;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 18px;
 		font-weight: 400;
 		font-style: normal;
@@ -455,7 +455,7 @@
 	.stat-val {
 		flex: 0 0 100px;
 		width: 100px;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 34px;
 		font-weight: 400;
 		color: #000;
@@ -525,7 +525,7 @@
 
 	.header-text {
 		color: #FAF6F3;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-weight: 400;
 		font-size: 18px;
 
@@ -573,7 +573,7 @@
 	}
 
 	.weapon-name {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 16px;
 		font-weight: 400;
 		font-style: normal;
@@ -588,7 +588,7 @@
 	}
 
 	.weapon-val {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 34px;
 		font-weight: 400;
 		color: #000;
@@ -639,7 +639,7 @@
 
 	.dcol-wide {
 		flex: 1;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Alegreya', serif;
 		font-size: 15px;
 		font-weight: 400;
 		color: #000;
@@ -651,7 +651,7 @@
 
 	.dcol-stat {
 		flex: 0 0 100px;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Alegreya', serif;
 		font-size: 15px;
 		font-weight: 400;
 		color: #000;

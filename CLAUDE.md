@@ -38,7 +38,7 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 ### Key files
 - `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `AbilityCardData`, `Weapon`, `Runemark`, etc.)
 - `src/app.css` — global styles, Tailwind import, custom font declarations
-- `static/fonts/` — `rodchenkoctt.woff2/.woff` (block font for card titles/stats)
+- `static/fonts/` — self-hosted font files and license texts
 
 ### Card rendering approach
 Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-image-more` at 2× scale for crisp PNGs. This means card visual components are regular Svelte components styled with CSS — no coordinate math.
@@ -56,8 +56,8 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Bottom ~72%: parchment area — card name, optional italic flavor text, body text
 
 ### Fonts
-- **Warcry block font** (`rodchenkoctt`, `static/fonts/RodchenkoCTT.ttf`, family `'Warcry'`) — card names, stats values, activation badge
-- **Oldrichium** (`static/fonts/OldrichiumITCStdLight.otf`, family `'Oldrichium'`) — damage table, ability card body text
+- **Germania One** (`static/fonts/GermaniaOne-Regular.ttf`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
+- **Alegreya** (`static/fonts/Alegreya-Regular.ttf` + `Alegreya-Italic.ttf`, family `'Alegreya'`, SIL OFL) — damage table, ability card body/flavor text
 
 ### Background / textures
 - Parchment texture: `static/background.jpg` applied to `.card` (full card coverage)

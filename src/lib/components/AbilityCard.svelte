@@ -160,7 +160,7 @@
 		border-radius: 20px;
 		padding: 5px 10px;
 		color: #FAF6F3;
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-weight: 400;
 		font-size: 13px;
 
@@ -233,7 +233,7 @@
 	}
 
 	.activation-text {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 14px;
 		font-weight: 400;
 		color: #FAF6F3;
@@ -247,7 +247,7 @@
 	}
 
 	.card-label-text {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-size: 28px;
 		font-weight: 400;
 		color: #FAF6F3;
@@ -273,7 +273,7 @@
 	}
 
 	.ability-name {
-		font-family: 'Roboto Slab', serif;
+		font-family: 'Germania One', serif;
 		font-weight: 600;
 		font-size: 42px;
 		text-transform: uppercase;

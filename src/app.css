@@ -3,15 +3,14 @@
 /* Custom fonts */
 
 /*
- * Roboto Slab — Apache License 2.0
- * Copyright 2013 The Roboto Slab Project Authors
- * License: static/fonts/RobotoSlab-LICENSE.txt
- * Source: https://fonts.google.com/specimen/Roboto+Slab
+ * Germania One — SIL Open Font License 1.1
+ * Copyright 2012 The Germania One Project Authors
+ * Source: https://fonts.google.com/specimen/Germania+One
  */
 @font-face {
-	font-family: 'Roboto Slab';
-	src: url('/fonts/RobotoSlab.ttf') format('truetype');
-	font-weight: 100 900;
+	font-family: 'Germania One';
+	src: url('/fonts/GermaniaOne-Regular.ttf') format('truetype');
+	font-weight: 400;
 	font-style: normal;
 }
 
