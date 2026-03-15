@@ -486,7 +486,7 @@
         <li>Renamed faction "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)" and fixed alphabetical order in hierarchy</li>
         <li>Empty weapon stat values now render <code>—</code> (em dash) in a smaller font matching the weapon name column style</li>
         <li>Weapon stat field placeholders in the sidebar changed to <code>—</code></li>
-        <li>Added <strong>image caption</strong> field: Oldrichium font, absolutely positioned at <code>bottom: 20px</code>, 50% opacity in preview / full opacity in export</li>
+        <li>Added <strong>image caption</strong> field: Alegreya font, absolutely positioned at <code>bottom: 20px</code>, 50% opacity in preview / full opacity in export</li>
         <li>Replaced circular runemark badges with custom organic shape (<code>runemark-shape.svg</code>) using CSS mask + wrapper border technique (78px border / 76px badge)</li>
         <li>Fixed hardcoded <code>fill="#FFF"</code> attribute in 20 runemark SVGs so printer-friendly fills work correctly</li>
         <li>Updated characteristics and weapons table border-radii to 1mm equivalent: outer boxes <code>7.5px</code>, inner rows <code>6.5px</code></li>
@@ -505,7 +505,7 @@
         <li>Replaced <strong>RodchenkoCTT</strong> with <strong>Germania One</strong> (weight 400 only, self-hosted, SIL OFL 1.1 — The Germania One Project Authors)</li>
         <li>Replaced <strong>OldrichiumITCStdLight</strong> with <strong>Alegreya</strong> (variable font, weight axis 100–900, regular + italic, self-hosted, SIL OFL 1.1 — The Alegreya Project Authors)</li>
         <li>Font family names updated from <code>'Warcry'</code> → <code>'Germania One'</code> and <code>'Oldrichium'</code> → <code>'Alegreya'</code> throughout all components and <code>app.css</code></li>
-        <li>Font weights: Germania One is fixed 400; <code>.fighter-name</code> and <code>.ability-name</code> use 600 (Alegreya SemiBold is unaffected — Germania One has no weight axis)</li>
+        <li>Font weights: Germania One is fixed 400 — <code>font-weight: 600</code> on <code>.fighter-name</code> / <code>.ability-name</code> is a no-op; Alegreya retains its full variable weight range</li>
         <li>Monster damage table (<code>.dcol-wide</code>, <code>.dcol-stat</code>) uses Alegreya (not Germania One — same as body text)</li>
         <li>All <code>letter-spacing</code> removed from Germania One usages in both card components</li>
         <li>License files included alongside font files: <code>GermaniaOne-OFL.txt</code> (SIL OFL 1.1), <code>Alegreya-OFL.txt</code> (SIL OFL 1.1)</li>
