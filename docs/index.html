@@ -429,6 +429,7 @@
             <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">SVG mask on <code>.image-section</code> — <code>image-mask-1-cropped.svg</code>, torn edges all sides, layout unchanged</a></td><td>Mar 13</td></tr>
             <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')"><code>background-clip: text</code> for parchment texture in table headers</a></td><td>Mar 13</td></tr>
             <tr><td><a href="#march-12-done" onclick="activateSession('march-12')">Fonts: Warcry (RodchenkoCTT) + Oldrichium (ITC Std Light)</a></td><td>Mar 12</td></tr>
+            <tr><td><a href="#march-15-fonts" onclick="activateSession('march-15')">Fonts replaced: Roboto Slab (variable, 100–900) + Alegreya (variable, 100–900); self-hosted; weights 400 everywhere, 600 for titles; letter-spacing removed</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-13-done" onclick="activateSession('march-13')">Named Fighter: chevrons pinned to title edges, text padded clear</a></td><td>Mar 13</td></tr>
             <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')">Image height flexible: <code>flex:1</code> image + <code>flex:0 0 auto</code> parchment</a></td><td>Mar 13</td></tr>
             <tr><td><a href="#march-13-decisions" onclick="activateSession('march-13')"><code>fittext</code> Svelte action — shrinks font until text fits cell width</a></td><td>Mar 13</td></tr>
@@ -498,6 +499,20 @@
         <li>Dead asset cleanup: removed <code>static/image-mask-1-cropped.svg</code> and <code>static/runemark-shape.svg</code> (duplicate of <code>src/lib/</code> copies actually used via <code>?raw</code>); removed <code>src/lib/assets/favicon.svg</code> (unreferenced Svelte template artifact)</li>
       </ul>
 
+      <h3 id="march-15-fonts">Font Swap</h3>
+      <ul>
+        <li>Created <code>fonts</code> branch for all font work</li>
+        <li>Replaced <strong>RodchenkoCTT</strong> with <strong>Roboto Slab</strong> (variable font, weight axis 100–900, self-hosted, Apache 2.0 — The Roboto Slab Project Authors)</li>
+        <li>Replaced <strong>OldrichiumITCStdLight</strong> with <strong>Alegreya</strong> (variable font, weight axis 100–900, regular + italic, self-hosted, SIL OFL 1.1 — The Alegreya Project Authors)</li>
+        <li>Font family names updated from <code>'Warcry'</code> → <code>'Roboto Slab'</code> and <code>'Oldrichium'</code> → <code>'Alegreya'</code> throughout all components and <code>app.css</code></li>
+        <li>Font weights: all Roboto Slab usages set to <code>400</code> except <code>.fighter-name</code> and <code>.ability-name</code> → <code>600</code> (SemiBold); Alegreya keeps natural weight range</li>
+        <li>Monster damage table (<code>.dcol-wide</code>, <code>.dcol-stat</code>) updated to Roboto Slab 400 (was Alegreya)</li>
+        <li>All <code>letter-spacing</code> removed from Roboto Slab usages in both card components</li>
+        <li>Roboto Slab fallback stack set to <code>serif</code> (slab serif); Alegreya keeps <code>serif</code></li>
+        <li>License files included alongside font files: <code>RobotoSlab-LICENSE.txt</code> (Apache 2.0), <code>Alegreya-OFL.txt</code> (SIL OFL 1.1)</li>
+        <li>Stale font files removed: <code>RodchenkoCTT.ttf</code>, <code>OldrichiumITCStdLight.otf</code></li>
+      </ul>
+
       <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
       <div class="decision">
         <div class="decision-q">How is the runemark border implemented without CSS border (which doesn't follow the mask shape)?</div>
@@ -529,6 +544,16 @@
         <tr><td><code>static/image-mask-1-cropped.svg</code></td><td>Deleted — duplicate of <code>src/lib/image-mask.svg</code></td></tr>
         <tr><td><code>static/runemark-shape.svg</code></td><td>Deleted — duplicate of <code>src/lib/runemark-shape.svg</code></td></tr>
         <tr><td><code>src/lib/assets/favicon.svg</code></td><td>Deleted — unreferenced Svelte template artifact</td></tr>
+        <tr><td><code>static/fonts/RodchenkoCTT.ttf</code></td><td>Deleted — replaced by Roboto Slab</td></tr>
+        <tr><td><code>static/fonts/OldrichiumITCStdLight.otf</code></td><td>Deleted — replaced by Alegreya</td></tr>
+        <tr><td><code>static/fonts/RobotoSlab.ttf</code></td><td>New — variable font (wght 100–900), self-hosted</td></tr>
+        <tr><td><code>static/fonts/RobotoSlab-LICENSE.txt</code></td><td>New — Apache License 2.0 for Roboto Slab</td></tr>
+        <tr><td><code>static/fonts/Alegreya-Regular.ttf</code></td><td>New — variable font (wght 100–900), self-hosted</td></tr>
+        <tr><td><code>static/fonts/Alegreya-Italic.ttf</code></td><td>New — variable italic font (wght 100–900), self-hosted</td></tr>
+        <tr><td><code>static/fonts/Alegreya-OFL.txt</code></td><td>New — SIL Open Font License 1.1 for Alegreya</td></tr>
+        <tr><td><code>src/app.css</code></td><td>Font-face declarations updated: Roboto Slab + Alegreya (regular + italic) with correct license attributions</td></tr>
+        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Font families → Roboto Slab/Alegreya; weights set; letter-spacing removed; damage table updated</td></tr>
+        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Font families → Roboto Slab/Alegreya; weights set; letter-spacing removed</td></tr>
       </table>
     </div>
     <!-- /session-march-15 -->

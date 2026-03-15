@@ -1,16 +1,36 @@
 @import "tailwindcss";
 
 /* Custom fonts */
+
+/*
+ * Roboto Slab — Apache License 2.0
+ * Copyright 2013 The Roboto Slab Project Authors
+ * License: static/fonts/RobotoSlab-LICENSE.txt
+ * Source: https://fonts.google.com/specimen/Roboto+Slab
+ */
 @font-face {
-	font-family: 'Warcry';
-	src: url('/fonts/RodchenkoCTT.ttf') format('truetype');
-	font-weight: normal;
+	font-family: 'Roboto Slab';
+	src: url('/fonts/RobotoSlab.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+}
+
+/*
+ * Alegreya — SIL Open Font License 1.1
+ * Copyright 2011 The Alegreya Project Authors
+ * License: static/fonts/Alegreya-OFL.txt
+ * Source: https://www.fontsquirrel.com/fonts/alegreya
+ */
+@font-face {
+	font-family: 'Alegreya';
+	src: url('/fonts/Alegreya-Regular.ttf') format('truetype');
+	font-weight: 100 900;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'Oldrichium';
-	src: url('/fonts/OldrichiumITCStdLight.otf') format('opentype');
-	font-weight: 300;
-	font-style: normal;
+	font-family: 'Alegreya';
+	src: url('/fonts/Alegreya-Italic.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: italic;
 }

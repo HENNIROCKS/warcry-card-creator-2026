@@ -262,7 +262,7 @@
 		left: 0;
 		right: 0;
 		text-align: center;
-		font-family: 'Oldrichium', serif;
+		font-family: 'Alegreya', serif;
 		font-size: 13px;
 		color: #000;
 		opacity: 0.5;
@@ -317,9 +317,10 @@
 		border-radius: 20px;
 		padding: 5px 10px;
 		color: #FAF6F3;
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
+		font-weight: 400;
 		font-size: 13px;
-		letter-spacing: 0.5px;
+
 		text-transform: uppercase;
 		text-align: center;
 		line-height: 1.3;
@@ -360,11 +361,12 @@
 	}
 
 	.fighter-name {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
+		font-weight: 600;
 		font-size: 42px;
 		text-transform: uppercase;
 		color: #000;
-		letter-spacing: 2px;
+
 		line-height: 1.1;
 		margin: 0;
 		text-align: center;
@@ -430,11 +432,11 @@
 	.label-col {
 		flex-direction: column;
 		line-height: 1.15;
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 18px;
 		font-weight: 400;
 		font-style: normal;
-		letter-spacing: 1px;
+
 		text-align: center;
 		background: url('/background.jpg') center center / cover no-repeat;
 		-webkit-background-clip: text;
@@ -453,9 +455,9 @@
 	.stat-val {
 		flex: 0 0 100px;
 		width: 100px;
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 34px;
-		font-weight: 900;
+		font-weight: 400;
 		color: #000;
 		text-align: center;
 		display: flex;
@@ -523,9 +525,10 @@
 
 	.header-text {
 		color: #FAF6F3;
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
+		font-weight: 400;
 		font-size: 18px;
-		letter-spacing: 1px;
+
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -570,14 +573,14 @@
 	}
 
 	.weapon-name {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 16px;
-		font-weight: 700;
+		font-weight: 400;
 		font-style: normal;
 		color: #000;
 		text-align: center;
 		text-transform: uppercase;
-		letter-spacing: 1px;
+
 		line-height: 1.2;
 		border: 0;
 		outline: none;
@@ -585,9 +588,9 @@
 	}
 
 	.weapon-val {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 34px;
-		font-weight: 700;
+		font-weight: 400;
 		color: #000;
 		display: flex;
 		align-items: center;
@@ -602,7 +605,7 @@
 
 	.weapon-val.is-empty {
 		font-size: 16px;
-		letter-spacing: 1px;
+
 	}
 
 
@@ -636,9 +639,9 @@
 
 	.dcol-wide {
 		flex: 1;
-		font-family: 'Oldrichium', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 15px;
-		font-weight: 300;
+		font-weight: 400;
 		color: #000;
 		padding: 0 8px;
 		border: 0;
@@ -648,9 +651,9 @@
 
 	.dcol-stat {
 		flex: 0 0 100px;
-		font-family: 'Oldrichium', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 15px;
-		font-weight: 300;
+		font-weight: 400;
 		color: #000;
 		border: 0;
 		outline: none;

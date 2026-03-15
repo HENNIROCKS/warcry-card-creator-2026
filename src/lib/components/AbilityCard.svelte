@@ -160,9 +160,10 @@
 		border-radius: 20px;
 		padding: 5px 10px;
 		color: #FAF6F3;
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
+		font-weight: 400;
 		font-size: 13px;
-		letter-spacing: 0.5px;
+
 		text-transform: uppercase;
 		text-align: center;
 		line-height: 1.3;
@@ -232,11 +233,11 @@
 	}
 
 	.activation-text {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 14px;
-		font-weight: 700;
+		font-weight: 400;
 		color: #FAF6F3;
-		letter-spacing: 1px;
+
 		text-transform: uppercase;
 		text-align: center;
 		line-height: 1.2;
@@ -246,11 +247,11 @@
 	}
 
 	.card-label-text {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
 		font-size: 28px;
-		font-weight: 700;
+		font-weight: 400;
 		color: #FAF6F3;
-		letter-spacing: 2px;
+
 		text-transform: uppercase;
 		white-space: nowrap;
 		border: 0;
@@ -272,11 +273,12 @@
 	}
 
 	.ability-name {
-		font-family: 'Warcry', 'Georgia', serif;
+		font-family: 'Roboto Slab', serif;
+		font-weight: 600;
 		font-size: 42px;
 		text-transform: uppercase;
 		color: #000;
-		letter-spacing: 2px;
+
 		line-height: 1.1;
 		margin: 0;
 		text-align: center;
@@ -286,7 +288,7 @@
 	}
 
 	.flavor-text {
-		font-family: 'Oldrichium', serif;
+		font-family: 'Alegreya', serif;
 		font-size: 18px;
 		font-style: italic;
 		color: #3a2a1a;
@@ -299,7 +301,7 @@
 	}
 
 	.body-text {
-		font-family: 'Oldrichium', serif;
+		font-family: 'Alegreya', serif;
 		font-size: 20px;
 		color: #000;
 		line-height: 1.55;
