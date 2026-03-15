@@ -56,9 +56,8 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Bottom ~72%: parchment area — card name, optional italic flavor text, body text
 
 ### Fonts
-- **Warcry block font** (`rodchenkoctt`) — card names, stats values, activation badge
-- **EB Garamond** (Google Fonts) — body text on ability cards
-- Font files go in `static/fonts/` (not yet added; declared in `app.css`)
+- **Warcry block font** (`rodchenkoctt`, `static/fonts/RodchenkoCTT.ttf`, family `'Warcry'`) — card names, stats values, activation badge
+- **Oldrichium** (`static/fonts/OldrichiumITCStdLight.otf`, family `'Oldrichium'`) — damage table, ability card body text
 
 ### Background / textures
 - Parchment texture: `static/background.jpg` applied to `.card` (full card coverage)
