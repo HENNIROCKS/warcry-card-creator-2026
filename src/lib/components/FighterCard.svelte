@@ -2,8 +2,10 @@
 	import type { FighterCardData } from '$lib/types';
 	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
+	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
+	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
 
 	let { data, printerFriendly = false }: { data: FighterCardData; printerFriendly?: boolean } = $props();
 
@@ -37,6 +39,7 @@
 			{/if}
 		</div>
 
+	<div class="image-bottom">
 		{#if !data.showRunemarks}
 			<div class="pills-row">
 				{#if data.grandAlliance}<div class="runemark-pill">{data.grandAlliance}</div>{/if}
@@ -51,34 +54,35 @@
 			</div>
 		{/if}
 	</div>
+	</div>
 
 	<!-- RUNEMARKS (card-level so they never get clipped) -->
 	{#if data.showRunemarks}
 		<div class="runemarks runemarks-left">
 			{#if data.grandAlliance}
-				<div class="runemark-badge">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div>
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 			{#if data.grandAlliance && data.faction}
-				<div class="runemark-badge">{@html getFactionSvg(data.grandAlliance, data.faction) ?? PLACEHOLDER_SVG}</div>
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getFactionSvg(data.grandAlliance, data.faction) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 			{#if data.grandAlliance && data.faction && data.bladeborn}
-				<div class="runemark-badge">{@html getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn) ?? PLACEHOLDER_SVG}</div>
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 		</div>
 
 		<div class="runemarks runemarks-right">
 			{#each data.rightRunemarks as rm}
-				<div class="runemark-badge">{@html rm.svg}</div>
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html rm.svg}</div></div>
 			{/each}
 		</div>
 	{/if}
 
 	<!-- PARCHMENT SECTION -->
 	<div class="parchment">
-		<h1 class="fighter-name" class:has-chevrons={data.isNamedCharacter}>
-			{#if data.isNamedCharacter}<span class="chevron chevron-left">«</span>{/if}
+		<h1 class="fighter-name">
+			{#if data.isNamedCharacter}<span class="chevron">«</span>{/if}
 			{data.name || 'FIGHTER NAME'}
-			{#if data.isNamedCharacter}<span class="chevron chevron-right">»</span>{/if}
+			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
 		</h1>
 
 		<!-- Characteristics box -->
@@ -119,10 +123,10 @@
 							{/if}
 						</div>
 					</div>
-					<div class="wcol weapon-val" use:fittext={weapon.range}>{weapon.range}</div>
-					<div class="wcol weapon-val" use:fittext={weapon.attacks}>{weapon.attacks}</div>
-					<div class="wcol weapon-val" use:fittext={weapon.strength}>{weapon.strength}</div>
-					<div class="wcol weapon-val" use:fittext={weapon.damage}>{data.isMonster ? '*/*' : weapon.damage}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.range} use:fittext={weapon.range}>{weapon.range || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.attacks} use:fittext={weapon.attacks}>{weapon.attacks || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.strength} use:fittext={weapon.strength}>{weapon.strength || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.damage && !data.isMonster} use:fittext={weapon.damage}>{data.isMonster ? '*/*' : (weapon.damage || "—")}</div>
 				</div>
 			{/each}
 		</div>
@@ -145,6 +149,9 @@
 			</div>
 		{/if}
 	</div>
+	{#if data.imageCaption}
+		<div class="image-caption">{data.imageCaption}</div>
+	{/if}
 </div>
 
 <style>
@@ -225,11 +232,21 @@
 		background: transparent;
 	}
 
-	.pills-row {
+	.image-bottom {
 		position: absolute;
 		bottom: 24px;
 		left: 0;
 		right: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.pills-row {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -237,6 +254,25 @@
 		border: 0;
 		outline: none;
 		background: transparent;
+	}
+
+	.image-caption {
+		position: absolute;
+		bottom: 20px;
+		left: 0;
+		right: 0;
+		text-align: center;
+		font-family: 'Oldrichium', serif;
+		font-size: 13px;
+		color: #000;
+		opacity: 0.5;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.is-printer-friendly .image-caption {
+		opacity: 1;
 	}
 
 	.runemarks {
@@ -253,15 +289,26 @@
 	.runemarks-left { left: 38px; }
 	.runemarks-right { right: 38px; }
 
-	.runemark-badge {
-		width: 76px;
-		height: 76px;
-		border-radius: 50%;
-		background: #5a0a14;
-		border: 1px solid white;
+	.runemark-border {
+		width: 78px;
+		height: 78px;
+		background: #FAF6F3;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
+	}
+
+	.runemark-badge {
+		width: 76px;
+		height: 76px;
+		background: #5a0a14;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		outline: none;
 	}
 
 	.runemark-pill {
@@ -279,10 +326,17 @@
 		outline: none;
 	}
 
+	.runemark-badge :global(svg),
+	.runemark-badge :global(svg *) {
+		fill: #FAF6F3;
+	}
+
 	.runemark-badge :global(svg) {
 		width: 56px;
 		height: 56px;
-		fill: #FAF6F3;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	/* ── PARCHMENT SECTION ─────────────────────── */
@@ -326,7 +380,7 @@
 	.weapons-box {
 		width: 100%;
 		flex-shrink: 0;
-		border-radius: 15px;
+		border-radius: 7.5px;
 		border: 1px solid #5a0a14;
 	}
 
@@ -350,13 +404,13 @@
 	}
 
 	.stats-values {
-		border-radius: 0 0 14px 14px;
+		border-radius: 0 0 6.5px 6.5px;
 		background: transparent;
 	}
 
 	.stats-header {
 		background: #5a0a14;
-		border-radius: 14px 14px 0 0;
+		border-radius: 6.5px 6.5px 0 0;
 		border: 0;
 		outline: none;
 	}
@@ -419,7 +473,7 @@
 
 	.weapons-header {
 		background: #5a0a14;
-		border-radius: 14px 14px 0 0;
+		border-radius: 6.5px 6.5px 0 0;
 		display: flex;
 		height: 55px;
 		border: 0;
@@ -452,7 +506,7 @@
 	}
 
 	.weapon-row:last-child {
-		border-radius: 0 0 14px 14px;
+		border-radius: 0 0 6.5px 6.5px;
 	}
 
 	.weapon-art-placeholder {
@@ -546,6 +600,11 @@
 		background: transparent;
 	}
 
+	.weapon-val.is-empty {
+		font-size: 16px;
+		letter-spacing: 1px;
+	}
+
 
 	/* ── DAMAGE BRACKETS ───────────────────────── */
 
@@ -633,13 +692,17 @@
 		fill: #000;
 	}
 
-	.is-printer-friendly .runemark-badge {
-		background: #fff;
-		border-color: #000;
+	.is-printer-friendly .runemark-border {
+		background: #000;
 	}
 
-	.is-printer-friendly .runemark-badge :global(svg) {
-		fill: #000;
+	.is-printer-friendly .runemark-badge {
+		background: #fff;
+	}
+
+	.is-printer-friendly .runemark-badge :global(svg),
+	.is-printer-friendly .runemark-badge :global(svg *) {
+		fill: #000 !important;
 	}
 
 	.is-printer-friendly .runemark-pill {

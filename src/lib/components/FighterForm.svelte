@@ -47,7 +47,7 @@
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">Monster (show damage bracket table)</span>
+			<span class="text-zinc-200">Monster (Damage Table)</span>
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
@@ -80,6 +80,10 @@
 				<div>
 					<label class="sublabel" for="img-zoom">Zoom</label>
 					<input id="img-zoom" type="range" min="1" max="3" step="0.05" bind:value={data.imageZoom} class="w-full accent-red-800" />
+				</div>
+				<div>
+					<label class="sublabel" for="img-caption">Caption</label>
+					<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />
 				</div>
 			</div>
 		{:else}
@@ -221,22 +225,22 @@
 				</div>
 				<div>
 					<span class="sublabel">Range (RNG)</span>
-					<input class="field-input text-center" bind:value={weapon.range} placeholder="1" />
+					<input class="field-input text-center" bind:value={weapon.range} placeholder="—" />
 				</div>
 				<div>
 					<span class="sublabel">Attacks (A)</span>
-					<input class="field-input text-center" bind:value={weapon.attacks} placeholder="3" />
+					<input class="field-input text-center" bind:value={weapon.attacks} placeholder="—" />
 				</div>
 				<div>
 					<span class="sublabel">Strength (S)</span>
-					<input class="field-input text-center" bind:value={weapon.strength} placeholder="4" />
+					<input class="field-input text-center" bind:value={weapon.strength} placeholder="—" />
 				</div>
 				<div>
 					<span class="sublabel">Damage (DMG)</span>
 					{#if data.isMonster}
 						<input class="field-input text-center opacity-40 cursor-not-allowed" value="*/*" disabled />
 					{:else}
-						<input class="field-input text-center" bind:value={weapon.damage} placeholder="2/4" />
+						<input class="field-input text-center" bind:value={weapon.damage} placeholder="—" />
 					{/if}
 				</div>
 			</div>
