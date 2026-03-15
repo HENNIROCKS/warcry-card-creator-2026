@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-15">
+          <span class="session-date">2026-03-15</span>
+          <span class="session-title">Fighter Card Polish &amp; Ability Card</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-14">
           <span class="session-date">2026-03-14</span>
           <span class="session-title">Fighter Runemarks, Git, UI Polish &amp; Runemark Library</span>
@@ -390,6 +396,8 @@
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Pills mode when "Show Runemarks" unchecked — image-inner for mask, image-section unmasked for pills</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Runemark SVGs: white versions for faction circles, black for weapon icons</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Hierarchy fully complete — zero <code>svg: null</code> entries; shared icons for Gobbapalooza and Brand's Oathbound</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card editor: <code>/ability</code> route, <code>AbilityCard.svelte</code> + <code>AbilityForm.svelte</code> built from scratch</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">SVG <code>fill="#FFF"</code> removed from 20 runemark source files — required for printer-friendly CSS override</a></td><td>Mar 15</td></tr>
           </tbody>
         </table>
       </section>
@@ -405,6 +413,8 @@
             <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">Full dimension table: card, image area, columns, rows, gaps</a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">2× scale: 1mm = 7.559px; all values fixed in px</a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-11-layout" onclick="activateSession('march-11')">Monster layout: reduced image height + damage bracket table</a></td><td>Mar 11</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card: 574×915px, torn-edge image area (no image upload), runemarks row + activation badge + card label</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card: image caption field overlaid on fighter card image area</a></td><td>Mar 15</td></tr>
           </tbody>
         </table>
       </section>
@@ -433,6 +443,11 @@
             <tr><td><a href="#march-14-export-decisions" onclick="activateSession('march-14')">dom-to-image-more: <code>border-top</code> on child rows not rendered — use <code>box-shadow: inset 0 1px 0 0 #000</code></a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-export-decisions" onclick="activateSession('march-14')">dom-to-image-more: SVG icon <code>width: auto</code> unreliable — use explicit px (28px) on both span and svg</a></td><td>Mar 14</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">Colors: all dark fills → <code>#000</code>; all white fills → <code>#FAF6F3</code> (parchment approximation)</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Organic shape runemark badges: 78px wrapper (<code>#FAF6F3</code>) + 76px inner (<code>#5a0a14</code>), both masked with same shape</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Runemark shape: copy SVG to <code>src/lib/</code>, <code>?raw</code> import → data URL, apply inline via <code>style</code> attribute for export</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Table border-radii: 1mm = 7.5px outer box, 6.5px inner rows</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Empty weapon values: em dash with smaller font (16px) via <code>class:is-empty</code></a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Ability card printer-friendly: white bg, <code>mask: none !important</code> on image-inner, black text/pills/labels</a></td><td>Mar 15</td></tr>
           </tbody>
         </table>
       </section>
@@ -455,6 +470,69 @@
     <!-- ══════════════════════════════════════════
          2026-03-14 — Fighter Runemarks, Git, UI Polish & Runemark Library
     ══════════════════════════════════════════ -->
+    <div id="session-march-15" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-15</span>
+          <span class="badge badge-green">Done</span>
+        </div>
+        <h1>Fighter Card Polish &amp; Ability Card</h1>
+        <p>Completed final polish on the fighter card (custom runemark shape, image caption, table radii, empty value dashes) and built the ability card editor from scratch.</p>
+      </div>
+
+      <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+      <ul>
+        <li>Renamed faction "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)" and fixed alphabetical order in hierarchy</li>
+        <li>Empty weapon stat values now render <code>—</code> (em dash) in a smaller font matching the weapon name column style</li>
+        <li>Weapon stat field placeholders in the sidebar changed to <code>—</code></li>
+        <li>Added <strong>image caption</strong> field: Oldrichium font, absolutely positioned at <code>bottom: 20px</code>, 50% opacity in preview / full opacity in export</li>
+        <li>Replaced circular runemark badges with custom organic shape (<code>runemark-shape.svg</code>) using CSS mask + wrapper border technique (78px border / 76px badge)</li>
+        <li>Fixed hardcoded <code>fill="#FFF"</code> attribute in 20 runemark SVGs so printer-friendly fills work correctly</li>
+        <li>Updated characteristics and weapons table border-radii to 1mm equivalent: outer boxes <code>7.5px</code>, inner rows <code>6.5px</code></li>
+        <li>Renamed form label "Monster (show damage bracket table)" → "Monster (Damage Table)"</li>
+        <li>Built <strong>AbilityCard.svelte</strong>: 574×915px card, torn-edge image area with dark maroon background, horizontal runemarks row (grand alliance + faction + subfaction + 2 fighter runemarks + activation badge), card type label, parchment with title / flavor text / body text</li>
+        <li>Built <strong>AbilityForm.svelte</strong>: card type, card name, show runemarks checkbox, grand alliance/faction/subfaction/fighter runemark selects, activation select, flavor text and body text textareas</li>
+        <li>Built <strong>/ability/+page.svelte</strong>: same split-panel layout as fighter card with Export PNG + printer-friendly export</li>
+        <li>Printer-friendly ability card: white background, no torn-edge mask, black text, white pills, black runemark fills</li>
+        <li>Code cleanup: removed unused <code>has-chevrons</code>/<code>chevron-left</code>/<code>chevron-right</code> classes; removed dead <code>Weapon.icon</code> field from type and all initializations</li>
+        <li>Dead asset cleanup: removed <code>static/image-mask-1-cropped.svg</code> and <code>static/runemark-shape.svg</code> (duplicate of <code>src/lib/</code> copies actually used via <code>?raw</code>); removed <code>src/lib/assets/favicon.svg</code> (unreferenced Svelte template artifact)</li>
+      </ul>
+
+      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+      <div class="decision">
+        <div class="decision-q">How is the runemark border implemented without CSS border (which doesn't follow the mask shape)?</div>
+        <div class="decision-a">A wrapper div (<code>.runemark-border</code>, 78px, <code>#FAF6F3</code> bg) and inner div (<code>.runemark-badge</code>, 76px, <code>#5a0a14</code> bg) both masked to the same organic shape. The 1px size difference on each side creates the visible border.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">Where do the SVG mask files live, and why are they in <code>src/lib/</code>?</div>
+        <div class="decision-a"><code>src/lib/image-mask.svg</code> and <code>src/lib/runemark-shape.svg</code> are imported via Vite <code>?raw</code> to build data URLs for inline mask styles — required for dom-to-image-more export fidelity (external URLs are not resolved during export). Duplicate copies that previously existed in <code>static/</code> were removed.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">Why does the activation badge live inside the runemarks row rather than a separate area?</div>
+        <div class="decision-a">User requested it behaves like a runemark circle, placed at the end of the horizontal row.</div>
+      </div>
+
+      <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+      <table>
+        <tr><th>File</th><th>Change</th></tr>
+        <tr><td><code>src/lib/types.ts</code></td><td>Added <code>imageCaption</code> to FighterCardData; replaced <code>runemarks</code> in AbilityCardData with <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>, <code>fighterRunemarks</code>, <code>showRunemarks</code>; removed <code>Weapon.icon</code></td></tr>
+        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Renamed "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)", fixed sort order</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/*.svg</code> (×20)</td><td>Removed hardcoded <code>fill="#FFF"</code> attribute from paths</td></tr>
+        <tr><td><code>static/runemark-shape.svg</code></td><td>New — organic circle shape for runemark badges</td></tr>
+        <tr><td><code>src/lib/runemark-shape.svg</code></td><td>New — copy for Vite <code>?raw</code> import / data URL export</td></tr>
+        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Organic badge shape, image caption, empty value dashes, table radii, chevron class cleanup</td></tr>
+        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Image caption field, weapon placeholder dashes, label rename</td></tr>
+        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>imageCaption</code> default; removed <code>icon</code> from weapon defaults</td></tr>
+        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>New — ability card visual component</td></tr>
+        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>New — ability card form component</td></tr>
+        <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Full ability card editor (was placeholder)</td></tr>
+        <tr><td><code>static/image-mask-1-cropped.svg</code></td><td>Deleted — duplicate of <code>src/lib/image-mask.svg</code></td></tr>
+        <tr><td><code>static/runemark-shape.svg</code></td><td>Deleted — duplicate of <code>src/lib/runemark-shape.svg</code></td></tr>
+        <tr><td><code>src/lib/assets/favicon.svg</code></td><td>Deleted — unreferenced Svelte template artifact</td></tr>
+      </table>
+    </div>
+    <!-- /session-march-15 -->
+
     <div id="session-march-14" class="session-panel">
       <div class="hero">
         <div class="meta">
@@ -1050,7 +1128,7 @@
 </div>
 
 <script>
-  const sessions = ["march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-15", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
