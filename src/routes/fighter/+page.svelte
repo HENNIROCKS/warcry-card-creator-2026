@@ -28,7 +28,7 @@
 		faction: '',
 		bladeborn: '',
 		rightRunemarks: [],
-		baseSize: '32',
+		baseSize: '⌀ 32',
 		points: '100',
 		move: '4',
 		toughness: '4',

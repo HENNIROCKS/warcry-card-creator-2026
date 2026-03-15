@@ -170,7 +170,29 @@
 		<div class="grid grid-cols-5 gap-2">
 			<div>
 				<label class="sublabel" for="baseSize">Base Size</label>
-				<input id="baseSize" class="field-input text-center" bind:value={data.baseSize} />
+				<select id="baseSize" class="field-input text-center" bind:value={data.baseSize}>
+					<option>⌀ 20</option>
+					<option>⌀ 25</option>
+					<option>⌀ 28.5</option>
+					<option>⌀ 32</option>
+					<option>⌀ 40</option>
+					<option>⌀ 50</option>
+					<option>⌀ 60</option>
+					<option>⌀ 70</option>
+					<option>⌀ 80</option>
+					<option>⌀ 90</option>
+					<option>⌀ 100</option>
+					<option>⌀ 120</option>
+					<option>⌀ 130</option>
+					<option>⌀ 160</option>
+					<option>50 × 25</option>
+					<option>60 × 35</option>
+					<option>75 × 42</option>
+					<option>90 × 52</option>
+					<option>105 × 70</option>
+					<option>120 × 92</option>
+					<option>170 × 105</option>
+				</select>
 			</div>
 			<div>
 				<label class="sublabel" for="points">Points Value</label>

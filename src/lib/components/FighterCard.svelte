@@ -95,7 +95,7 @@
 				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">W</span>{/if}</div>
 			</div>
 			<div class="stats-values">
-				<div class="stat-val" use:fittext={data.baseSize}>{data.baseSize}</div>
+				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
 				<div class="stat-val" use:fittext={data.points}>{data.points}</div>
 				<div class="stat-val" use:fittext={data.move}>{data.isMonster ? '*' : data.move}</div>
 				<div class="stat-val" use:fittext={data.toughness}>{data.toughness}</div>
@@ -468,6 +468,9 @@
 		border: 0;
 		outline: none;
 		background: transparent;
+	}
+	.stat-val-narrow {
+		font-size: 22px;
 	}
 
 
