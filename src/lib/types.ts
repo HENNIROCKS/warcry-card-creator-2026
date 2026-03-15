@@ -5,7 +5,6 @@ export interface Runemark {
 }
 
 export interface Weapon {
-	icon: Runemark | null;
 	name: string;
 	range: string;    // e.g. "1" or "3-7"
 	attacks: string;
@@ -25,6 +24,7 @@ export interface FighterCardData {
 	imageOffsetX: number; // 0–100, object-position x
 	imageOffsetY: number; // 0–100, object-position y
 	imageZoom: number;    // 1–3, scale factor
+	imageCaption: string;
 	grandAlliance: string;  // left top circle
 	faction: string;        // left middle circle
 	bladeborn: string;      // left bottom circle
@@ -47,7 +47,11 @@ export interface AbilityCardData {
 	name: string;
 	cardLabel: string;          // "ABILITY" | "HEROIC TRAIT" | "REACTION" | custom
 	activationType: ActivationType;
-	runemarks: Runemark[];      // up to 4
+	grandAlliance: string;
+	faction: string;
+	bladeborn: string;
+	fighterRunemarks: Runemark[];
+	showRunemarks: boolean;
 	flavorText: string;         // italic block, shown above bodyText if non-empty
 	bodyText: string;
 }
