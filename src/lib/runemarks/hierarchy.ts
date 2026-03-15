@@ -214,7 +214,6 @@ export const hierarchy: AllianceEntry[] = [
 			},
 			{ label: 'Blades of Khorne: Daemons',         svg: cKhorneDaemons,      subfactions: [] },
 			{ label: 'Chaos Legionnaires',                svg: cChaosLegionnaires,  subfactions: [] },
-			{ label: 'Chaotic Beasts',                    svg: mChaoticBeasts,      subfactions: [] },
 			{ label: 'Claws of Karanak',                  svg: cClawsOfKaranak,     subfactions: [] },
 			{ label: 'Corvus Cabal',                      svg: cCorvusCabal,        subfactions: [] },
 			{ label: 'Cypher Lords',                      svg: cCypherLords,        subfactions: [] },
@@ -268,6 +267,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Wurmspat', svg: cBbTheWurmspat },
 				],
 			},
+			{ label: 'Monsters of Chaos (Chaotic Beasts)', svg: mChaoticBeasts,      subfactions: [] },
 			{ label: 'Rotmire Creed',                     svg: cRotmireCreed,       subfactions: [] },
 			{ label: 'Scions of the Flame',               svg: cScionsOfTheFlame,   subfactions: [] },
 			{
