@@ -122,7 +122,7 @@
 							{#if data.showRunemarks && weapon.name}
 								<span class="weapon-runemark">{@html weaponRunemarks[weapon.name]}</span>
 							{:else}
-								<span class="weapon-name">{weapon.name || '—'}</span>
+								<span class="weapon-name" use:fittext={weapon.name}>{weapon.name || '—'}</span>
 							{/if}
 						</div>
 					</div>
@@ -596,7 +596,7 @@
 
 	.weapon-name {
 		font-family: 'Germania One', serif;
-		font-size: 16px;
+		font-size: 18px;
 		font-weight: 400;
 		font-style: normal;
 		color: #000;
