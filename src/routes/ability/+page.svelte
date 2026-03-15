@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Ability Card — Warcry Card Creator</title>
+</svelte:head>
+
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { AbilityCardData } from '$lib/types';

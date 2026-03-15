@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Fighter Card — Warcry Card Creator</title>
+</svelte:head>
+
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { FighterCardData } from '$lib/types';
