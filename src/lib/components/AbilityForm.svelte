@@ -23,6 +23,8 @@
 			<option value="ABILITY">Ability</option>
 			<option value="REACTION">Reaction</option>
 			<option value="HEROIC TRAIT">Heroic Trait</option>
+			<option value="LESSER ARTEFACT">Lesser Artefact</option>
+			<option value="GREATER ARTEFACT">Greater Artefact</option>
 		</select>
 	</section>
 
