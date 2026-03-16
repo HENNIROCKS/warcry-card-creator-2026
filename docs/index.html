@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-16">
+          <span class="session-date">2026-03-16</span>
+          <span class="session-title">Runemark Library Audit &amp; Ability Card Types</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-15">
           <span class="session-date">2026-03-15</span>
           <span class="session-title">Fighter Card Polish &amp; Ability Card</span>
@@ -402,6 +408,9 @@
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Weapon name font 18px (matches header text) + <code>fittext</code> shrink for long names</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card editor: <code>/ability</code> route, <code>AbilityCard.svelte</code> + <code>AbilityForm.svelte</code> built from scratch</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">SVG <code>fill="#FFF"</code> removed from 20 runemark source files — required for printer-friendly CSS override</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Runemark library audited vs. barrysheppard — added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Ability card types: Lesser Artefact + Greater Artefact added</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Pipe <code>|</code> as manual line break in fighter name and ability card name</a></td><td>Mar 16</td></tr>
           </tbody>
         </table>
       </section>
@@ -473,7 +482,64 @@
     <!-- /session-index -->
 
     <!-- ══════════════════════════════════════════
-         2026-03-14 — Fighter Runemarks, Git, UI Polish & Runemark Library
+         2026-03-16 — Runemark Library Audit & Ability Card Types
+    ══════════════════════════════════════════ -->
+    <div id="session-march-16" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-16</span>
+          <span class="badge badge-green">Done</span>
+        </div>
+        <h1>Runemark Library Audit &amp; Ability Card Types</h1>
+        <p>Audited the faction runemark library against barrysheppard's reference implementation, added missing factions/subfactions, and extended ability card types.</p>
+      </div>
+
+      <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+      <ul>
+        <li><strong>Activation badge font-size</strong> increased from 14px → 24px in <code>AbilityCard.svelte</code></li>
+        <li><strong>Pipe line break</strong> (<code>|</code>) supported in fighter name and ability card name — card renders a <code>&lt;br&gt;</code> at each <code>|</code>; form label hints updated to "use | for a line break"</li>
+        <li><strong>Full runemark audit</strong> against <a href="https://barrysheppard.github.io/warcry-card-creator/index.html">barrysheppard's card creator</a> — cross-checked faction list and all subfactions</li>
+        <li>Added <strong>Everchosen</strong> as a top-level Chaos faction (SVG + hierarchy entry)</li>
+        <li>Added <strong>Legions of Nagash</strong> as a top-level Death faction (SVG + hierarchy entry)</li>
+        <li>Added <strong>Ulfenkarn</strong> as a subfaction under Soulblight Gravelords (SVG + hierarchy entry)</li>
+        <li>Added <strong>10 Cities of Sigmar subfactions</strong>: Anvilgard, Castelite Hosts, Darkling Covens, Dispossessed, Greywater Fastness, Hallowheart, Hammerhal, Tempest's Eye, The Living City, The Phoenicium (SVGs + hierarchy entries)</li>
+        <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code>, saved as <code>factions-order-bladeborn-grombrindal.svg</code>)</li>
+        <li>Added <strong>Lesser Artefact</strong> and <strong>Greater Artefact</strong> to the ability card type select — displayed as card label text in uppercase</li>
+      </ul>
+
+      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+      <div class="decision">
+        <div class="decision-q">Where does Ulfenkarn sit in the hierarchy?</div>
+        <div class="decision-a">As a subfaction under Soulblight Gravelords — Ulfenkarn is a city setting within the Soulblight range (Cursed City). Barrysheppard lists it top-level but the subfaction placement is more thematically accurate.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">Where does Grombrindal sit?</div>
+        <div class="decision-a">Top-level Order faction (not a Cities of Sigmar subfaction). Grombrindal is an independent character and warband, not tied to a specific city.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">SVG source for Grombrindal?</div>
+        <div class="decision-a">Barrysheppard's repo uses a flat <code>bladeborn-grombrindal.svg</code> naming convention; saved locally as <code>factions-order-bladeborn-grombrindal.svg</code> to match our naming pattern.</div>
+      </div>
+
+      <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+      <table>
+        <tr><th>File</th><th>Change</th></tr>
+        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Activation badge font-size 14px → 24px; pipe line break in ability name</td></tr>
+        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added Lesser Artefact + Greater Artefact options; pipe hint in card name label</td></tr>
+        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pipe line break in fighter name</td></tr>
+        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label</td></tr>
+        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions; new imports</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-death-ulfenkarn.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>New — sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code></td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-*.svg</code> (×10)</td><td>New — 10 Cities of Sigmar subfaction SVGs</td></tr>
+      </table>
+    </div>
+    <!-- /session-march-16 -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-15 — Fighter Card Polish & Ability Card
     ══════════════════════════════════════════ -->
     <div id="session-march-15" class="session-panel">
       <div class="hero">
@@ -1177,7 +1243,7 @@
 </div>
 
 <script>
-  const sessions = ["march-15", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
