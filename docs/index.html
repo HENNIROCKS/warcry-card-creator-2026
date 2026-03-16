@@ -332,7 +332,7 @@
       <li>
         <button class="session-btn" data-session="march-16">
           <span class="session-date">2026-03-16</span>
-          <span class="session-title">Runemark Library Audit &amp; Ability Card Types</span>
+          <span class="session-title">Hierarchy Restructure &amp; Filterable Faction Select</span>
         </button>
       </li>
       <li>
@@ -411,6 +411,9 @@
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Runemark library audited vs. barrysheppard — added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Ability card types: Lesser Artefact + Greater Artefact added</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Pipe <code>|</code> as manual line break in fighter name and ability card name</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Faction hierarchy restructured: parent-prefixed naming (e.g. <em>Slaves to Darkness: Iron Golem</em>); CoS subfactions promoted; Ulfenkarn removed</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')"><code>FactionSelect.svelte</code> — filterable grouped list replaces 3 cascading selects on both Fighter + Ability editors</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">TXT export workflow for human-editable hierarchy audits (<code>runemark-hierarchy.txt</code>)</a></td><td>Mar 16</td></tr>
           </tbody>
         </table>
       </section>
@@ -490,8 +493,8 @@
           <span class="badge badge-blue">2026-03-16</span>
           <span class="badge badge-green">Done</span>
         </div>
-        <h1>Runemark Library Audit &amp; Ability Card Types</h1>
-        <p>Audited the faction runemark library against barrysheppard's reference implementation, added missing factions/subfactions, and extended ability card types.</p>
+        <h1>Hierarchy Restructure &amp; Filterable Faction Select</h1>
+        <p>Audited and restructured the faction hierarchy with proper parent-prefixed naming, replaced three cascading dropdowns with a single filterable list component used on both Fighter and Ability card editors.</p>
       </div>
 
       <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
@@ -505,6 +508,15 @@
         <li>Added <strong>10 Cities of Sigmar subfactions</strong>: Anvilgard, Castelite Hosts, Darkling Covens, Dispossessed, Greywater Fastness, Hallowheart, Hammerhal, Tempest's Eye, The Living City, The Phoenicium (SVGs + hierarchy entries)</li>
         <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code>, saved as <code>factions-order-bladeborn-grombrindal.svg</code>)</li>
         <li>Added <strong>Lesser Artefact</strong> and <strong>Greater Artefact</strong> to the ability card type select — displayed as card label text in uppercase</li>
+      </ul>
+
+      <h3>Later in the session</h3>
+      <ul>
+        <li><strong>Faction hierarchy fully restructured</strong> via editable TXT export — standalone warbands now namespaced under their parent faction (e.g. <em>Iron Golem</em> → <em>Slaves to Darkness: Iron Golem</em>); Cities of Sigmar subfactions promoted to factions; several Death/Destruction factions similarly reparented</li>
+        <li><strong>Ulfenkarn removed</strong> from the hierarchy entirely (was a Soulblight Gravelords subfaction)</li>
+        <li><code>dUlfenkarn</code> import removed from <code>hierarchy.ts</code></li>
+        <li>Built <strong><code>FactionSelect.svelte</code></strong> — replaces all three cascading Alliance/Faction/Subfaction <code>&lt;select&gt;</code> elements with a single filterable component: text filter input + scrollable grouped list (alliance headers sticky, factions indented, subfactions further indented); current selection shown as a dismissible badge; A→Z order fully preserved</li>
+        <li><strong>Applied to both editors</strong> — <code>FighterForm.svelte</code> and <code>AbilityForm.svelte</code> both use <code>FactionSelect</code>; cascading selects removed from both</li>
       </ul>
 
       <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
@@ -521,19 +533,35 @@
         <div class="decision-a">Barrysheppard's repo uses a flat <code>bladeborn-grombrindal.svg</code> naming convention; saved locally as <code>factions-order-bladeborn-grombrindal.svg</code> to match our naming pattern.</div>
       </div>
 
+      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+      <div class="decision">
+        <div class="decision-q">How to restructure factions without losing SVG references?</div>
+        <div class="decision-a">Exported hierarchy to a plain TXT file for human editing. User edited the TXT, then changes were applied back to <code>hierarchy.ts</code> — all SVG imports reused, only labels and nesting changed. Clean workflow for future audits.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">Should the filterable faction select replace or supplement the cascading dropdowns?</div>
+        <div class="decision-a">Replace entirely. With the new naming convention (e.g. <em>Slaves to Darkness: Iron Golem</em>) the old three-step cascade adds no value — you'd still need to know the parent. A single searchable list is faster for any selection depth.</div>
+      </div>
+      <div class="decision">
+        <div class="decision-q">What does "filter" mean in context — search box or always-visible list?</div>
+        <div class="decision-a">Always-visible grouped list with a filter input at the top that narrows it. Full list visible by default; typing narrows it in real-time. Alliance headers sticky. Selecting any item (faction or subfaction) sets all three data fields at once.</div>
+      </div>
+
       <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
       <table>
         <tr><th>File</th><th>Change</th></tr>
         <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Activation badge font-size 14px → 24px; pipe line break in ability name</td></tr>
-        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added Lesser Artefact + Greater Artefact options; pipe hint in card name label</td></tr>
+        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added Lesser Artefact + Greater Artefact options; pipe hint; replaced 3 cascading selects with <code>FactionSelect</code></td></tr>
         <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pipe line break in fighter name</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label</td></tr>
-        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions; new imports</td></tr>
+        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label; replaced 3 cascading selects with <code>FactionSelect</code></td></tr>
+        <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>New — filterable faction/subfaction select component</td></tr>
+        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Full hierarchy restructure: parent-prefixed factions, Ulfenkarn removed, <code>dUlfenkarn</code> import removed</td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-death-ulfenkarn.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-death-ulfenkarn.svg</code></td><td>Retained on disk; no longer imported or used</td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>New — sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code></td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-*.svg</code> (×10)</td><td>New — 10 Cities of Sigmar subfaction SVGs</td></tr>
+        <tr><td><code>runemark-hierarchy.txt</code></td><td>New — human-editable TXT export used for hierarchy audit</td></tr>
       </table>
     </div>
     <!-- /session-march-16 -->
