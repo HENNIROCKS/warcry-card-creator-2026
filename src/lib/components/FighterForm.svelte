@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
-	import { hierarchy, getFactions, getSubfactions, fighterRunemarks } from '$lib/runemarks/index';
+	import { fighterRunemarks } from '$lib/runemarks/index';
+	import FactionSelect from './FactionSelect.svelte';
 
 	let { data }: { data: FighterCardData } = $props();
 
@@ -108,51 +109,7 @@
 	<!-- Runemarks -->
 	<section>
 		<p class="field-label mb-2">Runemarks</p>
-		<div class="flex flex-col gap-2">
-			<div>
-				<label class="sublabel" for="grand-alliance">Grand Alliance</label>
-				<select
-					id="grand-alliance"
-					class="field-input"
-					bind:value={data.grandAlliance}
-					onchange={() => { data.faction = ''; data.bladeborn = ''; }}
-				>
-					<option value="">—</option>
-					{#each hierarchy as alliance}
-						<option value={alliance.label}>{alliance.label}</option>
-					{/each}
-				</select>
-			</div>
-			<div>
-				<label class="sublabel" for="faction">Faction</label>
-				<select
-					id="faction"
-					class="field-input"
-					bind:value={data.faction}
-					disabled={!data.grandAlliance}
-					onchange={() => { data.bladeborn = ''; }}
-				>
-					<option value="">—</option>
-					{#each getFactions(data.grandAlliance) as faction}
-						<option value={faction.label}>{faction.label}</option>
-					{/each}
-				</select>
-			</div>
-			<div>
-				<label class="sublabel" for="bladeborn">Subfaction / Bladeborn</label>
-				<select
-					id="bladeborn"
-					class="field-input"
-					bind:value={data.bladeborn}
-					disabled={!data.faction}
-				>
-					<option value="">—</option>
-					{#each getSubfactions(data.grandAlliance, data.faction) as sf}
-						<option value={sf.label}>{sf.label}</option>
-					{/each}
-				</select>
-			</div>
-		</div>
+		<FactionSelect {data} />
 		<div class="mt-3">
 			<p class="sublabel mb-1">Fighter Runemarks</p>
 			<div class="flex flex-col gap-2">

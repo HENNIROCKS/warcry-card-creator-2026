@@ -71,7 +71,6 @@ import dLegionsOfNagash     from './svg/factions-death-legions-of-nagash.svg?raw
 import dPyregheists          from './svg/factions-death-pyregheists.svg?raw';
 import dTeraticCohort        from './svg/factions-death-teratic-cohort.svg?raw';
 import dAskurganTrueblades   from './svg/factions-death-askurgan-trueblades.svg?raw';
-import dUlfenkarn            from './svg/factions-death-ulfenkarn.svg?raw';
 import dFleshEaterCourts     from './svg/factions-death-flesh-eater-courts.svg?raw';
 import dNighthaunt           from './svg/factions-death-nighthaunt.svg?raw';
 import dOssiarchBonereapers  from './svg/factions-death-ossiarch-bonereapers.svg?raw';
@@ -228,19 +227,8 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Magore's Fiends",     svg: cBbMagoresFiends },
 				],
 			},
-			{ label: 'Blades of Khorne: Daemons',         svg: cKhorneDaemons,      subfactions: [] },
-			{ label: 'Chaos Legionnaires',                svg: cChaosLegionnaires,  subfactions: [] },
-			{ label: 'Claws of Karanak',                  svg: cClawsOfKaranak,     subfactions: [] },
-			{ label: 'Corvus Cabal',                      svg: cCorvusCabal,        subfactions: [] },
-			{ label: 'Cypher Lords',                      svg: cCypherLords,        subfactions: [] },
-			{
-				label: 'Darkoath', svg: cDarkoath,
-				subfactions: [
-					{ label: "Brand's Oathbound", svg: cDarkoath },
-				],
-			},
-			{ label: 'Darkoath Savagers',                 svg: cDarkoathSavagers,   subfactions: [] },
-			{ label: 'Everchosen',                        svg: cEverchosen,         subfactions: [] },
+			{ label: 'Blades of Khorne: Claws of Karanak', svg: cClawsOfKaranak,  subfactions: [] },
+			{ label: 'Blades of Khorne: Daemons',          svg: cKhorneDaemons,   subfactions: [] },
 			{
 				label: 'Disciples of Tzeentch: Arcanites', svg: cTzeentchArcanites,
 				subfactions: [
@@ -253,6 +241,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Ephilim's Pandaemonium", svg: cBbEphilims },
 				],
 			},
+			{ label: 'Disciples of Tzeentch: Jade Obelisk', svg: cJadeObelisk,    subfactions: [] },
 			{
 				label: 'Hedonites of Slaanesh: Daemons', svg: cSlaaneshDaemons,
 				subfactions: [
@@ -271,7 +260,6 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'Blood of the Bull', svg: cBbBloodOfTheBull },
 				],
 			},
-			{ label: 'Iron Golem',                        svg: cIronGolems,         subfactions: [] },
 			{
 				label: 'Maggotkin of Nurgle: Daemons', svg: cNurgleDaemons,
 				subfactions: [
@@ -284,9 +272,8 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Wurmspat', svg: cBbTheWurmspat },
 				],
 			},
-			{ label: 'Monsters of Chaos (Chaotic Beasts)', svg: mChaoticBeasts,      subfactions: [] },
-			{ label: 'Rotmire Creed',                     svg: cRotmireCreed,       subfactions: [] },
-			{ label: 'Scions of the Flame',               svg: cScionsOfTheFlame,   subfactions: [] },
+			{ label: 'Maggotkin of Nurgle: Rotmire Creed', svg: cRotmireCreed,    subfactions: [] },
+			{ label: 'Monsters of Chaos (Chaotic Beasts)',  svg: mChaoticBeasts,   subfactions: [] },
 			{
 				label: 'Skaven', svg: cSkaven,
 				subfactions: [
@@ -304,13 +291,25 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Khagra's Ravagers", svg: cBbKhagrasRavagers },
 				],
 			},
-			{ label: 'Spire Tyrants',                     svg: cSpireTyrants,       subfactions: [] },
-			{ label: 'Splintered Fang',                   svg: cSplinteredFang,     subfactions: [] },
-			{ label: 'Tarantulos Brood',                  svg: cTarantulosBrood,    subfactions: [] },
-			{ label: 'The Horns of Hashut',               svg: cHornsOfHashut,      subfactions: [] },
-			{ label: 'The Jade Obelisk',                  svg: cJadeObelisk,        subfactions: [] },
-			{ label: 'The Unmade',                        svg: cTheUnmade,          subfactions: [] },
-			{ label: 'Untamed Beasts',                    svg: cUntamedBeasts,      subfactions: [] },
+			{ label: 'Slaves to Darkness: Chaos Legionnaires', svg: cChaosLegionnaires, subfactions: [] },
+			{ label: 'Slaves to Darkness: Corvus Cabal',        svg: cCorvusCabal,       subfactions: [] },
+			{ label: 'Slaves to Darkness: Cypher Lords',        svg: cCypherLords,       subfactions: [] },
+			{
+				label: 'Slaves to Darkness: Darkoath', svg: cDarkoath,
+				subfactions: [
+					{ label: "Brand's Oathbound", svg: cDarkoath },
+				],
+			},
+			{ label: 'Slaves to Darkness: Darkoath Savagers',  svg: cDarkoathSavagers,  subfactions: [] },
+			{ label: 'Slaves to Darkness: Everchosen',         svg: cEverchosen,         subfactions: [] },
+			{ label: 'Slaves to Darkness: Iron Golem',         svg: cIronGolems,         subfactions: [] },
+			{ label: 'Slaves to Darkness: Scions of the Flame', svg: cScionsOfTheFlame,  subfactions: [] },
+			{ label: 'Slaves to Darkness: Spire Tyrants',      svg: cSpireTyrants,       subfactions: [] },
+			{ label: 'Slaves to Darkness: Splintered Fang',    svg: cSplinteredFang,     subfactions: [] },
+			{ label: 'Slaves to Darkness: Tarantulos Brood',   svg: cTarantulosBrood,    subfactions: [] },
+			{ label: 'Slaves to Darkness: The Horns of Hashut', svg: cHornsOfHashut,     subfactions: [] },
+			{ label: 'Slaves to Darkness: The Unmade',         svg: cTheUnmade,          subfactions: [] },
+			{ label: 'Slaves to Darkness: Untamed Beasts',     svg: cUntamedBeasts,      subfactions: [] },
 		],
 	},
 
@@ -318,7 +317,6 @@ export const hierarchy: AllianceEntry[] = [
 		label: 'Bringers of Death',
 		svg: gaBringersOfDeath,
 		factions: [
-			{ label: 'Askurgan Trueblades',           svg: dAskurganTrueblades,  subfactions: [] },
 			{
 				label: 'Flesh-eater Courts', svg: dFleshEaterCourts,
 				subfactions: [
@@ -326,8 +324,9 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Grymwatch', svg: dBbTheGrymwatch },
 				],
 			},
-			{ label: 'Legions of Nagash',             svg: dLegionsOfNagash,    subfactions: [] },
-			{ label: 'Monsters of Death',             svg: mMonstersOfDeath,    subfactions: [] },
+			{ label: 'Flesh-eater Courts: Royal Beastflayers', svg: dRoyalBeastflayers, subfactions: [] },
+			{ label: 'Legions of Nagash',                      svg: dLegionsOfNagash,   subfactions: [] },
+			{ label: 'Monsters of Death',                      svg: mMonstersOfDeath,   subfactions: [] },
 			{
 				label: 'Nighthaunt', svg: dNighthaunt,
 				subfactions: [
@@ -335,14 +334,14 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'Thorns of the Briar Queen', svg: dBbThornsOfBriarQueen },
 				],
 			},
+			{ label: 'Nighthaunt: Pyregheists',                svg: dPyregheists,       subfactions: [] },
 			{
 				label: 'Ossiarch Bonereapers', svg: dOssiarchBonereapers,
 				subfactions: [
 					{ label: "Kainan's Reapers", svg: dBbKainansReavers },
 				],
 			},
-			{ label: 'Pyregheists',                   svg: dPyregheists,                subfactions: [] },
-			{ label: 'Royal Beastflayers',            svg: dRoyalBeastflayers,  subfactions: [] },
+			{ label: 'Ossiarch Bonereapers: Teratic Cohort',   svg: dTeraticCohort,     subfactions: [] },
 			{
 				label: 'Soulblight Gravelords', svg: dSoulblightGravelords,
 				subfactions: [
@@ -351,11 +350,10 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Crimson Court',             svg: dBbTheCrimsonCourt },
 					{ label: 'The Exiled Dead',               svg: dBbTheExiledDead },
 					{ label: 'The Sepulchral Guard',          svg: dBbTheSepulchralGuard },
-					{ label: 'Ulfenkarn',                     svg: dUlfenkarn },
 					{ label: "Zondara's Gravebreakers",       svg: dBbZondarasGravebreakers },
 				],
 			},
-			{ label: 'Teratic Cohort',                svg: dTeraticCohort,                subfactions: [] },
+			{ label: 'Soulblight Gravelords: Askurgan Trueblades', svg: dAskurganTrueblades, subfactions: [] },
 		],
 	},
 
@@ -379,8 +377,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Zarbag's Gitz",         svg: desBbZarbagsGitz },
 				],
 			},
-			{ label: 'Gobbapalooza',                  svg: desGloomspiteGitz,               subfactions: [] },
-			{ label: 'Gorger Mawpack',                svg: desGorgerMawpack,   subfactions: [] },
+			{ label: 'Gloomspite Gitz: Gobbapalooza', svg: desGloomspiteGitz, subfactions: [] },
 			{
 				label: 'Ironjawz', svg: desIronjawz,
 				subfactions: [
@@ -395,8 +392,8 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Daggok's Stab-ladz", svg: desBbDaggoksStabLadz },
 				],
 			},
-			{ label: 'Kruleboyz Monsta-killaz',       svg: desMonstaKillaz,      subfactions: [] },
-			{ label: 'Monsters of Destruction',       svg: mMonstersOfDest,      subfactions: [] },
+			{ label: 'Kruleboyz: Monsta-killaz',  svg: desMonstaKillaz,  subfactions: [] },
+			{ label: 'Monsters of Destruction',   svg: mMonstersOfDest,  subfactions: [] },
 			{
 				label: 'Ogor Mawtribes', svg: desOgorMawtribes,
 				subfactions: [
@@ -404,6 +401,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Hrothgorn's Mantrappers",  svg: desBbHrothgornsMantrappers },
 				],
 			},
+			{ label: 'Ogor Mawtribes: Gorger Mawpack', svg: desGorgerMawpack, subfactions: [] },
 		],
 	},
 
@@ -414,19 +412,26 @@ export const hierarchy: AllianceEntry[] = [
 			{
 				label: 'Cities of Sigmar', svg: oCitiesOfSigmar,
 				subfactions: [
-					{ label: 'Anvilgard',            svg: oCosAnvilgard },
 					{ label: 'Brethren of the Bolt', svg: oBbBrethrenOfTheBolt },
-					{ label: 'Castelite Hosts',      svg: oCosCasteliteHosts },
-					{ label: 'Darkling Covens',      svg: oCosDarklingCovens },
-					{ label: 'Dispossessed',         svg: oCosDispossessed },
-					{ label: 'Greywater Fastness',   svg: oCosGreywaterFastness },
-					{ label: 'Hallowheart',          svg: oCosHallowheart },
-					{ label: 'Hammerhal',            svg: oCosHammerhal },
-					{ label: "Tempest's Eye",        svg: oCosTempestsEye },
-					{ label: 'The Living City',      svg: oCosTheLivingCity },
-					{ label: 'The Phoenicium',       svg: oCosThePhoesnicium },
 				],
 			},
+			{ label: 'Cities of Sigmar: Anvilgard',          svg: oCosAnvilgard,         subfactions: [] },
+			{ label: 'Cities of Sigmar: Castelite Hosts',    svg: oCosCasteliteHosts,    subfactions: [] },
+			{ label: 'Cities of Sigmar: Darkling Covens',    svg: oCosDarklingCovens,    subfactions: [] },
+			{ label: 'Cities of Sigmar: Dispossessed',       svg: oCosDispossessed,      subfactions: [] },
+			{ label: 'Cities of Sigmar: Greywater Fastness', svg: oCosGreywaterFastness, subfactions: [] },
+			{ label: 'Cities of Sigmar: Hallowheart',        svg: oCosHallowheart,       subfactions: [] },
+			{ label: 'Cities of Sigmar: Hammerhal',          svg: oCosHammerhal,         subfactions: [] },
+			{
+				label: 'Cities of Sigmar: Order of Azyr', svg: oOrderOfAzyr,
+				subfactions: [
+					{ label: "Hexbane's Hunters", svg: oBbHexbanesHunters },
+				],
+			},
+			{ label: "Cities of Sigmar: Tempest's Eye",      svg: oCosTempestsEye,       subfactions: [] },
+			{ label: 'Cities of Sigmar: The Living City',    svg: oCosTheLivingCity,     subfactions: [] },
+			{ label: 'Cities of Sigmar: The Phoenicium',     svg: oCosThePhoesnicium,    subfactions: [] },
+			{ label: 'Cities of Sigmar: Wildercorps Hunters', svg: oWildercorpsHunters,  subfactions: [] },
 			{
 				label: 'Daughters of Khaine', svg: oDaughtersOfKhaine,
 				subfactions: [
@@ -436,14 +441,15 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Shadeborn',           svg: oBbTheShadeborn },
 				],
 			},
-			{ label: 'Grombrindal', svg: oBbGrombrindal, subfactions: [] },
+			{ label: 'Daughters of Khaine: Khainite Shadowstalkers', svg: oKhainiteShadowstalkers, subfactions: [] },
 			{
 				label: 'Fyreslayers', svg: oFyreslayers,
 				subfactions: [
 					{ label: 'The Chosen Axes', svg: oBbTheChosenAxes },
 				],
 			},
-			{ label: 'Hunters of Huanchi',                           svg: oHuntersOfHuanchi,           subfactions: [] },
+			{ label: 'Fyreslayers: Vulkyn Flameseekers',     svg: oVulkynFlameseekers,   subfactions: [] },
+			{ label: 'Grombrindal',                          svg: oBbGrombrindal,         subfactions: [] },
 			{
 				label: 'Idoneth Deepkin', svg: oIdonethDeekin,
 				subfactions: [
@@ -451,7 +457,6 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Elathain's Soulraid", svg: oBbElathainsSoulraid },
 				],
 			},
-			{ label: 'Khainite Shadowstalkers',                      svg: oKhainiteShadowstalkers,     subfactions: [] },
 			{
 				label: 'Kharadron Overlords', svg: oKharadronOverlords,
 				subfactions: [
@@ -464,13 +469,8 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Myari's Purifiers", svg: oBbMyarisPurifiers },
 				],
 			},
-			{ label: 'Monsters of Order',                            svg: mMonstersOfOrder,            subfactions: [] },
-			{
-				label: 'Order of Azyr', svg: oOrderOfAzyr,
-				subfactions: [
-					{ label: "Hexbane's Hunters", svg: oBbHexbanesHunters },
-				],
-			},
+			{ label: 'Lumineth Realm-lords: Ydrilan Riverblades', svg: oYdrilanRiverblades, subfactions: [] },
+			{ label: 'Monsters of Order',                    svg: mMonstersOfOrder,      subfactions: [] },
 			{
 				label: 'Seraphon', svg: oSeraphon,
 				subfactions: [
@@ -478,14 +478,16 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Starblood Stalkers', svg: oBbTheStarbloodStalkers },
 				],
 			},
-			{ label: 'Stormcast Eternals: Questor Soulsworn',        svg: oStormcastQuestorSoulsworn,  subfactions: [] },
-			{ label: 'Stormcast Eternals: Ruination Chamber',        svg: oStormcastRuniationChamber,                        subfactions: [] },
+			{ label: 'Seraphon: Hunters of Huanchi',         svg: oHuntersOfHuanchi,     subfactions: [] },
+			{ label: 'Stormcast Eternals: Questor Soulsworn', svg: oStormcastQuestorSoulsworn, subfactions: [] },
+			{ label: 'Stormcast Eternals: Ruination Chamber', svg: oStormcastRuniationChamber, subfactions: [] },
 			{
 				label: 'Stormcast Eternals: Sacrosanct Chamber', svg: oStormcastSacrosanctChamber,
 				subfactions: [
 					{ label: "Stormsire's Cursebreakers", svg: oBbStormsiresCursebreakers },
 				],
 			},
+			{ label: 'Stormcast Eternals: The Blacktalons',  svg: oTheBlacktalons,       subfactions: [] },
 			{
 				label: 'Stormcast Eternals: Thunderstrike Chamber', svg: oStormcastThunderstrike,
 				subfactions: [
@@ -515,11 +517,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: "Ylthari's Guardians", svg: oBbYlthariGuardians },
 				],
 			},
-			{ label: 'The Blacktalons',                              svg: oTheBlacktalons,             subfactions: [] },
-			{ label: 'Twistweald',                                   svg: oTwistweald,                        subfactions: [] },
-			{ label: 'Vulkyn Flameseekers',                          svg: oVulkynFlameseekers,         subfactions: [] },
-			{ label: 'Wildercorps Hunters',                          svg: oWildercorpsHunters,         subfactions: [] },
-			{ label: 'Ydrilan Riverblades',                          svg: oYdrilanRiverblades,                        subfactions: [] },
+			{ label: 'Sylvaneth: Twistweald',                svg: oTwistweald,            subfactions: [] },
 		],
 	},
 ];
