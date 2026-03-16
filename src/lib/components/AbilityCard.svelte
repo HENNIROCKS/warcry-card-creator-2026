@@ -85,7 +85,7 @@
 
 	<!-- PARCHMENT -->
 	<div class="parchment">
-		<h1 class="ability-name">{data.name || 'ABILITY NAME'}</h1>
+		<h1 class="ability-name">{#each (data.name || 'ABILITY NAME').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
 		{#if data.flavorText}
 			<p class="flavor-text">{data.flavorText}</p>
 		{/if}

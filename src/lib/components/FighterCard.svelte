@@ -81,7 +81,7 @@
 	<div class="parchment">
 		<h1 class="fighter-name">
 			{#if data.isNamedCharacter}<span class="chevron">«</span>{/if}
-			{data.name || 'FIGHTER NAME'}
+			{#each (data.name || 'FIGHTER NAME').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}
 			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
 		</h1>
 		{#if data.subtitle}

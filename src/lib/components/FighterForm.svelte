@@ -29,7 +29,7 @@
 <div class="space-y-10 text-sm">
 	<!-- Fighter Name + Subtitle -->
 	<section>
-		<label class="field-label" for="fighter-name">Fighter</label>
+		<label class="field-label" for="fighter-name">Fighter <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
 		<input
 			id="fighter-name"
 			class="field-input"

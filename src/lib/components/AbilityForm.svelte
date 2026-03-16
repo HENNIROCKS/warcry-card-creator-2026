@@ -28,7 +28,7 @@
 
 	<!-- Card Name -->
 	<section>
-		<label class="field-label" for="ability-name">Card Name</label>
+		<label class="field-label" for="ability-name">Card Name <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
 		<input
 			id="ability-name"
 			class="field-input"
