@@ -234,7 +234,7 @@
 
 	.activation-text {
 		font-family: 'Germania One', serif;
-		font-size: 14px;
+		font-size: 24px;
 		font-weight: 400;
 		color: #FAF6F3;
 
