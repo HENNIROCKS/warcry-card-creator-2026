@@ -39,6 +39,7 @@ import cTheUnmade           from './svg/factions-chaos-the-unmade.svg?raw';
 import cUntamedBeasts       from './svg/factions-chaos-untamed-beasts.svg?raw';
 
 import cDarkoath            from './svg/factions-chaos-darkoath.svg?raw';
+import cEverchosen          from './svg/factions-chaos-everchosen.svg?raw';
 import cHelsmithsOfHashut   from './svg/factions-chaos-helsmiths-of-hashut.svg?raw';
 
 // ── Chaos subfactions / bladeborn ────────────────────────────────────────────
@@ -66,9 +67,11 @@ import cBbGodswornHunt           from './svg/factions-chaos-bladeborn-godsworn-h
 import dBbBladesOfHollowKing    from './svg/factions-death-bladeborn-blades-of-the-hollow-king.svg?raw';
 
 // ── Death factions ───────────────────────────────────────────────────────────
+import dLegionsOfNagash     from './svg/factions-death-legions-of-nagash.svg?raw';
 import dPyregheists          from './svg/factions-death-pyregheists.svg?raw';
 import dTeraticCohort        from './svg/factions-death-teratic-cohort.svg?raw';
 import dAskurganTrueblades   from './svg/factions-death-askurgan-trueblades.svg?raw';
+import dUlfenkarn            from './svg/factions-death-ulfenkarn.svg?raw';
 import dFleshEaterCourts     from './svg/factions-death-flesh-eater-courts.svg?raw';
 import dNighthaunt           from './svg/factions-death-nighthaunt.svg?raw';
 import dOssiarchBonereapers  from './svg/factions-death-ossiarch-bonereapers.svg?raw';
@@ -112,6 +115,18 @@ import desBbDaKunninKrew           from './svg/factions-destruction-bladeborn-da
 import desBbHrothgornsMantrappers  from './svg/factions-destruction-bladeborn-hrothgorns-mantrappers.svg?raw';
 import desBbBlackpowdersBuccaneers from './svg/factions-destruction-bladeborn-blackpowders-buccaneers.svg?raw';
 
+// ── Cities of Sigmar subfactions ──────────────────────────────────────────────
+import oCosAnvilgard         from './svg/factions-order-cities-of-sigmar-anvilgard.svg?raw';
+import oCosCasteliteHosts    from './svg/factions-order-cities-of-sigmar-castelite-hosts.svg?raw';
+import oCosDarklingCovens    from './svg/factions-order-cities-of-sigmar-darkling-covens.svg?raw';
+import oCosDispossessed      from './svg/factions-order-cities-of-sigmar-dispossessed.svg?raw';
+import oCosGreywaterFastness from './svg/factions-order-cities-of-sigmar-greywater-fastness.svg?raw';
+import oCosHallowheart       from './svg/factions-order-cities-of-sigmar-hallowheart.svg?raw';
+import oCosHammerhal         from './svg/factions-order-cities-of-sigmar-hammerhal.svg?raw';
+import oCosTheLivingCity     from './svg/factions-order-cities-of-sigmar-the-living-city.svg?raw';
+import oCosThePhoesnicium    from './svg/factions-order-cities-of-sigmar-the-phoenicium.svg?raw';
+import oCosTempestsEye       from './svg/factions-order-cities-of-sigmar-tempests-eye.svg?raw';
+
 // ── Order subfactions / bladeborn (additional) ────────────────────────────────
 import oBbHexbanesHunters        from './svg/factions-order-bladeborn-hexbanes-hunters.svg?raw';
 import oBbKnivesOfTheCrone       from './svg/factions-order-bladeborn-knives-of-the-crone.svg?raw';
@@ -146,6 +161,7 @@ import oWildercorpsHunters     from './svg/factions-order-wildercorps-hunters.sv
 
 // ── Order subfactions / bladeborn ─────────────────────────────────────────────
 import oBbBrethrenOfTheBolt       from './svg/factions-order-bladeborn-brethren-of-the-bolt.svg?raw';
+import oBbGrombrindal             from './svg/factions-order-bladeborn-grombrindal.svg?raw';
 import oBbMorgwaethsBladecoven    from './svg/factions-order-bladeborn-morgwaeths-bladecoven.svg?raw';
 import oBbGrysellesArenai         from './svg/factions-order-bladeborn-gryselles-arenai.svg?raw';
 import oBbTheShadeborn            from './svg/factions-order-bladeborn-the-shadeborn.svg?raw';
@@ -224,6 +240,7 @@ export const hierarchy: AllianceEntry[] = [
 				],
 			},
 			{ label: 'Darkoath Savagers',                 svg: cDarkoathSavagers,   subfactions: [] },
+			{ label: 'Everchosen',                        svg: cEverchosen,         subfactions: [] },
 			{
 				label: 'Disciples of Tzeentch: Arcanites', svg: cTzeentchArcanites,
 				subfactions: [
@@ -309,6 +326,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Grymwatch', svg: dBbTheGrymwatch },
 				],
 			},
+			{ label: 'Legions of Nagash',             svg: dLegionsOfNagash,    subfactions: [] },
 			{ label: 'Monsters of Death',             svg: mMonstersOfDeath,    subfactions: [] },
 			{
 				label: 'Nighthaunt', svg: dNighthaunt,
@@ -333,6 +351,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Crimson Court',             svg: dBbTheCrimsonCourt },
 					{ label: 'The Exiled Dead',               svg: dBbTheExiledDead },
 					{ label: 'The Sepulchral Guard',          svg: dBbTheSepulchralGuard },
+					{ label: 'Ulfenkarn',                     svg: dUlfenkarn },
 					{ label: "Zondara's Gravebreakers",       svg: dBbZondarasGravebreakers },
 				],
 			},
@@ -395,7 +414,17 @@ export const hierarchy: AllianceEntry[] = [
 			{
 				label: 'Cities of Sigmar', svg: oCitiesOfSigmar,
 				subfactions: [
+					{ label: 'Anvilgard',            svg: oCosAnvilgard },
 					{ label: 'Brethren of the Bolt', svg: oBbBrethrenOfTheBolt },
+					{ label: 'Castelite Hosts',      svg: oCosCasteliteHosts },
+					{ label: 'Darkling Covens',      svg: oCosDarklingCovens },
+					{ label: 'Dispossessed',         svg: oCosDispossessed },
+					{ label: 'Greywater Fastness',   svg: oCosGreywaterFastness },
+					{ label: 'Hallowheart',          svg: oCosHallowheart },
+					{ label: 'Hammerhal',            svg: oCosHammerhal },
+					{ label: "Tempest's Eye",        svg: oCosTempestsEye },
+					{ label: 'The Living City',      svg: oCosTheLivingCity },
+					{ label: 'The Phoenicium',       svg: oCosThePhoesnicium },
 				],
 			},
 			{
@@ -407,6 +436,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ label: 'The Shadeborn',           svg: oBbTheShadeborn },
 				],
 			},
+			{ label: 'Grombrindal', svg: oBbGrombrindal, subfactions: [] },
 			{
 				label: 'Fyreslayers', svg: oFyreslayers,
 				subfactions: [
