@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-17">
+          <span class="session-date">2026-03-17</span>
+          <span class="session-title">Mobile Support</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-16">
           <span class="session-date">2026-03-16</span>
           <span class="session-title">Hierarchy Restructure &amp; Filterable Faction Select</span>
@@ -414,6 +420,9 @@
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Faction hierarchy restructured: parent-prefixed naming (e.g. <em>Slaves to Darkness: Iron Golem</em>); CoS subfactions promoted; Ulfenkarn removed</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')"><code>FactionSelect.svelte</code> — filterable grouped list replaces 3 cascading selects on both Fighter + Ability editors</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">TXT export workflow for human-editable hierarchy audits (<code>runemark-hierarchy.txt</code>)</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#march-17-built" onclick="activateSession('march-17')">Mobile support: tab bar (Edit/Preview), <code>flex-col h-dvh</code> layout, <code>min-h-0</code> flex scroll fix, explicit-dimension card wrapper</a></td><td>Mar 17</td></tr>
+            <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">iOS input zoom fix: <code>font-size: 1rem</code> on mobile for <code>.field-input</code></a></td><td>Mar 17</td></tr>
+            <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Touch dropdown: deferred <code>document</code> click-outside listener via <code>$effect</code> + <code>setTimeout</code></a></td><td>Mar 17</td></tr>
           </tbody>
         </table>
       </section>
@@ -483,6 +492,71 @@
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-17 — Mobile Support
+    ══════════════════════════════════════════ -->
+    <div id="session-march-17" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-17</span>
+          <span class="badge badge-green">Done</span>
+        </div>
+        <h1>Mobile Support</h1>
+        <p>Full editor access on phones — tab-based layout, responsive form grids, iOS input zoom fix, touch-friendly dropdown dismissal, and export button relocated to the Preview tab on mobile.</p>
+      </div>
+
+      <section id="march-17-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li>Removed <code>isRestricted</code> block from both editor pages — editors now fully accessible on any screen size</li>
+          <li>Removed mobile warning message and all viewport detection state from the index page (<code>/</code>)</li>
+          <li><strong>Tab bar</strong> on mobile (Edit / Preview): solid <code>bg-red-800</code> fill on active tab, dark <code>bg-zinc-950</code> on inactive — hidden on desktop (<code>sm:hidden</code>)</li>
+          <li>Layout: <code>flex-col h-dvh</code> on mobile stacks tab bar → form/preview panel; <code>sm:flex-row</code> restores side-by-side on desktop</li>
+          <li><code>h-dvh</code> (dynamic viewport height) instead of <code>h-screen</code> — accounts for iOS Safari browser chrome correctly</li>
+          <li><code>overflow-hidden</code> on wrapper + <code>min-h-0</code> on <code>&lt;aside&gt;</code> — fixes flex scroll trap so the inner <code>overflow-y-auto</code> form div scrolls correctly within the bounded height</li>
+          <li><strong>Explicit-dimension card wrapper</strong>: <code>width: 574×cardScale px; height: 915×cardScale px; position: relative</code> — card absolutely positioned inside with <code>transform-origin: top left</code>; flex sees the correct visual size instead of the raw 915px layout box</li>
+          <li><code>cardScale</code> uses viewport width on mobile (<code>(viewportWidth - 32) / 574</code>), viewport height on desktop</li>
+          <li>Export button <strong>hidden from Edit tab header on mobile</strong> (<code>hidden sm:block</code>); shown above the card in the Preview panel on mobile only (<code>sm:hidden</code>)</li>
+          <li><strong>FighterForm grids</strong>: Characteristics and each Weapon row changed from <code>grid-cols-5</code> to <code>grid-cols-3 sm:grid-cols-5</code> — 3-column wrap on mobile</li>
+          <li><strong>iOS input zoom fix</strong>: <code>@media (max-width: 639px) { .field-input { font-size: 1rem; } }</code> added to both <code>FighterForm.svelte</code> and <code>AbilityForm.svelte</code> — prevents iOS Safari from auto-zooming on focus</li>
+          <li><strong>Dropdown click-outside</strong>: <code>$effect</code> attaches a deferred document click listener when <code>showDropdown</code> is true; any tap outside closes it — fixes dropdown getting stuck open on touch devices</li>
+        </ul>
+      </section>
+
+      <section id="march-17-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Tab bar vs scroll vs drawer for mobile layout?</div>
+          <div class="decision-a">Tabs. A scroll layout (form on top, card below) is awkward because the card is tall. A drawer adds complexity. Two equal-width tabs with a clear active state are the simplest and most native-feeling pattern.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why explicit-dimension wrapper instead of adjusting transform-origin?</div>
+          <div class="decision-a">CSS <code>transform</code> doesn't affect layout — the element's layout box stays at 915px regardless of scale. Fighting this with <code>transform-origin</code> still leaves the card in an unpredictable position relative to flex siblings. Wrapping in a div with explicit computed dimensions (<code>574×scale</code> × <code>915×scale</code>) is clean: flex and siblings see the correct visual size.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Where should the export button live on mobile?</div>
+          <div class="decision-a">Preview tab, above the card. On mobile the typical flow is: fill form → switch to preview → export. Keeping export in the Edit header would require switching back just to export. The preview panel is the natural place to export from.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">How to fix the dropdown on touch without a click-outside library?</div>
+          <div class="decision-a">A <code>$effect</code> that watches <code>showDropdown</code>: when true, adds a <code>document.addEventListener('click', close)</code> via <code>setTimeout(..., 0)</code> to skip the opening click. Cleans up on effect teardown. No dependencies, no library.</div>
+        </div>
+      </section>
+
+      <section id="march-17-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td>Removed mobile warning, viewport state, resize effect, <code>isPhone</code>/<code>isPortraitTablet</code> derived</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Removed <code>isRestricted</code>; added tab bar, mobile layout, explicit card wrapper, mobile export button, click-outside effect</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same changes as fighter page</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Characteristics + weapon grids: <code>grid-cols-3 sm:grid-cols-5</code>; iOS font-size fix</td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>iOS font-size fix</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-17 -->
 
     <!-- ══════════════════════════════════════════
          2026-03-16 — Runemark Library Audit & Ability Card Types
@@ -1271,7 +1345,7 @@
 </div>
 
 <script>
-  const sessions = ["march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-17", "march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
