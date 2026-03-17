@@ -19,7 +19,7 @@
 		window.addEventListener('resize', onResize);
 		return () => window.removeEventListener('resize', onResize);
 	});
-	const isMobile = $derived(viewportWidth < 640);
+	const isMobile = $derived(viewportWidth < 1024);
 	$effect(() => {
 		if (!showDropdown) return;
 		const close = () => { showDropdown = false; };
@@ -100,10 +100,10 @@
 	}
 </script>
 
-<div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden sm:flex-row">
+<div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden lg:flex-row">
 
 	<!-- Mobile tab bar -->
-	<nav class="sm:hidden flex shrink-0">
+	<nav class="lg:hidden flex shrink-0">
 		<button
 			class="flex-1 py-4 text-sm font-bold tracking-widest uppercase transition {activeTab === 'edit' ? 'bg-red-800 text-white' : 'bg-zinc-950 text-zinc-500'}"
 			onclick={() => activeTab = 'edit'}
@@ -116,7 +116,7 @@
 
 	<!-- LEFT: Form panel -->
 	<aside
-		class="flex flex-col border-zinc-800 w-full flex-1 min-h-0 sm:w-[480px] sm:flex-none sm:shrink-0 sm:border-r sm:h-full"
+		class="flex flex-col border-zinc-800 w-full flex-1 min-h-0 lg:w-[480px] lg:flex-none lg:shrink-0 lg:border-r lg:h-full"
 		style:display={isMobile && activeTab !== 'edit' ? 'none' : 'flex'}
 	>
 		<!-- Header -->
@@ -125,7 +125,7 @@
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
 				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Fighter Card</h1>
 			</div>
-			<div class="relative hidden sm:block">
+			<div class="relative hidden lg:block">
 				<div class="flex rounded-md overflow-hidden">
 					<button
 						onclick={exportCard}
@@ -168,11 +168,11 @@
 
 	<!-- RIGHT: Card preview -->
 	<main
-		class="flex flex-col flex-1 min-h-0 items-center justify-start overflow-y-auto pt-6 sm:justify-center sm:pt-0 sm:h-full sm:overflow-hidden"
+		class="flex flex-col flex-1 min-h-0 items-center justify-start overflow-y-auto pt-6 lg:justify-center lg:pt-0 lg:h-full lg:overflow-hidden"
 		style:display={isMobile && activeTab !== 'preview' ? 'none' : 'flex'}
 	>
 		<!-- Export button: mobile only, above card -->
-		<div class="sm:hidden mb-6 relative">
+		<div class="lg:hidden mb-6 relative">
 			<div class="flex rounded-md overflow-hidden">
 				<button
 					onclick={exportCard}
