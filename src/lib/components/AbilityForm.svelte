@@ -142,4 +142,10 @@
 	.field-input:focus {
 		border-color: #7f1d1d;
 	}
+
+	@media (max-width: 639px) {
+		.field-input {
+			font-size: 1rem;
+		}
+	}
 </style>
