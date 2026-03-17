@@ -132,7 +132,7 @@
 	<!-- Characteristics -->
 	<section>
 		<p class="field-label mb-2">Characteristics</p>
-		<div class="grid grid-cols-5 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 			<div>
 				<label class="sublabel" for="baseSize">Base Size</label>
 				<select id="baseSize" class="field-input text-center" bind:value={data.baseSize}>
@@ -186,7 +186,7 @@
 	{#each data.weapons as weapon, i}
 		<section>
 			<p class="field-label mb-2">Weapon {i + 1}</p>
-			<div class="grid grid-cols-5 gap-2">
+			<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 				<div>
 					<span class="sublabel">Type</span>
 					<select class="field-input text-center" bind:value={weapon.name}>
@@ -290,5 +290,11 @@
 
 	.field-input:focus {
 		border-color: #7f1d1d;
+	}
+
+	@media (max-width: 639px) {
+		.field-input {
+			font-size: 1rem;
+		}
 	}
 </style>

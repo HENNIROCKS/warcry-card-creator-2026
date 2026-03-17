@@ -11,6 +11,7 @@
 	let exporting = $state(false);
 	let printerFriendly = $state(false);
 	let showDropdown = $state(false);
+	let activeTab = $state<'edit' | 'preview'>('edit');
 	let viewportHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
 	let viewportWidth = $state(typeof window !== 'undefined' ? window.innerWidth : 1024);
 	$effect(() => {
@@ -18,8 +19,18 @@
 		window.addEventListener('resize', onResize);
 		return () => window.removeEventListener('resize', onResize);
 	});
-	const cardScale = $derived(Math.min(1, (viewportHeight - 64) / 915));
-	const isRestricted = $derived(viewportWidth < 640 || (viewportWidth < 1024 && viewportHeight > viewportWidth));
+	const isMobile = $derived(viewportWidth < 640);
+	$effect(() => {
+		if (!showDropdown) return;
+		const close = () => { showDropdown = false; };
+		const id = setTimeout(() => document.addEventListener('click', close), 0);
+		return () => { clearTimeout(id); document.removeEventListener('click', close); };
+	});
+	const cardScale = $derived(
+		isMobile
+			? Math.min(1, (viewportWidth - 32) / 574)
+			: Math.min(1, (viewportHeight - 64) / 915)
+	);
 
 	let data = $state<FighterCardData>({
 		name: 'FIGHTER NAME',
@@ -89,22 +100,32 @@
 	}
 </script>
 
-{#if isRestricted}
-<div class="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-4 p-8 text-center">
-	<p class="text-zinc-300">This tool requires a tablet in landscape orientation or a larger screen. Mobile support may come in a future update.</p>
-	<a href="{base}/" class="text-zinc-500 hover:text-white text-sm transition">← Back</a>
-</div>
-{:else}
-<div class="flex h-screen bg-zinc-900 text-white">
+<div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden sm:flex-row">
+
+	<!-- Mobile tab bar -->
+	<nav class="sm:hidden flex shrink-0">
+		<button
+			class="flex-1 py-4 text-sm font-bold tracking-widest uppercase transition {activeTab === 'edit' ? 'bg-red-800 text-white' : 'bg-zinc-950 text-zinc-500'}"
+			onclick={() => activeTab = 'edit'}
+		>Edit</button>
+		<button
+			class="flex-1 py-4 text-sm font-bold tracking-widest uppercase transition {activeTab === 'preview' ? 'bg-red-800 text-white' : 'bg-zinc-950 text-zinc-500'}"
+			onclick={() => activeTab = 'preview'}
+		>Preview</button>
+	</nav>
+
 	<!-- LEFT: Form panel -->
-	<aside class="flex w-[480px] shrink-0 flex-col border-r border-zinc-800 h-full">
+	<aside
+		class="flex flex-col border-zinc-800 w-full flex-1 min-h-0 sm:w-[480px] sm:flex-none sm:shrink-0 sm:border-r sm:h-full"
+		style:display={isMobile && activeTab !== 'edit' ? 'none' : 'flex'}
+	>
 		<!-- Header -->
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
 			<div class="flex items-center gap-3">
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
 				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Fighter Card</h1>
 			</div>
-			<div class="relative">
+			<div class="relative hidden sm:block">
 				<div class="flex rounded-md overflow-hidden">
 					<button
 						onclick={exportCard}
@@ -146,12 +167,53 @@
 	</aside>
 
 	<!-- RIGHT: Card preview -->
-	<main class="flex flex-1 items-center justify-center h-full">
-		<div style="transform: scale({cardScale}); transform-origin: center center; display:inline-block; line-height:0;">
-			<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-				<FighterCard {data} {printerFriendly} />
+	<main
+		class="flex flex-col flex-1 min-h-0 items-center justify-start overflow-y-auto pt-6 sm:justify-center sm:pt-0 sm:h-full sm:overflow-hidden"
+		style:display={isMobile && activeTab !== 'preview' ? 'none' : 'flex'}
+	>
+		<!-- Export button: mobile only, above card -->
+		<div class="sm:hidden mb-6 relative">
+			<div class="flex rounded-md overflow-hidden">
+				<button
+					onclick={exportCard}
+					disabled={exporting}
+					class="bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
+				>
+					{exporting ? 'Exporting…' : 'Export PNG'}
+				</button>
+				<button
+					onclick={() => showDropdown = !showDropdown}
+					disabled={exporting}
+					class="bg-red-800 border-l border-red-900 px-2 py-2 text-white transition hover:bg-red-700 disabled:opacity-50"
+					aria-label="More export options"
+				>
+					<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+				</button>
+			</div>
+			{#if showDropdown}
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div
+					class="absolute left-0 top-full mt-1 z-10 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg"
+					onmouseleave={() => showDropdown = false}
+				>
+					<button
+						onclick={exportPrinterFriendly}
+						class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md"
+					>
+						Export printer-friendly PNG
+					</button>
+				</div>
+			{/if}
+		</div>
+
+		<!-- Explicit-dimension wrapper so flex sees the visual size, not the 915px layout box -->
+		<div style="width: {574 * cardScale}px; height: {915 * cardScale}px; position: relative; flex-shrink: 0;">
+			<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
+				<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
+					<FighterCard {data} {printerFriendly} />
+				</div>
 			</div>
 		</div>
 	</main>
+
 </div>
-{/if}
