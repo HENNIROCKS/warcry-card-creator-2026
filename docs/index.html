@@ -423,6 +423,7 @@
             <tr><td><a href="#march-17-built" onclick="activateSession('march-17')">Mobile support: tab bar (Edit/Preview), <code>flex-col h-dvh</code> layout, <code>min-h-0</code> flex scroll fix, explicit-dimension card wrapper</a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">iOS input zoom fix: <code>font-size: 1rem</code> on mobile for <code>.field-input</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Touch dropdown: deferred <code>document</code> click-outside listener via <code>$effect</code> + <code>setTimeout</code></a></td><td>Mar 17</td></tr>
+            <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Tablet portrait: side-by-side layout breakpoint raised to <code>lg:</code> 1024px — phones + portrait tablets use tabbed layout</a></td><td>Mar 17</td></tr>
           </tbody>
         </table>
       </section>
@@ -521,6 +522,7 @@
           <li><strong>FighterForm grids</strong>: Characteristics and each Weapon row changed from <code>grid-cols-5</code> to <code>grid-cols-3 sm:grid-cols-5</code> — 3-column wrap on mobile</li>
           <li><strong>iOS input zoom fix</strong>: <code>@media (max-width: 639px) { .field-input { font-size: 1rem; } }</code> added to both <code>FighterForm.svelte</code> and <code>AbilityForm.svelte</code> — prevents iOS Safari from auto-zooming on focus</li>
           <li><strong>Dropdown click-outside</strong>: <code>$effect</code> attaches a deferred document click listener when <code>showDropdown</code> is true; any tap outside closes it — fixes dropdown getting stuck open on touch devices</li>
+          <li><strong>Tablet portrait fix</strong>: raised the mobile/desktop layout breakpoint from <code>sm:</code> (640px) to <code>lg:</code> (1024px) — tablets in portrait now use the tabbed layout instead of a cramped 480px form + ~288px preview side-by-side. <code>isMobile</code> threshold updated to match. iOS input zoom media query updated to <code>max-width: 1023px</code>.</li>
         </ul>
       </section>
 
@@ -542,6 +544,10 @@
           <div class="decision-q">How to fix the dropdown on touch without a click-outside library?</div>
           <div class="decision-a">A <code>$effect</code> that watches <code>showDropdown</code>: when true, adds a <code>document.addEventListener('click', close)</code> via <code>setTimeout(..., 0)</code> to skip the opening click. Cleans up on effect teardown. No dependencies, no library.</div>
         </div>
+        <div class="decision">
+          <div class="decision-q">When should the side-by-side layout kick in — at 640px or 1024px?</div>
+          <div class="decision-a">1024px (<code>lg:</code>). At 768px (iPad portrait) the form panel is 480px fixed, leaving only ~288px for the card preview — too cramped to be useful. Raising the breakpoint to 1024px means tablets in portrait get the full-screen tabbed layout, and the side-by-side layout starts at iPad landscape / desktop where there's enough room.</div>
+        </div>
       </section>
 
       <section id="march-17-files" data-nav="Files Changed">
@@ -549,10 +555,10 @@
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/routes/+page.svelte</code></td><td>Removed mobile warning, viewport state, resize effect, <code>isPhone</code>/<code>isPortraitTablet</code> derived</td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Removed <code>isRestricted</code>; added tab bar, mobile layout, explicit card wrapper, mobile export button, click-outside effect</td></tr>
-          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same changes as fighter page</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Characteristics + weapon grids: <code>grid-cols-3 sm:grid-cols-5</code>; iOS font-size fix</td></tr>
-          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>iOS font-size fix</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Removed <code>isRestricted</code>; added tab bar, mobile layout, explicit card wrapper, mobile export button, click-outside effect; layout breakpoint raised to <code>lg:</code> (1024px)</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same changes as fighter page; layout breakpoint raised to <code>lg:</code> (1024px)</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Characteristics + weapon grids: <code>grid-cols-3 sm:grid-cols-5</code>; iOS font-size fix raised to <code>max-width: 1023px</code></td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>iOS font-size fix raised to <code>max-width: 1023px</code></td></tr>
         </table>
       </section>
     </div>
