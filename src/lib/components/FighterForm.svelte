@@ -78,18 +78,21 @@
 				</button>
 			</div>
 			<div class="space-y-2">
-				<div>
-					<label class="sublabel" for="img-offset-x">Position X</label>
-					<input id="img-offset-x" type="range" min="0" max="100" bind:value={data.imageOffsetX} class="w-full accent-red-800" />
+				<div class="hidden lg:block space-y-2">
+					<div>
+						<label class="sublabel" for="img-offset-x">Position X <span class="font-normal">(left/right)</span></label>
+						<input id="img-offset-x" type="range" min="0" max="100" bind:value={data.imageOffsetX} class="w-full accent-red-800" />
+					</div>
+					<div>
+						<label class="sublabel" for="img-offset-y">Position Y <span class="font-normal">(down/up)</span></label>
+						<input id="img-offset-y" type="range" min="0" max="100" bind:value={data.imageOffsetY} class="w-full accent-red-800" />
+					</div>
+					<div>
+						<label class="sublabel" for="img-zoom">Zoom</label>
+						<input id="img-zoom" type="range" min="1" max="3" step="0.05" bind:value={data.imageZoom} class="w-full accent-red-800" />
+					</div>
 				</div>
-				<div>
-					<label class="sublabel" for="img-offset-y">Position Y</label>
-					<input id="img-offset-y" type="range" min="0" max="100" bind:value={data.imageOffsetY} class="w-full accent-red-800" />
-				</div>
-				<div>
-					<label class="sublabel" for="img-zoom">Zoom</label>
-					<input id="img-zoom" type="range" min="1" max="3" step="0.05" bind:value={data.imageZoom} class="w-full accent-red-800" />
-				</div>
+				<p class="lg:hidden text-sm text-zinc-300">Adjust image position and zoom in the <strong class="text-white font-semibold">Preview</strong> tab.</p>
 				<div>
 					<label class="sublabel" for="img-caption">Caption</label>
 					<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />

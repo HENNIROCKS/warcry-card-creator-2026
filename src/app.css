@@ -61,6 +61,38 @@
 [data-theme="light"] .bg-red-900.text-white,
 [data-theme="light"] .bg-red-800.text-white { color: #ffffff; }
 
+/* ── Range input — larger thumb for touch ─────────────────────────────────── */
+
+input[type="range"] {
+	-webkit-appearance: none;
+	appearance: none;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--ui-surface-2);
+	outline: none;
+	cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #991b1b;
+	cursor: pointer;
+	border: 2px solid #7f1d1d;
+}
+
+input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #991b1b;
+	cursor: pointer;
+	border: 2px solid #7f1d1d;
+}
+
 /* Custom fonts */
 
 /*
