@@ -435,6 +435,7 @@
             <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Mobile image positioning: touch overlay on card image area — drag to pan, pinch to zoom; <code>touch-action: none</code> suppresses scroll without non-passive listeners</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Range input: custom 20px thumb via <code>-webkit-appearance: none</code>; track uses <code>var(--ui-surface-2)</code> for theme compat</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-files" onclick="activateSession('march-18')">Code style rules added to CLAUDE.md: import sorting, key quoting, on-touch cleanup policy</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-mobile-export" onclick="activateSession('march-18')">Mobile export: iOS Safari + dom-to-image-more incompatibility (foreignObject restriction); html2canvas attempted and reverted; export currently unavailable on mobile</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
@@ -605,8 +606,56 @@
           <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Removed unnecessary quotes from <code>'Pistol'</code> and all 25 single-word keys in <code>fighterRunemarks</code>; <code>'Icon Bearer'</code> kept quoted</td></tr>
           <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>All import groups sorted A→Z; orphan Chaos imports folded into main block; three <code>(additional)</code> headers eliminated; duplicate Order bladeborn section merged; Cities of Sigmar subfactions sort corrected</td></tr>
           <tr><td><code>CLAUDE.md</code></td><td>Added Code Style section: import sorting, key quoting rules, on-touch cleanup policy</td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td>Mobile-only note added below card buttons: "Card export is currently unavailable on mobile" (<code>lg:hidden</code>)</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Mobile export button replaced with "Export currently unavailable on mobile, use desktop" message; desktop export reverted to dom-to-image-more (html2canvas attempt reverted)</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same revert as fighter page; html2canvas + maskSvgRaw + bgDataUrl removed</td></tr>
         </table>
       </section>
+
+      <section id="march-18-mobile-export" data-nav="Mobile Export Investigation">
+        <h2><span class="icon" style="background:rgba(248,113,113,0.15)">📱</span> Mobile Export Investigation</h2>
+        <p>PNG export on real iOS devices (iPhone) produced images with no background texture and intermittently no model image. A full switch to html2canvas was attempted but could not produce a correct result on either platform. All changes were reverted; desktop export uses dom-to-image-more unchanged.</p>
+
+        <h3>Root cause: iOS Safari + dom-to-image-more</h3>
+        <p>dom-to-image-more serialises the DOM into an SVG <code>foreignObject</code>, then draws it to canvas. iOS Safari refuses to render <code>&lt;img&gt;</code> elements and CSS <code>background-image</code> inside <code>foreignObject</code>. This is a fundamental browser security restriction, not a library bug. No workaround exists within dom-to-image-more.</p>
+
+        <h3>Attempted fix: html2canvas</h3>
+        <p>html2canvas uses Canvas 2D API directly, bypassing <code>foreignObject</code>. Both editor pages were switched to it, with additional canvas compositing to re-apply the SVG mask to the image area after capture.</p>
+        <p>Problems encountered:</p>
+        <ul>
+          <li><strong>Model image overflow (desktop)</strong>: <code>.image-inner</code> uses CSS <code>mask-image</code> for clipping with no <code>overflow: hidden</code>. Without the mask pass, <code>transform: scale(zoom)</code> on the model img caused it to overflow across the full card.</li>
+          <li><strong>Background not rendering</strong>: <code>background: url('/background.jpg')</code> on <code>.card</code> never appeared in html2canvas output. Tried: CSS custom property as background-image, inline <code>&lt;img&gt;</code> at <code>z-index:-1</code>, programmatic inline style injection. None worked.</li>
+          <li><strong>background-clip: text</strong>: <code>.label-col</code> uses this for the parchment-through-text effect on stat headers. Not supported by html2canvas.</li>
+          <li><strong>Prerender 404</strong>: adding <code>&lt;img src="/background.jpg"&gt;</code> caused SvelteKit's static prerenderer to follow the src as a page route.</li>
+        </ul>
+
+        <div class="callout warn">
+          <p><strong>Status: unresolved.</strong> All html2canvas code reverted. Mobile export replaced with an inline unavailable message on both editor pages and a note on the landing page. Known open issue.</p>
+        </div>
+      </section>
+
+      <section id="march-18-export-decisions" data-nav="Mobile Export Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Mobile Export Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Why stop debugging html2canvas?</div>
+          <div class="decision-a">Multiple rounds produced no visual improvement. The background-image problem appears fundamental to how this project applies backgrounds (CSS <code>background:</code> on the card element), not a configuration issue. Further html2canvas attempts were deferred in favour of restoring a known-good working state.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Messaging for unavailable mobile export</div>
+          <div class="decision-a">"Export currently unavailable on mobile, use desktop" (comma, no em dash). Shown as a muted inline pill replacing the export button on both editor preview tabs. Landing page shows a smaller <code>lg:hidden</code> note below the card type buttons.</div>
+        </div>
+      </section>
+
+      <section id="march-18-pending" data-nav="Still Pending">
+        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+        <table>
+          <thead><tr><th>Status</th><th>Item</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-amber">open</span></td><td><strong>Mobile PNG export</strong> — iOS Safari incompatibility with dom-to-image-more (foreignObject restriction). html2canvas trialled but could not render card background. Needs a new approach: server-side render, headless browser, or full Canvas-based card reimplementation.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
     </div>
     <!-- /session-march-18 -->
 
