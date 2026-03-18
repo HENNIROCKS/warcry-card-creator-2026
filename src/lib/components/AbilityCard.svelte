@@ -109,12 +109,12 @@
 		width: 574px;
 		height: 915px;
 		position: relative;
+		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		background: url('/background.jpg') center center / cover no-repeat;
 		border: 0;
 		outline: none;
-		overflow: hidden;
 	}
 
 	/* ── IMAGE SECTION ─────────────────────────── */

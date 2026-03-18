@@ -152,39 +152,11 @@
 		class="flex flex-col flex-1 min-h-0 items-center justify-start overflow-y-auto pt-6 lg:justify-center lg:pt-0 lg:h-full lg:overflow-hidden"
 		style:display={isMobile && activeTab !== 'preview' ? 'none' : 'flex'}
 	>
-		<!-- Export button: mobile only, above card -->
-		<div class="lg:hidden mb-6 relative">
-			<div class="flex rounded-md overflow-hidden">
-				<button
-					onclick={exportCard}
-					disabled={exporting}
-					class="bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
-				>
-					{exporting ? 'Exporting…' : 'Export PNG'}
-				</button>
-				<button
-					onclick={() => showDropdown = !showDropdown}
-					disabled={exporting}
-					class="bg-red-800 border-l border-red-900 px-2 py-2 text-white transition hover:bg-red-700 disabled:opacity-50"
-					aria-label="More export options"
-				>
-					<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-				</button>
+		<!-- Export unavailable on mobile -->
+		<div class="lg:hidden mb-4">
+			<div class="rounded-md bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm text-zinc-400">
+				Export currently unavailable on mobile, use desktop
 			</div>
-			{#if showDropdown}
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div
-					class="absolute left-0 top-full mt-1 z-10 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg"
-					onmouseleave={() => showDropdown = false}
-				>
-					<button
-						onclick={exportPrinterFriendly}
-						class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md"
-					>
-						Export printer-friendly PNG
-					</button>
-				</div>
-			{/if}
 		</div>
 
 		<!-- Explicit-dimension wrapper so flex sees the visual size, not the 915px layout box -->
