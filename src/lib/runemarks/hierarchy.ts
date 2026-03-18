@@ -4,90 +4,87 @@ import gaBringersOfDeath  from './svg/grand-alliances-death.svg?raw';
 import gaHarbingersOfDest from './svg/grand-alliances-destruction.svg?raw';
 import gaSentinelsOfOrder from './svg/grand-alliances-order.svg?raw';
 
-// ── Monsters factions ─────────────────────────────────────────────────────────
-import mChaoticBeasts      from './svg/monsters-chaotic-beasts.svg?raw';
-import mMonstersOfDeath    from './svg/monsters-of-death.svg?raw';
-import mMonstersOfDest     from './svg/monsters-of-destruction.svg?raw';
-import mMonstersOfOrder    from './svg/monsters-of-order.svg?raw';
+// ── Monsters ─────────────────────────────────────────────────────────────────
+import mChaoticBeasts   from './svg/monsters-chaotic-beasts.svg?raw';
+import mMonstersOfDeath from './svg/monsters-of-death.svg?raw';
+import mMonstersOfDest  from './svg/monsters-of-destruction.svg?raw';
+import mMonstersOfOrder from './svg/monsters-of-order.svg?raw';
 
 // ── Chaos factions ───────────────────────────────────────────────────────────
-import cBeastsOfChaos       from './svg/factions-chaos-beasts-of-chaos.svg?raw';
-import cKhorneBloodbound    from './svg/factions-chaos-khorne-bloodbound.svg?raw';
-import cKhorneDaemons       from './svg/factions-chaos-khorne-daemons.svg?raw';
-import cChaosLegionnaires   from './svg/factions-chaos-chaos-legionnaires.svg?raw';
-import cClawsOfKaranak      from './svg/factions-chaos-claws-of-karanak.svg?raw';
-import cCorvusCabal         from './svg/factions-chaos-corvus-cabal.svg?raw';
-import cCypherLords         from './svg/factions-chaos-cypher-lords.svg?raw';
-import cDarkoathSavagers    from './svg/factions-chaos-darkoath-savagers.svg?raw';
-import cTzeentchArcanites   from './svg/factions-chaos-tzeentch-arcanites.svg?raw';
-import cTzeentchDaemons     from './svg/factions-chaos-tzeentch-daemons.svg?raw';
-import cSlaaneshDaemons     from './svg/factions-chaos-slaanesh-daemons.svg?raw';
-import cSlaaneshSybarites   from './svg/factions-chaos-slaanesh-sybarites.svg?raw';
-import cHornsOfHashut       from './svg/factions-chaos-horns-of-hashut.svg?raw';
-import cIronGolems          from './svg/factions-chaos-iron-golems.svg?raw';
-import cJadeObelisk         from './svg/factions-chaos-jade-obelisk.svg?raw';
-import cNurgleDaemons       from './svg/factions-chaos-nurgle-daemons.svg?raw';
-import cNurgleRotbringers   from './svg/factions-chaos-nurgle-rotbringers.svg?raw';
-import cRotmireCreed        from './svg/factions-chaos-rotmire-creed.svg?raw';
-import cScionsOfTheFlame    from './svg/factions-chaos-scions-of-the-flame.svg?raw';
-import cSkaven              from './svg/factions-chaos-skaven.svg?raw';
-import cSlavesToDarkness    from './svg/factions-chaos-slaves-to-darkness.svg?raw';
-import cSpireTyrants        from './svg/factions-chaos-spire-tyrants.svg?raw';
-import cSplinteredFang      from './svg/factions-chaos-splintered-fang.svg?raw';
-import cTarantulosBrood     from './svg/factions-chaos-tarantulos-brood.svg?raw';
-import cTheUnmade           from './svg/factions-chaos-the-unmade.svg?raw';
-import cUntamedBeasts       from './svg/factions-chaos-untamed-beasts.svg?raw';
-
-import cDarkoath            from './svg/factions-chaos-darkoath.svg?raw';
-import cEverchosen          from './svg/factions-chaos-everchosen.svg?raw';
-import cHelsmithsOfHashut   from './svg/factions-chaos-helsmiths-of-hashut.svg?raw';
+import cBeastsOfChaos      from './svg/factions-chaos-beasts-of-chaos.svg?raw';
+import cChaosLegionnaires  from './svg/factions-chaos-chaos-legionnaires.svg?raw';
+import cClawsOfKaranak     from './svg/factions-chaos-claws-of-karanak.svg?raw';
+import cCorvusCabal        from './svg/factions-chaos-corvus-cabal.svg?raw';
+import cCypherLords        from './svg/factions-chaos-cypher-lords.svg?raw';
+import cDarkoath           from './svg/factions-chaos-darkoath.svg?raw';
+import cDarkoathSavagers   from './svg/factions-chaos-darkoath-savagers.svg?raw';
+import cEverchosen         from './svg/factions-chaos-everchosen.svg?raw';
+import cHelsmithsOfHashut  from './svg/factions-chaos-helsmiths-of-hashut.svg?raw';
+import cHornsOfHashut      from './svg/factions-chaos-horns-of-hashut.svg?raw';
+import cIronGolems         from './svg/factions-chaos-iron-golems.svg?raw';
+import cJadeObelisk        from './svg/factions-chaos-jade-obelisk.svg?raw';
+import cKhorneBloodbound   from './svg/factions-chaos-khorne-bloodbound.svg?raw';
+import cKhorneDaemons      from './svg/factions-chaos-khorne-daemons.svg?raw';
+import cNurgleDaemons      from './svg/factions-chaos-nurgle-daemons.svg?raw';
+import cNurgleRotbringers  from './svg/factions-chaos-nurgle-rotbringers.svg?raw';
+import cRotmireCreed       from './svg/factions-chaos-rotmire-creed.svg?raw';
+import cScionsOfTheFlame   from './svg/factions-chaos-scions-of-the-flame.svg?raw';
+import cSkaven             from './svg/factions-chaos-skaven.svg?raw';
+import cSlaaneshDaemons    from './svg/factions-chaos-slaanesh-daemons.svg?raw';
+import cSlaaneshSybarites  from './svg/factions-chaos-slaanesh-sybarites.svg?raw';
+import cSlavesToDarkness   from './svg/factions-chaos-slaves-to-darkness.svg?raw';
+import cSpireTyrants       from './svg/factions-chaos-spire-tyrants.svg?raw';
+import cSplinteredFang     from './svg/factions-chaos-splintered-fang.svg?raw';
+import cTarantulosBrood    from './svg/factions-chaos-tarantulos-brood.svg?raw';
+import cTheUnmade          from './svg/factions-chaos-the-unmade.svg?raw';
+import cTzeentchArcanites  from './svg/factions-chaos-tzeentch-arcanites.svg?raw';
+import cTzeentchDaemons    from './svg/factions-chaos-tzeentch-daemons.svg?raw';
+import cUntamedBeasts      from './svg/factions-chaos-untamed-beasts.svg?raw';
 
 // ── Chaos subfactions / bladeborn ────────────────────────────────────────────
-import cBbGorehhosen             from './svg/factions-chaos-bladeborn-gorechhosen-of-dromm.svg?raw';
-import cBbKamandorasBlades       from './svg/factions-chaos-bladeborn-kamandoras-blades.svg?raw';
-import cBbEphilims               from './svg/factions-chaos-bladeborn-ephilims-pandaemonium.svg?raw';
-import cBbBloodOfTheBull         from './svg/factions-chaos-bladeborn-blood-of-the-bull.svg?raw';
-import cBbGrandfathersGardeners  from './svg/factions-chaos-bladeborn-grandfathers-gardeners.svg?raw';
-import cBbZikkitsTunnelpack      from './svg/factions-chaos-bladeborn-zikkits-tunnelpack.svg?raw';
-import cBbGrashraksDespoilers    from './svg/factions-chaos-bladeborn-grashraks-despoilers.svg?raw';
-import cBbMagoresFiends          from './svg/factions-chaos-bladeborn-magores-fiends.svg?raw';
-import cBbGarrekSReavers         from './svg/factions-chaos-bladeborn-garreks-reavers.svg?raw';
-import cBbEyesOfTheNine          from './svg/factions-chaos-bladeborn-eyes-of-the-nine.svg?raw';
-import cBbThricefoldDiscord      from './svg/factions-chaos-bladeborn-thricefold-discord.svg?raw';
-import cBbTheDreadPageant        from './svg/factions-chaos-bladeborn-the-dread-pageant.svg?raw';
-import cBbTheWurmspat            from './svg/factions-chaos-bladeborn-the-wurmspat.svg?raw';
-import cBbSkabbiksPlaguepack     from './svg/factions-chaos-bladeborn-skabbiks-plaguepack.svg?raw';
-import cBbSkittershanksClawpack  from './svg/factions-chaos-bladeborn-skittershanks-clawpack.svg?raw';
-import cBbSpiteclawsSwarm        from './svg/factions-chaos-bladeborn-spiteclaws-swarm.svg?raw';
-import cBbGnarlspiritPack        from './svg/factions-chaos-bladeborn-gnarlspirit-pack.svg?raw';
-import cBbKhagrasRavagers        from './svg/factions-chaos-bladeborn-khagras-ravagers.svg?raw';
-import cBbGodswornHunt           from './svg/factions-chaos-bladeborn-godsworn-hunt.svg?raw';
-
-// ── Death subfactions / bladeborn (additional) ───────────────────────────────
-import dBbBladesOfHollowKing    from './svg/factions-death-bladeborn-blades-of-the-hollow-king.svg?raw';
+import cBbBloodOfTheBull        from './svg/factions-chaos-bladeborn-blood-of-the-bull.svg?raw';
+import cBbEphilims              from './svg/factions-chaos-bladeborn-ephilims-pandaemonium.svg?raw';
+import cBbEyesOfTheNine         from './svg/factions-chaos-bladeborn-eyes-of-the-nine.svg?raw';
+import cBbGarrekSReavers        from './svg/factions-chaos-bladeborn-garreks-reavers.svg?raw';
+import cBbGnarlspiritPack       from './svg/factions-chaos-bladeborn-gnarlspirit-pack.svg?raw';
+import cBbGodswornHunt          from './svg/factions-chaos-bladeborn-godsworn-hunt.svg?raw';
+import cBbGorehhosen            from './svg/factions-chaos-bladeborn-gorechhosen-of-dromm.svg?raw';
+import cBbGrandfathersGardeners from './svg/factions-chaos-bladeborn-grandfathers-gardeners.svg?raw';
+import cBbGrashraksDespoilers   from './svg/factions-chaos-bladeborn-grashraks-despoilers.svg?raw';
+import cBbKamandorasBlades      from './svg/factions-chaos-bladeborn-kamandoras-blades.svg?raw';
+import cBbKhagrasRavagers       from './svg/factions-chaos-bladeborn-khagras-ravagers.svg?raw';
+import cBbMagoresFiends         from './svg/factions-chaos-bladeborn-magores-fiends.svg?raw';
+import cBbSkabbiksPlaguepack    from './svg/factions-chaos-bladeborn-skabbiks-plaguepack.svg?raw';
+import cBbSkittershanksClawpack from './svg/factions-chaos-bladeborn-skittershanks-clawpack.svg?raw';
+import cBbSpiteclawsSwarm       from './svg/factions-chaos-bladeborn-spiteclaws-swarm.svg?raw';
+import cBbTheDreadPageant       from './svg/factions-chaos-bladeborn-the-dread-pageant.svg?raw';
+import cBbTheWurmspat           from './svg/factions-chaos-bladeborn-the-wurmspat.svg?raw';
+import cBbThricefoldDiscord     from './svg/factions-chaos-bladeborn-thricefold-discord.svg?raw';
+import cBbZikkitsTunnelpack     from './svg/factions-chaos-bladeborn-zikkits-tunnelpack.svg?raw';
 
 // ── Death factions ───────────────────────────────────────────────────────────
-import dLegionsOfNagash     from './svg/factions-death-legions-of-nagash.svg?raw';
-import dPyregheists          from './svg/factions-death-pyregheists.svg?raw';
-import dTeraticCohort        from './svg/factions-death-teratic-cohort.svg?raw';
 import dAskurganTrueblades   from './svg/factions-death-askurgan-trueblades.svg?raw';
 import dFleshEaterCourts     from './svg/factions-death-flesh-eater-courts.svg?raw';
+import dLegionsOfNagash      from './svg/factions-death-legions-of-nagash.svg?raw';
 import dNighthaunt           from './svg/factions-death-nighthaunt.svg?raw';
 import dOssiarchBonereapers  from './svg/factions-death-ossiarch-bonereapers.svg?raw';
+import dPyregheists          from './svg/factions-death-pyregheists.svg?raw';
 import dRoyalBeastflayers    from './svg/factions-death-royal-beastflayers.svg?raw';
 import dSoulblightGravelords from './svg/factions-death-soulblight-gravelords.svg?raw';
+import dTeraticCohort        from './svg/factions-death-teratic-cohort.svg?raw';
 
 // ── Death subfactions / bladeborn ─────────────────────────────────────────────
-import dBbSkinnerkin            from './svg/factions-death-bladeborn-skinnerkin.svg?raw';
-import dBbTheGrymwatch          from './svg/factions-death-bladeborn-the-grymwatch.svg?raw';
-import dBbThornsOfBriarQueen    from './svg/factions-death-bladeborn-thorns-of-the-briar-queen.svg?raw';
+import dBbBladesOfHollowKing    from './svg/factions-death-bladeborn-blades-of-the-hollow-king.svg?raw';
 import dBbHeadmansCurse         from './svg/factions-death-bladeborn-headmans-curse.svg?raw';
 import dBbKainansReavers        from './svg/factions-death-bladeborn-kainans-reapers.svg?raw';
-import dBbZondarasGravebreakers from './svg/factions-death-bladeborn-zondaras-gravebreakers.svg?raw';
+import dBbSkinnerkin            from './svg/factions-death-bladeborn-skinnerkin.svg?raw';
 import dBbSonsOfVelmorn         from './svg/factions-death-bladeborn-sons-of-velmorn.svg?raw';
-import dBbTheExiledDead         from './svg/factions-death-bladeborn-the-exiled-dead.svg?raw';
 import dBbTheCrimsonCourt       from './svg/factions-death-bladeborn-the-crimson-court.svg?raw';
+import dBbTheExiledDead         from './svg/factions-death-bladeborn-the-exiled-dead.svg?raw';
+import dBbTheGrymwatch          from './svg/factions-death-bladeborn-the-grymwatch.svg?raw';
 import dBbTheSepulchralGuard    from './svg/factions-death-bladeborn-sepulchral-guard.svg?raw';
+import dBbThornsOfBriarQueen    from './svg/factions-death-bladeborn-thorns-of-the-briar-queen.svg?raw';
+import dBbZondarasGravebreakers from './svg/factions-death-bladeborn-zondaras-gravebreakers.svg?raw';
 
 // ── Destruction factions ─────────────────────────────────────────────────────
 import desBonesplitterz  from './svg/factions-destruction-bonesplitterz.svg?raw';
@@ -98,21 +95,19 @@ import desKruleboyz      from './svg/factions-destruction-kruleboyz.svg?raw';
 import desMonstaKillaz   from './svg/factions-destruction-monsta-killaz.svg?raw';
 import desOgorMawtribes  from './svg/factions-destruction-ogor-mawtribes.svg?raw';
 
-// ── Destruction subfactions / bladeborn (additional) ─────────────────────────
-import desBbBorgitsBeastgrabbaz  from './svg/factions-destruction-bladeborn-borgits-beastgrabbaz.svg?raw';
-
 // ── Destruction subfactions / bladeborn ──────────────────────────────────────
-import desBbHedkrakkasMadmob       from './svg/factions-destruction-bladeborn-hedkrakkas-madmob.svg?raw';
-import desBbGrinkraksLooncourt     from './svg/factions-destruction-bladeborn-grinkraks-looncourt.svg?raw';
-import desBbZarbagsGitz            from './svg/factions-destruction-bladeborn-zarbags-gitz.svg?raw';
-import desBbMollogsMob             from './svg/factions-destruction-bladeborn-mollogs-mob.svg?raw';
-import desBbRippasSnarlfangs       from './svg/factions-destruction-bladeborn-rippas-snarlfangs.svg?raw';
-import desBbMorgoksKrushas         from './svg/factions-destruction-bladeborn-morgoks-krushas.svg?raw';
-import desBbIronskullsBoyz         from './svg/factions-destruction-bladeborn-ironskulls-boyz.svg?raw';
-import desBbDaggoksStabLadz        from './svg/factions-destruction-bladeborn-daggoks-stab-ladz.svg?raw';
-import desBbDaKunninKrew           from './svg/factions-destruction-bladeborn-da-kunnin-krew.svg?raw';
-import desBbHrothgornsMantrappers  from './svg/factions-destruction-bladeborn-hrothgorns-mantrappers.svg?raw';
 import desBbBlackpowdersBuccaneers from './svg/factions-destruction-bladeborn-blackpowders-buccaneers.svg?raw';
+import desBbBorgitsBeastgrabbaz    from './svg/factions-destruction-bladeborn-borgits-beastgrabbaz.svg?raw';
+import desBbDaKunninKrew           from './svg/factions-destruction-bladeborn-da-kunnin-krew.svg?raw';
+import desBbDaggoksStabLadz        from './svg/factions-destruction-bladeborn-daggoks-stab-ladz.svg?raw';
+import desBbGrinkraksLooncourt     from './svg/factions-destruction-bladeborn-grinkraks-looncourt.svg?raw';
+import desBbHedkrakkasMadmob       from './svg/factions-destruction-bladeborn-hedkrakkas-madmob.svg?raw';
+import desBbHrothgornsMantrappers  from './svg/factions-destruction-bladeborn-hrothgorns-mantrappers.svg?raw';
+import desBbIronskullsBoyz         from './svg/factions-destruction-bladeborn-ironskulls-boyz.svg?raw';
+import desBbMollogsMob             from './svg/factions-destruction-bladeborn-mollogs-mob.svg?raw';
+import desBbMorgoksKrushas         from './svg/factions-destruction-bladeborn-morgoks-krushas.svg?raw';
+import desBbRippasSnarlfangs       from './svg/factions-destruction-bladeborn-rippas-snarlfangs.svg?raw';
+import desBbZarbagsGitz            from './svg/factions-destruction-bladeborn-zarbags-gitz.svg?raw';
 
 // ── Cities of Sigmar subfactions ──────────────────────────────────────────────
 import oCosAnvilgard         from './svg/factions-order-cities-of-sigmar-anvilgard.svg?raw';
@@ -122,61 +117,59 @@ import oCosDispossessed      from './svg/factions-order-cities-of-sigmar-disposs
 import oCosGreywaterFastness from './svg/factions-order-cities-of-sigmar-greywater-fastness.svg?raw';
 import oCosHallowheart       from './svg/factions-order-cities-of-sigmar-hallowheart.svg?raw';
 import oCosHammerhal         from './svg/factions-order-cities-of-sigmar-hammerhal.svg?raw';
+import oCosTempestsEye       from './svg/factions-order-cities-of-sigmar-tempests-eye.svg?raw';
 import oCosTheLivingCity     from './svg/factions-order-cities-of-sigmar-the-living-city.svg?raw';
 import oCosThePhoesnicium    from './svg/factions-order-cities-of-sigmar-the-phoenicium.svg?raw';
-import oCosTempestsEye       from './svg/factions-order-cities-of-sigmar-tempests-eye.svg?raw';
-
-// ── Order subfactions / bladeborn (additional) ────────────────────────────────
-import oBbHexbanesHunters        from './svg/factions-order-bladeborn-hexbanes-hunters.svg?raw';
-import oBbKnivesOfTheCrone       from './svg/factions-order-bladeborn-knives-of-the-crone.svg?raw';
-import oBbJawsOfItzl             from './svg/factions-order-bladeborn-jaws-of-itzl.svg?raw';
-import oBbGladitorium            from './svg/factions-order-bladeborn-gladitorium-fighters.svg?raw';
-import oBbTheEmberwatch          from './svg/factions-order-bladeborn-the-emberwatch.svg?raw';
-import oBbHeraldsOfKurnoth       from './svg/factions-order-bladeborn-heralds-of-kurnoth.svg?raw';
 
 // ── Order factions ────────────────────────────────────────────────────────────
-import oCitiesOfSigmar         from './svg/factions-order-cities-of-sigmar.svg?raw';
-import oDaughtersOfKhaine      from './svg/factions-order-daughters-of-khaine.svg?raw';
-import oFyreslayers            from './svg/factions-order-fyreslayers.svg?raw';
-import oHuntersOfHuanchi       from './svg/factions-order-hunters-of-huanchi.svg?raw';
-import oIdonethDeekin          from './svg/factions-order-idoneth-deepkin.svg?raw';
-import oKhainiteShadowstalkers from './svg/factions-order-khainite-shadowstalkers.svg?raw';
-import oKharadronOverlords     from './svg/factions-order-kharadron-overlords.svg?raw';
-import oLuminethRealmlords     from './svg/factions-order-lumineth-realmlords.svg?raw';
-import oOrderOfAzyr            from './svg/factions-order-order-of-azyr.svg?raw';
-import oSeraphon               from './svg/factions-order-seraphon.svg?raw';
-import oStormcastRuniationChamber   from './svg/factions-order-stormcast-eternals-ruination.svg?raw';
-import oTwistweald                  from './svg/factions-order-twistweald.svg?raw';
-import oYdrilanRiverblades          from './svg/factions-order-ydrilan-riverblades.svg?raw';
-import oStormcastQuestorSoulsworn   from './svg/factions-order-stormcast-eternals-questor-soulsworn.svg?raw';
-import oStormcastSacrosanctChamber  from './svg/factions-order-stormcast-eternals-sacrosanct-chamber.svg?raw';
-import oStormcastThunderstrike      from './svg/factions-order-stormcast-eternals-thunderstrike-eternals.svg?raw';
-import oStormcastVanguardChamber    from './svg/factions-order-stormcast-eternals-vanguard-chamber.svg?raw';
-import oStormcastWarriorChamber     from './svg/factions-order-stormcast-eternals-warrior-chamber.svg?raw';
-import oSylvaneth              from './svg/factions-order-sylvaneth.svg?raw';
-import oTheBlacktalons         from './svg/factions-order-the-blacktalons.svg?raw';
-import oVulkynFlameseekers     from './svg/factions-order-vulkyn-flameseekers.svg?raw';
-import oWildercorpsHunters     from './svg/factions-order-wildercorps-hunters.svg?raw';
+import oCitiesOfSigmar            from './svg/factions-order-cities-of-sigmar.svg?raw';
+import oDaughtersOfKhaine         from './svg/factions-order-daughters-of-khaine.svg?raw';
+import oFyreslayers               from './svg/factions-order-fyreslayers.svg?raw';
+import oHuntersOfHuanchi          from './svg/factions-order-hunters-of-huanchi.svg?raw';
+import oIdonethDeekin             from './svg/factions-order-idoneth-deepkin.svg?raw';
+import oKhainiteShadowstalkers    from './svg/factions-order-khainite-shadowstalkers.svg?raw';
+import oKharadronOverlords        from './svg/factions-order-kharadron-overlords.svg?raw';
+import oLuminethRealmlords        from './svg/factions-order-lumineth-realmlords.svg?raw';
+import oOrderOfAzyr               from './svg/factions-order-order-of-azyr.svg?raw';
+import oSeraphon                  from './svg/factions-order-seraphon.svg?raw';
+import oStormcastQuestorSoulsworn from './svg/factions-order-stormcast-eternals-questor-soulsworn.svg?raw';
+import oStormcastRuniationChamber from './svg/factions-order-stormcast-eternals-ruination.svg?raw';
+import oStormcastSacrosanctChamber from './svg/factions-order-stormcast-eternals-sacrosanct-chamber.svg?raw';
+import oTheBlacktalons            from './svg/factions-order-the-blacktalons.svg?raw';
+import oStormcastThunderstrike    from './svg/factions-order-stormcast-eternals-thunderstrike-eternals.svg?raw';
+import oStormcastVanguardChamber  from './svg/factions-order-stormcast-eternals-vanguard-chamber.svg?raw';
+import oStormcastWarriorChamber   from './svg/factions-order-stormcast-eternals-warrior-chamber.svg?raw';
+import oSylvaneth                 from './svg/factions-order-sylvaneth.svg?raw';
+import oTwistweald                from './svg/factions-order-twistweald.svg?raw';
+import oVulkynFlameseekers        from './svg/factions-order-vulkyn-flameseekers.svg?raw';
+import oWildercorpsHunters        from './svg/factions-order-wildercorps-hunters.svg?raw';
+import oYdrilanRiverblades        from './svg/factions-order-ydrilan-riverblades.svg?raw';
 
 // ── Order subfactions / bladeborn ─────────────────────────────────────────────
 import oBbBrethrenOfTheBolt       from './svg/factions-order-bladeborn-brethren-of-the-bolt.svg?raw';
-import oBbGrombrindal             from './svg/factions-order-bladeborn-grombrindal.svg?raw';
-import oBbMorgwaethsBladecoven    from './svg/factions-order-bladeborn-morgwaeths-bladecoven.svg?raw';
-import oBbGrysellesArenai         from './svg/factions-order-bladeborn-gryselles-arenai.svg?raw';
-import oBbTheShadeborn            from './svg/factions-order-bladeborn-the-shadeborn.svg?raw';
-import oBbTheChosenAxes           from './svg/factions-order-bladeborn-the-chosen-axes.svg?raw';
 import oBbCyrenisRazors           from './svg/factions-order-bladeborn-cyrenis-razors.svg?raw';
-import oBbElathainsSoulraid       from './svg/factions-order-bladeborn-elathains-soulraid.svg?raw';
-import oBbThundriksProfileers     from './svg/factions-order-bladeborn-thundriks-profiteers.svg?raw';
-import oBbMyarisPurifiers         from './svg/factions-order-bladeborn-myaris-purifiers.svg?raw';
-import oBbTheStarbloodStalkers    from './svg/factions-order-bladeborn-the-starblood-stalkers.svg?raw';
-import oBbStormsiresCursebreakers from './svg/factions-order-bladeborn-stormsires-cursebreakers.svg?raw';
-import oBbXandiressTruthseekers   from './svg/factions-order-bladeborn-xandires-truthseekers.svg?raw';
 import oBbDomitansStormcoven      from './svg/factions-order-bladeborn-domitans-stormcoven.svg?raw';
-import oBbTheFarstriders          from './svg/factions-order-bladeborn-the-farstriders.svg?raw';
-import oBbSteelheartSChampions    from './svg/factions-order-bladeborn-steelhearts-champions.svg?raw';
-import oBbYlthariGuardians        from './svg/factions-order-bladeborn-yltharis-guardians.svg?raw';
+import oBbElathainsSoulraid       from './svg/factions-order-bladeborn-elathains-soulraid.svg?raw';
+import oBbGladitorium             from './svg/factions-order-bladeborn-gladitorium-fighters.svg?raw';
+import oBbGrombrindal             from './svg/factions-order-bladeborn-grombrindal.svg?raw';
+import oBbGrysellesArenai         from './svg/factions-order-bladeborn-gryselles-arenai.svg?raw';
+import oBbHeraldsOfKurnoth        from './svg/factions-order-bladeborn-heralds-of-kurnoth.svg?raw';
+import oBbHexbanesHunters         from './svg/factions-order-bladeborn-hexbanes-hunters.svg?raw';
+import oBbJawsOfItzl              from './svg/factions-order-bladeborn-jaws-of-itzl.svg?raw';
+import oBbKnivesOfTheCrone        from './svg/factions-order-bladeborn-knives-of-the-crone.svg?raw';
+import oBbMorgwaethsBladecoven    from './svg/factions-order-bladeborn-morgwaeths-bladecoven.svg?raw';
+import oBbMyarisPurifiers         from './svg/factions-order-bladeborn-myaris-purifiers.svg?raw';
 import oBbSkaethsWildHunt         from './svg/factions-order-bladeborn-skaeths-wild-hunt.svg?raw';
+import oBbSteelheartSChampions    from './svg/factions-order-bladeborn-steelhearts-champions.svg?raw';
+import oBbStormsiresCursebreakers from './svg/factions-order-bladeborn-stormsires-cursebreakers.svg?raw';
+import oBbTheChosenAxes           from './svg/factions-order-bladeborn-the-chosen-axes.svg?raw';
+import oBbTheEmberwatch           from './svg/factions-order-bladeborn-the-emberwatch.svg?raw';
+import oBbTheFarstriders          from './svg/factions-order-bladeborn-the-farstriders.svg?raw';
+import oBbTheShadeborn            from './svg/factions-order-bladeborn-the-shadeborn.svg?raw';
+import oBbTheStarbloodStalkers    from './svg/factions-order-bladeborn-the-starblood-stalkers.svg?raw';
+import oBbThundriksProfileers     from './svg/factions-order-bladeborn-thundriks-profiteers.svg?raw';
+import oBbXandiressTruthseekers   from './svg/factions-order-bladeborn-xandires-truthseekers.svg?raw';
+import oBbYlthariGuardians        from './svg/factions-order-bladeborn-yltharis-guardians.svg?raw';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
