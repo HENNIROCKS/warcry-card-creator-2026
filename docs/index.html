@@ -332,7 +332,7 @@
       <li>
         <button class="session-btn" data-session="march-18">
           <span class="session-date">2026-03-18</span>
-          <span class="session-title">Grand Alliance Selection &amp; Light/Dark Theme</span>
+          <span class="session-title">Grand Alliance, Light/Dark Theme &amp; Mobile Image Positioning</span>
         </button>
       </li>
       <li>
@@ -432,6 +432,9 @@
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">iOS input zoom fix: <code>font-size: 1rem</code> on mobile for <code>.field-input</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Touch dropdown: deferred <code>document</code> click-outside listener via <code>$effect</code> + <code>setTimeout</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Tablet portrait: side-by-side layout breakpoint raised to <code>lg:</code> 1024px — phones + portrait tablets use tabbed layout</a></td><td>Mar 17</td></tr>
+            <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Mobile image positioning: touch overlay on card image area — drag to pan, pinch to zoom; <code>touch-action: none</code> suppresses scroll without non-passive listeners</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Range input: custom 20px thumb via <code>-webkit-appearance: none</code>; track uses <code>var(--ui-surface-2)</code> for theme compat</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-files" onclick="activateSession('march-18')">Code style rules added to CLAUDE.md: import sorting, key quoting, on-touch cleanup policy</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
@@ -496,6 +499,7 @@
             <tr><td><a href="#march-11-node" onclick="activateSession('march-11')">Node v22 required — Herd path / <code>make dev</code></a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-11-built" onclick="activateSession('march-11')">File structure &amp; route scaffold</a></td><td>Mar 11</td></tr>
             <tr><td><a href="#march-14-decisions" onclick="activateSession('march-14')">GitHub Pages: <code>adapter-static</code>, <code>paths.base</code>, GitHub Actions deploy workflow</a></td><td>Mar 14</td></tr>
+            <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">LAN device testing: <code>server: { host: true }</code> in <code>vite.config.ts</code> — use Network URL from Vite output on same Wi-Fi</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
@@ -512,8 +516,8 @@
           <span class="badge badge-blue">2026-03-18</span>
           <span class="badge badge-green">Done</span>
         </div>
-        <h1>Grand Alliance Selection &amp; Light/Dark Theme</h1>
-        <p>Two features: faction selector now supports selecting a Grand Alliance alone (no faction), and the UI gains a light/dark theme toggle backed by CSS custom properties with warm parchment tones for light mode.</p>
+        <h1>Grand Alliance, Light/Dark Theme &amp; Mobile Image Positioning</h1>
+        <p>Three areas: faction selector supports selecting a Grand Alliance alone; light/dark theme toggle backed by CSS custom properties; and the fighter card image positioning workflow is redesigned for mobile — drag to pan, pinch to zoom, with a toggle overlay directly on the card.</p>
       </div>
 
       <section id="march-18-built" data-nav="What Was Built">
@@ -528,6 +532,12 @@
           <li><strong>ThemeToggle</strong>: pill-shaped bordered button (sun/moon icon + "Light mode" / "Dark mode" label) placed inline in the landing page, below the card buttons. Not shown on editor pages.</li>
           <li><strong>Red button contrast fix</strong>: <code>[data-theme="light"] .bg-red-900.text-white</code> override keeps button text white on maroon backgrounds, counteracting the global <code>text-white</code> remap.</li>
           <li><strong>Contrast audit</strong>: <code>--ui-text-subtle</code> and <code>[data-theme="light"] .text-zinc-500</code> darkened from <code>#8a7e72</code> to <code>#5a5048</code> (~5.3:1 on page bg, ~4.6:1 on alliance header bg — both pass WCAG AA).</li>
+          <li><strong>Mobile image positioning — touch overlay</strong>: on the Preview tab, an "Adjust Image" toggle button appears when a model image is uploaded. When active, a transparent overlay covers the image area of the card; single-finger drag updates X/Y offset, two-finger pinch updates zoom. <code>touch-action: none</code> on the overlay suppresses browser scroll/zoom interference without needing <code>preventDefault()</code>.</li>
+          <li><strong>Positioning sliders hidden on mobile</strong>: Position X/Y/Zoom sliders in <code>FighterForm</code> are wrapped in <code>hidden lg:block</code> — desktop only. A hint line ("Adjust image position and zoom in the Preview tab.") takes their place on mobile, styled as plain <code>text-sm text-zinc-300</code> with "Preview" bolded.</li>
+          <li><strong>Below-card sliders removed</strong>: the intermediate slider strip below the card (added in an earlier iteration) is replaced entirely by the touch overlay. No sliders on the preview tab on mobile.</li>
+          <li><strong>Range input thumb</strong>: custom CSS in <code>app.css</code> replaces the native thumb with a 20px circle (<code>#991b1b</code>) on both <code>-webkit-</code> and <code>-moz-</code>. Track uses <code>var(--ui-surface-2)</code> to adapt to both themes. Applies globally to all range inputs.</li>
+          <li><strong>Hint label parity</strong>: "(left/right)" / "(down/up)" hints on slider labels use <code>font-normal</code> only (no hardcoded colour), inheriting <code>var(--ui-field-label)</code> from <code>.sublabel</code> — consistent with other form hints and theme-aware.</li>
+          <li><strong>LAN testing</strong>: <code>server: { host: true }</code> added to <code>vite.config.ts</code> — dev server now listens on all network interfaces. Use the Network URL printed by Vite from any device on the same Wi-Fi. README updated with instructions.</li>
         </ul>
       </section>
 
@@ -555,6 +565,26 @@
         </div>
       </section>
 
+      <section id="march-18-image-decisions" data-nav="Image Positioning Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Image Positioning Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Sliders in the preview tab vs touch-to-pan directly on the card?</div>
+          <div class="decision-a">Touch overlay on the card (Option A). Sliders below the card are better than sliders hidden in the Edit tab, but still require the user to look away from the card while dragging. The overlay means the image and the interaction are the same object — direct manipulation. Sliders remain on desktop (in the form, side-by-side with the card).</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">How to suppress scroll during touch interaction without <code>preventDefault()</code>?</div>
+          <div class="decision-a"><code>touch-action: none</code> on the overlay div. Passive event listeners (Svelte's default) cannot call <code>preventDefault()</code>. <code>touch-action: none</code> achieves the same result — tells the browser to pass all touch events to JS and skip its own scroll/zoom handling — without needing non-passive listeners.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Drag sensitivity: how many offset percentage points per pixel?</div>
+          <div class="decision-a">50% per full image-area width/height in card space: <code>sensX = 50/574</code>, <code>sensY = 50/503</code>. Screen pixels are divided by <code>cardScale</code> first to get card-space pixels, then multiplied by sensitivity. Direction is inverted — drag right → image pans right → left side becomes visible → offset decreases.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Range input thumb: custom CSS vs native?</div>
+          <div class="decision-a">Custom CSS. Native thumbs on iOS/Android are ~20px but the hit target feels imprecise when fine-tuning. Explicit <code>-webkit-appearance: none</code> + 20px custom thumb with the project's red accent is consistent across platforms and matches the UI. Track colour uses <code>var(--ui-surface-2)</code> for theme compatibility.</div>
+        </div>
+      </section>
+
       <section id="march-18-files" data-nav="Files Changed">
         <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
         <table>
@@ -566,8 +596,15 @@
           <tr><td><code>src/app.css</code></td><td>CSS vars for both themes; Tailwind class overrides for light mode; red button contrast fix; contrast audit darkening</td></tr>
           <tr><td><code>src/routes/+layout.svelte</code></td><td><code>theme.init()</code> on mount to sync reactive state with DOM attribute</td></tr>
           <tr><td><code>src/routes/+page.svelte</code></td><td><code>ThemeToggle</code> added inline below card buttons</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded hex → CSS vars in style block</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded hex → CSS vars; Position X/Y/Zoom sliders wrapped in <code>hidden lg:block</code>; mobile hint text added; label hints inherit <code>var(--ui-field-label)</code></td></tr>
           <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Hardcoded hex → CSS vars in style block</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Touch overlay on image area (drag/pinch); "Adjust Image" toggle button; below-card sliders removed; <code>TouchState</code> interface + handlers</td></tr>
+          <tr><td><code>src/app.css</code></td><td>Custom range input thumb (20px, <code>#991b1b</code>); track via <code>var(--ui-surface-2)</code>; both <code>-webkit-</code> and <code>-moz-</code> variants</td></tr>
+          <tr><td><code>vite.config.ts</code></td><td><code>server: { host: true }</code> — expose dev server on LAN for device testing</td></tr>
+          <tr><td><code>README.md</code></td><td>Added "Testing on a phone or other device" section</td></tr>
+          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Removed unnecessary quotes from <code>'Pistol'</code> and all 25 single-word keys in <code>fighterRunemarks</code>; <code>'Icon Bearer'</code> kept quoted</td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>All import groups sorted A→Z; orphan Chaos imports folded into main block; three <code>(additional)</code> headers eliminated; duplicate Order bladeborn section merged; Cities of Sigmar subfactions sort corrected</td></tr>
+          <tr><td><code>CLAUDE.md</code></td><td>Added Code Style section: import sorting, key quoting rules, on-touch cleanup policy</td></tr>
         </table>
       </section>
     </div>
