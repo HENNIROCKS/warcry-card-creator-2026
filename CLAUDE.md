@@ -67,6 +67,12 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 ### Runemark library
 SVGs live in `src/lib/runemarks/svg/` (not yet populated). Library metadata in `src/lib/runemarks/index.ts`. Will be sourced from the public domain SVGs in the previous project (HENNIROCKS/warcry-card-creator on GitHub, master branch, `runemarks/` directory).
 
+## Code style
+
+- **Import groups**: sorted alphabetically by the name the variable represents (not by variable name prefix). Each logical group has one header comment; no orphan imports between groups.
+- **Object key quoting**: only quote keys that require it — keys containing spaces or hyphens. Single-word plain-identifier keys are unquoted.
+- **On-touch cleanup**: when editing any file, also fix incremental-accumulation artifacts in that file — unsorted imports, duplicate or `(additional)`-suffixed section headers, unnecessary quotes. Do not audit unrelated files speculatively.
+
 ## Workflow preferences
 - Explain plan before making changes. Wait for confirmation.
 - At session start, consult `docs/index.html` for prior decisions.
