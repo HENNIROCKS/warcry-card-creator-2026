@@ -9,3 +9,7 @@ Browser-based tool for creating Warcry fighter and ability cards with custom ima
 ## Developing
 
 Requires Node v22+. Run `make dev` to start the dev server at http://localhost:5173.
+
+### Testing on a phone or other device
+
+The dev server is configured to listen on all network interfaces (`server: { host: true }` in `vite.config.ts`). Start `make dev` and use the **Network** URL printed by Vite (e.g. `http://192.168.x.x:5173`) from any device on the same Wi-Fi network. If another process already occupies port 5173, Vite will increment the port. Use whichever port appears in the terminal output.
