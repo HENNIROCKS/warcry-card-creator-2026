@@ -116,15 +116,15 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 8px;
-		background: rgba(127, 29, 29, 0.2);
-		border: 1px solid rgba(127, 29, 29, 0.4);
+		background: var(--ui-sel-bg);
+		border: 1px solid var(--ui-sel-border);
 		border-radius: 6px;
 		padding: 4px 6px 4px 10px;
 	}
 
 	.selection-text {
 		font-size: 0.78rem;
-		color: #fca5a5;
+		color: var(--ui-sel-text);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -134,7 +134,7 @@
 		flex-shrink: 0;
 		background: none;
 		border: none;
-		color: #fca5a5;
+		color: var(--ui-sel-text);
 		font-size: 1.1rem;
 		line-height: 1;
 		padding: 0 2px;
@@ -150,11 +150,11 @@
 	.search-input {
 		width: 100%;
 		box-sizing: border-box;
-		background: #27272a;
-		border: 1px solid #3f3f46;
+		background: var(--ui-surface);
+		border: 1px solid var(--ui-border);
 		border-radius: 6px;
 		padding: 6px 10px;
-		color: #e4e4e7;
+		color: var(--ui-text);
 		font-size: 0.875rem;
 		outline: none;
 		transition: border-color 0.15s;
@@ -167,11 +167,11 @@
 	.list {
 		max-height: 260px;
 		overflow-y: auto;
-		background: #27272a;
-		border: 1px solid #3f3f46;
+		background: var(--ui-surface);
+		border: 1px solid var(--ui-border);
 		border-radius: 6px;
 		scrollbar-width: thin;
-		scrollbar-color: #3f3f46 transparent;
+		scrollbar-color: var(--ui-border) transparent;
 	}
 
 	.alliance-header {
@@ -185,8 +185,8 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #71717a;
-		background: #1c1c1e;
+		color: var(--ui-text-subtle);
+		background: var(--ui-header-bg);
 		position: sticky;
 		top: 0;
 		z-index: 1;
@@ -194,12 +194,12 @@
 	}
 
 	.alliance-header:hover {
-		color: #a1a1aa;
+		color: var(--ui-text-muted);
 	}
 
 	.alliance-header.selected {
-		color: #fca5a5;
-		background: #1c1c1e;
+		color: var(--ui-sel-text);
+		background: var(--ui-header-bg);
 	}
 
 	.faction-row,
@@ -210,7 +210,7 @@
 		border: none;
 		background: transparent;
 		cursor: pointer;
-		color: #d4d4d8;
+		color: var(--ui-text-dim);
 		transition: background 0.1s, color 0.1s;
 	}
 
@@ -222,25 +222,25 @@
 	.subfaction-row {
 		padding: 4px 10px 4px 26px;
 		font-size: 0.75rem;
-		color: #a1a1aa;
+		color: var(--ui-text-muted);
 	}
 
 	.faction-row:hover,
 	.subfaction-row:hover {
-		background: #3f3f46;
-		color: #ffffff;
+		background: var(--ui-surface-2);
+		color: var(--ui-text);
 	}
 
 	.faction-row.selected,
 	.subfaction-row.selected {
-		background: rgba(127, 29, 29, 0.25);
-		color: #fca5a5;
+		background: var(--ui-sel-row);
+		color: var(--ui-sel-text);
 	}
 
 	.empty {
 		padding: 12px 14px;
 		font-size: 0.8rem;
-		color: #71717a;
+		color: var(--ui-text-subtle);
 		font-style: italic;
 	}
 </style>

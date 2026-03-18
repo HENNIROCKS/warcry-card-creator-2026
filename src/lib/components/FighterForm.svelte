@@ -263,14 +263,14 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #9ca3af;
+		color: var(--ui-field-label);
 		margin-bottom: 0.375rem;
 	}
 
 	.sublabel {
 		display: block;
 		font-size: 0.65rem;
-		color: #9ca3af;
+		color: var(--ui-field-label);
 		margin-bottom: 2px;
 	}
 
@@ -278,11 +278,11 @@
 		width: 100%;
 		box-sizing: border-box;
 		appearance: none;
-		background: #27272a;
-		border: 1px solid #3f3f46;
+		background: var(--ui-surface);
+		border: 1px solid var(--ui-border);
 		border-radius: 6px;
 		padding: 6px 10px;
-		color: #e4e4e7;
+		color: var(--ui-text);
 		font-size: 0.875rem;
 		outline: none;
 		transition: border-color 0.15s;

@@ -4,6 +4,7 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 </script>
 
 <main class="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-6">
@@ -24,4 +25,5 @@
 			Ability Card
 		</a>
 	</div>
+	<ThemeToggle />
 </main>
