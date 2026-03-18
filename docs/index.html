@@ -4,21 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Warcry Card Creator — Dev Session Logs</title>
+  <script>
+    if (window.matchMedia('(prefers-color-scheme: light)').matches)
+      document.documentElement.setAttribute('data-theme', 'light');
+  </script>
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: #2e3350;
-      --accent: #6c8ef7;
-      --accent2: #a78bfa;
+      --bg: #141210;
+      --surface: #1e1b18;
+      --surface2: #28231e;
+      --border: #3a322a;
+      --accent: #d47070;
+      --accent2: #c4906c;
       --green: #34d399;
       --amber: #fbbf24;
       --red: #f87171;
-      --text: #e2e8f0;
-      --muted: #8892b0;
-      --code-bg: #0d1117;
+      --text: #ede7df;
+      --muted: #9a8e82;
+      --code-bg: #0e0b09;
       --radius: 10px;
+    }
+
+    [data-theme="light"] {
+      --bg: #e4ddd3;
+      --surface: #ede8e2;
+      --surface2: #c8c0b5;
+      --border: #c4bdb1;
+      --accent: #991b1b;
+      --accent2: #7f4040;
+      --text: #2e2620;
+      --muted: #52463c;
+      --code-bg: #d8d0c5;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,7 +70,7 @@
     nav .logo-icon {
       width: 34px;
       height: 34px;
-      background: linear-gradient(135deg, #7f1d1d, #a78bfa);
+      background: linear-gradient(135deg, #7f1d1d, #c87070);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -106,9 +122,9 @@
       transition: all 0.15s;
     }
     .session-btn:hover { background: var(--surface2); color: var(--text); }
-    .session-btn.active { background: rgba(108, 142, 247, 0.12); color: var(--accent); }
+    .session-btn.active { background: rgba(180, 40, 40, 0.15); color: var(--accent); }
     .session-btn .session-date { display: block; font-size: 0.7rem; color: var(--muted); margin-bottom: 1px; }
-    .session-btn.active .session-date { color: rgba(108, 142, 247, 0.7); }
+    .session-btn.active .session-date { color: rgba(212, 112, 112, 0.7); }
     .session-btn .session-title { font-weight: 600; }
 
     /* ── Main ── */
@@ -132,11 +148,17 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.2;
-      background: linear-gradient(135deg, #e2e8f0 0%, #a78bfa 100%);
+      background: linear-gradient(135deg, #f0ebe4 0%, #d47070 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 0.75rem;
+    }
+
+    [data-theme="light"] h1 {
+      background: linear-gradient(135deg, #3a2018 0%, #991b1b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
     }
 
     .hero p { font-size: 1rem; color: var(--muted); max-width: 640px; }
@@ -187,11 +209,11 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-    .badge-blue  { background: rgba(108,142,247,0.15); color: var(--accent);  border: 1px solid rgba(108,142,247,0.3); }
+    .badge-blue  { background: rgba(212,112,112,0.15); color: var(--accent);  border: 1px solid rgba(212,112,112,0.3); }
     .badge-green { background: rgba(52,211,153,0.12);  color: var(--green);   border: 1px solid rgba(52,211,153,0.25); }
     .badge-amber { background: rgba(251,191,36,0.12);  color: var(--amber);   border: 1px solid rgba(251,191,36,0.25); }
     .badge-red   { background: rgba(248,113,113,0.12); color: var(--red);     border: 1px solid rgba(248,113,113,0.25); }
-    .badge-purple{ background: rgba(167,139,250,0.12); color: var(--accent2); border: 1px solid rgba(167,139,250,0.25); }
+    .badge-purple{ background: rgba(196,144,108,0.15); color: var(--accent2); border: 1px solid rgba(196,144,108,0.3); }
 
     /* ── Callout ── */
     .callout {
@@ -287,8 +309,6 @@
     td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
     td:first-child { color: var(--text); font-weight: 500; }
     tr:last-child td { border-bottom: none; }
-
-    /* ── Todo list ── */
 
     /* ── Footer ── */
     footer {
@@ -399,7 +419,7 @@
       </div>
 
       <section id="index-architecture" data-nav="Architecture">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">🏛️</span> Architecture</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">🏛️</span> Architecture</h2>
         <table>
           <thead><tr><th>Topic</th><th>Where</th></tr></thead>
           <tbody>
@@ -432,19 +452,19 @@
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">iOS input zoom fix: <code>font-size: 1rem</code> on mobile for <code>.field-input</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Touch dropdown: deferred <code>document</code> click-outside listener via <code>$effect</code> + <code>setTimeout</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Tablet portrait: side-by-side layout breakpoint raised to <code>lg:</code> 1024px — phones + portrait tablets use tabbed layout</a></td><td>Mar 17</td></tr>
-            <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Mobile image positioning: touch overlay on card image area — drag to pan, pinch to zoom; <code>touch-action: none</code> suppresses scroll without non-passive listeners</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Range input: custom 20px thumb via <code>-webkit-appearance: none</code>; track uses <code>var(--ui-surface-2)</code> for theme compat</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Mobile image positioning: touch overlay on card image area — drag to pan, pinch to zoom; <code>touch-action: none</code> suppresses scroll without non-passive listeners</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-decisions" onclick="activateSession('march-18')">Range input: custom 20px thumb via <code>-webkit-appearance: none</code>; track uses <code>var(--ui-surface-2)</code> for theme compat</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-files" onclick="activateSession('march-18')">Code style rules added to CLAUDE.md: import sorting, key quoting, on-touch cleanup policy</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-mobile-export" onclick="activateSession('march-18')">Mobile export: iOS Safari + dom-to-image-more incompatibility (foreignObject restriction); html2canvas attempted and reverted; export currently unavailable on mobile</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">Mobile export fixed: <code>modern-screenshot</code> (<code>domToPng</code>) + explicit <code>{ width: 574, height: 915, scale: 2 }</code> to override CSS transform bounding rect</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">iOS download: Web Share API (HTTPS) saves immediately on live URL — overlay only fires on localhost (HTTP, no secure context)</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18)"><code>isRealMobile</code> pattern: plain <code>const</code> via <code>navigator.userAgent</code> regex — separates real devices from desktop mobile-viewport emulation</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-decisions" onclick="activateSession('march-18')">Mobile export: iOS Safari + dom-to-image-more incompatibility (foreignObject restriction); html2canvas attempted and reverted; fixed via <code>modern-screenshot</code></a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Mobile export: <code>modern-screenshot</code> (<code>domToPng</code>) + explicit <code>{ width: 574, height: 915, scale: 2 }</code> to override CSS transform bounding rect</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">iOS download: Web Share API (HTTPS) saves immediately on live URL — overlay only fires on localhost (HTTP, no secure context)</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')"><code>isRealMobile</code> pattern: plain <code>const</code> via <code>navigator.userAgent</code> regex — separates real devices from desktop mobile-viewport emulation</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
 
       <section id="index-card-design" data-nav="Card Design">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">🃏</span> Card Design</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">🃏</span> Card Design</h2>
         <table>
           <thead><tr><th>Topic</th><th>Where</th></tr></thead>
           <tbody>
@@ -515,211 +535,173 @@
     <!-- /session-index -->
 
     <!-- ══════════════════════════════════════════
-         2026-03-18 — Grand Alliance Selection & Light/Dark Theme
+         2026-03-18 — Grand Alliance, Theme, Mobile Polish & Export Fix
     ══════════════════════════════════════════ -->
     <div id="session-march-18" class="session-panel">
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-18</span>
-          <span class="badge badge-green">Done</span>
+          <span class="badge badge-green">Light/dark theme</span>
+          <span class="badge badge-green">Touch pan &amp; pinch</span>
+          <span class="badge badge-green">Mobile export fixed</span>
         </div>
-        <h1>Grand Alliance, Light/Dark Theme &amp; Mobile Image Positioning</h1>
-        <p>Three areas: faction selector supports selecting a Grand Alliance alone; light/dark theme toggle backed by CSS custom properties; and the fighter card image positioning workflow is redesigned for mobile — drag to pan, pinch to zoom, with a toggle overlay directly on the card.</p>
+        <h1>Grand Alliance, Light/Dark Theme, Mobile Polish &amp; Export Fix</h1>
+        <p>Four areas in one session: faction selector gains Grand Alliance-only selection; light/dark theme backed by CSS custom properties; mobile image positioning redesigned as a touch overlay directly on the card; mobile export fixed via <code>modern-screenshot</code> with Web Share API download on iOS.</p>
       </div>
 
       <section id="march-18-built" data-nav="What Was Built">
         <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+
+        <h3>Grand Alliance Selection</h3>
         <ul>
-          <li><strong>Grand Alliance-only selection</strong>: alliance headers in <code>FactionSelect</code> are now clickable buttons — clicking sets <code>data.grandAlliance</code> and clears <code>data.faction</code>/<code>data.bladeborn</code>. Card already renders only the GA runemark when faction is empty. Selected state highlighted in red; <code>selectionLabel</code> shows the alliance name alone.</li>
-          <li><strong>Light/dark theme</strong>: <code>data-theme</code> attribute on <code>&lt;html&gt;</code> controls the active theme. Defaults to system <code>prefers-color-scheme</code>; manual toggle saves preference to <code>localStorage</code> and overrides the system setting permanently.</li>
-          <li><strong>FOUC prevention</strong>: inline <code>&lt;script&gt;</code> in <code>app.html</code> reads <code>localStorage</code> (or system pref) and sets <code>data-theme</code> before the first paint.</li>
-          <li><strong>CSS custom properties</strong>: <code>:root</code> defines dark-mode vars; <code>[data-theme="light"]</code> overrides them with warm parchment palette. Tailwind class overrides (<code>[data-theme="light"] .bg-zinc-900</code> etc.) handle page-level layout colours without touching component class lists.</li>
-          <li><strong>Light palette</strong>: shell <code>#e4ddd3</code>, inputs <code>#ede8e2</code>, text <code>#2e2620</code> — warm parchment tones that complement the card aesthetic rather than generic grey-on-white.</li>
-          <li><strong>Form components</strong> (<code>FighterForm</code>, <code>AbilityForm</code>, <code>FactionSelect</code>): all hardcoded hex values in <code>&lt;style&gt;</code> blocks replaced with <code>var(--ui-*)</code> CSS vars.</li>
-          <li><strong>ThemeToggle</strong>: pill-shaped bordered button (sun/moon icon + "Light mode" / "Dark mode" label) placed inline in the landing page, below the card buttons. Not shown on editor pages.</li>
-          <li><strong>Red button contrast fix</strong>: <code>[data-theme="light"] .bg-red-900.text-white</code> override keeps button text white on maroon backgrounds, counteracting the global <code>text-white</code> remap.</li>
-          <li><strong>Contrast audit</strong>: <code>--ui-text-subtle</code> and <code>[data-theme="light"] .text-zinc-500</code> darkened from <code>#8a7e72</code> to <code>#5a5048</code> (~5.3:1 on page bg, ~4.6:1 on alliance header bg — both pass WCAG AA).</li>
-          <li><strong>Mobile image positioning — touch overlay</strong>: on the Preview tab, an "Adjust Image" toggle button appears when a model image is uploaded. When active, a transparent overlay covers the image area of the card; single-finger drag updates X/Y offset, two-finger pinch updates zoom. <code>touch-action: none</code> on the overlay suppresses browser scroll/zoom interference without needing <code>preventDefault()</code>.</li>
-          <li><strong>Positioning sliders hidden on mobile</strong>: Position X/Y/Zoom sliders in <code>FighterForm</code> are wrapped in <code>hidden lg:block</code> — desktop only. A hint line ("Adjust image position and zoom in the Preview tab.") takes their place on mobile, styled as plain <code>text-sm text-zinc-300</code> with "Preview" bolded.</li>
-          <li><strong>Below-card sliders removed</strong>: the intermediate slider strip below the card (added in an earlier iteration) is replaced entirely by the touch overlay. No sliders on the preview tab on mobile.</li>
-          <li><strong>Range input thumb</strong>: custom CSS in <code>app.css</code> replaces the native thumb with a 20px circle (<code>#991b1b</code>) on both <code>-webkit-</code> and <code>-moz-</code>. Track uses <code>var(--ui-surface-2)</code> to adapt to both themes. Applies globally to all range inputs.</li>
-          <li><strong>Hint label parity</strong>: "(left/right)" / "(down/up)" hints on slider labels use <code>font-normal</code> only (no hardcoded colour), inheriting <code>var(--ui-field-label)</code> from <code>.sublabel</code> — consistent with other form hints and theme-aware.</li>
-          <li><strong>LAN testing</strong>: <code>server: { host: true }</code> added to <code>vite.config.ts</code> — dev server now listens on all network interfaces. Use the Network URL printed by Vite from any device on the same Wi-Fi. README updated with instructions.</li>
+          <li>Alliance headers in <code>FactionSelect</code> converted to clickable buttons — clicking sets <code>data.grandAlliance</code> and clears <code>data.faction</code>/<code>data.bladeborn</code>. Card already renders only the GA runemark when faction is empty.</li>
+          <li>Selected state highlighted in red; <code>selectionLabel</code> shows the alliance name alone.</li>
+        </ul>
+
+        <h3>Light/Dark Theme</h3>
+        <ul>
+          <li><code>data-theme</code> attribute on <code>&lt;html&gt;</code> controls the active theme. Defaults to system <code>prefers-color-scheme</code>; manual toggle saves to <code>localStorage</code> and overrides permanently.</li>
+          <li>FOUC prevention: inline <code>&lt;script&gt;</code> in <code>app.html</code> reads <code>localStorage</code> (or system pref) and sets <code>data-theme</code> before first paint.</li>
+          <li><code>:root</code> defines dark-mode vars; <code>[data-theme="light"]</code> overrides with warm parchment palette. Tailwind class overrides in <code>app.css</code> remap zinc/white classes — no component class changes needed. Form components use <code>var(--ui-*)</code> directly.</li>
+          <li>Light palette: shell <code>#e4ddd3</code>, inputs <code>#ede8e2</code>, text <code>#2e2620</code>.</li>
+          <li><code>ThemeToggle</code>: pill-shaped button (sun/moon + label), landing page only, below card buttons.</li>
+          <li>Red button contrast fix: <code>[data-theme="light"] .bg-red-900.text-white</code> keeps button text white on maroon.</li>
+          <li>Contrast audit: <code>--ui-text-subtle</code> darkened to <code>#5a5048</code> (~5.3:1 on page bg — WCAG AA).</li>
+        </ul>
+
+        <h3>Mobile Image Positioning</h3>
+        <ul>
+          <li>Touch overlay on card image area in the Preview tab; "Adjust Image" toggle button appears when a model image is uploaded.</li>
+          <li>Single-finger drag → X/Y offset; two-finger pinch → zoom. <code>touch-action: none</code> on the overlay suppresses browser scroll/zoom without needing <code>preventDefault()</code>.</li>
+          <li>Position X/Y/Zoom sliders in <code>FighterForm</code> wrapped in <code>hidden lg:block</code> — desktop only. Mobile shows a hint: "Adjust image position and zoom in the <strong>Preview</strong> tab."</li>
+          <li>Below-card slider strip removed entirely.</li>
+          <li>Range input thumb: custom 20px circle (<code>#991b1b</code>) via <code>-webkit-appearance: none</code> + <code>-moz-</code>; track uses <code>var(--ui-surface-2)</code> for theme compat.</li>
+        </ul>
+
+        <h3>Mobile Form Polish</h3>
+        <ul>
+          <li>iOS layout shift fix: <code>placeholder="—"</code> added to characteristics inputs (Points, Move, Toughness, Wounds). Missing placeholder caused iOS to switch keyboard type on empty field, triggering a viewport shift. Matches existing weapon input pattern.</li>
+          <li>Empty characteristics on card: <code>class:stat-val-empty</code> shows <code>—</code> at 16px — matches weapon value <code>class:is-empty</code> from Mar 15.</li>
+          <li>Select centering on iOS: <code>style="text-align-last: center"</code> on Base Size + Weapon Type selects. iOS Safari ignores <code>text-align: center</code> on <code>&lt;select&gt;</code>; <code>text-align-last</code> is the correct property.</li>
+          <li><code>.field-input</code> font-size set to <code>1rem</code> unconditionally; <code>@media (max-width: 1023px)</code> override removed.</li>
+        </ul>
+
+        <h3>Mobile Export Fix</h3>
+        <ul>
+          <li><strong>Library: <code>modern-screenshot</code></strong> (<code>domToPng</code>) replaces dom-to-image-more on real mobile devices. Uses Canvas 2D API internally — bypasses the iOS Safari <code>foreignObject</code> restriction that blocked background textures and model images. Desktop unchanged.</li>
+          <li><strong>Explicit dimensions</strong>: the card sits inside a CSS <code>transform: scale(cardScale)</code> wrapper. <code>getBoundingClientRect()</code> includes the transform, so without explicit dimensions the captured size was wrong. Fix: <code>{ width: 574, height: 915, scale: 2 }</code> passed to <code>domToPng</code>.</li>
+          <li><strong>iOS download — Web Share API</strong>: on HTTPS, <code>navigator.share</code> saves immediately to Photos — no overlay. On localhost (HTTP, no secure context), <code>navigator.share</code> is <code>undefined</code> and the overlay fallback fires instead. Confirmed on real device: overlay is a localhost artefact only.</li>
+          <li><strong>Inline overlay fallback</strong>: fullscreen dark overlay + long-press-to-save instruction. Localhost-only. Uses inline <code>style="color: #fff"</code> — light theme CSS overrides <code>text-white</code> to near-black.</li>
+          <li><strong><code>isRealMobile</code></strong>: plain <code>const</code> via <code>navigator.userAgent</code> regex (<code>/iPhone|iPad|iPod|Android/i</code>). Separates real devices from desktop mobile-viewport emulation — desktop in mobile viewport keeps dom-to-image-more.</li>
+          <li>Split export button (PNG + printer-friendly dropdown) added to mobile Preview tab on both editor pages. Landing page "unavailable" notice removed.</li>
+        </ul>
+
+        <h3>Misc</h3>
+        <ul>
+          <li>LAN testing: <code>server: { host: true }</code> in <code>vite.config.ts</code> — dev server on all network interfaces. README updated.</li>
+          <li><code>CLAUDE.md</code>: import sorting, key quoting, on-touch cleanup policy documented.</li>
         </ul>
       </section>
 
       <section id="march-18-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+
+        <h3>Grand Alliance &amp; Theme</h3>
         <div class="decision">
           <div class="decision-q">Grand Alliance selection: new UI element or extend existing alliance headers?</div>
-          <div class="decision-a">Extend existing headers — convert the sticky <code>div.alliance-header</code> to a <code>button</code> with <code>onclick={() =&gt; select(alliance.label, '')}</code>. Zero extra UI; the card already supports GA-only rendering when <code>data.faction</code> is empty.</div>
+          <div class="decision-a">Extend existing headers — convert <code>div.alliance-header</code> to a <code>button</code> with <code>onclick={() =&gt; select(alliance.label, '')}</code>. Zero extra UI; card already supports GA-only rendering when <code>data.faction</code> is empty.</div>
         </div>
         <div class="decision">
-          <div class="decision-q">Theme implementation: Tailwind dark-mode class approach vs CSS custom properties?</div>
-          <div class="decision-a">CSS vars + <code>[data-theme]</code> attribute overrides. All existing Tailwind classes are the dark values; switching to Tailwind's dark-mode system would require adding <code>dark:</code> prefixes everywhere. Instead, CSS overrides in <code>app.css</code> remap Tailwind's zinc/white classes under <code>[data-theme="light"]</code> — no component class changes needed. Form component <code>&lt;style&gt;</code> blocks use <code>var(--ui-*)</code> directly.</div>
+          <div class="decision-q">Theme: Tailwind dark-mode class approach vs CSS custom properties?</div>
+          <div class="decision-a">CSS vars + <code>[data-theme]</code> attribute overrides. All existing Tailwind classes are dark values; switching to Tailwind's dark-mode system would require <code>dark:</code> prefixes everywhere. Instead, <code>app.css</code> remaps zinc/white classes under <code>[data-theme="light"]</code> — no component class changes needed.</div>
         </div>
         <div class="decision">
-          <div class="decision-q">Does system pref override manual toggle, or vice versa?</div>
-          <div class="decision-a">Manual toggle wins and persists. On first visit (no <code>localStorage</code>) the system <code>prefers-color-scheme</code> is used. After a manual toggle the choice is saved to <code>localStorage</code> and sticks across visits. The page does not listen for live OS theme changes.</div>
+          <div class="decision-q">System pref vs manual toggle — which wins?</div>
+          <div class="decision-a">Manual toggle wins and persists. First visit uses <code>prefers-color-scheme</code>; after a manual toggle the choice is saved to <code>localStorage</code> and sticks. Page does not listen for live OS theme changes.</div>
         </div>
         <div class="decision">
           <div class="decision-q">Cookie/consent notice for localStorage?</div>
-          <div class="decision-a">Not required. <code>localStorage</code> is purely local browser storage — it stores a single preference string, never leaves the device, is not sent with requests, and is not used for tracking. GDPR/ePrivacy cookie rules do not apply.</div>
+          <div class="decision-a">Not required. Stores a single preference string, never leaves the device, not used for tracking. GDPR/ePrivacy cookie rules do not apply.</div>
         </div>
         <div class="decision">
-          <div class="decision-q">Where should the theme toggle button live?</div>
-          <div class="decision-a">Landing page only, inline in the content flow (below the card buttons). Setting a theme preference once on the home page and having it persist is sufficient — cluttering every editor page header is unnecessary.</div>
+          <div class="decision-q">Where should the theme toggle live?</div>
+          <div class="decision-a">Landing page only. Setting the preference once and having it persist is sufficient — cluttering every editor page header is unnecessary.</div>
         </div>
-      </section>
 
-      <section id="march-18-image-decisions" data-nav="Image Positioning Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Image Positioning Decisions</h2>
+        <h3>Mobile Image Positioning</h3>
         <div class="decision">
-          <div class="decision-q">Sliders in the preview tab vs touch-to-pan directly on the card?</div>
-          <div class="decision-a">Touch overlay on the card (Option A). Sliders below the card are better than sliders hidden in the Edit tab, but still require the user to look away from the card while dragging. The overlay means the image and the interaction are the same object — direct manipulation. Sliders remain on desktop (in the form, side-by-side with the card).</div>
+          <div class="decision-q">Sliders in preview tab vs touch-to-pan directly on the card?</div>
+          <div class="decision-a">Touch overlay. Sliders require looking away from the card while dragging. The overlay means image and interaction are the same object — direct manipulation. Sliders remain on desktop (in the form, side by side with the card).</div>
         </div>
         <div class="decision">
-          <div class="decision-q">How to suppress scroll during touch interaction without <code>preventDefault()</code>?</div>
-          <div class="decision-a"><code>touch-action: none</code> on the overlay div. Passive event listeners (Svelte's default) cannot call <code>preventDefault()</code>. <code>touch-action: none</code> achieves the same result — tells the browser to pass all touch events to JS and skip its own scroll/zoom handling — without needing non-passive listeners.</div>
+          <div class="decision-q">How to suppress scroll without <code>preventDefault()</code>?</div>
+          <div class="decision-a"><code>touch-action: none</code> on the overlay. Svelte's passive listeners cannot call <code>preventDefault()</code>; <code>touch-action: none</code> tells the browser to pass all touch events to JS and skip its own scroll/zoom handling — same result, no non-passive listeners needed.</div>
         </div>
         <div class="decision">
-          <div class="decision-q">Drag sensitivity: how many offset percentage points per pixel?</div>
-          <div class="decision-a">50% per full image-area width/height in card space: <code>sensX = 50/574</code>, <code>sensY = 50/503</code>. Screen pixels are divided by <code>cardScale</code> first to get card-space pixels, then multiplied by sensitivity. Direction is inverted — drag right → image pans right → left side becomes visible → offset decreases.</div>
+          <div class="decision-q">Drag sensitivity?</div>
+          <div class="decision-a">50% offset per full image-area dimension: <code>sensX = 50/574</code>, <code>sensY = 50/503</code>. Screen pixels divided by <code>cardScale</code> first (card-space), then × sensitivity. Direction inverted — drag right moves image right, revealing the left side.</div>
         </div>
         <div class="decision">
           <div class="decision-q">Range input thumb: custom CSS vs native?</div>
-          <div class="decision-a">Custom CSS. Native thumbs on iOS/Android are ~20px but the hit target feels imprecise when fine-tuning. Explicit <code>-webkit-appearance: none</code> + 20px custom thumb with the project's red accent is consistent across platforms and matches the UI. Track colour uses <code>var(--ui-surface-2)</code> for theme compatibility.</div>
+          <div class="decision-a">Custom. Native thumbs feel imprecise when fine-tuning. Explicit <code>-webkit-appearance: none</code> + 20px red thumb is consistent across platforms. Track colour via <code>var(--ui-surface-2)</code> for theme compat.</div>
+        </div>
+
+        <h3>Mobile Export</h3>
+        <div class="callout warn">
+          <p><strong>Context:</strong> iOS Safari refuses to render <code>&lt;img&gt;</code> and CSS <code>background-image</code> inside SVG <code>foreignObject</code> — the technique dom-to-image-more uses. html2canvas was attempted (Canvas 2D, bypasses <code>foreignObject</code>) but also failed: background-image never appeared, <code>background-clip: text</code> unsupported, model image overflowed without the mask, prerenderer followed inline <code>&lt;img src="/background.jpg"&gt;</code> as a route. All html2canvas code reverted. Fixed instead via <code>modern-screenshot</code>.</p>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why <code>modern-screenshot</code> over manual canvas redraw?</div>
+          <div class="decision-a">Tried first, succeeded immediately. The key insight: passing explicit <code>{ width: 574, height: 915 }</code> to override the transform-affected bounding rect. Manual canvas redraw was the backup and was not needed.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why keep dom-to-image-more on desktop?</div>
+          <div class="decision-a">It works reliably and produces correct output. No reason to change a working path. <code>modern-screenshot</code> is mobile-only to minimise risk.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">PNG at 2× for mobile — no compression?</div>
+          <div class="decision-a">Print quality is the primary use case — 2× (1148×1830px) PNG is correct. JPEG/WebP considered for sharing, rejected.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why does the overlay only appear on localhost?</div>
+          <div class="decision-a"><code>navigator.share</code> requires a secure context (HTTPS). Localhost is HTTP, so <code>navigator.share</code> is <code>undefined</code> there and the overlay fires. On a live HTTPS URL the Web Share API is available and saves immediately. The overlay is a local dev artefact worth keeping.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Does resetting <code>printerFriendly</code> before overlay dismissal cause a bug?</div>
+          <div class="decision-a">No. The capture completes and the data URL is stored in <code>exportedImageUrl</code> while <code>printerFriendly</code> is still <code>true</code>. The reset only affects the live card render beneath the overlay, which is irrelevant.</div>
+        </div>
+
+        <h3>Mobile Form Polish</h3>
+        <div class="decision">
+          <div class="decision-q">Why did the layout shift only affect characteristics inputs, not weapon inputs?</div>
+          <div class="decision-a">Weapon inputs already had <code>placeholder="—"</code>; characteristics did not. The placeholder prevents iOS from seeing the field as completely empty after deletion, which prevents the keyboard-type switch that triggered the shift.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why not use <code>inputmode="numeric"</code>?</div>
+          <div class="decision-a">Characteristic fields accept non-numeric values (<code>*</code> for monsters, dashes). Locking to numeric keyboard is incorrect UX. The placeholder approach is semantic and matches the existing weapon input pattern.</div>
         </div>
       </section>
 
       <section id="march-18-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Alliance headers → buttons; Grand Alliance-only selection; CSS vars in style block</td></tr>
           <tr><td><code>src/lib/theme.svelte.ts</code></td><td>NEW — reactive <code>Theme</code> class with <code>init()</code> / <code>toggle()</code></td></tr>
           <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>NEW — pill button with sun/moon icon + label</td></tr>
-          <tr><td><code>src/app.html</code></td><td>Inline script: set <code>data-theme</code> before first paint (reads localStorage → falls back to <code>prefers-color-scheme</code>)</td></tr>
-          <tr><td><code>src/app.css</code></td><td>CSS vars for both themes; Tailwind class overrides for light mode; red button contrast fix; contrast audit darkening</td></tr>
+          <tr><td><code>src/app.html</code></td><td>Inline script: set <code>data-theme</code> before first paint (localStorage → falls back to <code>prefers-color-scheme</code>)</td></tr>
+          <tr><td><code>src/app.css</code></td><td>CSS vars for both themes; Tailwind class overrides for light mode; red button contrast fix; range input thumb; contrast audit</td></tr>
           <tr><td><code>src/routes/+layout.svelte</code></td><td><code>theme.init()</code> on mount to sync reactive state with DOM attribute</td></tr>
-          <tr><td><code>src/routes/+page.svelte</code></td><td><code>ThemeToggle</code> added inline below card buttons</td></tr>
-          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded hex → CSS vars; Position X/Y/Zoom sliders wrapped in <code>hidden lg:block</code>; mobile hint text added; label hints inherit <code>var(--ui-field-label)</code></td></tr>
-          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Hardcoded hex → CSS vars in style block</td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Touch overlay on image area (drag/pinch); "Adjust Image" toggle button; below-card sliders removed; <code>TouchState</code> interface + handlers</td></tr>
-          <tr><td><code>src/app.css</code></td><td>Custom range input thumb (20px, <code>#991b1b</code>); track via <code>var(--ui-surface-2)</code>; both <code>-webkit-</code> and <code>-moz-</code> variants</td></tr>
-          <tr><td><code>vite.config.ts</code></td><td><code>server: { host: true }</code> — expose dev server on LAN for device testing</td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td><code>ThemeToggle</code> added below card buttons; "unavailable" mobile note removed</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded hex → CSS vars; sliders wrapped in <code>hidden lg:block</code>; mobile hint text; <code>placeholder="—"</code> on characteristics; <code>text-align-last</code> on selects; font-size <code>1rem</code></td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Hardcoded hex → CSS vars; font-size <code>1rem</code></td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Touch overlay (drag/pinch); "Adjust Image" toggle; below-card sliders removed; <code>TouchState</code> + handlers; <code>modern-screenshot</code> mobile export; Web Share API download; <code>isRealMobile</code>; split export button on mobile</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same mobile export changes as fighter page; html2canvas code removed</td></tr>
+          <tr><td><code>vite.config.ts</code></td><td><code>server: { host: true }</code> — LAN device testing</td></tr>
           <tr><td><code>README.md</code></td><td>Added "Testing on a phone or other device" section</td></tr>
-          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Removed unnecessary quotes from <code>'Pistol'</code> and all 25 single-word keys in <code>fighterRunemarks</code>; <code>'Icon Bearer'</code> kept quoted</td></tr>
-          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>All import groups sorted A→Z; orphan Chaos imports folded into main block; three <code>(additional)</code> headers eliminated; duplicate Order bladeborn section merged; Cities of Sigmar subfactions sort corrected</td></tr>
-          <tr><td><code>CLAUDE.md</code></td><td>Added Code Style section: import sorting, key quoting rules, on-touch cleanup policy</td></tr>
-          <tr><td><code>src/routes/+page.svelte</code></td><td>Mobile-only note added below card buttons: "Card export is currently unavailable on mobile" (<code>lg:hidden</code>)</td></tr>
-          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Mobile export button replaced with "Export currently unavailable on mobile, use desktop" message; desktop export reverted to dom-to-image-more (html2canvas attempt reverted)</td></tr>
-          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Same revert as fighter page; html2canvas + maskSvgRaw + bgDataUrl removed</td></tr>
-        </table>
-      </section>
-
-      <section id="march-18-mobile-export" data-nav="Mobile Export Investigation">
-        <h2><span class="icon" style="background:rgba(248,113,113,0.15)">📱</span> Mobile Export Investigation</h2>
-        <p>PNG export on real iOS devices (iPhone) produced images with no background texture and intermittently no model image. A full switch to html2canvas was attempted but could not produce a correct result on either platform. All changes were reverted; desktop export uses dom-to-image-more unchanged.</p>
-
-        <h3>Root cause: iOS Safari + dom-to-image-more</h3>
-        <p>dom-to-image-more serialises the DOM into an SVG <code>foreignObject</code>, then draws it to canvas. iOS Safari refuses to render <code>&lt;img&gt;</code> elements and CSS <code>background-image</code> inside <code>foreignObject</code>. This is a fundamental browser security restriction, not a library bug. No workaround exists within dom-to-image-more.</p>
-
-        <h3>Attempted fix: html2canvas</h3>
-        <p>html2canvas uses Canvas 2D API directly, bypassing <code>foreignObject</code>. Both editor pages were switched to it, with additional canvas compositing to re-apply the SVG mask to the image area after capture.</p>
-        <p>Problems encountered:</p>
-        <ul>
-          <li><strong>Model image overflow (desktop)</strong>: <code>.image-inner</code> uses CSS <code>mask-image</code> for clipping with no <code>overflow: hidden</code>. Without the mask pass, <code>transform: scale(zoom)</code> on the model img caused it to overflow across the full card.</li>
-          <li><strong>Background not rendering</strong>: <code>background: url('/background.jpg')</code> on <code>.card</code> never appeared in html2canvas output. Tried: CSS custom property as background-image, inline <code>&lt;img&gt;</code> at <code>z-index:-1</code>, programmatic inline style injection. None worked.</li>
-          <li><strong>background-clip: text</strong>: <code>.label-col</code> uses this for the parchment-through-text effect on stat headers. Not supported by html2canvas.</li>
-          <li><strong>Prerender 404</strong>: adding <code>&lt;img src="/background.jpg"&gt;</code> caused SvelteKit's static prerenderer to follow the src as a page route.</li>
-        </ul>
-
-        <div class="callout warn">
-          <p><strong>Status: unresolved.</strong> All html2canvas code reverted. Mobile export replaced with an inline unavailable message on both editor pages and a note on the landing page. Known open issue.</p>
-        </div>
-      </section>
-
-      <section id="march-18-export-decisions" data-nav="Mobile Export Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Mobile Export Decisions</h2>
-        <div class="decision">
-          <div class="decision-q">Why stop debugging html2canvas?</div>
-          <div class="decision-a">Multiple rounds produced no visual improvement. The background-image problem appears fundamental to how this project applies backgrounds (CSS <code>background:</code> on the card element), not a configuration issue. Further html2canvas attempts were deferred in favour of restoring a known-good working state.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Messaging for unavailable mobile export</div>
-          <div class="decision-a">"Export currently unavailable on mobile, use desktop" (comma, no em dash). Shown as a muted inline pill replacing the export button on both editor preview tabs. Landing page shows a smaller <code>lg:hidden</code> note below the card type buttons.</div>
-        </div>
-      </section>
-
-      <section id="march-18-form-polish" data-nav="Mobile Form Polish">
-        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> Mobile Form Polish</h2>
-        <ul>
-          <li><strong>iOS layout shift on typing fixed</strong>: characteristics inputs (Points, Move, Toughness, Wounds) were missing <code>placeholder="—"</code>. When the field was emptied on iOS, the keyboard switched from numeric to alpha layout; typing on the alpha keyboard triggered a viewport/layout shift that pushed the input down away from its label. Adding <code>placeholder="—"</code> (matching the existing weapon inputs) keeps iOS in a consistent keyboard state and eliminates the shift. Root cause was not font-size but keyboard-type switching triggered by the empty-field state.</li>
-          <li><strong>Empty characteristics on card</strong>: characteristics stat cells now show <code>—</code> at smaller font size (16px, <code>class:stat-val-empty</code>) when empty — matching the weapon value behaviour (<code>class:is-empty</code>) introduced in Mar 15.</li>
-          <li><strong>Select field centering on iOS</strong>: Base Size and Weapon Type selects gained <code>style="text-align-last: center"</code>. iOS Safari ignores <code>text-align: center</code> on <code>&lt;select&gt;</code> for the displayed value; <code>text-align-last</code> is the correct property. Applied only to these two centred selects, not globally.</li>
-          <li><strong>Form font-size normalised</strong>: <code>.field-input</code> base font-size changed from <code>0.875rem</code> to <code>1rem</code> unconditionally; the <code>@media (max-width: 1023px)</code> override removed. Prevents any font-size-driven layout shifts across breakpoints.</li>
-        </ul>
-      </section>
-
-      <section id="march-18-form-decisions" data-nav="Form Polish Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Form Polish Decisions</h2>
-        <div class="decision">
-          <div class="decision-q">Why did the gap only appear on characteristics inputs and not weapon inputs?</div>
-          <div class="decision-a">Weapon inputs already had <code>placeholder="—"</code>; characteristics did not. The placeholder prevents iOS from seeing the field as "completely empty" after deletion, which in turn prevents the keyboard-type switch that triggers the layout shift. The fix is the placeholder, not the keyboard type — these fields accept non-numeric values (e.g. <code>*</code> for monsters).</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Why not use <code>inputmode="numeric"</code> to prevent keyboard switching?</div>
-          <div class="decision-a">The characteristic fields accept non-numeric values (asterisk for monsters, dashes, etc.), so locking the keyboard to numeric would be incorrect UX. The placeholder approach is the right solution — it's semantic, has no keyboard restriction, and matches the existing weapon input pattern.</div>
-        </div>
-      </section>
-
-      <section id="march-18-mobile-export-fix" data-nav="Mobile Export Fix">
-        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> Mobile Export Fix</h2>
-        <ul>
-          <li><strong>Library swap: <code>modern-screenshot</code></strong>: replaced dom-to-image-more on real mobile devices. Uses Canvas 2D API internally rather than SVG <code>foreignObject</code>, bypassing the iOS Safari restriction that prevented background textures and model images from rendering. Export named <code>domToPng</code> (not <code>toPng</code>).</li>
-          <li><strong>Explicit dimensions required</strong>: the card element sits inside a CSS <code>transform: scale(cardScale)</code> parent. <code>modern-screenshot</code> reads <code>getBoundingClientRect()</code> which includes the transform, so without explicit dimensions it captured the scaled-down visual size. Fix: <code>{ width: 574, height: 915, scale: 2 }</code> passed to <code>domToPng</code>.</li>
-          <li><strong>iOS download — Web Share API</strong>: iOS Safari blocks <code>a.click()</code> programmatic downloads and <code>window.open(dataUrl)</code> as a popup. Web Share API (<code>navigator.share</code>) is the correct path and requires a <strong>secure context (HTTPS)</strong>. On a live HTTPS URL it fires immediately and the image saves directly to Photos — no overlay shown. On localhost (HTTP) the secure context requirement is not met, so <code>navigator.share</code> is <code>undefined</code> and the fallback overlay triggers instead. <strong>Confirmed on real device (2026-03-19)</strong>: the overlay was always only a localhost artefact, not a real device limitation.</li>
-          <li><strong>Inline overlay fallback (localhost only)</strong>: fullscreen dark overlay with the captured image — user long-presses to save to Photos. Only appears when <code>navigator.share</code> is unavailable (HTTP). Worth keeping for local dev convenience.</li>
-          <li><strong>Overlay text colour</strong>: uses inline <code>style="color: #fff"</code> rather than Tailwind <code>text-white</code> — the light theme CSS overrides <code>text-white</code> to near-black, making text invisible on the dark overlay.</li>
-          <li><strong>Real device detection</strong>: <code>isRealMobile</code> — plain <code>const</code> using <code>navigator.userAgent</code> regex (<code>/iPhone|iPad|iPod|Android/i</code>). Separates real devices from desktop browser mobile-viewport emulation. Desktop in mobile viewport keeps dom-to-image-more + <code>a.click()</code> download.</li>
-          <li><strong>Mobile export button</strong>: split button (Export PNG + chevron dropdown → printer-friendly) added to the Preview tab on mobile for both fighter and ability editors, matching the desktop header button exactly.</li>
-          <li><strong>Ability card parity</strong>: all mobile export changes ported to <code>/ability/+page.svelte</code>.</li>
-          <li><strong>Landing page notice removed</strong>: "Export currently unavailable on mobile" note removed from <code>+page.svelte</code> and both editor pages.</li>
-        </ul>
-      </section>
-
-      <section id="march-18-export-fix-decisions" data-nav="Export Fix Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Export Fix Decisions</h2>
-        <div class="decision">
-          <div class="decision-q">Why <code>modern-screenshot</code> over manual canvas redraw?</div>
-          <div class="decision-a">Tried in order: (1) <code>modern-screenshot</code> library swap — succeeded. Manual canvas redraw (full reimplementation) was the backup and was not needed. The key insight was passing explicit <code>width/height</code> to override the transform-affected bounding rect.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Why keep dom-to-image-more on desktop?</div>
-          <div class="decision-a">It works reliably on desktop and produces correct output. No reason to change a working path. <code>modern-screenshot</code> is mobile-only to minimise risk to the proven desktop export.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">PNG at 2× for mobile — no size optimisation?</div>
-          <div class="decision-a">Mobile export is also used for printing, so PNG at 2× (1148×1830px) is correct. Lossy formats (JPEG/WebP) were considered for sharing but rejected since print quality is the primary use case.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Why does the overlay only appear on localhost, not on the live site?</div>
-          <div class="decision-a"><code>navigator.share</code> requires a <em>secure context</em> (HTTPS). Localhost is HTTP and does not qualify, so <code>navigator.share</code> is <code>undefined</code> there and the overlay fallback fires. On a live HTTPS deployment the Web Share API is available and the image saves immediately — no overlay needed. The overlay is a local dev artefact and is worth keeping for that purpose.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Does <code>printerFriendly</code> resetting before the overlay is dismissed cause a bug?</div>
-          <div class="decision-a">No. The capture completes and the data URL is stored in <code>exportedImageUrl</code> while <code>printerFriendly</code> is still <code>true</code>. The reset only affects the live card render beneath the overlay, which doesn't matter. The image in the overlay is already the correct printer-friendly PNG.</div>
-        </div>
-      </section>
-
-      <section id="march-18-pending" data-nav="Still Pending">
-        <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
-        <table>
-          <thead><tr><th>Status</th><th>Item</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge badge-green">done</span></td><td><strong>Mobile PNG export</strong> — resolved via <code>modern-screenshot</code> + inline overlay fallback. See Mobile Export Fix section above.</td></tr>
-          </tbody>
+          <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Unnecessary quotes removed from single-word keys; <code>'Icon Bearer'</code> kept quoted</td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Import groups sorted A→Z; orphan imports folded in; three <code>(additional)</code> headers eliminated; duplicate section merged; CoS sort corrected</td></tr>
+          <tr><td><code>CLAUDE.md</code></td><td>Code Style section added: import sorting, key quoting, on-touch cleanup policy</td></tr>
         </table>
       </section>
 
@@ -733,7 +715,9 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-17</span>
-          <span class="badge badge-green">Done</span>
+          <span class="badge badge-green">Mobile layout</span>
+          <span class="badge badge-green">Tab bar</span>
+          <span class="badge badge-green">Tablet breakpoint</span>
         </div>
         <h1>Mobile Support</h1>
         <p>Full editor access on phones — tab-based layout, responsive form grids, iOS input zoom fix, touch-friendly dropdown dismissal, and export button relocated to the Preview tab on mobile.</p>
@@ -759,7 +743,7 @@
       </section>
 
       <section id="march-17-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
         <div class="decision">
           <div class="decision-q">Tab bar vs scroll vs drawer for mobile layout?</div>
           <div class="decision-a">Tabs. A scroll layout (form on top, card below) is awkward because the card is tall. A drawer adds complexity. Two equal-width tabs with a clear active state are the simplest and most native-feeling pattern.</div>
@@ -783,7 +767,7 @@
       </section>
 
       <section id="march-17-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/routes/+page.svelte</code></td><td>Removed mobile warning, viewport state, resize effect, <code>isPhone</code>/<code>isPortraitTablet</code> derived</td></tr>
@@ -803,78 +787,88 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-16</span>
-          <span class="badge badge-green">Done</span>
+          <span class="badge badge-green">Hierarchy restructured</span>
+          <span class="badge badge-green">Runemark audit</span>
+          <span class="badge badge-green">Faction select built</span>
         </div>
         <h1>Hierarchy Restructure &amp; Filterable Faction Select</h1>
         <p>Audited and restructured the faction hierarchy with proper parent-prefixed naming, replaced three cascading dropdowns with a single filterable list component used on both Fighter and Ability card editors.</p>
       </div>
 
-      <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
-      <ul>
-        <li><strong>Activation badge font-size</strong> increased from 14px → 24px in <code>AbilityCard.svelte</code></li>
-        <li><strong>Pipe line break</strong> (<code>|</code>) supported in fighter name and ability card name — card renders a <code>&lt;br&gt;</code> at each <code>|</code>; form label hints updated to "use | for a line break"</li>
-        <li><strong>Full runemark audit</strong> against a reference card creator — cross-checked faction list and all subfactions</li>
-        <li>Added <strong>Everchosen</strong> as a top-level Chaos faction (SVG + hierarchy entry)</li>
-        <li>Added <strong>Legions of Nagash</strong> as a top-level Death faction (SVG + hierarchy entry)</li>
-        <li>Added <strong>Ulfenkarn</strong> as a subfaction under Soulblight Gravelords (SVG + hierarchy entry)</li>
-        <li>Added <strong>10 Cities of Sigmar subfactions</strong>: Anvilgard, Castelite Hosts, Darkling Covens, Dispossessed, Greywater Fastness, Hallowheart, Hammerhal, Tempest's Eye, The Living City, The Phoenicium (SVGs + hierarchy entries)</li>
-        <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from reference project as <code>bladeborn-grombrindal.svg</code>, saved as <code>factions-order-bladeborn-grombrindal.svg</code>)</li>
-        <li>Added <strong>Lesser Artefact</strong> and <strong>Greater Artefact</strong> to the ability card type select — displayed as card label text in uppercase</li>
-      </ul>
+      <section id="march-16-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
 
-      <h3>Later in the session</h3>
-      <ul>
-        <li><strong>Faction hierarchy fully restructured</strong> via editable TXT export — standalone warbands now namespaced under their parent faction (e.g. <em>Iron Golem</em> → <em>Slaves to Darkness: Iron Golem</em>); Cities of Sigmar subfactions promoted to factions; several Death/Destruction factions similarly reparented</li>
-        <li><strong>Ulfenkarn removed</strong> from the hierarchy entirely (was a Soulblight Gravelords subfaction)</li>
-        <li><code>dUlfenkarn</code> import removed from <code>hierarchy.ts</code></li>
-        <li>Built <strong><code>FactionSelect.svelte</code></strong> — replaces all three cascading Alliance/Faction/Subfaction <code>&lt;select&gt;</code> elements with a single filterable component: text filter input + scrollable grouped list (alliance headers sticky, factions indented, subfactions further indented); current selection shown as a dismissible badge; A→Z order fully preserved</li>
-        <li><strong>Applied to both editors</strong> — <code>FighterForm.svelte</code> and <code>AbilityForm.svelte</code> both use <code>FactionSelect</code>; cascading selects removed from both</li>
-      </ul>
+        <h3>Runemark Library Audit</h3>
+        <ul>
+          <li><strong>Full audit</strong> against a reference card creator — cross-checked faction list and all subfactions</li>
+          <li>Added <strong>Everchosen</strong> as a top-level Chaos faction (SVG + hierarchy entry)</li>
+          <li>Added <strong>Legions of Nagash</strong> as a top-level Death faction (SVG + hierarchy entry)</li>
+          <li>Added <strong>10 Cities of Sigmar subfactions</strong>: Anvilgard, Castelite Hosts, Darkling Covens, Dispossessed, Greywater Fastness, Hallowheart, Hammerhal, Tempest's Eye, The Living City, The Phoenicium (SVGs + hierarchy entries)</li>
+          <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from reference project)</li>
+          <li>Added <strong>Lesser Artefact</strong> and <strong>Greater Artefact</strong> to ability card type select</li>
+        </ul>
 
-      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-      <div class="decision">
-        <div class="decision-q">Where does Ulfenkarn sit in the hierarchy?</div>
-        <div class="decision-a">As a subfaction under Soulblight Gravelords — Ulfenkarn is a city setting within the Soulblight range (Cursed City). The subfaction placement is more thematically accurate than listing it top-level.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">Where does Grombrindal sit?</div>
-        <div class="decision-a">Top-level Order faction (not a Cities of Sigmar subfaction). Grombrindal is an independent character and warband, not tied to a specific city.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">SVG source for Grombrindal?</div>
-        <div class="decision-a">The source file uses a flat <code>bladeborn-grombrindal.svg</code> naming convention; saved locally as <code>factions-order-bladeborn-grombrindal.svg</code> to match our naming pattern.</div>
-      </div>
+        <h3>Hierarchy Restructure</h3>
+        <ul>
+          <li>Standalone warbands namespaced under parent faction (e.g. <em>Iron Golem</em> → <em>Slaves to Darkness: Iron Golem</em>); Cities of Sigmar subfactions promoted to factions; several Death/Destruction factions similarly reparented</li>
+          <li>Ulfenkarn removed from the hierarchy entirely; <code>dUlfenkarn</code> import removed from <code>hierarchy.ts</code></li>
+          <li>TXT export workflow: hierarchy exported to editable plain text, user audited, changes applied back to <code>hierarchy.ts</code> — SVG imports reused, only labels and nesting changed</li>
+        </ul>
 
-      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-      <div class="decision">
-        <div class="decision-q">How to restructure factions without losing SVG references?</div>
-        <div class="decision-a">Exported hierarchy to a plain TXT file for human editing. User edited the TXT, then changes were applied back to <code>hierarchy.ts</code> — all SVG imports reused, only labels and nesting changed. Clean workflow for future audits.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">Should the filterable faction select replace or supplement the cascading dropdowns?</div>
-        <div class="decision-a">Replace entirely. With the new naming convention (e.g. <em>Slaves to Darkness: Iron Golem</em>) the old three-step cascade adds no value — you'd still need to know the parent. A single searchable list is faster for any selection depth.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">What does "filter" mean in context — search box or always-visible list?</div>
-        <div class="decision-a">Always-visible grouped list with a filter input at the top that narrows it. Full list visible by default; typing narrows it in real-time. Alliance headers sticky. Selecting any item (faction or subfaction) sets all three data fields at once.</div>
-      </div>
+        <h3>Filterable Faction Select</h3>
+        <ul>
+          <li>Built <strong><code>FactionSelect.svelte</code></strong> — replaces the three cascading Alliance/Faction/Subfaction <code>&lt;select&gt;</code> elements with a single filterable component: text filter input + scrollable grouped list (alliance headers sticky, factions indented, subfactions further indented); current selection shown as a dismissible badge; A→Z order preserved</li>
+          <li>Applied to both editors — <code>FighterForm.svelte</code> and <code>AbilityForm.svelte</code>; cascading selects removed from both</li>
+        </ul>
 
-      <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
-      <table>
-        <tr><th>File</th><th>Change</th></tr>
-        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Activation badge font-size 14px → 24px; pipe line break in ability name</td></tr>
-        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added Lesser Artefact + Greater Artefact options; pipe hint; replaced 3 cascading selects with <code>FactionSelect</code></td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pipe line break in fighter name</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label; replaced 3 cascading selects with <code>FactionSelect</code></td></tr>
-        <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>New — filterable faction/subfaction select component</td></tr>
-        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Full hierarchy restructure: parent-prefixed factions, Ulfenkarn removed, <code>dUlfenkarn</code> import removed</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>New — sourced from reference project</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>New — sourced from reference project</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-death-ulfenkarn.svg</code></td><td>Retained on disk; no longer imported or used</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>New — sourced from reference project</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-*.svg</code> (×10)</td><td>New — 10 Cities of Sigmar subfaction SVGs</td></tr>
-        <tr><td><code>runemark-hierarchy.txt</code></td><td>New — human-editable TXT export used for hierarchy audit</td></tr>
-      </table>
+        <h3>Card Polish</h3>
+        <ul>
+          <li><strong>Activation badge font-size</strong> increased from 14px → 24px in <code>AbilityCard.svelte</code></li>
+          <li><strong>Pipe line break</strong> (<code>|</code>) supported in fighter name and ability card name — card renders <code>&lt;br&gt;</code> at each <code>|</code>; form label hints updated</li>
+        </ul>
+      </section>
+
+      <section id="march-16-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Where does Ulfenkarn sit in the hierarchy?</div>
+          <div class="decision-a">Originally added as a Soulblight Gravelords subfaction (Cursed City setting). Later removed entirely — too niche and not a competitive warband in the current meta.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Where does Grombrindal sit?</div>
+          <div class="decision-a">Top-level Order faction, not a Cities of Sigmar subfaction. Grombrindal is an independent character and warband, not tied to a specific city. Source file named <code>bladeborn-grombrindal.svg</code>; saved as <code>factions-order-bladeborn-grombrindal.svg</code> to match project naming.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">How to restructure factions without losing SVG references?</div>
+          <div class="decision-a">Export hierarchy to plain TXT for human editing, then apply changes back to <code>hierarchy.ts</code>. All SVG imports reused — only labels and nesting changed. Clean, repeatable workflow for future audits.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Should the filterable faction select replace or supplement the cascading dropdowns?</div>
+          <div class="decision-a">Replace entirely. With parent-prefixed naming (e.g. <em>Slaves to Darkness: Iron Golem</em>) the three-step cascade adds no value — you'd still need to know the parent. A single searchable list is faster at any selection depth.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Filter: search box narrowing or always-visible list?</div>
+          <div class="decision-a">Always-visible grouped list with a filter input at the top. Full list visible by default; typing narrows in real-time. Alliance headers sticky. Selecting any item sets all three data fields at once.</div>
+        </div>
+      </section>
+
+      <section id="march-16-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Activation badge font-size 14px → 24px; pipe line break in ability name</td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Lesser Artefact + Greater Artefact options; pipe hint; cascading selects → <code>FactionSelect</code></td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pipe line break in fighter name</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label; cascading selects → <code>FactionSelect</code></td></tr>
+          <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>NEW — filterable faction/subfaction select component</td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Full hierarchy restructure: parent-prefixed factions; Ulfenkarn + import removed</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>NEW</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>NEW</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>NEW</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-*.svg</code> (×10)</td><td>NEW — 10 Cities of Sigmar subfaction SVGs</td></tr>
+          <tr><td><code>runemark-hierarchy.txt</code></td><td>NEW — human-editable TXT export for hierarchy audits</td></tr>
+        </table>
+      </section>
     </div>
     <!-- /session-march-16 -->
 
@@ -885,106 +879,94 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-15</span>
-          <span class="badge badge-green">Done</span>
+          <span class="badge badge-green">Ability card built</span>
+          <span class="badge badge-green">Font swap</span>
+          <span class="badge badge-green">Fighter card polish</span>
         </div>
         <h1>Fighter Card Polish &amp; Ability Card</h1>
         <p>Completed final polish on the fighter card (custom runemark shape, image caption, table radii, empty value dashes) and built the ability card editor from scratch.</p>
       </div>
 
-      <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
-      <ul>
-        <li>Renamed faction "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)" and fixed alphabetical order in hierarchy</li>
-        <li>Empty weapon stat values now render <code>—</code> (em dash) in a smaller font matching the weapon name column style</li>
-        <li>Weapon stat field placeholders in the sidebar changed to <code>—</code></li>
-        <li>Added <strong>image caption</strong> field: Alegreya font, absolutely positioned at <code>bottom: 20px</code>, 50% opacity in preview / full opacity in export</li>
-        <li>Replaced circular runemark badges with custom organic shape (<code>runemark-shape.svg</code>) using CSS mask + wrapper border technique (78px border / 76px badge)</li>
-        <li>Fixed hardcoded <code>fill="#FFF"</code> attribute in 20 runemark SVGs so printer-friendly fills work correctly</li>
-        <li>Updated characteristics and weapons table border-radii to 1mm equivalent: outer boxes <code>7.5px</code>, inner rows <code>6.5px</code></li>
-        <li>Renamed form label "Monster (show damage bracket table)" → "Monster (Damage Table)"</li>
-        <li>Built <strong>AbilityCard.svelte</strong>: 574×915px card, torn-edge image area with dark maroon background, horizontal runemarks row (grand alliance + faction + subfaction + 2 fighter runemarks + activation badge), card type label, parchment with title / flavor text / body text</li>
-        <li>Built <strong>AbilityForm.svelte</strong>: card type, card name, show runemarks checkbox, grand alliance/faction/subfaction/fighter runemark selects, activation select, flavor text and body text textareas</li>
-        <li>Built <strong>/ability/+page.svelte</strong>: same split-panel layout as fighter card with Export PNG + printer-friendly export</li>
-        <li>Printer-friendly ability card: white background, no torn-edge mask, black text, white pills, black runemark fills</li>
-        <li>Code cleanup: removed unused <code>has-chevrons</code>/<code>chevron-left</code>/<code>chevron-right</code> classes; removed dead <code>Weapon.icon</code> field from type and all initializations</li>
-        <li>Dead asset cleanup: removed <code>static/image-mask-1-cropped.svg</code> and <code>static/runemark-shape.svg</code> (duplicate of <code>src/lib/</code> copies actually used via <code>?raw</code>); removed <code>src/lib/assets/favicon.svg</code> (unreferenced Svelte template artifact)</li>
-        <li><strong>Base size field</strong> changed from free-text input to a <code>&lt;select&gt;</code> — 14 round options (⌀ 20 → ⌀ 160) followed by 7 oval options (50×25 → 170×105), round entries first ascending then oval entries ascending</li>
-        <li><strong>Fighter card subtitle</strong> — optional secondary line below the fighter name; Germania One, same color as name, rendered only when non-empty; form field grouped inside the Fighter name section with <em>(optional)</em> label</li>
-        <li><strong>Header text changed from abbreviations to full words</strong> — stat headers now read MOVE / TOUGHNESS / WOUNDS and weapon headers RANGE / ATTACKS / STRENGTH / DAMAGE (was M / T / W / RNG / A / S / DMG); form field sub-labels similarly de-abbreviated</li>
-        <li><strong>Subtitle polish</strong> — added <code>maxlength="120"</code>, live character counter <code>{length}/120</code> in label; CSS: <code>display: block; width: 100%; line-height: 1.3; white-space: normal; overflow-wrap: break-word</code></li>
-        <li><strong>Weapon name font size</strong> raised from 16px → 18px to match header text; <code>use:fittext</code> applied so long names shrink to fit the cell</li>
-        <li><strong>Monster damage field auto-dash</strong> — when Range, Attacks, and Strength are all cleared on a monster weapon row, the disabled Damage field shows <code>—</code> instead of <code>*/*</code>; <code>class:is-empty</code> also applied so the dash gets the same 16px styling as other empty fields</li>
-        <li><strong>Form label renames</strong> — "Damage Brackets" → "Damage Table"; "Wounds Taken" → "Damage Points Allocated"</li>
-        <li><strong>Damage table font size</strong> bumped from 15px → 17px on both <code>.dcol-wide</code> and <code>.dcol-stat</code></li>
-        <li><strong>Page titles</strong> — added <code>&lt;svelte:head&gt;&lt;title&gt;</code> to <code>/fighter</code> and <code>/ability</code> routes; both showed a blank tab title on hard-reload</li>
-      </ul>
+      <section id="march-15-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
 
-      <h3 id="march-15-fonts">Font Swap</h3>
-      <ul>
-        <li>Created <code>fonts</code> branch for all font work</li>
-        <li>Replaced <strong>RodchenkoCTT</strong> with <strong>Germania One</strong> (weight 400 only, self-hosted, SIL OFL 1.1 — The Germania One Project Authors)</li>
-        <li>Replaced <strong>OldrichiumITCStdLight</strong> with <strong>Alegreya</strong> (variable font, weight axis 100–900, regular + italic, self-hosted, SIL OFL 1.1 — The Alegreya Project Authors)</li>
-        <li>Font family names updated from <code>'Warcry'</code> → <code>'Germania One'</code> and <code>'Oldrichium'</code> → <code>'Alegreya'</code> throughout all components and <code>app.css</code></li>
-        <li>Font weights: Germania One is fixed 400 — <code>font-weight: 600</code> on <code>.fighter-name</code> / <code>.ability-name</code> is a no-op; Alegreya retains its full variable weight range</li>
-        <li>Monster damage table (<code>.dcol-wide</code>, <code>.dcol-stat</code>) uses Alegreya (not Germania One — same as body text)</li>
-        <li>All <code>letter-spacing</code> removed from Germania One usages in both card components</li>
-        <li>License files included alongside font files: <code>GermaniaOne-OFL.txt</code> (SIL OFL 1.1), <code>Alegreya-OFL.txt</code> (SIL OFL 1.1)</li>
-        <li>Stale font files removed: <code>RodchenkoCTT.ttf</code>, <code>OldrichiumITCStdLight.otf</code>, <code>RobotoSlab.ttf</code>, <code>RobotoSlab-LICENSE.txt</code></li>
-      </ul>
+        <h3>Fighter Card Polish</h3>
+        <ul>
+          <li>Renamed faction "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)"; fixed alphabetical sort in hierarchy</li>
+          <li>Empty weapon stat values render <code>—</code> at smaller font; weapon stat field placeholders changed to <code>—</code></li>
+          <li><strong>Image caption</strong> field: Alegreya font, absolutely positioned at <code>bottom: 20px</code>, 50% opacity in preview / full in export</li>
+          <li>Circular runemark badges replaced with custom organic shape (<code>runemark-shape.svg</code>) — CSS mask + wrapper border technique (78px border / 76px badge)</li>
+          <li>Fixed hardcoded <code>fill="#FFF"</code> in 20 runemark SVGs so printer-friendly fills work</li>
+          <li>Table border-radii: outer boxes <code>7.5px</code>, inner rows <code>6.5px</code> (1mm equivalent)</li>
+          <li><strong>Subtitle</strong> — optional secondary line below fighter name; Germania One; <code>maxlength="120"</code> + live counter; rendered only when non-empty</li>
+          <li><strong>Header text</strong> changed from abbreviations to full words: MOVE / TOUGHNESS / WOUNDS / RANGE / ATTACKS / STRENGTH / DAMAGE</li>
+          <li>Weapon name font 16px → 18px; <code>use:fittext</code> applied so long names shrink to fit</li>
+          <li>Monster damage auto-dash: when Range/Attacks/Strength all empty, Damage shows <code>—</code> with <code>class:is-empty</code> styling</li>
+          <li>Damage table font 15px → 17px; form labels: "Damage Table", "Damage Points Allocated"</li>
+          <li>Code cleanup: removed unused <code>has-chevrons</code>/<code>chevron-*</code> classes; removed dead <code>Weapon.icon</code> field</li>
+          <li>Dead assets removed: duplicate SVGs in <code>static/</code>, unreferenced <code>favicon.svg</code></li>
+          <li><strong>Base size</strong> changed to <code>&lt;select&gt;</code> — 14 round (⌀ 20 → ⌀ 160) + 7 oval options, round-first ascending</li>
+          <li>Page <code>&lt;title&gt;</code> tags added to <code>/fighter</code> and <code>/ability</code> routes</li>
+        </ul>
 
-      <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-      <div class="decision">
-        <div class="decision-q">How is the runemark border implemented without CSS border (which doesn't follow the mask shape)?</div>
-        <div class="decision-a">A wrapper div (<code>.runemark-border</code>, 78px, <code>#FAF6F3</code> bg) and inner div (<code>.runemark-badge</code>, 76px, <code>#5a0a14</code> bg) both masked to the same organic shape. The 1px size difference on each side creates the visible border.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">Where do the SVG mask files live, and why are they in <code>src/lib/</code>?</div>
-        <div class="decision-a"><code>src/lib/image-mask.svg</code> and <code>src/lib/runemark-shape.svg</code> are imported via Vite <code>?raw</code> to build data URLs for inline mask styles — required for dom-to-image-more export fidelity (external URLs are not resolved during export). Duplicate copies that previously existed in <code>static/</code> were removed.</div>
-      </div>
-      <div class="decision">
-        <div class="decision-q">Why does the activation badge live inside the runemarks row rather than a separate area?</div>
-        <div class="decision-a">User requested it behaves like a runemark circle, placed at the end of the horizontal row.</div>
-      </div>
+        <h3>Font Swap</h3>
+        <ul>
+          <li>Replaced <strong>RodchenkoCTT</strong> with <strong>Germania One</strong> (weight 400 only, self-hosted, SIL OFL 1.1)</li>
+          <li>Replaced <strong>OldrichiumITCStdLight</strong> with <strong>Alegreya</strong> (variable, wght 100–900, regular + italic, SIL OFL 1.1)</li>
+          <li>Font family names updated throughout; <code>letter-spacing</code> removed from all Germania One usages</li>
+          <li>Monster damage table uses Alegreya (body font, not Germania One)</li>
+          <li>Stale font files removed: RodchenkoCTT, OldrichiumITCStdLight, RobotoSlab</li>
+        </ul>
 
-      <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
-      <table>
-        <tr><th>File</th><th>Change</th></tr>
-        <tr><td><code>src/lib/types.ts</code></td><td>Added <code>imageCaption</code> to FighterCardData; replaced <code>runemarks</code> in AbilityCardData with <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>, <code>fighterRunemarks</code>, <code>showRunemarks</code>; removed <code>Weapon.icon</code></td></tr>
-        <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Renamed "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)", fixed sort order</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/*.svg</code> (×20)</td><td>Removed hardcoded <code>fill="#FFF"</code> attribute from paths</td></tr>
-        <tr><td><code>static/runemark-shape.svg</code></td><td>New — organic circle shape for runemark badges</td></tr>
-        <tr><td><code>src/lib/runemark-shape.svg</code></td><td>New — copy for Vite <code>?raw</code> import / data URL export</td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Organic badge shape, image caption, empty value dashes, table radii, chevron class cleanup</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Image caption field, weapon placeholder dashes, label rename</td></tr>
-        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>imageCaption</code> default; removed <code>icon</code> from weapon defaults</td></tr>
-        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>New — ability card visual component</td></tr>
-        <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>New — ability card form component</td></tr>
-        <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Full ability card editor (was placeholder)</td></tr>
-        <tr><td><code>static/image-mask-1-cropped.svg</code></td><td>Deleted — duplicate of <code>src/lib/image-mask.svg</code></td></tr>
-        <tr><td><code>static/runemark-shape.svg</code></td><td>Deleted — duplicate of <code>src/lib/runemark-shape.svg</code></td></tr>
-        <tr><td><code>src/lib/assets/favicon.svg</code></td><td>Deleted — unreferenced Svelte template artifact</td></tr>
-        <tr><td><code>static/fonts/RodchenkoCTT.ttf</code></td><td>Deleted — replaced by Germania One</td></tr>
-        <tr><td><code>static/fonts/OldrichiumITCStdLight.otf</code></td><td>Deleted — replaced by Alegreya</td></tr>
-        <tr><td><code>static/fonts/RobotoSlab.ttf</code></td><td>Deleted — replaced by Germania One</td></tr>
-        <tr><td><code>static/fonts/RobotoSlab-LICENSE.txt</code></td><td>Deleted — no longer needed</td></tr>
-        <tr><td><code>static/fonts/GermaniaOne-Regular.ttf</code></td><td>New — weight 400 only, self-hosted, SIL OFL 1.1</td></tr>
-        <tr><td><code>static/fonts/GermaniaOne-OFL.txt</code></td><td>New — SIL Open Font License 1.1 for Germania One</td></tr>
-        <tr><td><code>static/fonts/Alegreya-Regular.ttf</code></td><td>New — variable font (wght 100–900), self-hosted</td></tr>
-        <tr><td><code>static/fonts/Alegreya-Italic.ttf</code></td><td>New — variable italic font (wght 100–900), self-hosted</td></tr>
-        <tr><td><code>static/fonts/Alegreya-OFL.txt</code></td><td>New — SIL Open Font License 1.1 for Alegreya</td></tr>
-        <tr><td><code>src/app.css</code></td><td>Font-face declarations updated: Germania One + Alegreya (regular + italic) with correct license attributions</td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Font families → Germania One/Alegreya; weights set; letter-spacing removed; damage table uses Alegreya</td></tr>
-        <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Font families → Germania One/Alegreya; weights set; letter-spacing removed</td></tr>
-        <tr><td><code>src/lib/types.ts</code></td><td>Added <code>subtitle: string</code> to <code>FighterCardData</code></td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Render <code>.fighter-subtitle</code> below fighter name (Germania One, 18px, conditional on non-empty); base size display unchanged</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Base size changed to <code>&lt;select&gt;</code> (14 round + 7 oval options, round-first ascending); subtitle input added inside Fighter name section</td></tr>
-        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>subtitle: ''</code> default; base size default updated to <code>⌀ 32</code></td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Stat + weapon header text changed from abbreviations to full words (MOVE/TOUGHNESS/WOUNDS/RANGE/ATTACKS/STRENGTH/DAMAGE); weapon name font 16px → 18px; <code>use:fittext</code> on weapon name span</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Subtitle: <code>maxlength="120"</code> + live counter; sub-labels de-abbreviated (Move, Toughness, Wounds, Range, Attacks, Strength, Damage)</td></tr>
-        <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Monster damage shows <code>—</code> (+ <code>is-empty</code> class) when range/attacks/strength all empty; damage table font 15px → 17px</td></tr>
-        <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Monster damage disabled field shows <code>—</code> when row is empty; labels "Damage Table" + "Damage Points Allocated"</td></tr>
-        <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>&lt;svelte:head&gt;&lt;title&gt;Fighter Card — Warcry Card Creator&lt;/title&gt;</code></td></tr>
-        <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Added <code>&lt;svelte:head&gt;&lt;title&gt;Ability Card — Warcry Card Creator&lt;/title&gt;</code></td></tr>
-      </table>
+        <h3>Ability Card</h3>
+        <ul>
+          <li>Built <strong>AbilityCard.svelte</strong>: 574×915px, torn-edge header with dark maroon background, horizontal runemarks row (GA + faction + subfaction + 2 fighter runemarks + activation badge), card type label, parchment with title / flavor text / body text</li>
+          <li>Built <strong>AbilityForm.svelte</strong>: card type, name, runemarks selects, activation select, flavor + body textareas</li>
+          <li>Built <strong>/ability/+page.svelte</strong>: split-panel layout, Export PNG + printer-friendly export</li>
+          <li>Printer-friendly: white background, no torn-edge mask, black text, white pills, black runemark fills</li>
+        </ul>
+      </section>
+
+      <section id="march-15-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">How is the runemark border implemented without a CSS border (which doesn't follow the mask shape)?</div>
+          <div class="decision-a">A wrapper div (<code>.runemark-border</code>, 78px, <code>#FAF6F3</code> bg) and inner div (<code>.runemark-badge</code>, 76px, <code>#5a0a14</code> bg) both masked to the same organic shape. The 1px size difference on each side creates the visible border.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Where do the SVG mask files live, and why in <code>src/lib/</code>?</div>
+          <div class="decision-a"><code>src/lib/image-mask.svg</code> and <code>src/lib/runemark-shape.svg</code> imported via Vite <code>?raw</code> to build data URLs for inline mask styles — required for dom-to-image-more export fidelity. Duplicate <code>static/</code> copies removed.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why does the activation badge live inside the runemarks row?</div>
+          <div class="decision-a">Requested to behave like a runemark circle, placed at the end of the horizontal row.</div>
+        </div>
+      </section>
+
+      <section id="march-15-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/types.ts</code></td><td>Added <code>imageCaption</code>, <code>subtitle</code> to FighterCardData; replaced <code>runemarks</code> in AbilityCardData with individual fields; removed <code>Weapon.icon</code></td></tr>
+          <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Renamed "Chaotic Beasts" → "Monsters of Chaos (Chaotic Beasts)"; fixed sort</td></tr>
+          <tr><td><code>src/lib/runemarks/svg/*.svg</code> (×20)</td><td>Removed hardcoded <code>fill="#FFF"</code> from paths</td></tr>
+          <tr><td><code>src/lib/runemark-shape.svg</code></td><td>NEW — organic circle shape for <code>?raw</code> import / data URL export</td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Organic badge shape; image caption; empty value dashes; table radii; subtitle; full-word headers; weapon font 18px + fittext; monster damage dash; damage table 17px; fonts → Germania One / Alegreya</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Image caption field; placeholder dashes; base size → select; subtitle input + counter; de-abbreviated sub-labels; monster damage dash; label renames; fonts updated</td></tr>
+          <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added defaults for <code>imageCaption</code>, <code>subtitle</code>; base size default <code>⌀ 32</code>; <code>&lt;title&gt;</code> tag</td></tr>
+          <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>NEW — ability card visual component; fonts → Germania One / Alegreya</td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>NEW — ability card form component</td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Full ability card editor; <code>&lt;title&gt;</code> tag</td></tr>
+          <tr><td><code>src/app.css</code></td><td>Font-face declarations: Germania One + Alegreya (regular + italic) with license attributions</td></tr>
+          <tr><td><code>static/fonts/GermaniaOne-Regular.ttf</code></td><td>NEW — SIL OFL 1.1</td></tr>
+          <tr><td><code>static/fonts/GermaniaOne-OFL.txt</code></td><td>NEW</td></tr>
+          <tr><td><code>static/fonts/Alegreya-Regular.ttf</code></td><td>NEW — SIL OFL 1.1</td></tr>
+          <tr><td><code>static/fonts/Alegreya-Italic.ttf</code></td><td>NEW</td></tr>
+          <tr><td><code>static/fonts/Alegreya-OFL.txt</code></td><td>NEW</td></tr>
+          <tr><td><code>static/fonts/RodchenkoCTT.ttf</code>, <code>OldrichiumITCStdLight.otf</code>, <code>RobotoSlab.*</code></td><td>Deleted — replaced by Germania One / Alegreya</td></tr>
+          <tr><td><code>static/image-mask-1-cropped.svg</code>, <code>static/runemark-shape.svg</code>, <code>src/lib/assets/favicon.svg</code></td><td>Deleted — duplicates / unreferenced</td></tr>
+        </table>
+      </section>
     </div>
     <!-- /session-march-15 -->
 
@@ -992,7 +974,9 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-14</span>
-          <span class="badge badge-green">Done</span>
+          <span class="badge badge-green">Fighter runemarks</span>
+          <span class="badge badge-green">GitHub Pages live</span>
+          <span class="badge badge-green">Runemark library complete</span>
         </div>
         <h1>Fighter Runemarks, Git, UI Polish &amp; Runemark Library</h1>
         <p>Four conversations across the day: added fighter runemarks with pills fallback and export fidelity fixes; initialized git and deployed to GitHub Pages; polished the UI with mobile restrictions and landing page copy; completed the runemark SVG library with all factions wired and file naming normalised.</p>
@@ -1075,7 +1059,7 @@
       </section>
 
       <section id="march-14-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
         <div class="decision">
           <div class="decision-q">Fighter runemark deduplication: disabled options, not hidden</div>
           <div class="decision-a">Options that are already selected in another slot stay visible in the dropdown but are set to <code>disabled</code>. This keeps the full list scannable while preventing duplicates — the user can see what exists and what's taken. Hiding selected options was the alternative but made the list feel inconsistent.</div>
@@ -1152,7 +1136,7 @@
       </section>
 
       <section id="march-14-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/lib/runemarks/svg/fighters-*.svg</code> (×26)</td><td>Added — Agile → Warrior fighter runemark SVGs</td></tr>
@@ -1183,17 +1167,9 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-13</span>
-          <span class="badge badge-green">Image layout done</span>
-          <span class="badge badge-green">Tables styled</span>
-          <span class="badge badge-green">Named fighter done</span>
-          <span class="badge badge-green">Runemarks wired</span>
-          <span class="badge badge-green">Weapon types done</span>
-          <span class="badge badge-green">Runemark hierarchy done</span>
-          <span class="badge badge-green">Order hierarchy complete</span>
-          <span class="badge badge-green">SVG mask done</span>
-          <span class="badge badge-green">Housekeeping done</span>
+          <span class="badge badge-green">Fighter card polish</span>
+          <span class="badge badge-green">Runemark hierarchy</span>
           <span class="badge badge-green">Export fidelity improved</span>
-          <span class="badge badge-amber">Ability card pending</span>
         </div>
         <h1>Fighter Card Polish + Runemarks + Runemark Hierarchy + Export Fixes</h1>
         <p>Full pass over the fighter card UI, weapon type select, runemark infrastructure (SVGs inlined via Vite glob), image repositioning/zoom, Grand Alliance / Faction / Subfaction circles, form layout housekeeping, and a complete 3-level runemark hierarchy with cascading selects. Second session: significant PNG export fidelity improvements — model image now appears, cell frames eliminated.</p>
@@ -1251,7 +1227,7 @@
       </section>
 
       <section id="march-13-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
         <div class="decision">
           <div class="decision-q">SVG mask — the aha moment</div>
           <div class="decision-a">Many approaches failed: clip-path polygon (too mathematical, can't approximate curves), separate overlay elements (positioning fights the flex layout), wrong SVGs. The correct approach: take <code>image-mask-1-cropped.svg</code> (black filled shape, torn edges on all four sides), remove its internal <code>&lt;clipPath&gt;</code> (it was cutting the tears flush to a rectangle), add <code>preserveAspectRatio="none"</code>, and apply it as <code>mask-image</code> on <code>.image-section</code> with <code>mask-size: 100% 100%</code>. Critically: do NOT change the image section layout at all — flex, margins, overflow all stay exactly as they were.</div>
@@ -1336,7 +1312,7 @@
       </section>
 
       <section id="march-13-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/lib/types.ts</code></td><td>Added <code>name</code>, <code>showRunemarks</code>, <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>, <code>imageOffsetX/Y</code>, <code>imageZoom</code></td></tr>
@@ -1361,10 +1337,9 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-12</span>
-          <span class="badge badge-green">Fonts &amp; texture live</span>
-          <span class="badge badge-green">SVG mask working</span> <span class="badge badge-amber">later dropped</span>
+          <span class="badge badge-green">Fonts &amp; texture</span>
+          <span class="badge badge-green">SVG mask</span>
           <span class="badge badge-green">Monster form UX</span>
-          <span class="badge badge-amber">Name centering pending</span>
         </div>
         <h1>Visual Polish, Mask &amp; Monster UX</h1>
         <p>Applied custom fonts, parchment background texture, and an SVG organic mask. Fixed SSR export crash. Locked damage bracket rows to 5 (fixed). Added monster-aware field locking: Move and Damage show * and are non-editable on both form and card when isMonster is true.</p>
@@ -1387,7 +1362,7 @@
       </section>
 
       <section id="march-12-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
         <div class="decision">
           <div class="decision-q">background.jpg on <code>.card</code>, not <code>.parchment</code></div>
           <div class="decision-a">The SVG mask makes parts of <code>.image-section</code> transparent. Putting the texture on the card root means those transparent areas reveal the parchment seamlessly rather than showing a bare browser background.</div>
@@ -1417,7 +1392,7 @@
       </section>
 
       <section id="march-12-files" data-nav="Files Changed">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>static/fonts/RodchenkoCTT.ttf</code></td><td>Added</td></tr>
@@ -1440,16 +1415,61 @@
       <div class="hero">
         <div class="meta">
           <span class="badge badge-blue">2026-03-11</span>
-          <span class="badge badge-green">Scaffold complete</span>
-          <span class="badge badge-green">Fighter card functional</span>
-          <span class="badge badge-amber">CSS polish pending</span>
+          <span class="badge badge-green">Scaffold built</span>
+          <span class="badge badge-green">Fighter card</span>
+          <span class="badge badge-green">Card dimensions</span>
         </div>
         <h1>Scaffold, Architecture &amp; Fighter Card</h1>
         <p>Project initialized from scratch: stack chosen, types defined, routes created. Fighter card editor built end-to-end — visual card component, editable form, live preview and PNG export.</p>
       </div>
 
+      <section id="march-11-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <div class="tree"><span class="tree-dir">src/</span>
+  <span class="tree-dir">lib/</span>
+    <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, AbilityCardData, Weapon, …)</span>
+    <span class="tree-file">index.ts</span>
+    <span class="tree-dir">assets/</span>
+  <span class="tree-dir">routes/</span>
+    <span class="tree-file">+layout.svelte</span>
+    <span class="tree-file">+page.svelte</span>     <span class="tree-note">— landing page</span>
+    <span class="tree-dir">fighter/</span>
+      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
+    <span class="tree-dir">ability/</span>
+      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
+  <span class="tree-file">app.css</span>           <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
+<span class="tree-file">static/fonts/</span>       <span class="tree-note">— empty, awaiting font files</span>
+<span class="tree-file">Makefile</span>            <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
+<span class="tree-file">CLAUDE.md</span></div>
+      </section>
+
+      <section id="march-11-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+
+        <div class="decision">
+          <div class="decision-q">Stack: SvelteKit 2 + Vite + TypeScript + Tailwind CSS v4</div>
+          <div class="decision-a">Consistent with hobbylog project, reactive, no extra state lib needed.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">CSS/HTML card rendering (not Canvas)</div>
+          <div class="decision-a">Svelte reactivity gives live preview for free; fonts and textures are easier in CSS; dom-to-image-more handles export at 2× for crisp PNGs.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Separate routes: /fighter and /ability</div>
+          <div class="decision-a">Different enough in structure that sharing a route would add complexity for no benefit.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Placeholder backgrounds for now</div>
+          <div class="decision-a"><code>#f5f0e8</code> parchment, <code>#5a0a14</code> dark sections. Texture image to be swapped in later via CSS variable.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Monster toggle on fighter card</div>
+          <div class="decision-a">When checked, appends the damage bracket table below weapons.</div>
+        </div>
+      </section>
+
       <section id="march-11-cards" data-nav="Card Types">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">🃏</span> Card Types (v9 Reference)</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">🃏</span> Card Types (v9 Reference)</h2>
         <h3>Fighter Card</h3>
         <ul>
           <li>Portrait ~830×1300 ratio (approx 0.638 w:h)</li>
@@ -1475,7 +1495,7 @@
       </section>
 
       <section id="march-11-layout" data-nav="Sizing &amp; Spacing">
-        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📐</span> Sizing &amp; Spacing — The Long Road</h2>
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📐</span> Sizing &amp; Spacing — The Long Road</h2>
         <p>Most of this session was an iterative, sometimes messy process of extracting exact measurements from the v9 SVG reference and translating them into a faithful CSS layout. What looked simple turned into a long back-and-forth — with the user providing physical measurements in mm, then verifying by screenshot, then refining again.</p>
 
         <h3>Physical dimensions and the 2× scale</h3>
@@ -1506,51 +1526,6 @@
         <p>Early attempts used percentage-based or approximate sizes — the card never matched the reference. Progress only clicked once every dimension was derived from the physical mm spec and consistently applied. Screenshots revealed mismatches multiple times before the spacing felt right. The table column and row sizes in particular required several passes: equal-width columns were not obvious from the SVG, and the gap between the image and first table was initially left unspecified then re-derived from the reference.</p>
       </section>
 
-      <section id="march-11-decisions" data-nav="Key Decisions">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
-
-        <div class="decision">
-          <div class="decision-q">Stack: SvelteKit 2 + Vite + TypeScript + Tailwind CSS v4</div>
-          <div class="decision-a">Consistent with hobbylog project, reactive, no extra state lib needed.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">CSS/HTML card rendering (not Canvas)</div>
-          <div class="decision-a">Svelte reactivity gives live preview for free; fonts and textures are easier in CSS; dom-to-image-more handles export at 2× for crisp PNGs.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Separate routes: /fighter and /ability</div>
-          <div class="decision-a">Different enough in structure that sharing a route would add complexity for no benefit.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Placeholder backgrounds for now</div>
-          <div class="decision-a"><code>#f5f0e8</code> parchment, <code>#5a0a14</code> dark sections. Texture image to be swapped in later via CSS variable.</div>
-        </div>
-        <div class="decision">
-          <div class="decision-q">Monster toggle on fighter card</div>
-          <div class="decision-a">When checked, appends the damage bracket table below weapons.</div>
-        </div>
-      </section>
-
-      <section id="march-11-built" data-nav="What Was Built">
-        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
-        <div class="tree"><span class="tree-dir">src/</span>
-  <span class="tree-dir">lib/</span>
-    <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, AbilityCardData, Weapon, …)</span>
-    <span class="tree-file">index.ts</span>
-    <span class="tree-dir">assets/</span>
-  <span class="tree-dir">routes/</span>
-    <span class="tree-file">+layout.svelte</span>
-    <span class="tree-file">+page.svelte</span>     <span class="tree-note">— landing page</span>
-    <span class="tree-dir">fighter/</span>
-      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
-    <span class="tree-dir">ability/</span>
-      <span class="tree-file">+page.svelte</span>   <span class="tree-note">— stub</span>
-  <span class="tree-file">app.css</span>           <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
-<span class="tree-file">static/fonts/</span>       <span class="tree-note">— empty, awaiting font files</span>
-<span class="tree-file">Makefile</span>            <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
-<span class="tree-file">CLAUDE.md</span></div>
-      </section>
-
       <section id="march-11-node" data-nav="Node Version">
         <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⚙</span> Node Version Note</h2>
         <p>System default is Node v16 (Laravel Herd). Project requires v22+. Herd has v22.22.0 at:</p>
@@ -1559,7 +1534,7 @@
       </section>
 
       <section id="march-11-reactivity" data-nav="Reactivity">
-        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">⚡</span> State / Reactivity Pattern</h2>
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">⚡</span> State / Reactivity Pattern</h2>
         <p>Page creates <code>let data = $state&lt;FighterCardData&gt;({...})</code> and passes the reactive proxy to both <code>FighterForm</code> and <code>FighterCard</code> as a prop. The form mutates properties directly (<code>data.name = x</code>, <code>weapon.range = x</code>) — Svelte 5 deep reactivity propagates all mutations back to the card in real time. No stores, no <code>$bindable</code> needed.</p>
       </section>
 
@@ -1617,6 +1592,11 @@
 
   const hash = location.hash.slice(1);
   activateSession(sessions.includes(hash) ? hash : sessions[0]);
+
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+    if (e.matches) document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+  });
 </script>
 </body>
 </html>
