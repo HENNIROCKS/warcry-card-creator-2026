@@ -25,8 +25,5 @@
 			Ability Card
 		</a>
 	</div>
-	<p class="lg:hidden text-zinc-500 text-xs text-center max-w-xs px-6">
-		Card export is currently unavailable on mobile. Use a desktop browser to export PNG files.
-	</p>
-	<ThemeToggle />
+<ThemeToggle />
 </main>
