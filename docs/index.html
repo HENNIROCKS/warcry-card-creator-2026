@@ -332,7 +332,7 @@
       <li>
         <button class="session-btn" data-session="march-18">
           <span class="session-date">2026-03-18</span>
-          <span class="session-title">Grand Alliance, Light/Dark Theme &amp; Mobile Image Positioning</span>
+          <span class="session-title">Grand Alliance, Light/Dark Theme, Mobile Image Positioning &amp; Form Polish</span>
         </button>
       </li>
       <li>
@@ -486,6 +486,9 @@
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Runemark shape: copy SVG to <code>src/lib/</code>, <code>?raw</code> import → data URL, apply inline via <code>style</code> attribute for export</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Table border-radii: 1mm = 7.5px outer box, 6.5px inner rows</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Empty weapon values: em dash with smaller font (16px) via <code>class:is-empty</code></a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-18-form-polish" onclick="activateSession('march-18')">iOS layout shift fix: <code>placeholder="—"</code> on characteristics inputs prevents keyboard-type switch on empty field</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-form-polish" onclick="activateSession('march-18')">Select centering on iOS: <code>text-align-last: center</code> on Base Size + Weapon Type selects</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-form-polish" onclick="activateSession('march-18')">Empty characteristics on card: <code>class:stat-val-empty</code> shows <code>—</code> at 16px, matching weapon behaviour</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Ability card printer-friendly: white bg, <code>mask: none !important</code> on image-inner, black text/pills/labels</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Light theme palette: <code>#e4ddd3</code> shell, <code>#ede8e2</code> inputs, <code>#2e2620</code> text — warm parchment tones. Contrast-audited: subtle text darkened to <code>#5a5048</code> for WCAG AA.</a></td><td>Mar 18</td></tr>
           </tbody>
@@ -643,6 +646,28 @@
         <div class="decision">
           <div class="decision-q">Messaging for unavailable mobile export</div>
           <div class="decision-a">"Export currently unavailable on mobile, use desktop" (comma, no em dash). Shown as a muted inline pill replacing the export button on both editor preview tabs. Landing page shows a smaller <code>lg:hidden</code> note below the card type buttons.</div>
+        </div>
+      </section>
+
+      <section id="march-18-form-polish" data-nav="Mobile Form Polish">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> Mobile Form Polish</h2>
+        <ul>
+          <li><strong>iOS layout shift on typing fixed</strong>: characteristics inputs (Points, Move, Toughness, Wounds) were missing <code>placeholder="—"</code>. When the field was emptied on iOS, the keyboard switched from numeric to alpha layout; typing on the alpha keyboard triggered a viewport/layout shift that pushed the input down away from its label. Adding <code>placeholder="—"</code> (matching the existing weapon inputs) keeps iOS in a consistent keyboard state and eliminates the shift. Root cause was not font-size but keyboard-type switching triggered by the empty-field state.</li>
+          <li><strong>Empty characteristics on card</strong>: characteristics stat cells now show <code>—</code> at smaller font size (16px, <code>class:stat-val-empty</code>) when empty — matching the weapon value behaviour (<code>class:is-empty</code>) introduced in Mar 15.</li>
+          <li><strong>Select field centering on iOS</strong>: Base Size and Weapon Type selects gained <code>style="text-align-last: center"</code>. iOS Safari ignores <code>text-align: center</code> on <code>&lt;select&gt;</code> for the displayed value; <code>text-align-last</code> is the correct property. Applied only to these two centred selects, not globally.</li>
+          <li><strong>Form font-size normalised</strong>: <code>.field-input</code> base font-size changed from <code>0.875rem</code> to <code>1rem</code> unconditionally; the <code>@media (max-width: 1023px)</code> override removed. Prevents any font-size-driven layout shifts across breakpoints.</li>
+        </ul>
+      </section>
+
+      <section id="march-18-form-decisions" data-nav="Form Polish Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Form Polish Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Why did the gap only appear on characteristics inputs and not weapon inputs?</div>
+          <div class="decision-a">Weapon inputs already had <code>placeholder="—"</code>; characteristics did not. The placeholder prevents iOS from seeing the field as "completely empty" after deletion, which in turn prevents the keyboard-type switch that triggers the layout shift. The fix is the placeholder, not the keyboard type — these fields accept non-numeric values (e.g. <code>*</code> for monsters).</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why not use <code>inputmode="numeric"</code> to prevent keyboard switching?</div>
+          <div class="decision-a">The characteristic fields accept non-numeric values (asterisk for monsters, dashes, etc.), so locking the keyboard to numeric would be incorrect UX. The placeholder approach is the right solution — it's semantic, has no keyboard restriction, and matches the existing weapon input pattern.</div>
         </div>
       </section>
 
