@@ -437,7 +437,7 @@
             <tr><td><a href="#march-18-files" onclick="activateSession('march-18')">Code style rules added to CLAUDE.md: import sorting, key quoting, on-touch cleanup policy</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-mobile-export" onclick="activateSession('march-18')">Mobile export: iOS Safari + dom-to-image-more incompatibility (foreignObject restriction); html2canvas attempted and reverted; export currently unavailable on mobile</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">Mobile export fixed: <code>modern-screenshot</code> (<code>domToPng</code>) + explicit <code>{ width: 574, height: 915, scale: 2 }</code> to override CSS transform bounding rect</a></td><td>Mar 18</td></tr>
-            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">iOS download: <code>a.click()</code> blocked; Web Share API (HTTPS only); inline overlay fallback on HTTP</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">iOS download: Web Share API (HTTPS) saves immediately on live URL — overlay only fires on localhost (HTTP, no secure context)</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18)"><code>isRealMobile</code> pattern: plain <code>const</code> via <code>navigator.userAgent</code> regex — separates real devices from desktop mobile-viewport emulation</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
@@ -679,7 +679,8 @@
         <ul>
           <li><strong>Library swap: <code>modern-screenshot</code></strong>: replaced dom-to-image-more on real mobile devices. Uses Canvas 2D API internally rather than SVG <code>foreignObject</code>, bypassing the iOS Safari restriction that prevented background textures and model images from rendering. Export named <code>domToPng</code> (not <code>toPng</code>).</li>
           <li><strong>Explicit dimensions required</strong>: the card element sits inside a CSS <code>transform: scale(cardScale)</code> parent. <code>modern-screenshot</code> reads <code>getBoundingClientRect()</code> which includes the transform, so without explicit dimensions it captured the scaled-down visual size. Fix: <code>{ width: 574, height: 915, scale: 2 }</code> passed to <code>domToPng</code>.</li>
-          <li><strong>iOS download workaround — inline overlay</strong>: iOS Safari blocks <code>a.click()</code> programmatic downloads and <code>window.open(dataUrl)</code> as a popup. Web Share API (<code>navigator.share</code>) works but requires HTTPS. On HTTP (local dev), fallback is a fullscreen overlay with the captured image — user long-presses to save to Photos. On production (HTTPS) the Web Share API path fires with the correct filename.</li>
+          <li><strong>iOS download — Web Share API</strong>: iOS Safari blocks <code>a.click()</code> programmatic downloads and <code>window.open(dataUrl)</code> as a popup. Web Share API (<code>navigator.share</code>) is the correct path and requires a <strong>secure context (HTTPS)</strong>. On a live HTTPS URL it fires immediately and the image saves directly to Photos — no overlay shown. On localhost (HTTP) the secure context requirement is not met, so <code>navigator.share</code> is <code>undefined</code> and the fallback overlay triggers instead. <strong>Confirmed on real device (2026-03-19)</strong>: the overlay was always only a localhost artefact, not a real device limitation.</li>
+          <li><strong>Inline overlay fallback (localhost only)</strong>: fullscreen dark overlay with the captured image — user long-presses to save to Photos. Only appears when <code>navigator.share</code> is unavailable (HTTP). Worth keeping for local dev convenience.</li>
           <li><strong>Overlay text colour</strong>: uses inline <code>style="color: #fff"</code> rather than Tailwind <code>text-white</code> — the light theme CSS overrides <code>text-white</code> to near-black, making text invisible on the dark overlay.</li>
           <li><strong>Real device detection</strong>: <code>isRealMobile</code> — plain <code>const</code> using <code>navigator.userAgent</code> regex (<code>/iPhone|iPad|iPod|Android/i</code>). Separates real devices from desktop browser mobile-viewport emulation. Desktop in mobile viewport keeps dom-to-image-more + <code>a.click()</code> download.</li>
           <li><strong>Mobile export button</strong>: split button (Export PNG + chevron dropdown → printer-friendly) added to the Preview tab on mobile for both fighter and ability editors, matching the desktop header button exactly.</li>
@@ -701,6 +702,10 @@
         <div class="decision">
           <div class="decision-q">PNG at 2× for mobile — no size optimisation?</div>
           <div class="decision-a">Mobile export is also used for printing, so PNG at 2× (1148×1830px) is correct. Lossy formats (JPEG/WebP) were considered for sharing but rejected since print quality is the primary use case.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why does the overlay only appear on localhost, not on the live site?</div>
+          <div class="decision-a"><code>navigator.share</code> requires a <em>secure context</em> (HTTPS). Localhost is HTTP and does not qualify, so <code>navigator.share</code> is <code>undefined</code> there and the overlay fallback fires. On a live HTTPS deployment the Web Share API is available and the image saves immediately — no overlay needed. The overlay is a local dev artefact and is worth keeping for that purpose.</div>
         </div>
         <div class="decision">
           <div class="decision-q">Does <code>printerFriendly</code> resetting before the overlay is dismissed cause a bug?</div>
