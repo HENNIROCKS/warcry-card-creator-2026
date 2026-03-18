@@ -50,7 +50,9 @@
 			? `${data.faction} › ${data.bladeborn}`
 			: data.faction
 				? `${data.grandAlliance} › ${data.faction}`
-				: ''
+				: data.grandAlliance
+					? data.grandAlliance
+					: ''
 	);
 </script>
 
@@ -71,7 +73,11 @@
 
 	<div class="list">
 		{#each filtered as alliance}
-			<div class="alliance-header">{alliance.label}</div>
+			<button
+				class="alliance-header"
+				class:selected={data.grandAlliance === alliance.label && !data.faction}
+				onclick={() => select(alliance.label, '')}
+			>{alliance.label}</button>
 			{#each alliance.factions as faction}
 				<button
 					class="faction-row"
@@ -169,6 +175,11 @@
 	}
 
 	.alliance-header {
+		display: block;
+		width: 100%;
+		text-align: left;
+		border: none;
+		cursor: pointer;
 		padding: 5px 10px 3px;
 		font-size: 0.6rem;
 		font-weight: 700;
@@ -179,6 +190,16 @@
 		position: sticky;
 		top: 0;
 		z-index: 1;
+		transition: color 0.1s;
+	}
+
+	.alliance-header:hover {
+		color: #a1a1aa;
+	}
+
+	.alliance-header.selected {
+		color: #fca5a5;
+		background: #1c1c1e;
 	}
 
 	.faction-row,
