@@ -330,6 +330,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-18">
+          <span class="session-date">2026-03-18</span>
+          <span class="session-title">Grand Alliance Selection &amp; Light/Dark Theme</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-17">
           <span class="session-date">2026-03-17</span>
           <span class="session-title">Mobile Support</span>
@@ -414,12 +420,14 @@
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Weapon name font 18px (matches header text) + <code>fittext</code> shrink for long names</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">Ability card editor: <code>/ability</code> route, <code>AbilityCard.svelte</code> + <code>AbilityForm.svelte</code> built from scratch</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-built" onclick="activateSession('march-15')">SVG <code>fill="#FFF"</code> removed from 20 runemark source files — required for printer-friendly CSS override</a></td><td>Mar 15</td></tr>
-            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Runemark library audited vs. barrysheppard — added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Runemark library audited against reference card creator — added Everchosen, Legions of Nagash, Ulfenkarn, Grombrindal, 10 Cities of Sigmar subfactions</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Ability card types: Lesser Artefact + Greater Artefact added</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Pipe <code>|</code> as manual line break in fighter name and ability card name</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Faction hierarchy restructured: parent-prefixed naming (e.g. <em>Slaves to Darkness: Iron Golem</em>); CoS subfactions promoted; Ulfenkarn removed</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')"><code>FactionSelect.svelte</code> — filterable grouped list replaces 3 cascading selects on both Fighter + Ability editors</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">TXT export workflow for human-editable hierarchy audits (<code>runemark-hierarchy.txt</code>)</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Grand Alliance-only faction selection: alliance headers are now clickable buttons; card renders GA runemark alone when faction is empty</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-decisions" onclick="activateSession('march-18')">Light/dark theme: CSS vars + <code>[data-theme]</code> on <code>&lt;html&gt;</code>; Tailwind class overrides in <code>app.css</code>; <code>ThemeToggle</code> on landing page; system pref default, localStorage override</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-17-built" onclick="activateSession('march-17')">Mobile support: tab bar (Edit/Preview), <code>flex-col h-dvh</code> layout, <code>min-h-0</code> flex scroll fix, explicit-dimension card wrapper</a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">iOS input zoom fix: <code>font-size: 1rem</code> on mobile for <code>.field-input</code></a></td><td>Mar 17</td></tr>
             <tr><td><a href="#march-17-decisions" onclick="activateSession('march-17')">Touch dropdown: deferred <code>document</code> click-outside listener via <code>$effect</code> + <code>setTimeout</code></a></td><td>Mar 17</td></tr>
@@ -475,6 +483,7 @@
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Table border-radii: 1mm = 7.5px outer box, 6.5px inner rows</a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Empty weapon values: em dash with smaller font (16px) via <code>class:is-empty</code></a></td><td>Mar 15</td></tr>
             <tr><td><a href="#march-15-decisions" onclick="activateSession('march-15')">Ability card printer-friendly: white bg, <code>mask: none !important</code> on image-inner, black text/pills/labels</a></td><td>Mar 15</td></tr>
+            <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Light theme palette: <code>#e4ddd3</code> shell, <code>#ede8e2</code> inputs, <code>#2e2620</code> text — warm parchment tones. Contrast-audited: subtle text darkened to <code>#5a5048</code> for WCAG AA.</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
@@ -493,6 +502,76 @@
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-18 — Grand Alliance Selection & Light/Dark Theme
+    ══════════════════════════════════════════ -->
+    <div id="session-march-18" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-18</span>
+          <span class="badge badge-green">Done</span>
+        </div>
+        <h1>Grand Alliance Selection &amp; Light/Dark Theme</h1>
+        <p>Two features: faction selector now supports selecting a Grand Alliance alone (no faction), and the UI gains a light/dark theme toggle backed by CSS custom properties with warm parchment tones for light mode.</p>
+      </div>
+
+      <section id="march-18-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Grand Alliance-only selection</strong>: alliance headers in <code>FactionSelect</code> are now clickable buttons — clicking sets <code>data.grandAlliance</code> and clears <code>data.faction</code>/<code>data.bladeborn</code>. Card already renders only the GA runemark when faction is empty. Selected state highlighted in red; <code>selectionLabel</code> shows the alliance name alone.</li>
+          <li><strong>Light/dark theme</strong>: <code>data-theme</code> attribute on <code>&lt;html&gt;</code> controls the active theme. Defaults to system <code>prefers-color-scheme</code>; manual toggle saves preference to <code>localStorage</code> and overrides the system setting permanently.</li>
+          <li><strong>FOUC prevention</strong>: inline <code>&lt;script&gt;</code> in <code>app.html</code> reads <code>localStorage</code> (or system pref) and sets <code>data-theme</code> before the first paint.</li>
+          <li><strong>CSS custom properties</strong>: <code>:root</code> defines dark-mode vars; <code>[data-theme="light"]</code> overrides them with warm parchment palette. Tailwind class overrides (<code>[data-theme="light"] .bg-zinc-900</code> etc.) handle page-level layout colours without touching component class lists.</li>
+          <li><strong>Light palette</strong>: shell <code>#e4ddd3</code>, inputs <code>#ede8e2</code>, text <code>#2e2620</code> — warm parchment tones that complement the card aesthetic rather than generic grey-on-white.</li>
+          <li><strong>Form components</strong> (<code>FighterForm</code>, <code>AbilityForm</code>, <code>FactionSelect</code>): all hardcoded hex values in <code>&lt;style&gt;</code> blocks replaced with <code>var(--ui-*)</code> CSS vars.</li>
+          <li><strong>ThemeToggle</strong>: pill-shaped bordered button (sun/moon icon + "Light mode" / "Dark mode" label) placed inline in the landing page, below the card buttons. Not shown on editor pages.</li>
+          <li><strong>Red button contrast fix</strong>: <code>[data-theme="light"] .bg-red-900.text-white</code> override keeps button text white on maroon backgrounds, counteracting the global <code>text-white</code> remap.</li>
+          <li><strong>Contrast audit</strong>: <code>--ui-text-subtle</code> and <code>[data-theme="light"] .text-zinc-500</code> darkened from <code>#8a7e72</code> to <code>#5a5048</code> (~5.3:1 on page bg, ~4.6:1 on alliance header bg — both pass WCAG AA).</li>
+        </ul>
+      </section>
+
+      <section id="march-18-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Grand Alliance selection: new UI element or extend existing alliance headers?</div>
+          <div class="decision-a">Extend existing headers — convert the sticky <code>div.alliance-header</code> to a <code>button</code> with <code>onclick={() =&gt; select(alliance.label, '')}</code>. Zero extra UI; the card already supports GA-only rendering when <code>data.faction</code> is empty.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Theme implementation: Tailwind dark-mode class approach vs CSS custom properties?</div>
+          <div class="decision-a">CSS vars + <code>[data-theme]</code> attribute overrides. All existing Tailwind classes are the dark values; switching to Tailwind's dark-mode system would require adding <code>dark:</code> prefixes everywhere. Instead, CSS overrides in <code>app.css</code> remap Tailwind's zinc/white classes under <code>[data-theme="light"]</code> — no component class changes needed. Form component <code>&lt;style&gt;</code> blocks use <code>var(--ui-*)</code> directly.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Does system pref override manual toggle, or vice versa?</div>
+          <div class="decision-a">Manual toggle wins and persists. On first visit (no <code>localStorage</code>) the system <code>prefers-color-scheme</code> is used. After a manual toggle the choice is saved to <code>localStorage</code> and sticks across visits. The page does not listen for live OS theme changes.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Cookie/consent notice for localStorage?</div>
+          <div class="decision-a">Not required. <code>localStorage</code> is purely local browser storage — it stores a single preference string, never leaves the device, is not sent with requests, and is not used for tracking. GDPR/ePrivacy cookie rules do not apply.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Where should the theme toggle button live?</div>
+          <div class="decision-a">Landing page only, inline in the content flow (below the card buttons). Setting a theme preference once on the home page and having it persist is sufficient — cluttering every editor page header is unnecessary.</div>
+        </div>
+      </section>
+
+      <section id="march-18-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Alliance headers → buttons; Grand Alliance-only selection; CSS vars in style block</td></tr>
+          <tr><td><code>src/lib/theme.svelte.ts</code></td><td>NEW — reactive <code>Theme</code> class with <code>init()</code> / <code>toggle()</code></td></tr>
+          <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>NEW — pill button with sun/moon icon + label</td></tr>
+          <tr><td><code>src/app.html</code></td><td>Inline script: set <code>data-theme</code> before first paint (reads localStorage → falls back to <code>prefers-color-scheme</code>)</td></tr>
+          <tr><td><code>src/app.css</code></td><td>CSS vars for both themes; Tailwind class overrides for light mode; red button contrast fix; contrast audit darkening</td></tr>
+          <tr><td><code>src/routes/+layout.svelte</code></td><td><code>theme.init()</code> on mount to sync reactive state with DOM attribute</td></tr>
+          <tr><td><code>src/routes/+page.svelte</code></td><td><code>ThemeToggle</code> added inline below card buttons</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded hex → CSS vars in style block</td></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Hardcoded hex → CSS vars in style block</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-18 -->
 
     <!-- ══════════════════════════════════════════
          2026-03-17 — Mobile Support
@@ -581,12 +660,12 @@
       <ul>
         <li><strong>Activation badge font-size</strong> increased from 14px → 24px in <code>AbilityCard.svelte</code></li>
         <li><strong>Pipe line break</strong> (<code>|</code>) supported in fighter name and ability card name — card renders a <code>&lt;br&gt;</code> at each <code>|</code>; form label hints updated to "use | for a line break"</li>
-        <li><strong>Full runemark audit</strong> against <a href="https://barrysheppard.github.io/warcry-card-creator/index.html">barrysheppard's card creator</a> — cross-checked faction list and all subfactions</li>
+        <li><strong>Full runemark audit</strong> against a reference card creator — cross-checked faction list and all subfactions</li>
         <li>Added <strong>Everchosen</strong> as a top-level Chaos faction (SVG + hierarchy entry)</li>
         <li>Added <strong>Legions of Nagash</strong> as a top-level Death faction (SVG + hierarchy entry)</li>
         <li>Added <strong>Ulfenkarn</strong> as a subfaction under Soulblight Gravelords (SVG + hierarchy entry)</li>
         <li>Added <strong>10 Cities of Sigmar subfactions</strong>: Anvilgard, Castelite Hosts, Darkling Covens, Dispossessed, Greywater Fastness, Hallowheart, Hammerhal, Tempest's Eye, The Living City, The Phoenicium (SVGs + hierarchy entries)</li>
-        <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code>, saved as <code>factions-order-bladeborn-grombrindal.svg</code>)</li>
+        <li>Added <strong>Grombrindal</strong> as a top-level Order faction (SVG sourced from reference project as <code>bladeborn-grombrindal.svg</code>, saved as <code>factions-order-bladeborn-grombrindal.svg</code>)</li>
         <li>Added <strong>Lesser Artefact</strong> and <strong>Greater Artefact</strong> to the ability card type select — displayed as card label text in uppercase</li>
       </ul>
 
@@ -602,7 +681,7 @@
       <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
       <div class="decision">
         <div class="decision-q">Where does Ulfenkarn sit in the hierarchy?</div>
-        <div class="decision-a">As a subfaction under Soulblight Gravelords — Ulfenkarn is a city setting within the Soulblight range (Cursed City). Barrysheppard lists it top-level but the subfaction placement is more thematically accurate.</div>
+        <div class="decision-a">As a subfaction under Soulblight Gravelords — Ulfenkarn is a city setting within the Soulblight range (Cursed City). The subfaction placement is more thematically accurate than listing it top-level.</div>
       </div>
       <div class="decision">
         <div class="decision-q">Where does Grombrindal sit?</div>
@@ -610,7 +689,7 @@
       </div>
       <div class="decision">
         <div class="decision-q">SVG source for Grombrindal?</div>
-        <div class="decision-a">Barrysheppard's repo uses a flat <code>bladeborn-grombrindal.svg</code> naming convention; saved locally as <code>factions-order-bladeborn-grombrindal.svg</code> to match our naming pattern.</div>
+        <div class="decision-a">The source file uses a flat <code>bladeborn-grombrindal.svg</code> naming convention; saved locally as <code>factions-order-bladeborn-grombrindal.svg</code> to match our naming pattern.</div>
       </div>
 
       <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
@@ -636,10 +715,10 @@
         <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Pipe hint in fighter name label; replaced 3 cascading selects with <code>FactionSelect</code></td></tr>
         <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>New — filterable faction/subfaction select component</td></tr>
         <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Full hierarchy restructure: parent-prefixed factions, Ulfenkarn removed, <code>dUlfenkarn</code> import removed</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>New — sourced from barrysheppard/warcry-card-creator</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-chaos-everchosen.svg</code></td><td>New — sourced from reference project</td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-death-legions-of-nagash.svg</code></td><td>New — sourced from reference project</td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-death-ulfenkarn.svg</code></td><td>Retained on disk; no longer imported or used</td></tr>
-        <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>New — sourced from barrysheppard's <code>bladeborn-grombrindal.svg</code></td></tr>
+        <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-grombrindal.svg</code></td><td>New — sourced from reference project</td></tr>
         <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-*.svg</code> (×10)</td><td>New — 10 Cities of Sigmar subfaction SVGs</td></tr>
         <tr><td><code>runemark-hierarchy.txt</code></td><td>New — human-editable TXT export used for hierarchy audit</td></tr>
       </table>
@@ -1351,7 +1430,7 @@
 </div>
 
 <script>
-  const sessions = ["march-17", "march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-18", "march-17", "march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
