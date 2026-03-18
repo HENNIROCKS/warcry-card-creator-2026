@@ -332,7 +332,7 @@
       <li>
         <button class="session-btn" data-session="march-18">
           <span class="session-date">2026-03-18</span>
-          <span class="session-title">Grand Alliance, Light/Dark Theme, Mobile Image Positioning &amp; Form Polish</span>
+          <span class="session-title">Grand Alliance, Light/Dark Theme, Mobile Polish &amp; Export Fix</span>
         </button>
       </li>
       <li>
@@ -436,6 +436,9 @@
             <tr><td><a href="#march-18-image-decisions" onclick="activateSession('march-18')">Range input: custom 20px thumb via <code>-webkit-appearance: none</code>; track uses <code>var(--ui-surface-2)</code> for theme compat</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-files" onclick="activateSession('march-18')">Code style rules added to CLAUDE.md: import sorting, key quoting, on-touch cleanup policy</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-mobile-export" onclick="activateSession('march-18')">Mobile export: iOS Safari + dom-to-image-more incompatibility (foreignObject restriction); html2canvas attempted and reverted; export currently unavailable on mobile</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">Mobile export fixed: <code>modern-screenshot</code> (<code>domToPng</code>) + explicit <code>{ width: 574, height: 915, scale: 2 }</code> to override CSS transform bounding rect</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18')">iOS download: <code>a.click()</code> blocked; Web Share API (HTTPS only); inline overlay fallback on HTTP</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-18-mobile-export-fix" onclick="activateSession('march-18)"><code>isRealMobile</code> pattern: plain <code>const</code> via <code>navigator.userAgent</code> regex — separates real devices from desktop mobile-viewport emulation</a></td><td>Mar 18</td></tr>
           </tbody>
         </table>
       </section>
@@ -671,12 +674,46 @@
         </div>
       </section>
 
+      <section id="march-18-mobile-export-fix" data-nav="Mobile Export Fix">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> Mobile Export Fix</h2>
+        <ul>
+          <li><strong>Library swap: <code>modern-screenshot</code></strong>: replaced dom-to-image-more on real mobile devices. Uses Canvas 2D API internally rather than SVG <code>foreignObject</code>, bypassing the iOS Safari restriction that prevented background textures and model images from rendering. Export named <code>domToPng</code> (not <code>toPng</code>).</li>
+          <li><strong>Explicit dimensions required</strong>: the card element sits inside a CSS <code>transform: scale(cardScale)</code> parent. <code>modern-screenshot</code> reads <code>getBoundingClientRect()</code> which includes the transform, so without explicit dimensions it captured the scaled-down visual size. Fix: <code>{ width: 574, height: 915, scale: 2 }</code> passed to <code>domToPng</code>.</li>
+          <li><strong>iOS download workaround — inline overlay</strong>: iOS Safari blocks <code>a.click()</code> programmatic downloads and <code>window.open(dataUrl)</code> as a popup. Web Share API (<code>navigator.share</code>) works but requires HTTPS. On HTTP (local dev), fallback is a fullscreen overlay with the captured image — user long-presses to save to Photos. On production (HTTPS) the Web Share API path fires with the correct filename.</li>
+          <li><strong>Overlay text colour</strong>: uses inline <code>style="color: #fff"</code> rather than Tailwind <code>text-white</code> — the light theme CSS overrides <code>text-white</code> to near-black, making text invisible on the dark overlay.</li>
+          <li><strong>Real device detection</strong>: <code>isRealMobile</code> — plain <code>const</code> using <code>navigator.userAgent</code> regex (<code>/iPhone|iPad|iPod|Android/i</code>). Separates real devices from desktop browser mobile-viewport emulation. Desktop in mobile viewport keeps dom-to-image-more + <code>a.click()</code> download.</li>
+          <li><strong>Mobile export button</strong>: split button (Export PNG + chevron dropdown → printer-friendly) added to the Preview tab on mobile for both fighter and ability editors, matching the desktop header button exactly.</li>
+          <li><strong>Ability card parity</strong>: all mobile export changes ported to <code>/ability/+page.svelte</code>.</li>
+          <li><strong>Landing page notice removed</strong>: "Export currently unavailable on mobile" note removed from <code>+page.svelte</code> and both editor pages.</li>
+        </ul>
+      </section>
+
+      <section id="march-18-export-fix-decisions" data-nav="Export Fix Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Export Fix Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Why <code>modern-screenshot</code> over manual canvas redraw?</div>
+          <div class="decision-a">Tried in order: (1) <code>modern-screenshot</code> library swap — succeeded. Manual canvas redraw (full reimplementation) was the backup and was not needed. The key insight was passing explicit <code>width/height</code> to override the transform-affected bounding rect.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why keep dom-to-image-more on desktop?</div>
+          <div class="decision-a">It works reliably on desktop and produces correct output. No reason to change a working path. <code>modern-screenshot</code> is mobile-only to minimise risk to the proven desktop export.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">PNG at 2× for mobile — no size optimisation?</div>
+          <div class="decision-a">Mobile export is also used for printing, so PNG at 2× (1148×1830px) is correct. Lossy formats (JPEG/WebP) were considered for sharing but rejected since print quality is the primary use case.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Does <code>printerFriendly</code> resetting before the overlay is dismissed cause a bug?</div>
+          <div class="decision-a">No. The capture completes and the data URL is stored in <code>exportedImageUrl</code> while <code>printerFriendly</code> is still <code>true</code>. The reset only affects the live card render beneath the overlay, which doesn't matter. The image in the overlay is already the correct printer-friendly PNG.</div>
+        </div>
+      </section>
+
       <section id="march-18-pending" data-nav="Still Pending">
         <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
         <table>
           <thead><tr><th>Status</th><th>Item</th></tr></thead>
           <tbody>
-            <tr><td><span class="badge badge-amber">open</span></td><td><strong>Mobile PNG export</strong> — iOS Safari incompatibility with dom-to-image-more (foreignObject restriction). html2canvas trialled but could not render card background. Needs a new approach: server-side render, headless browser, or full Canvas-based card reimplementation.</td></tr>
+            <tr><td><span class="badge badge-green">done</span></td><td><strong>Mobile PNG export</strong> — resolved via <code>modern-screenshot</code> + inline overlay fallback. See Mobile Export Fix section above.</td></tr>
           </tbody>
         </table>
       </section>
