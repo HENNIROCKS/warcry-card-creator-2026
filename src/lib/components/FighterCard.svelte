@@ -99,10 +99,10 @@
 			</div>
 			<div class="stats-values">
 				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
-				<div class="stat-val" use:fittext={data.points}>{data.points}</div>
-				<div class="stat-val" use:fittext={data.move}>{data.isMonster ? '*' : data.move}</div>
-				<div class="stat-val" use:fittext={data.toughness}>{data.toughness}</div>
-				<div class="stat-val" use:fittext={data.wounds}>{data.wounds}</div>
+				<div class="stat-val" class:stat-val-empty={!data.points} use:fittext={data.points}>{data.points || '—'}</div>
+				<div class="stat-val" class:stat-val-empty={!data.isMonster && !data.move} use:fittext={data.move}>{data.isMonster ? '*' : (data.move || '—')}</div>
+				<div class="stat-val" class:stat-val-empty={!data.toughness} use:fittext={data.toughness}>{data.toughness || '—'}</div>
+				<div class="stat-val" class:stat-val-empty={!data.wounds} use:fittext={data.wounds}>{data.wounds || '—'}</div>
 			</div>
 		</div>
 
@@ -490,6 +490,10 @@
 	}
 	.stat-val-narrow {
 		font-size: 22px;
+	}
+
+	.stat-val-empty {
+		font-size: 16px;
 	}
 
 

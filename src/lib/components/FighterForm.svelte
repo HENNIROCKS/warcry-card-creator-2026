@@ -138,7 +138,7 @@
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 			<div>
 				<label class="sublabel" for="baseSize">Base Size</label>
-				<select id="baseSize" class="field-input text-center" bind:value={data.baseSize}>
+				<select id="baseSize" class="field-input text-center" style="text-align-last: center" bind:value={data.baseSize}>
 					<option>⌀ 20</option>
 					<option>⌀ 25</option>
 					<option>⌀ 28.5</option>
@@ -164,23 +164,23 @@
 			</div>
 			<div>
 				<label class="sublabel" for="points">Points Value</label>
-				<input id="points" class="field-input text-center" bind:value={data.points} />
+				<input id="points" class="field-input text-center" placeholder="—" bind:value={data.points} />
 			</div>
 			<div>
 				<label class="sublabel" for="move">Move</label>
 				{#if data.isMonster}
 					<input id="move" class="field-input text-center opacity-40 cursor-not-allowed" value="*" disabled />
 				{:else}
-					<input id="move" class="field-input text-center" bind:value={data.move} />
+					<input id="move" class="field-input text-center" placeholder="—" bind:value={data.move} />
 				{/if}
 			</div>
 			<div>
 				<label class="sublabel" for="toughness">Toughness</label>
-				<input id="toughness" class="field-input text-center" bind:value={data.toughness} />
+				<input id="toughness" class="field-input text-center" placeholder="—" bind:value={data.toughness} />
 			</div>
 			<div>
 				<label class="sublabel" for="wounds">Wounds</label>
-				<input id="wounds" class="field-input text-center" bind:value={data.wounds} />
+				<input id="wounds" class="field-input text-center" placeholder="—" bind:value={data.wounds} />
 			</div>
 		</div>
 	</section>
@@ -192,7 +192,7 @@
 			<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 				<div>
 					<span class="sublabel">Type</span>
-					<select class="field-input text-center" bind:value={weapon.name}>
+					<select class="field-input text-center" style="text-align-last: center" bind:value={weapon.name}>
 						<option value="">—</option>
 						<option value="Axe">Axe</option>
 						<option value="Bident">Bident</option>
@@ -286,18 +286,12 @@
 		border-radius: 6px;
 		padding: 6px 10px;
 		color: var(--ui-text);
-		font-size: 0.875rem;
+		font-size: 1rem;
 		outline: none;
 		transition: border-color 0.15s;
 	}
 
 	.field-input:focus {
 		border-color: #7f1d1d;
-	}
-
-	@media (max-width: 1023px) {
-		.field-input {
-			font-size: 1rem;
-		}
 	}
 </style>
