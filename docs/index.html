@@ -589,6 +589,15 @@
           <li><strong>Pills alignment fixed</strong> on Fighter card — the <code>pills-break</code> div (a <code>width:100%</code> flex spacer that forced hierarchy pills and fighter runemark pills onto separate rows) was removed. All pills now flow in one continuous row.</li>
           <li><strong>Worst-case test combination</strong> identified and saved: Grand Alliance = <em>Sentinels of Order</em>, Faction = <em>Stormcast Eternals: Vanguard Auxiliary Chamber</em>, Bladeborn = <em>The Farstriders</em>, Fighter runemarks = <em>Icon Bearer + Terrifying + Berserker</em>, Activation = <em>QUAD</em>.</li>
         </ul>
+        <h3>Label Rename</h3>
+        <ul>
+          <li><strong>"Ability Card" → "Ability / Text Card"</strong> — updated in both the landing page button (<code>src/routes/+page.svelte</code>) and the editor header (<code>src/routes/ability/+page.svelte</code>) to better reflect that the card type is used for plain text cards beyond just abilities.</li>
+        </ul>
+        <h3>Community &amp; GitHub Files</h3>
+        <ul>
+          <li><strong>Repo community files added:</strong> <code>CODE_OF_CONDUCT.md</code>, <code>CONTRIBUTING.md</code>, <code>SECURITY.md</code>, <code>LICENSE</code> (MIT); <code>README.md</code> expanded.</li>
+          <li><strong>GitHub templates reworked:</strong> <code>.github/ISSUE_TEMPLATE/bug_report.md</code>, <code>feature_request.md</code>, and new <code>PULL_REQUEST_TEMPLATE.md</code>.</li>
+        </ul>
       </section>
 
       <section id="march-19-decisions" data-nav="Key Decisions">
@@ -619,6 +628,9 @@
           <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Default card name changed to "CARD NAME"</td></tr>
           <tr><td><code>src/app.html</code></td><td>Added favicon, apple-touch-icon, and manifest link tags; fixed href paths to use <code>%sveltekit.assets%</code> prefix (required by <code>paths.base</code> on GitHub Pages)</td></tr>
           <tr><td><code>static/favicon.svg</code>, <code>favicon.ico</code>, <code>favicon-96x96.png</code>, <code>apple-touch-icon.png</code>, <code>web-app-manifest-192x192.png</code>, <code>web-app-manifest-512x512.png</code>, <code>site.webmanifest</code></td><td>Full favicon/PWA asset set added; theme_color set to <code>#5a0a14</code></td></tr>
+          <tr><td><code>src/routes/+page.svelte</code>, <code>src/routes/ability/+page.svelte</code></td><td>"Ability Card" label renamed to "Ability / Text Card"</td></tr>
+          <tr><td><code>CODE_OF_CONDUCT.md</code>, <code>CONTRIBUTING.md</code>, <code>SECURITY.md</code>, <code>LICENSE</code>, <code>README.md</code></td><td>Community files added / expanded</td></tr>
+          <tr><td><code>.github/ISSUE_TEMPLATE/bug_report.md</code>, <code>feature_request.md</code>, <code>PULL_REQUEST_TEMPLATE.md</code></td><td>Issue &amp; PR templates reworked</td></tr>
         </table>
       </section>
     </div>
