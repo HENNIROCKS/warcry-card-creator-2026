@@ -6,6 +6,18 @@
 	let { data }: { data: AbilityCardData } = $props();
 
 	let rmKeys = $state(['', '']);
+	let bodyTextEl: HTMLTextAreaElement;
+
+	function wrapSelection(el: HTMLTextAreaElement, marker: string) {
+		const start = el.selectionStart;
+		const end = el.selectionEnd;
+		const selected = data.bodyText.slice(start, end);
+		data.bodyText = data.bodyText.slice(0, start) + marker + selected + marker + data.bodyText.slice(end);
+		requestAnimationFrame(() => {
+			el.focus();
+			el.setSelectionRange(start + marker.length, end + marker.length);
+		});
+	}
 
 	$effect(() => {
 		data.fighterRunemarks = rmKeys
@@ -19,7 +31,7 @@
 
 	<!-- Card Type -->
 	<section>
-		<label class="field-label" for="card-label">Card Type</label>
+		<label class="field-label" for="card-label">Type <span class="normal-case font-normal text-zinc-500">(select)</span></label>
 		<select id="card-label" class="field-input" bind:value={data.cardLabel}>
 			<option value="ABILITY">Ability</option>
 			<option value="REACTION">Reaction</option>
@@ -31,7 +43,7 @@
 
 	<!-- Card Name -->
 	<section>
-		<label class="field-label" for="ability-name">Card Name <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
+		<label class="field-label" for="ability-name">Card <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
 		<input
 			id="ability-name"
 			class="field-input"
@@ -96,12 +108,17 @@
 
 	<!-- Body Text -->
 	<section>
-		<label class="field-label" for="body-text">Body Text</label>
+		<label class="field-label" for="body-text">Text</label>
+		<div class="markup-toolbar">
+			<button type="button" class="markup-btn" onclick={() => wrapSelection(bodyTextEl, '**')}>B</button>
+			<button type="button" class="markup-btn italic" onclick={() => wrapSelection(bodyTextEl, '*')}>I</button>
+		</div>
 		<textarea
 			id="body-text"
 			class="field-input resize-none"
 			rows="8"
 			bind:value={data.bodyText}
+			bind:this={bodyTextEl}
 		></textarea>
 	</section>
 
@@ -125,6 +142,32 @@
 		margin-bottom: 2px;
 	}
 
+	.markup-toolbar {
+		display: flex;
+		gap: 4px;
+		margin-bottom: 4px;
+	}
+
+	.markup-btn {
+		font-size: 0.8rem;
+		font-weight: 700;
+		line-height: 1;
+		padding: 3px 8px;
+		border-radius: 4px;
+		border: 1px solid var(--ui-border);
+		background: var(--ui-surface);
+		color: var(--ui-text);
+		cursor: pointer;
+	}
+
+	.markup-btn.italic {
+		font-style: italic;
+	}
+
+	.markup-btn:hover {
+		border-color: #7f1d1d;
+	}
+
 	.field-input {
 		width: 100%;
 		box-sizing: border-box;
@@ -146,6 +189,11 @@
 	@media (max-width: 1023px) {
 		.field-input {
 			font-size: 1rem;
+		}
+
+		.markup-btn {
+			font-size: 1rem;
+			padding: 12px 20px;
 		}
 	}
 </style>
