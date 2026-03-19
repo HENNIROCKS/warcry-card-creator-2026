@@ -467,6 +467,9 @@
             <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Mobile export: <code>modern-screenshot</code> (<code>domToPng</code>) + explicit <code>{ width: 574, height: 915, scale: 2 }</code> to override CSS transform bounding rect</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">iOS download: Web Share API (HTTPS) saves immediately on live URL — overlay only fires on localhost (HTTP, no secure context)</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-built" onclick="activateSession('march-18')"><code>isRealMobile</code> pattern: plain <code>const</code> via <code>navigator.userAgent</code> regex — separates real devices from desktop mobile-viewport emulation</a></td><td>Mar 18</td></tr>
+            <tr><td><a href="#march-19-favicon" onclick="activateSession('march-19')">Favicon + PWA icons: SVG, ICO, apple-touch-icon, 192/512px manifest PNGs, <code>site.webmanifest</code>; theme_color <code>#5a0a14</code></a></td><td>Mar 19</td></tr>
+            <tr><td><a href="#march-19-pills" onclick="activateSession('march-19')">Pills: font Alegreya 15px, padding 7px 13px; <code>pills-break</code> removed — all pills in one row; worst-case test combo documented</a></td><td>Mar 19</td></tr>
+            <tr><td><a href="#march-19-type-position" onclick="activateSession('march-19')">Ability card type label: <code>bottom</code> moved from 80px → 60px (closer to torn edge)</a></td><td>Mar 19</td></tr>
           </tbody>
         </table>
       </section>
@@ -582,10 +585,41 @@
         <table>
           <tr><th>File</th><th>Change</th></tr>
           <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Markup toolbar (B/I buttons + <code>wrapSelection()</code>); label text cleanup; <code>bind:this</code> on body textarea</td></tr>
-          <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td><code>parseMarkup()</code>; <code>{@html}</code> on body text; torn-edge SVG overlay for printer-friendly; "CARD NAME" placeholder; <code>strong</code>/<code>em</code> export CSS fix</td></tr>
+          <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td><code>parseMarkup()</code>; <code>{@html}</code> on body text; torn-edge SVG overlay for printer-friendly; "CARD NAME" placeholder; <code>strong</code>/<code>em</code> export CSS fix; pill font/size tweaks; card-type-area bottom adjusted to 60px</td></tr>
           <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Damage bracket input alignment — Damage Points Allocated input now <code>text-center</code></td></tr>
+          <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pill font/size tweaks; removed <code>pills-break</code> div + CSS — all pills now flow in one row</td></tr>
           <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Default card name changed to "CARD NAME"</td></tr>
+          <tr><td><code>src/app.html</code></td><td>Added favicon, apple-touch-icon, and manifest link tags</td></tr>
+          <tr><td><code>static/favicon.svg</code>, <code>favicon.ico</code>, <code>favicon-96x96.png</code>, <code>apple-touch-icon.png</code>, <code>web-app-manifest-192x192.png</code>, <code>web-app-manifest-512x512.png</code>, <code>site.webmanifest</code></td><td>Full favicon/PWA asset set added; theme_color set to <code>#5a0a14</code></td></tr>
         </table>
+      </section>
+
+      <section id="march-19-favicon" data-nav="Favicon &amp; PWA">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">🔖</span> Favicon &amp; PWA Icons</h2>
+        <ul>
+          <li><strong>Full favicon set</strong> added to <code>static/</code>: SVG (modern browsers), ICO (fallback), 96px PNG, apple-touch-icon (180px), 192px + 512px manifest icons, <code>site.webmanifest</code>.</li>
+          <li><strong>Link tag order</strong> in <code>app.html</code>: <code>.ico sizes="any"</code> → <code>.svg type="image/svg+xml"</code> → apple-touch-icon → manifest. Modern browsers pick SVG; ICO covers RSS readers and old browsers.</li>
+          <li><strong>theme_color / background_color</strong> in manifest set to <code>#5a0a14</code> (dark maroon) to match card aesthetic.</li>
+          <li><strong>PWA install prompt</strong> enabled on Android/Chrome via manifest; iOS home screen icon covered by apple-touch-icon.</li>
+        </ul>
+      </section>
+
+      <section id="march-19-pills" data-nav="Pill Styling">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> Pill / Badge Styling (no-runemarks mode)</h2>
+        <ul>
+          <li><strong>Size increased</strong> from <code>13px / 5px 10px</code> to <code>15px / 7px 13px</code> on both Fighter and Ability cards.</li>
+          <li><strong>Font changed</strong> from <code>'Germania One'</code> to <code>'Alegreya'</code> — Alegreya is more legible at small body-text sizes.</li>
+          <li><strong>Pills alignment fixed</strong> on Fighter card — the <code>pills-break</code> div (a <code>width:100%</code> flex spacer that forced hierarchy pills and fighter runemark pills onto separate rows) was removed. All pills now flow in one continuous row.</li>
+          <li><strong>Worst-case test combination</strong> identified and saved: Grand Alliance = <em>Sentinels of Order</em>, Faction = <em>Stormcast Eternals: Vanguard Auxiliary Chamber</em>, Bladeborn = <em>The Farstriders</em>, Fighter runemarks = <em>Icon Bearer + Terrifying + Berserker</em>, Activation = <em>QUAD</em>.</li>
+        </ul>
+      </section>
+
+      <section id="march-19-type-position" data-nav="Ability Card Type Position">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Ability Card Type Label Position</h2>
+        <div class="decision">
+          <div class="decision-q">Card type label (ABILITY / HEROIC TRAIT / REACTION) — where does it sit?</div>
+          <div class="decision-a">Changed <code>bottom</code> on <code>.card-type-area</code> from <code>80px</code> to <code>60px</code>, moving the label closer to the torn edge. The theoretical midpoint between the label and the ability name would be <code>bottom: 29px</code> (matching parchment padding-top), but that was visually too close — <code>60px</code> felt better.</div>
+        </div>
       </section>
     </div>
     <!-- /session-march-19 -->
