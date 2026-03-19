@@ -452,6 +452,8 @@
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">Faction hierarchy restructured: parent-prefixed naming (e.g. <em>Slaves to Darkness: Iron Golem</em>); CoS subfactions promoted; Ulfenkarn removed</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')"><code>FactionSelect.svelte</code> — filterable grouped list replaces 3 cascading selects on both Fighter + Ability editors</a></td><td>Mar 16</td></tr>
             <tr><td><a href="#session-march-16" onclick="activateSession('march-16')">TXT export workflow for human-editable hierarchy audits (<code>runemark-hierarchy.txt</code>)</a></td><td>Mar 16</td></tr>
+            <tr><td><a href="#march-19-built" onclick="activateSession('march-19')">Bold/italic markup buttons on ability body text; <code>parseMarkup()</code> renders <code>**…**</code>/<code>*…*</code> as <code>&lt;strong&gt;</code>/<code>&lt;em&gt;</code> via <code>{@html}</code></a></td><td>Mar 19</td></tr>
+            <tr><td><a href="#march-19-built" onclick="activateSession('march-19')">Torn-edge SVG overlay added to printer-friendly ability card</a></td><td>Mar 19</td></tr>
             <tr><td><a href="#march-18-built" onclick="activateSession('march-18')">Grand Alliance-only faction selection: alliance headers are now clickable buttons; card renders GA runemark alone when faction is empty</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-18-decisions" onclick="activateSession('march-18')">Light/dark theme: CSS vars + <code>[data-theme]</code> on <code>&lt;html&gt;</code>; Tailwind class overrides in <code>app.css</code>; <code>ThemeToggle</code> on landing page; system pref default, localStorage override</a></td><td>Mar 18</td></tr>
             <tr><td><a href="#march-17-built" onclick="activateSession('march-17')">Mobile support: tab bar (Edit/Preview), <code>flex-col h-dvh</code> layout, <code>min-h-0</code> flex scroll fix, explicit-dimension card wrapper</a></td><td>Mar 17</td></tr>
@@ -539,6 +541,54 @@
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-19 — Ability Card Form & Export Polish
+    ══════════════════════════════════════════ -->
+    <div id="session-march-19" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-19</span>
+          <span class="badge badge-green">done</span>
+        </div>
+        <h1>Ability Card Form &amp; Export Polish</h1>
+        <p>Bold/italic markup buttons for ability body text; printer-friendly torn-edge overlay on ability card; form label cleanup; damage bracket alignment.</p>
+      </div>
+
+      <section id="march-19-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Bold / italic markup buttons</strong> on the ability form body text field — B and I buttons wrap the current selection in <code>**…**</code> / <code>*…*</code> markers; <code>parseMarkup()</code> in <code>AbilityCard.svelte</code> renders them as <code>&lt;strong&gt;</code> / <code>&lt;em&gt;</code> via <code>{@html}</code>.</li>
+          <li><strong>Torn-edge SVG overlay on printer-friendly ability card</strong> — the torn-paper path is drawn as an absolute overlay inside <code>.image-section</code>, matching the fighter card aesthetic. Only shown when <code>printerFriendly=true</code>.</li>
+          <li><strong>Form label cleanup</strong> — "Card Type" → "Type (select)", "Card Name" → "Card", "Body Text" → "Text"; default card name changed from "ABILITY NAME" to "CARD NAME" in both the form state and the card placeholder.</li>
+          <li><strong>Damage bracket alignment</strong> — Damage Points Allocated input is now <code>text-center</code>; Move/Damage column headers lost unnecessary <code>text-center</code> class (inputs already centered).</li>
+        </ul>
+      </section>
+
+      <section id="march-19-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Why <code>{@html}</code> for body text instead of a Svelte markdown component?</div>
+          <div class="decision-a">Body text is user-entered, single-field content with minimal formatting (bold/italic only). A full markdown parser would be overkill. The <code>parseMarkup()</code> regex is narrow and outputs only <code>&lt;strong&gt;</code>/<code>&lt;em&gt;</code> — no script injection surface.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why <code>requestAnimationFrame</code> after wrapping the selection?</div>
+          <div class="decision-a">The textarea value is updated via Svelte's reactive binding, which may re-render the DOM before <code>setSelectionRange</code> fires. Deferring to the next frame ensures the cursor/selection is restored after the DOM settles.</div>
+        </div>
+      </section>
+
+      <section id="march-19-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>
+        <table>
+          <tr><th>File</th><th>Change</th></tr>
+          <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Markup toolbar (B/I buttons + <code>wrapSelection()</code>); label text cleanup; <code>bind:this</code> on body textarea</td></tr>
+          <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td><code>parseMarkup()</code>; <code>{@html}</code> on body text; torn-edge SVG overlay for printer-friendly; "CARD NAME" placeholder; <code>strong</code>/<code>em</code> export CSS fix</td></tr>
+          <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Damage bracket input alignment — Damage Points Allocated input now <code>text-center</code></td></tr>
+          <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Default card name changed to "CARD NAME"</td></tr>
+        </table>
+      </section>
+    </div>
+    <!-- /session-march-19 -->
 
     <!-- ══════════════════════════════════════════
          2026-03-18 — Grand Alliance, Theme, Mobile Polish & Export Fix
