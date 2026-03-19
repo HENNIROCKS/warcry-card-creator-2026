@@ -172,11 +172,11 @@
 		background: #5a0a14;
 		border: 1px solid #FAF6F3;
 		border-radius: 20px;
-		padding: 5px 10px;
+		padding: 7px 13px;
 		color: #FAF6F3;
-		font-family: 'Germania One', serif;
+		font-family: 'Alegreya', serif;
 		font-weight: 400;
-		font-size: 13px;
+		font-size: 15px;
 
 		text-transform: uppercase;
 		text-align: center;
@@ -234,7 +234,7 @@
 
 	.card-type-area {
 		position: absolute;
-		bottom: 80px;
+		bottom: 60px;
 		left: 0;
 		right: 0;
 		display: flex;

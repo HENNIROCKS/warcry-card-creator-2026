@@ -45,12 +45,9 @@
 				{#if data.grandAlliance}<div class="runemark-pill">{data.grandAlliance}</div>{/if}
 				{#if data.faction}<div class="runemark-pill">{data.faction}</div>{/if}
 				{#if data.bladeborn}<div class="runemark-pill">{data.bladeborn}</div>{/if}
-				{#if data.rightRunemarks.length > 0}
-					<div class="pills-break"></div>
-					{#each data.rightRunemarks as rm}
-						<div class="runemark-pill">{rm.label}</div>
-					{/each}
-				{/if}
+				{#each data.rightRunemarks as rm}
+					<div class="runemark-pill">{rm.label}</div>
+				{/each}
 			</div>
 		{/if}
 	</div>
@@ -227,14 +224,6 @@
 		font-size: 28px;
 	}
 
-	.pills-break {
-		width: 100%;
-		height: 0;
-		border: 0;
-		outline: none;
-		background: transparent;
-	}
-
 	.image-bottom {
 		position: absolute;
 		bottom: 24px;
@@ -318,11 +307,11 @@
 		background: #5a0a14;
 		border: 1px solid #FAF6F3;
 		border-radius: 20px;
-		padding: 5px 10px;
+		padding: 7px 13px;
 		color: #FAF6F3;
-		font-family: 'Germania One', serif;
+		font-family: 'Alegreya', serif;
 		font-weight: 400;
-		font-size: 13px;
+		font-size: 15px;
 
 		text-transform: uppercase;
 		text-align: center;
