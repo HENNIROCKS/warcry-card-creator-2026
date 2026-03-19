@@ -22,7 +22,7 @@
 			Fighter Card
 		</a>
 		<a href="{base}/ability" class="px-6 py-3 bg-red-900 hover:bg-red-800 rounded text-white font-semibold transition">
-			Ability Card
+			Ability / Text Card
 		</a>
 	</div>
 <ThemeToggle />

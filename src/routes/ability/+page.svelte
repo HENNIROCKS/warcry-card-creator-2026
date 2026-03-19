@@ -121,7 +121,7 @@
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
 			<div class="flex items-center gap-3">
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
-				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Ability Card</h1>
+				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Ability / Text Card</h1>
 			</div>
 			<div class="relative hidden lg:block">
 				<div class="flex rounded-md overflow-hidden">
