@@ -38,7 +38,7 @@
 	);
 
 	let data = $state<AbilityCardData>({
-		name: 'ABILITY NAME',
+		name: 'CARD NAME',
 		cardLabel: 'ABILITY',
 		activationType: null,
 		grandAlliance: '',

@@ -244,12 +244,12 @@
 			<div class="space-y-2">
 				<div class="grid grid-cols-3 gap-1">
 					<span class="sublabel">Damage Points Allocated</span>
-					<span class="sublabel text-center">Move</span>
-					<span class="sublabel text-center">Damage</span>
+					<span class="sublabel">Move</span>
+					<span class="sublabel">Damage</span>
 				</div>
 				{#each data.damageBrackets as bracket}
 					<div class="grid grid-cols-3 gap-1 items-center">
-						<input class="field-input" bind:value={bracket.damageRange} placeholder="0–3" />
+						<input class="field-input text-center" bind:value={bracket.damageRange} placeholder="0–3" />
 						<input class="field-input text-center" bind:value={bracket.move} placeholder="6" />
 						<input class="field-input text-center" bind:value={bracket.damage} placeholder="6/12" />
 					</div>
