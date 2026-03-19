@@ -46,7 +46,7 @@ export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
 export interface AbilityCardData {
 	name: string;
-	cardLabel: string;          // "ABILITY" | "HEROIC TRAIT" | "REACTION" | custom
+	cardLabel: string;          // "ABILITY" | "HEROIC TRAIT" | "BATTLE TRAIT" | "REACTION" | custom
 	activationType: ActivationType;
 	grandAlliance: string;
 	faction: string;
