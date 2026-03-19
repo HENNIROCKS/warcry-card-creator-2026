@@ -589,7 +589,7 @@
           <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Damage bracket input alignment — Damage Points Allocated input now <code>text-center</code></td></tr>
           <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Pill font/size tweaks; removed <code>pills-break</code> div + CSS — all pills now flow in one row</td></tr>
           <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Default card name changed to "CARD NAME"</td></tr>
-          <tr><td><code>src/app.html</code></td><td>Added favicon, apple-touch-icon, and manifest link tags</td></tr>
+          <tr><td><code>src/app.html</code></td><td>Added favicon, apple-touch-icon, and manifest link tags; fixed href paths to use <code>%sveltekit.assets%</code> prefix (required by <code>paths.base</code> on GitHub Pages)</td></tr>
           <tr><td><code>static/favicon.svg</code>, <code>favicon.ico</code>, <code>favicon-96x96.png</code>, <code>apple-touch-icon.png</code>, <code>web-app-manifest-192x192.png</code>, <code>web-app-manifest-512x512.png</code>, <code>site.webmanifest</code></td><td>Full favicon/PWA asset set added; theme_color set to <code>#5a0a14</code></td></tr>
         </table>
       </section>
@@ -599,6 +599,7 @@
         <ul>
           <li><strong>Full favicon set</strong> added to <code>static/</code>: SVG (modern browsers), ICO (fallback), 96px PNG, apple-touch-icon (180px), 192px + 512px manifest icons, <code>site.webmanifest</code>.</li>
           <li><strong>Link tag order</strong> in <code>app.html</code>: <code>.ico sizes="any"</code> → <code>.svg type="image/svg+xml"</code> → apple-touch-icon → manifest. Modern browsers pick SVG; ICO covers RSS readers and old browsers.</li>
+          <li><strong>Paths use <code>%sveltekit.assets%</code></strong> — all four link hrefs prefixed with <code>%sveltekit.assets%</code> so they resolve correctly under <code>paths.base = '/warcry-card-creator-2026'</code> on GitHub Pages. Without this, SvelteKit's prerender throws a 404 error on <code>/favicon.ico</code> during CI build.</li>
           <li><strong>theme_color / background_color</strong> in manifest set to <code>#5a0a14</code> (dark maroon) to match card aesthetic.</li>
           <li><strong>PWA install prompt</strong> enabled on Android/Chrome via manifest; iOS home screen icon covered by apple-touch-icon.</li>
         </ul>
