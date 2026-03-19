@@ -1,20 +1,22 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest something to add or improve
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Which part of the tool does this relate to?**
+- [ ] Fighter card editor
+- [ ] Ability card editor
+- [ ] Both / general
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**What would you like?**
+A clear description of the feature or improvement you have in mind.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Why would it be useful?**
+How would this help when making cards?
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Mockup or example (optional)**
+A sketch, screenshot, or reference card that illustrates what you're after.
