@@ -24,3 +24,6 @@ vite.config.ts.timestamp-*
 
 # Claude Code local settings (contains machine-specific permissions)
 .claude/
+
+# Local working files (notes, graphics, scratch)
+_work/
