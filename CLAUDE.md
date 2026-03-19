@@ -51,7 +51,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - If `isMonster: true`: damage bracket table appended below weapons
 
 **Ability card** (portrait, same ratio):
-- Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (ABILITY / HEROIC TRAIT / REACTION)
+- Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (ABILITY / HEROIC TRAIT / BATTLE TRAIT / REACTION)
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, optional italic flavor text, body text
 
@@ -78,6 +78,8 @@ SVGs live in `src/lib/runemarks/svg/` (not yet populated). Library metadata in `
 - At session start, consult `docs/index.html` for prior decisions.
 - When asked to "document the session", append a new session panel to `docs/index.html`. Do NOT create separate session files.
 - At session end, offer to update/append to `docs/index.html`.
+- **Never** run `git commit` or `git push` (any variant). User manages all git operations.
+- When redundant files are identified (stale build output, `.DS_Store`, empty placeholders, orphaned assets), delete them without asking.
 
 ## Documentation conventions (`docs/index.html`)
 
@@ -93,13 +95,17 @@ Single-file, multi-session format. All sessions live in one file with a sidebar 
 3. Add the new ID at the front of `const sessions = [...]` in the script block.
 4. Update the Topic Index (`session-index`) with links to notable new sections.
 
+**Every `<section>` inside a panel must have both** `id="march-DD-sectionname"` and `data-nav="Label"` attributes — `data-nav` populates the sidebar nav.
+
 **Standard panel structure:**
-- Hero: date badge (`badge-blue`) + optional status badge(s) (`badge-green`/`badge-amber`) + title + one-line summary
+- Hero: date badge (`badge-blue`) + exactly 3 `badge-green` badges (short noun phrases, never "Done") + title + one-line summary
 - **What Was Built** — `<h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>` + `<ul>`
-- **Key Decisions** — `<h2><span class="icon" style="background:rgba(167,139,250,0.15)">💡</span> Key Decisions</h2>` + `<div class="decision">` blocks (`.decision-q` / `.decision-a`)
-- **Still Pending** — `<h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>` + `<div class="todo-list">` with `<div class="todo-item"><span class="badge badge-amber">todo</span> …</div>`
-- **Files Changed** (optional) — `<h2><span class="icon" style="background:rgba(108,142,247,0.15)">📁</span> Files Changed</h2>` + `<table>` with File / Change columns
+- **Key Decisions** — `<h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>` + `<div class="decision">` blocks (`.decision-q` / `.decision-a`)
+- **Still Pending** — `<h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>` + `<table>` with Status / Item columns; badge (`badge-amber`) in first `<td>`, item text in second. Do NOT use `.todo-list` / `.todo-item` divs.
+- **Files Changed** (optional) — `<h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>` + `<table>` with File / Change columns
 
 **Badges:** `badge-blue` = date, `badge-green` = done, `badge-amber` = pending/todo, `badge-purple` = reference.
 
 **Index links** use `onclick="activateSession('march-DD')"` alongside the `href="#section-id"` to switch to the correct panel.
+
+**After every edit to `docs/index.html`:** read back the changed area and verify HTML structure — all new content sits inside a `<section>`, no orphaned tags, no mismatched `</section>` closers.
