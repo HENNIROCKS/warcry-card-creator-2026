@@ -1674,10 +1674,10 @@
         <div id="session-march-20" class="session-panel">
           <div class="hero">
             <div class="meta">
-              <span class="badge badge-blue">2026-03-20</span>
+              <span class="badge badge-blue">2026-03-20 – 21</span>
               <span class="badge badge-green">i18n + polish</span>
               <span class="badge badge-green">Subfaction data</span>
-              <span class="badge badge-green">Contributor docs</span>
+              <span class="badge badge-green">Docs &amp; QA</span>
             </div>
             <h1>i18n, Subfaction Data &amp; Contributor Docs</h1>
             <p>
@@ -1687,7 +1687,10 @@
               fixes, 1 new subfaction (Thanatek's Tithe) with optimized SVG,
               removed 4 Underworlds-only factions deemed redundant, and a
               contributor documentation pass (i18n README, issue template,
-              CONTRIBUTING).
+              CONTRIBUTING). Follow-up session: <code>|</code> line-break support
+              in all column headers and weapon name cells, FighterForm weapon select
+              updated to strip <code>|</code>, and a full pre-release QA pass on
+              docs and locale files.
             </p>
           </div>
 
@@ -1786,6 +1789,39 @@
                 <code>.github/ISSUE_TEMPLATE/new_language.md</code> created.
               </li>
             </ul>
+            <h3>i18n Polish (2026-03-21)</h3>
+            <ul>
+              <li>
+                <strong><code>|</code> line-break in card headers</strong> — all nine
+                <code>col-*</code> column headers in <code>FighterCard.svelte</code> now
+                render via <code>split('|')</code> + <code>&lt;br&gt;</code>, allowing
+                long translated labels (e.g. <code>"Lebens|punkte"</code>) to wrap
+                within narrow cells. <code>col-base-size</code> and
+                <code>col-points</code> migrated to the same consistent pattern.
+              </li>
+              <li>
+                <strong><code>|</code> line-break in weapon names</strong> — weapon name
+                span in <code>FighterCard.svelte</code> uses the same split pattern
+                (e.g. <code>"Reichweiten|waffe"</code>). FighterForm weapon
+                <code>&lt;select&gt;</code> refactored to an <code>#each</code> loop
+                and strips <code>|</code> via <code>.replaceAll('|', '')</code> so
+                the split character never appears in the dropdown.
+              </li>
+              <li>
+                <strong>i18n README corrections</strong> — new "Line breaks in card
+                text" section documents the <code>|</code> feature with examples and
+                clarifies that only <code>card.*</code> and <code>weapons.*</code>
+                support it. False claim that "TODO suffix is stripped in display"
+                corrected: the <code>t()</code> function returns raw values as-is.
+              </li>
+              <li>
+                <strong>Pre-release QA pass</strong> — <code>de.json</code> typos
+                fixed (double-O in "Ordnung", "Geingeres" → "Geringeres");
+                duplicate translation on <code>cities-of-sigmar-dispossessed</code>
+                resolved; all templates, README, CONTRIBUTING, and issue templates
+                reviewed and confirmed accurate.
+              </li>
+            </ul>
           </section>
 
           <section id="march-20-decisions" data-nav="Key Decisions">
@@ -1842,6 +1878,21 @@
                 boolean) and avoids the select ever showing a blank option.
               </div>
             </div>
+            <div class="decision">
+              <div class="decision-q">
+                Why encode line breaks as <code>|</code> in locale values rather than
+                using CSS <code>word-break</code> or <code>overflow-wrap</code>?
+              </div>
+              <div class="decision-a">
+                CSS word-breaking splits at arbitrary points mid-syllable, which looks
+                wrong in a small all-caps header cell. The <code>|</code> convention
+                gives translators deliberate control over exactly where the break falls
+                (<code>"Lebens|punkte"</code>, <code>"Reichweiten|waffe"</code>), and
+                it costs nothing for languages whose strings already fit — no <code>|</code>,
+                no break. The character is stripped at the one place it would be
+                visible to the user (the editor dropdown).
+              </div>
+            </div>
           </section>
 
           <section id="march-20-pending" data-nav="Still Pending">
@@ -1855,16 +1906,16 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><span class="badge badge-amber">WIP</span></td>
-                  <td>German game-term review — runemark and weapon translations are reasonable approximations; official German Warcry rulebook terms may differ</td>
+                  <td><span class="badge badge-green">Done</span></td>
+                  <td>German QA pass — typos fixed (double-O "Oordnung", "Geingeres"); duplicate <code>cities-of-sigmar-dispossessed</code> translation resolved; official game-term review by contributor</td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">WIP</span></td>
-                  <td>Additional community languages — architecture supports drop-in JSON files; no third locale yet</td>
+                  <td><span class="badge badge-blue">open</span></td>
+                  <td>Additional community languages — architecture supports drop-in JSON files; open for community contributions</td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-green">Done</span></td>
-                  <td>Contributor README (<code>src/lib/i18n/README.md</code>) — expanded with namespace table, TODO convention, RTL note; issue template and CONTRIBUTING updates done</td>
+                  <td>Contributor README (<code>src/lib/i18n/README.md</code>) — namespace table, TODO convention, RTL note, <code>|</code> line-break section; false "TODO stripped" claim corrected</td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">later</span></td>
@@ -1887,13 +1938,13 @@
                 <tr><td><code>src/lib/i18n/types.ts</code></td><td>New — <code>LocaleMeta</code>, <code>LocaleData</code> interfaces (7 namespaces)</td></tr>
                 <tr><td><code>src/lib/i18n/index.svelte.ts</code></td><td>New — reactive locale store, <code>t()</code>, <code>i18n</code> object, <code>availableLocales</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>New — English source of truth, ~130 keys across 7 namespaces; updated: 5 new subfaction keys, removed <code>title</code> + <code>github</code> from <code>ui</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>New — German translation, all keys covered; updated: 5 new subfaction entries with translations</td></tr>
-                <tr><td><code>src/lib/i18n/README.md</code></td><td>New then expanded — namespace table, TODO convention, RTL note, partial translation guidance</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>New — German translation, all keys covered; updated: 5 new subfaction entries; QA pass: typos + duplicate translation fixed</td></tr>
+                <tr><td><code>src/lib/i18n/README.md</code></td><td>New then expanded — namespace table, TODO convention, RTL note, partial translation guidance; added "Line breaks in card text" section; corrected false "TODO stripped in display" claim</td></tr>
                 <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>New — pill-style language select with globe icon and GitHub Issues link</td></tr>
                 <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Updated — display via <code>t()</code>, stores IDs</td></tr>
-                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Updated — all column headers, weapon names, placeholder, <code>text-transform</code> added to missing classes</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Updated — all column headers, weapon names, placeholder, <code>text-transform</code> added to missing classes; all nine <code>col-*</code> headers and weapon name span now use <code>split('|')</code> + <code>&lt;br&gt;</code> for translator-controlled line breaks</td></tr>
                 <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Updated — <code>resolveCardLabel()</code>, pill labels, activation labels</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels; weapon select refactored to <code>#each</code> loop with <code>.replaceAll('|', '')</code> to strip line-break markers from dropdown</td></tr>
                 <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
                 <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>Updated — dark/light mode labels via <code>t()</code></td></tr>
                 <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — Thanatek's Tithe entry wired to <code>dBbThanateksTithe</code>; 4 Underworlds subfactions removed (Drepur's Wraithcreepers, Lady Harrow's Mournflight, Ironsoul's Condemnors, Storm of Celestus)</td></tr>
