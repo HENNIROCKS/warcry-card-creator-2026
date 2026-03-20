@@ -8,6 +8,14 @@
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
 
+	const presetLabels = ['ABILITY', 'REACTION', 'HEROIC TRAIT', 'BATTLE TRAIT', 'LESSER ARTEFACT', 'GREATER ARTEFACT'];
+	let selectValue = $state(presetLabels.includes(data.cardLabel) ? data.cardLabel : '__custom__');
+	let customText = $state(presetLabels.includes(data.cardLabel) ? '' : data.cardLabel);
+
+	$effect(() => {
+		data.cardLabel = selectValue === '__custom__' ? customText : selectValue;
+	});
+
 	function wrapSelection(el: HTMLTextAreaElement, marker: string) {
 		const start = el.selectionStart;
 		const end = el.selectionEnd;
@@ -31,15 +39,25 @@
 
 	<!-- Card Type -->
 	<section>
-		<label class="field-label" for="card-label">Type <span class="normal-case font-normal text-zinc-500">(select)</span></label>
-		<select id="card-label" class="field-input" bind:value={data.cardLabel}>
+		<label class="field-label" for="card-label">Type <span class="normal-case font-normal text-zinc-500">(select)</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
+		<select id="card-label" class="field-input" bind:value={selectValue}>
 			<option value="ABILITY">Ability</option>
 			<option value="REACTION">Reaction</option>
 			<option value="HEROIC TRAIT">Heroic Trait</option>
 			<option value="BATTLE TRAIT">Battle Trait</option>
 			<option value="LESSER ARTEFACT">Lesser Artefact</option>
 			<option value="GREATER ARTEFACT">Greater Artefact</option>
+			<option value="__custom__">Custom…</option>
 		</select>
+		{#if selectValue === '__custom__'}
+			<input
+				class="field-input mt-2"
+				type="text"
+				placeholder="Custom label"
+				maxlength="30"
+				bind:value={customText}
+			/>
+		{/if}
 	</section>
 
 	<!-- Card Name -->
