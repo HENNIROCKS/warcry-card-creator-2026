@@ -8,9 +8,9 @@ An updated version of my original card creator for Warhammer Age of Sigmar: Warc
 
 Browser-based tool for creating custom Warcry cards. No backend, no login, everything runs client-side.
 
-**Fighter card editor** — upload a model photo, set name and characteristics (Move, Toughness, Wounds), build a weapon profile table, add a damage bracket for monsters, and assign runemarks. Export as a print-ready PNG.
+**Fighter card editor** — upload a model photo, set name and characteristics (Move, Toughness, Wounds), build a weapon profile table, add a damage bracket for monsters, and assign runemarks. On mobile, pan and pinch-to-zoom the model image directly on the preview. Export as a print-ready PNG.
 
-**Ability card editor** — set card type (Ability, Reaction, Heroic Trait, Battle Trait, Lesser/Greater Artefact), activation cost (Double / Triple / Quad), card name, flavour text, and body text with bold/italic markup. Export as a print-ready PNG.
+**Ability / Text card editor** — set card type (Ability, Reaction, Heroic Trait, Battle Trait, Lesser/Greater Artefact, or a custom label), activation cost (Double / Triple / Quad), card name, flavour text, and body text with bold/italic markup. Export as a print-ready PNG.
 
 Both editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens with touch pan and pinch-to-zoom on the model image), and can be **installed as a PWA** from the browser.
 
