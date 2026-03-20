@@ -28,6 +28,10 @@ make preview  # preview production build
 
 The dev server listens on all network interfaces. Start `make dev` and use the **Network** URL printed by Vite (e.g. `http://192.168.x.x:5173`) from any device on the same Wi-Fi network. If port 5173 is occupied, Vite will increment it — use whichever port appears in the terminal.
 
+## Translations
+
+The tool ships with English and German. Adding a new language requires a single JSON file — no code changes. See [`src/lib/i18n/README.md`](src/lib/i18n/README.md) for the full guide, or [open a "New language" issue](https://github.com/HENNIROCKS/warcry-card-creator-2026/issues/new?template=new_language.md) to express interest and coordinate with others.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for code style, architecture constraints, and how to submit a PR.
