@@ -68,6 +68,7 @@
 			id="ability-name"
 			class="field-input"
 			type="text"
+			placeholder={t('card.card-name-placeholder')}
 			bind:value={data.name}
 		/>
 	</section>
@@ -108,9 +109,9 @@
 		<label class="field-label" for="activation">{t('ui.form-activation')}</label>
 		<select id="activation" class="field-input" bind:value={data.activationType}>
 			<option value={null}>—</option>
-			<option value="double">Double</option>
-			<option value="triple">Triple</option>
-			<option value="quad">Quad</option>
+			<option value="double">{t('card.activation-double')}</option>
+			<option value="triple">{t('card.activation-triple')}</option>
+			<option value="quad">{t('card.activation-quad')}</option>
 		</select>
 	</section>
 
