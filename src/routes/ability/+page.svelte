@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { AbilityCardData } from '$lib/types';
+	import { t } from '$lib/i18n/index.svelte';
 	import AbilityCard from '$lib/components/AbilityCard.svelte';
 	import AbilityForm from '$lib/components/AbilityForm.svelte';
 
@@ -38,8 +39,8 @@
 	);
 
 	let data = $state<AbilityCardData>({
-		name: 'CARD NAME',
-		cardLabel: 'ABILITY',
+		name: '',
+		cardLabel: 'ability',
 		activationType: null,
 		grandAlliance: '',
 		faction: '',
@@ -106,11 +107,11 @@
 		<button
 			class="flex-1 py-4 text-sm font-bold tracking-widest uppercase transition {activeTab === 'edit' ? 'bg-red-800 text-white' : 'bg-zinc-950 text-zinc-500'}"
 			onclick={() => activeTab = 'edit'}
-		>Edit</button>
+		>{t('ui.tab-edit')}</button>
 		<button
 			class="flex-1 py-4 text-sm font-bold tracking-widest uppercase transition {activeTab === 'preview' ? 'bg-red-800 text-white' : 'bg-zinc-950 text-zinc-500'}"
 			onclick={() => activeTab = 'preview'}
-		>Preview</button>
+		>{t('ui.tab-preview')}</button>
 	</nav>
 
 	<!-- LEFT: Form panel -->
@@ -121,7 +122,7 @@
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
 			<div class="flex items-center gap-3">
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
-				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">Ability / Text Card</h1>
+				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">{t('ui.ability-card')}</h1>
 			</div>
 			<div class="relative hidden lg:block">
 				<div class="flex rounded-md overflow-hidden">
@@ -130,7 +131,7 @@
 						disabled={exporting}
 						class="bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
 					>
-						{exporting ? 'Exporting…' : 'Export PNG'}
+						{exporting ? t('ui.exporting') : t('ui.export-png')}
 					</button>
 					<button
 						onclick={() => showDropdown = !showDropdown}
@@ -151,7 +152,7 @@
 							onclick={exportPrinterFriendly}
 							class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md"
 						>
-							Export printer-friendly PNG
+							{t('ui.export-printer-friendly')}
 						</button>
 					</div>
 				{/if}
@@ -177,7 +178,7 @@
 						disabled={exporting}
 						class="bg-red-800 px-4 py-2 text-sm font-semibold tracking-wide text-white transition hover:bg-red-700 disabled:opacity-50"
 					>
-						{exporting ? 'Exporting…' : 'Export PNG'}
+						{exporting ? t('ui.exporting') : t('ui.export-png')}
 					</button>
 					<button
 						onclick={() => showDropdown = !showDropdown}
@@ -194,7 +195,7 @@
 							onclick={exportPrinterFriendly}
 							class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md"
 						>
-							Export printer-friendly PNG
+							{t('ui.export-printer-friendly')}
 						</button>
 					</div>
 				{/if}
@@ -220,8 +221,8 @@
 		onclick={() => exportedImageUrl = null}
 	>
 		<div class="flex items-center justify-between px-5 py-4 shrink-0">
-			<p class="text-sm font-semibold" style="color: #fff">Long-press the image to save</p>
-			<button class="text-sm font-semibold px-3 py-1 rounded-full" style="color: #fff; background: rgba(255,255,255,0.2)" onclick={() => exportedImageUrl = null}>Close</button>
+			<p class="text-sm font-semibold" style="color: #fff">{t('ui.long-press-save')}</p>
+			<button class="text-sm font-semibold px-3 py-1 rounded-full" style="color: #fff; background: rgba(255,255,255,0.2)" onclick={() => exportedImageUrl = null}>{t('ui.close')}</button>
 		</div>
 		<div class="flex-1 min-h-0 overflow-y-auto flex justify-center px-4 pb-6">
 			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->

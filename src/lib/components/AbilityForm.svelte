@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { AbilityCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { t } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
 	let { data }: { data: AbilityCardData } = $props();
@@ -8,7 +9,7 @@
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
 
-	const presetLabels = ['ABILITY', 'REACTION', 'HEROIC TRAIT', 'BATTLE TRAIT', 'LESSER ARTEFACT', 'GREATER ARTEFACT'];
+	const presetLabels = ['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact'];
 	let selectValue = $state(presetLabels.includes(data.cardLabel) ? data.cardLabel : '__custom__');
 	let customText = $state(presetLabels.includes(data.cardLabel) ? '' : data.cardLabel);
 
@@ -31,7 +32,7 @@
 		data.fighterRunemarks = rmKeys
 			.filter(k => k !== '')
 			.sort((a, b) => (a === 'Hero' || a === 'Monster' ? -1 : 0) - (b === 'Hero' || b === 'Monster' ? -1 : 0))
-			.map(k => ({ id: k, label: k, svg: fighterRunemarks[k] }));
+			.map(k => ({ id: k, label: t('runemarks.' + k), svg: fighterRunemarks[k] }));
 	});
 </script>
 
@@ -39,21 +40,21 @@
 
 	<!-- Card Type -->
 	<section>
-		<label class="field-label" for="card-label">Type <span class="normal-case font-normal text-zinc-500">(select)</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
+		<label class="field-label" for="card-label">{t('ui.form-type')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-select')})</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
 		<select id="card-label" class="field-input" bind:value={selectValue}>
-			<option value="ABILITY">Ability</option>
-			<option value="REACTION">Reaction</option>
-			<option value="HEROIC TRAIT">Heroic Trait</option>
-			<option value="BATTLE TRAIT">Battle Trait</option>
-			<option value="LESSER ARTEFACT">Lesser Artefact</option>
-			<option value="GREATER ARTEFACT">Greater Artefact</option>
-			<option value="__custom__">Custom…</option>
+			<option value="ability">{t('card.label-ability')}</option>
+			<option value="reaction">{t('card.label-reaction')}</option>
+			<option value="heroic-trait">{t('card.label-heroic-trait')}</option>
+			<option value="battle-trait">{t('card.label-battle-trait')}</option>
+			<option value="lesser-artefact">{t('card.label-lesser-artefact')}</option>
+			<option value="greater-artefact">{t('card.label-greater-artefact')}</option>
+			<option value="__custom__">{t('ui.form-custom')}</option>
 		</select>
 		{#if selectValue === '__custom__'}
 			<input
 				class="field-input mt-2"
 				type="text"
-				placeholder="Custom label"
+				placeholder={t('ui.form-custom-label')}
 				maxlength="30"
 				bind:value={customText}
 			/>
@@ -62,7 +63,7 @@
 
 	<!-- Card Name -->
 	<section>
-		<label class="field-label" for="ability-name">Card <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
+		<label class="field-label" for="ability-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
 		<input
 			id="ability-name"
 			class="field-input"
@@ -75,16 +76,16 @@
 	<section>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">Show Runemarks</span>
+			<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
 		</label>
 	</section>
 
 	<!-- Runemarks -->
 	<section>
-		<p class="field-label mb-2">Runemarks</p>
+		<p class="field-label mb-2">{t('ui.form-runemarks')}</p>
 		<FactionSelect {data} />
 		<div class="mt-3">
-			<p class="sublabel mb-1">Fighter Runemarks</p>
+			<p class="sublabel mb-1">{t('ui.form-fighter-runemarks')}</p>
 			<div class="flex flex-col gap-2">
 				{#each [0, 1] as i}
 					<select class="field-input" bind:value={rmKeys[i]}>
@@ -94,7 +95,7 @@
 								(rmKeys[i] !== name && rmKeys.some((k, j) => j !== i && k === name)) ||
 								(name === 'Monster' && rmKeys.some(k => k === 'Hero')) ||
 								(name === 'Hero' && rmKeys.some(k => k === 'Monster'))
-							}>{name}</option>
+							}>{t('runemarks.' + name)}</option>
 						{/each}
 					</select>
 				{/each}
@@ -104,7 +105,7 @@
 
 	<!-- Activation -->
 	<section>
-		<label class="field-label" for="activation">Activation</label>
+		<label class="field-label" for="activation">{t('ui.form-activation')}</label>
 		<select id="activation" class="field-input" bind:value={data.activationType}>
 			<option value={null}>—</option>
 			<option value="double">Double</option>
@@ -116,7 +117,7 @@
 
 	<!-- Flavor Text -->
 	<section>
-		<label class="field-label" for="flavor-text">Flavor Text <span class="normal-case font-normal text-zinc-500">(italic, optional)</span></label>
+		<label class="field-label" for="flavor-text">{t('ui.form-flavor-text')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-italic-optional')})</span></label>
 		<textarea
 			id="flavor-text"
 			class="field-input resize-none"
@@ -127,10 +128,10 @@
 
 	<!-- Body Text -->
 	<section>
-		<label class="field-label" for="body-text">Text</label>
+		<label class="field-label" for="body-text">{t('ui.form-text')}</label>
 		<div class="markup-toolbar">
-			<button type="button" class="markup-btn" onclick={() => wrapSelection(bodyTextEl, '**')}>B</button>
-			<button type="button" class="markup-btn italic" onclick={() => wrapSelection(bodyTextEl, '*')}>I</button>
+			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(bodyTextEl, '**')}>B</button>
+			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(bodyTextEl, '*')}>I</button>
 		</div>
 		<textarea
 			id="body-text"
