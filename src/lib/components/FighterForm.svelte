@@ -195,23 +195,9 @@
 					<span class="sublabel">{t('ui.form-type')}</span>
 					<select class="field-input text-center" style="text-align-last: center" bind:value={weapon.name}>
 						<option value="">—</option>
-						<option value="Axe">{t('weapons.Axe')}</option>
-						<option value="Bident">{t('weapons.Bident')}</option>
-						<option value="Blast">{t('weapons.Blast')}</option>
-						<option value="Claws">{t('weapons.Claws')}</option>
-						<option value="Club">{t('weapons.Club')}</option>
-						<option value="Dagger">{t('weapons.Dagger')}</option>
-						<option value="Fangs">{t('weapons.Fangs')}</option>
-						<option value="Hammer">{t('weapons.Hammer')}</option>
-						<option value="Hook">{t('weapons.Hook')}</option>
-						<option value="Mace">{t('weapons.Mace')}</option>
-						<option value="Pistol">{t('weapons.Pistol')}</option>
-						<option value="Ranged Weapon">{t('weapons.Ranged Weapon')}</option>
-						<option value="Reach Weapon">{t('weapons.Reach Weapon')}</option>
-						<option value="Scythe">{t('weapons.Scythe')}</option>
-						<option value="Spear">{t('weapons.Spear')}</option>
-						<option value="Sword">{t('weapons.Sword')}</option>
-						<option value="Unarmed">{t('weapons.Unarmed')}</option>
+						{#each ['Axe','Bident','Blast','Claws','Club','Dagger','Fangs','Hammer','Hook','Mace','Pistol','Ranged Weapon','Reach Weapon','Scythe','Spear','Sword','Unarmed'] as w}
+							<option value={w}>{t(`weapons.${w}`).replaceAll('|', '')}</option>
+						{/each}
 					</select>
 				</div>
 				<div>
