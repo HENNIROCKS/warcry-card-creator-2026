@@ -30,7 +30,18 @@ Official localised names exist for most factions in languages where Games Worksh
 "slaves-to-darkness-corvus-cabal": "Sklaven der Finsternis: Corvus Cabal TODO"
 ```
 
-The `TODO` suffix is stripped out in display — it's only a signal for translators that the string needs attention.
+The `TODO` suffix is not stripped in display — it will appear on screen. It is only a marker for other translators that the string still needs attention.
+
+## Line breaks in card text
+
+Values in the `card` and `weapons` namespaces are rendered directly on the card. Use `|` to insert a line break when a translated string is too long to fit in a column header or weapon name cell:
+
+```json
+"col-wounds": "Lebens|punkte",
+"Reach Weapon": "Reichweiten|waffe"
+```
+
+The `|` character is stripped from dropdown option labels in the editor — it only affects the rendered card. The `ui` namespace does not support `|` line breaks.
 
 ## Partial translations
 
