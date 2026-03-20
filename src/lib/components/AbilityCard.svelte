@@ -63,7 +63,7 @@
 				{#if data.activationType}
 					<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
 						<div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
-							<span class="activation-text">{t(`card.activation-${data.activationType}`)}</span>
+							<span class="activation-text">{#each t(`card.activation-${data.activationType}`).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>
 						</div>
 					</div>
 				{/if}
@@ -79,7 +79,7 @@
 					<div class="runemark-pill">{rm.label}</div>
 				{/each}
 				{#if data.activationType}
-					<div class="runemark-pill">{t(`card.activation-${data.activationType}`)}</div>
+					<div class="runemark-pill">{t(`card.activation-${data.activationType}`).replace('|', '')}</div>
 				{/if}
 			</div>
 		{/if}

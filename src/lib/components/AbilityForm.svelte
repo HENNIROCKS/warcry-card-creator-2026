@@ -110,8 +110,8 @@
 		<select id="activation" class="field-input" bind:value={data.activationType}>
 			<option value={null}>—</option>
 			<option value="double">{t('card.activation-double')}</option>
-			<option value="triple">{t('card.activation-triple')}</option>
-			<option value="quad">{t('card.activation-quad')}</option>
+			<option value="triple">{t('card.activation-triple').replaceAll('|', '')}</option>
+			<option value="quad">{t('card.activation-quad').replaceAll('|', '')}</option>
 		</select>
 	</section>
 

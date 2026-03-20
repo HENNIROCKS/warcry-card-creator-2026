@@ -281,8 +281,8 @@
   },
   "card": {
     "activation-double": "Pasch",
-    "activation-triple": "Dreierpasch",
-    "activation-quad": "Viererpasch",
+    "activation-triple": "Dreier|pasch",
+    "activation-quad": "Vierer|pasch",
     "label-ability": "Fähigkeit",
     "label-heroic-trait": "Heldeneigenschaft",
     "label-battle-trait": "Kampfeigenschaft",
