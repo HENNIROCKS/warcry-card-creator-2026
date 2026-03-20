@@ -350,6 +350,12 @@
         </button>
       </li>
       <li>
+        <button class="session-btn" data-session="march-20">
+          <span class="session-date">2026-03-20</span>
+          <span class="session-title">Custom Card Type Label</span>
+        </button>
+      </li>
+      <li>
         <button class="session-btn" data-session="march-19">
           <span class="session-date">2026-03-19</span>
           <span class="session-title">Ability Card Form &amp; Export Polish</span>
@@ -545,6 +551,56 @@
 
     </div>
     <!-- /session-index -->
+
+    <!-- ══════════════════════════════════════════
+         2026-03-20 — Custom Card Type Label
+    ══════════════════════════════════════════ -->
+    <div id="session-march-20" class="session-panel">
+      <div class="hero">
+        <div class="meta">
+          <span class="badge badge-blue">2026-03-20</span>
+          <span class="badge badge-green">Custom card type</span>
+          <span class="badge badge-green">Character counter</span>
+          <span class="badge badge-green">30-char limit</span>
+        </div>
+        <h1>Custom Card Type Label</h1>
+        <p>Added a "Custom…" option to the ability card Type select, revealing a free-text input with a 30-character limit and live character counter.</p>
+      </div>
+
+      <section id="march-20-built" data-nav="What Was Built">
+        <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+        <ul>
+          <li><strong>Custom card type option</strong> — "Custom…" added to the Type select in <code>AbilityForm.svelte</code>. Selecting it reveals a text input below the select.</li>
+          <li><strong>Live character counter</strong> — label shows <code>N/30</code> when Custom is active, matching the Subtitle counter pattern on the fighter form.</li>
+          <li><strong>30-character hard limit</strong> — enforced via <code>maxlength="30"</code>.</li>
+          <li><strong>Reactive sync</strong> — <code>$effect</code> writes the custom text to <code>data.cardLabel</code>; preset options continue to write their fixed string. Switching back from Custom resets correctly.</li>
+        </ul>
+      </section>
+
+      <section id="march-20-decisions" data-nav="Key Decisions">
+        <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+        <div class="decision">
+          <div class="decision-q">Why a sentinel value <code>__custom__</code> rather than a separate boolean flag?</div>
+          <div class="decision-a">The select's <code>bind:value</code> already carries state — using a sentinel keeps the reactive graph simple (one <code>$effect</code>, no extra boolean) and avoids the select ever showing a blank option.</div>
+        </div>
+        <div class="decision">
+          <div class="decision-q">Why 30 characters?</div>
+          <div class="decision-a">Card label area is narrow; 30 chars matches the longest built-in label ("GREATER ARTEFACT" = 16) with headroom for custom text while preventing overflow.</div>
+        </div>
+      </section>
+
+      <section id="march-20-files" data-nav="Files Changed">
+        <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+        <table>
+          <thead><tr><th>File</th><th>Change</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added Custom option, conditional input, character counter, <code>$effect</code> sync</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+    <!-- /session-march-20 -->
 
     <!-- ══════════════════════════════════════════
          2026-03-19 — Ability Card Form & Export Polish
@@ -1660,7 +1716,7 @@
 </div>
 
 <script>
-  const sessions = ["march-19", "march-18", "march-17", "march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
+  const sessions = ["march-20", "march-19", "march-18", "march-17", "march-16", "march-15", "march-14", "march-13", "march-12", "march-11", "index"];
 
   function activateSession(id) {
     if (!sessions.includes(id)) id = sessions[0];
