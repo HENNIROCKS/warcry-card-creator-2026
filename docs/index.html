@@ -1666,16 +1666,17 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-20</span>
-              <span class="badge badge-green">i18n system</span>
-              <span class="badge badge-green">EN + DE locales</span>
-              <span class="badge badge-green">Custom card type</span>
+              <span class="badge badge-green">i18n + polish</span>
+              <span class="badge badge-green">Subfaction data</span>
+              <span class="badge badge-green">Contributor docs</span>
             </div>
-            <h1>i18n &amp; Custom Card Type Label</h1>
+            <h1>i18n, Subfaction Data &amp; Contributor Docs</h1>
             <p>
               Full internationalisation system wired up across every component —
               locale files, reactive <code>t()</code>, language switcher, and
-              German translation. Also added a custom card type label option on
-              the ability card.
+              German translation. Also added custom card type label, i18n bug
+              fixes, 5 new subfactions with placeholder SVGs, and a contributor
+              documentation pass (i18n README, issue template, CONTRIBUTING).
             </p>
           </div>
 
@@ -1728,6 +1729,30 @@
               <li>
                 <strong>Custom card type option</strong> — "Custom…" sentinel in Type
                 select; reveals free-text input with 30-char limit and live counter.
+              </li>
+              <li>
+                <strong>i18n bug fixes</strong> — activation options (Double/Triple/Quad)
+                now use <code>t('card.activation-*')</code>; card name placeholder
+                wired to <code>t('card.card-name-placeholder')</code>; <code>ui.title</code>
+                and <code>ui.github</code> removed from locale files and made static.
+              </li>
+              <li>
+                <strong>Landing page pill row</strong> — GitHub link, LangSwitch, and
+                ThemeToggle grouped into one consistent pill row; flex-wrap for mobile.
+              </li>
+              <li>
+                <strong>5 new subfactions</strong> (placeholder SVGs, <code>svg: null</code>)
+                — Nighthaunt: Drepur's Wraithcreepers, Lady Harrow's Mournflight;
+                Ossiarch Bonereapers: Thanatek's Tithe;
+                Stormcast Sacrosanct Chamber: Ironsoul's Condemnors, Storm of Celestus.
+                Added to <code>hierarchy.ts</code> and both locale files.
+              </li>
+              <li>
+                <strong>Contributor docs</strong> — <code>src/lib/i18n/README.md</code>
+                expanded with namespace table, TODO convention, RTL note, and what not to
+                translate; <code>README.md</code> Translations section added;
+                <code>CONTRIBUTING.md</code> lists translations as a contribution type;
+                <code>.github/ISSUE_TEMPLATE/new_language.md</code> created.
               </li>
             </ul>
           </section>
@@ -1807,8 +1832,12 @@
                   <td>Additional community languages — architecture supports drop-in JSON files; no third locale yet</td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">WIP</span></td>
-                  <td>Contributor README (<code>src/lib/i18n/README.md</code>) — scaffolded but may need expanded guidance once first external contributor attempts a translation</td>
+                  <td><span class="badge badge-green">Done</span></td>
+                  <td>Contributor README (<code>src/lib/i18n/README.md</code>) — expanded with namespace table, TODO convention, RTL note; issue template and CONTRIBUTING updates done</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">later</span></td>
+                  <td>Locale-aware faction/subfaction sorting — <code>FactionSelect</code> order is fixed by <code>hierarchy.ts</code> array order, not sorted by translated label. When a non-English locale is active, entries stay in English-alphabetical order. Fix: sort in <code>computeFiltered</code> using <code>localeCompare</code> with the active locale code.</td>
                 </tr>
               </tbody>
             </table>
@@ -1826,20 +1855,24 @@
               <tbody>
                 <tr><td><code>src/lib/i18n/types.ts</code></td><td>New — <code>LocaleMeta</code>, <code>LocaleData</code> interfaces (7 namespaces)</td></tr>
                 <tr><td><code>src/lib/i18n/index.svelte.ts</code></td><td>New — reactive locale store, <code>t()</code>, <code>i18n</code> object, <code>availableLocales</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>New — English source of truth, ~130 keys across 7 namespaces</td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>New — German translation, all keys covered</td></tr>
-                <tr><td><code>src/lib/i18n/README.md</code></td><td>New — contributor guide</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>New — English source of truth, ~130 keys across 7 namespaces; updated: 5 new subfaction keys, removed <code>title</code> + <code>github</code> from <code>ui</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>New — German translation, all keys covered; updated: 5 new subfaction entries with translations</td></tr>
+                <tr><td><code>src/lib/i18n/README.md</code></td><td>New then expanded — namespace table, TODO convention, RTL note, partial translation guidance</td></tr>
                 <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>New — pill-style language select with globe icon and GitHub Issues link</td></tr>
                 <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Updated — display via <code>t()</code>, stores IDs</td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Updated — all column headers, weapon names, placeholder, <code>text-transform</code> added to missing classes</td></tr>
                 <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Updated — <code>resolveCardLabel()</code>, pill labels, activation labels</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels</td></tr>
-                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels</td></tr>
+                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
                 <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>Updated — dark/light mode labels via <code>t()</code></td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Updated — all landing page text, LangSwitch added</td></tr>
+                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — 5 new subfaction entries with <code>svg: null</code></td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Updated — all landing page text, LangSwitch added; title/GitHub made static; pill row (LangSwitch + ThemeToggle + GitHub), mobile flex-wrap</td></tr>
                 <tr><td><code>src/routes/+layout.svelte</code></td><td>Updated — <code>i18n.init()</code> in <code>onMount</code></td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header</td></tr>
                 <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header, initial <code>cardLabel: 'ability'</code></td></tr>
+                <tr><td><code>README.md</code></td><td>Updated — Translations section added</td></tr>
+                <tr><td><code>CONTRIBUTING.md</code></td><td>Updated — translations listed as contribution type</td></tr>
+                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>New — issue template for language contributions</td></tr>
               </tbody>
             </table>
           </section>
