@@ -1590,6 +1590,15 @@
                   </td>
                   <td>Mar 18</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-20-built" onclick="activateSession('march-20')"
+                      >Runemark SVG checklist: strip editor <code>class</code>/<code>id</code>/<code>style</code>; add <code>width</code>/<code>height="300"</code>
+                      + <code>&lt;title&gt;</code>; normalize viewBox to <code>0 0</code> with translate;
+                      remove path <code>id</code>s and redundant <code>fill</code></a>
+                  </td>
+                  <td>Mar 20</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1675,8 +1684,10 @@
               Full internationalisation system wired up across every component —
               locale files, reactive <code>t()</code>, language switcher, and
               German translation. Also added custom card type label, i18n bug
-              fixes, 5 new subfactions with placeholder SVGs, and a contributor
-              documentation pass (i18n README, issue template, CONTRIBUTING).
+              fixes, 1 new subfaction (Thanatek's Tithe) with optimized SVG,
+              removed 4 Underworlds-only factions deemed redundant, and a
+              contributor documentation pass (i18n README, issue template,
+              CONTRIBUTING).
             </p>
           </div>
 
@@ -1685,6 +1696,7 @@
               <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
               What Was Built
             </h2>
+            <h3>i18n System</h3>
             <ul>
               <li>
                 <strong>i18n module</strong> — <code>src/lib/i18n/index.svelte.ts</code>
@@ -1706,6 +1718,20 @@
                 <code>text-transform: uppercase</code>.
               </li>
               <li>
+                <strong>Stable key pattern</strong> — stored values remain English
+                slugs/keys (weapon names, cardLabel, runemark IDs) for icon/SVG lookup;
+                translation happens at render time only.
+              </li>
+              <li>
+                <strong>i18n bug fixes</strong> — activation options (Double/Triple/Quad)
+                now use <code>t('card.activation-*')</code>; card name placeholder
+                wired to <code>t('card.card-name-placeholder')</code>; <code>ui.title</code>
+                and <code>ui.github</code> removed from locale files and made static.
+              </li>
+            </ul>
+            <h3>Components &amp; UI</h3>
+            <ul>
+              <li>
                 <strong>LangSwitch</strong> — native <code>&lt;select&gt;</code> styled
                 as pill (matches ThemeToggle), globe icon, "Add a language…" option
                 opens GitHub Issues in a new tab. Hidden when only one locale present.
@@ -1722,31 +1748,36 @@
                 name / card name placeholders, card type label.
               </li>
               <li>
-                <strong>Stable key pattern</strong> — stored values remain English
-                slugs/keys (weapon names, cardLabel, runemark IDs) for icon/SVG lookup;
-                translation happens at render time only.
-              </li>
-              <li>
                 <strong>Custom card type option</strong> — "Custom…" sentinel in Type
                 select; reveals free-text input with 30-char limit and live counter.
-              </li>
-              <li>
-                <strong>i18n bug fixes</strong> — activation options (Double/Triple/Quad)
-                now use <code>t('card.activation-*')</code>; card name placeholder
-                wired to <code>t('card.card-name-placeholder')</code>; <code>ui.title</code>
-                and <code>ui.github</code> removed from locale files and made static.
               </li>
               <li>
                 <strong>Landing page pill row</strong> — GitHub link, LangSwitch, and
                 ThemeToggle grouped into one consistent pill row; flex-wrap for mobile.
               </li>
+            </ul>
+            <h3>Faction Data</h3>
+            <ul>
               <li>
-                <strong>5 new subfactions</strong> (placeholder SVGs, <code>svg: null</code>)
-                — Nighthaunt: Drepur's Wraithcreepers, Lady Harrow's Mournflight;
-                Ossiarch Bonereapers: Thanatek's Tithe;
-                Stormcast Sacrosanct Chamber: Ironsoul's Condemnors, Storm of Celestus.
-                Added to <code>hierarchy.ts</code> and both locale files.
+                <strong>Thanatek's Tithe subfaction</strong> — added under Death /
+                Ossiarch Bonereapers in <code>hierarchy.ts</code> and both locale files.
+                SVG optimized from editor source: stripped <code>class</code>,
+                <code>id</code>, and <code>style</code> attributes; normalized
+                <code>viewBox</code> to <code>0 0</code> origin with translate;
+                added <code>width</code>/<code>height="300"</code> and
+                <code>&lt;title&gt;</code>; removed all path <code>id</code>s and
+                redundant <code>fill</code>. Import wired up as <code>dBbThanateksTithe</code>.
               </li>
+              <li>
+                <strong>Removed 4 Underworlds-only factions</strong> — Drepur's
+                Wraithcreepers and Lady Harrow's Mournflight (Nighthaunt);
+                Ironsoul's Condemnors and Storm of Celestus (Stormcast Sacrosanct
+                Chamber). These Warhammer Underworlds warbands are redundant for a
+                Warcry card creator.
+              </li>
+            </ul>
+            <h3>Contributor Docs</h3>
+            <ul>
               <li>
                 <strong>Contributor docs</strong> — <code>src/lib/i18n/README.md</code>
                 expanded with namespace table, TODO convention, RTL note, and what not to
@@ -1865,7 +1896,8 @@
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels</td></tr>
                 <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
                 <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>Updated — dark/light mode labels via <code>t()</code></td></tr>
-                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — 5 new subfaction entries with <code>svg: null</code></td></tr>
+                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — Thanatek's Tithe entry wired to <code>dBbThanateksTithe</code>; 4 Underworlds subfactions removed (Drepur's Wraithcreepers, Lady Harrow's Mournflight, Ironsoul's Condemnors, Storm of Celestus)</td></tr>
+                <tr><td><code>src/lib/runemarks/svg/factions-death-bladeborn-thanateks-tithe.svg</code></td><td>New — optimized runemark SVG (Death / Ossiarch Bonereapers)</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Updated — all landing page text, LangSwitch added; title/GitHub made static; pill row (LangSwitch + ThemeToggle + GitHub), mobile flex-wrap</td></tr>
                 <tr><td><code>src/routes/+layout.svelte</code></td><td>Updated — <code>i18n.init()</code> in <code>onMount</code></td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header</td></tr>
@@ -5152,38 +5184,23 @@
               >
               What Was Built
             </h2>
-            <div class="tree">
-              <span class="tree-dir">src/</span>
-              <span class="tree-dir">lib/</span>
-              <span class="tree-file">types.ts</span>
-              <span class="tree-note"
-                >— all TS interfaces (FighterCardData, AbilityCardData, Weapon,
-                …)</span
-              >
-              <span class="tree-file">index.ts</span>
-              <span class="tree-dir">assets/</span>
-              <span class="tree-dir">routes/</span>
-              <span class="tree-file">+layout.svelte</span>
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— landing page</span>
-              <span class="tree-dir">fighter/</span>
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— stub</span>
-              <span class="tree-dir">ability/</span>
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— stub</span>
-              <span class="tree-file">app.css</span>
-              <span class="tree-note"
-                >— Tailwind import + @font-face (rodchenkoctt)</span
-              >
-              <span class="tree-file">static/fonts/</span>
-              <span class="tree-note">— empty, awaiting font files</span>
-              <span class="tree-file">Makefile</span>
-              <span class="tree-note"
-                >— make dev/build/preview (Herd Node v22)</span
-              >
-              <span class="tree-file">CLAUDE.md</span>
-            </div>
+            <div class="tree"><span class="tree-dir">src/</span>
+├── <span class="tree-dir">lib/</span>
+│   ├── <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, AbilityCardData, Weapon, …)</span>
+│   ├── <span class="tree-file">index.ts</span>
+│   └── <span class="tree-dir">assets/</span>
+├── <span class="tree-dir">routes/</span>
+│   ├── <span class="tree-file">+layout.svelte</span>
+│   ├── <span class="tree-file">+page.svelte</span>      <span class="tree-note">— landing page</span>
+│   ├── <span class="tree-dir">fighter/</span>
+│   │   └── <span class="tree-file">+page.svelte</span>  <span class="tree-note">— stub</span>
+│   └── <span class="tree-dir">ability/</span>
+│       └── <span class="tree-file">+page.svelte</span>  <span class="tree-note">— stub</span>
+└── <span class="tree-file">app.css</span>               <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
+<span class="tree-dir">static/</span>
+└── <span class="tree-dir">fonts/</span>                  <span class="tree-note">— empty, awaiting font files</span>
+<span class="tree-file">Makefile</span>                  <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
+<span class="tree-file">CLAUDE.md</span></div>
           </section>
 
           <section id="march-11-decisions" data-nav="Key Decisions">
