@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { theme } from '$lib/theme.svelte';
+	import { t } from '$lib/i18n/index.svelte';
 </script>
 
 <button
 	onclick={() => theme.toggle()}
 	class="toggle"
-	aria-label={theme.dark ? 'Switch to light mode' : 'Switch to dark mode'}
+	aria-label={theme.dark ? t('ui.light-mode') : t('ui.dark-mode')}
 >
 	{#if theme.dark}
 		<!-- Sun -->
@@ -20,13 +21,13 @@
 			<line x1="3.1" y1="12.9" x2="4.4" y2="11.6"/>
 			<line x1="11.6" y1="4.4" x2="12.9" y2="3.1"/>
 		</svg>
-		<span>Light mode</span>
+		<span>{t('ui.light-mode')}</span>
 	{:else}
 		<!-- Moon -->
 		<svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
 			<path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a.5.5 0 0 0-.6-.6A6.5 6.5 0 1 0 14.1 11.1a.5.5 0 0 0-.6-.6z"/>
 		</svg>
-		<span>Dark mode</span>
+		<span>{t('ui.dark-mode')}</span>
 	{/if}
 </button>
 

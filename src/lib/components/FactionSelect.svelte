@@ -2,23 +2,28 @@
 	import { hierarchy } from '$lib/runemarks/index';
 	import type { AllianceEntry, FactionEntry } from '$lib/runemarks/hierarchy';
 	import type { FighterCardData } from '$lib/types';
+	import { t } from '$lib/i18n/index.svelte';
 
 	let { data }: { data: FighterCardData } = $props();
 
 	let search = $state('');
+
+	function tAlliance(id: string) { return t(`alliances.${id}`); }
+	function tFaction(id: string)  { return t(`factions.${id}`); }
+	function tSubfaction(id: string) { return t(`subfactions.${id}`); }
 
 	function computeFiltered(q: string): AllianceEntry[] {
 		const lc = q.trim().toLowerCase();
 		if (!lc) return hierarchy;
 		return hierarchy
 			.map(alliance => {
-				const allianceMatch = alliance.label.toLowerCase().includes(lc);
+				const allianceMatch = tAlliance(alliance.id).toLowerCase().includes(lc);
 				const factions = alliance.factions
 					.map(faction => {
-						const factionMatch = faction.label.toLowerCase().includes(lc);
+						const factionMatch = tFaction(faction.id).toLowerCase().includes(lc);
 						const subfactions = (allianceMatch || factionMatch)
 							? faction.subfactions
-							: faction.subfactions.filter(sf => sf.label.toLowerCase().includes(lc));
+							: faction.subfactions.filter(sf => tSubfaction(sf.id).toLowerCase().includes(lc));
 						if (allianceMatch || factionMatch || subfactions.length > 0) {
 							return { ...faction, subfactions } as FactionEntry;
 						}
@@ -32,10 +37,10 @@
 
 	const filtered = $derived(computeFiltered(search));
 
-	function select(alliance: string, faction: string, subfaction = '') {
-		data.grandAlliance = alliance;
-		data.faction = faction;
-		data.bladeborn = subfaction;
+	function select(allianceId: string, factionId: string, subfactionId = '') {
+		data.grandAlliance = allianceId;
+		data.faction = factionId;
+		data.bladeborn = subfactionId;
 	}
 
 	function clear() {
@@ -47,11 +52,11 @@
 
 	const selectionLabel = $derived(
 		data.bladeborn
-			? `${data.faction} › ${data.bladeborn}`
+			? `${tFaction(data.faction)} › ${tSubfaction(data.bladeborn)}`
 			: data.faction
-				? `${data.grandAlliance} › ${data.faction}`
+				? `${tAlliance(data.grandAlliance)} › ${tFaction(data.faction)}`
 				: data.grandAlliance
-					? data.grandAlliance
+					? tAlliance(data.grandAlliance)
 					: ''
 	);
 </script>
@@ -67,7 +72,7 @@
 	<input
 		class="search-input"
 		type="text"
-		placeholder="Filter factions…"
+		placeholder={t('ui.filter-factions')}
 		bind:value={search}
 	/>
 
@@ -75,31 +80,31 @@
 		{#each filtered as alliance}
 			<button
 				class="alliance-header"
-				class:selected={data.grandAlliance === alliance.label && !data.faction}
-				onclick={() => select(alliance.label, '')}
-			>{alliance.label}</button>
+				class:selected={data.grandAlliance === alliance.id && !data.faction}
+				onclick={() => select(alliance.id, '')}
+			>{tAlliance(alliance.id)}</button>
 			{#each alliance.factions as faction}
 				<button
 					class="faction-row"
-					class:selected={data.faction === faction.label && data.grandAlliance === alliance.label && !data.bladeborn}
-					onclick={() => select(alliance.label, faction.label)}
+					class:selected={data.faction === faction.id && data.grandAlliance === alliance.id && !data.bladeborn}
+					onclick={() => select(alliance.id, faction.id)}
 				>
-					{faction.label}
+					{tFaction(faction.id)}
 				</button>
 				{#each faction.subfactions as sf}
 					<button
 						class="subfaction-row"
-						class:selected={data.bladeborn === sf.label && data.faction === faction.label}
-						onclick={() => select(alliance.label, faction.label, sf.label)}
+						class:selected={data.bladeborn === sf.id && data.faction === faction.id}
+						onclick={() => select(alliance.id, faction.id, sf.id)}
 					>
-						{sf.label}
+						{tSubfaction(sf.id)}
 					</button>
 				{/each}
 			{/each}
 		{/each}
 
 		{#if filtered.length === 0}
-			<p class="empty">No matches for "{search}"</p>
+			<p class="empty">{t('ui.no-matches', { query: search })}</p>
 		{/if}
 	</div>
 </div>

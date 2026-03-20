@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
 	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
@@ -34,7 +35,7 @@
 				<img class="model-img" src={data.modelImage} alt="Fighter" style="object-position: {data.imageOffsetX}% {data.imageOffsetY}%; transform: scale({data.imageZoom}); transform-origin: {data.imageOffsetX}% {data.imageOffsetY}%" />
 			{:else}
 				<div class="model-placeholder">
-					<span>Upload model image</span>
+					<span>{t('card.upload-model-image')}</span>
 				</div>
 			{/if}
 		</div>
@@ -42,9 +43,9 @@
 	<div class="image-bottom">
 		{#if !data.showRunemarks}
 			<div class="pills-row">
-				{#if data.grandAlliance}<div class="runemark-pill">{data.grandAlliance}</div>{/if}
-				{#if data.faction}<div class="runemark-pill">{data.faction}</div>{/if}
-				{#if data.bladeborn}<div class="runemark-pill">{data.bladeborn}</div>{/if}
+				{#if data.grandAlliance}<div class="runemark-pill">{t(`alliances.${data.grandAlliance}`)}</div>{/if}
+				{#if data.faction}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
+				{#if data.bladeborn}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
 				{#each data.rightRunemarks as rm}
 					<div class="runemark-pill">{rm.label}</div>
 				{/each}
@@ -78,7 +79,7 @@
 	<div class="parchment">
 		<h1 class="fighter-name">
 			{#if data.isNamedCharacter}<span class="chevron">«</span>{/if}
-			{#each (data.name || 'FIGHTER NAME').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}
+			{#each (data.name || t('card.fighter-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}
 			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
 		</h1>
 		{#if data.subtitle}
@@ -88,11 +89,11 @@
 		<!-- Characteristics box -->
 		<div class="stats-box">
 			<div class="stats-header">
-				<div class="stat-col label-col"><span>BASE</span><span>SIZE</span></div>
-				<div class="stat-col label-col"><span>POINTS</span><span>VALUE</span></div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">MOVE</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">TOUGHNESS</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">WOUNDS</span>{/if}</div>
+				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-base-size').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
+				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-points').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			<div class="stats-values">
 				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
@@ -107,10 +108,10 @@
 		<div class="weapons-box">
 			<div class="weapons-header">
 				<div class="wcol label-col"></div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">RANGE</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">ATTACKS</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">STRENGTH</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">DAMAGE</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			{#each data.weapons as weapon}
 				<div class="weapon-row">
@@ -119,7 +120,7 @@
 							{#if data.showRunemarks && weapon.name}
 								<span class="weapon-runemark">{@html weaponRunemarks[weapon.name]}</span>
 							{:else}
-								<span class="weapon-name" use:fittext={weapon.name}>{weapon.name || '—'}</span>
+								<span class="weapon-name" use:fittext={weapon.name}>{#if weapon.name}{#each t('weapons.' + weapon.name).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}{:else}—{/if}</span>
 							{/if}
 						</div>
 					</div>
@@ -135,9 +136,9 @@
 		{#if data.isMonster}
 			<div class="damage-box">
 				<div class="damage-row">
-					<div class="dcol dcol-wide">* DAMAGE POINTS ALLOCATED</div>
-					<div class="dcol dcol-stat">MOVE</div>
-					<div class="dcol dcol-stat">DAMAGE</div>
+					<div class="dcol dcol-wide">{t('card.col-damage-points-allocated')}</div>
+					<div class="dcol dcol-stat">{t('card.col-move')}</div>
+					<div class="dcol dcol-stat">{t('card.col-damage')}</div>
 				</div>
 				{#each data.damageBrackets.slice(0, 5) as bracket, i}
 					<div class="damage-row" class:damage-row-alt={i % 2 === 0}>
@@ -444,7 +445,7 @@
 		font-size: 18px;
 		font-weight: 400;
 		font-style: normal;
-
+		text-transform: uppercase;
 		text-align: center;
 		background: url('/background.jpg') center center / cover no-repeat;
 		-webkit-background-clip: text;
@@ -543,6 +544,7 @@
 		font-family: 'Germania One', serif;
 		font-weight: 400;
 		font-size: 18px;
+		text-transform: uppercase;
 
 		border: 0;
 		outline: none;
@@ -657,6 +659,7 @@
 		font-family: 'Alegreya', serif;
 		font-size: 17px;
 		font-weight: 400;
+		text-transform: uppercase;
 		color: #000;
 		padding: 0 8px;
 		border: 0;

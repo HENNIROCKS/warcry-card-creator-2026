@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { t } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
 	let { data }: { data: FighterCardData } = $props();
@@ -12,7 +13,7 @@
 		data.rightRunemarks = rmKeys
 			.filter(k => k !== '')
 			.sort((a, b) => priority(a) - priority(b))
-			.map(k => ({ id: k, label: k, svg: fighterRunemarks[k] }));
+			.map(k => ({ id: k, label: t('runemarks.' + k), svg: fighterRunemarks[k] }));
 	});
 
 	function handleImageUpload(e: Event) {
@@ -30,15 +31,15 @@
 <div class="space-y-10 text-sm">
 	<!-- Fighter Name + Subtitle -->
 	<section>
-		<label class="field-label" for="fighter-name">Fighter <span class="normal-case font-normal text-zinc-500">— use | for a line break</span></label>
+		<label class="field-label" for="fighter-name">{t('ui.form-fighter')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
 		<input
 			id="fighter-name"
 			class="field-input"
 			type="text"
 			bind:value={data.name}
-			placeholder="FIGHTER"
+			placeholder={t('ui.form-placeholder-fighter')}
 		/>
-		<label class="field-label mt-2" for="fighter-subtitle">Subtitle <span class="normal-case font-normal text-zinc-500">(optional)</span> <span class="normal-case font-normal text-zinc-500">{(data.subtitle ?? '').length}/120</span></label>
+		<label class="field-label mt-2" for="fighter-subtitle">{t('ui.form-subtitle')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-optional')})</span> <span class="normal-case font-normal text-zinc-500">{(data.subtitle ?? '').length}/120</span></label>
 		<input
 			id="fighter-subtitle"
 			class="field-input"
@@ -52,21 +53,21 @@
 	<section class="flex flex-col gap-3">
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">Named Fighter</span>
+			<span class="text-zinc-120">{t('ui.form-named-fighter')}</span>
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">Monster (Damage Table)</span>
+			<span class="text-zinc-120">{t('ui.form-monster-damage-table')}</span>
 		</label>
 		<label class="flex cursor-pointer items-center gap-3">
 			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">Show Runemarks</span>
+			<span class="text-zinc-120">{t('ui.form-show-runemarks')}</span>
 		</label>
 	</section>
 
 	<!-- Model Image -->
 	<section>
-		<span class="field-label">Model Image</span>
+		<span class="field-label">{t('ui.form-model-image')}</span>
 		{#if data.modelImage}
 			<div class="flex items-center gap-3 mb-3">
 				<img src={data.modelImage} alt="Preview" class="h-16 w-16 rounded object-cover" />
@@ -74,27 +75,27 @@
 					class="text-xs text-zinc-400 underline hover:text-white"
 					onclick={() => (data.modelImage = null)}
 				>
-					Remove
+					{t('ui.form-remove')}
 				</button>
 			</div>
 			<div class="space-y-2">
 				<div class="hidden lg:block space-y-2">
 					<div>
-						<label class="sublabel" for="img-offset-x">Position X <span class="font-normal">(left/right)</span></label>
+						<label class="sublabel" for="img-offset-x">{t('ui.form-position-x')} <span class="font-normal">({t('ui.form-position-x-hint')})</span></label>
 						<input id="img-offset-x" type="range" min="0" max="100" bind:value={data.imageOffsetX} class="w-full accent-red-800" />
 					</div>
 					<div>
-						<label class="sublabel" for="img-offset-y">Position Y <span class="font-normal">(down/up)</span></label>
+						<label class="sublabel" for="img-offset-y">{t('ui.form-position-y')} <span class="font-normal">({t('ui.form-position-y-hint')})</span></label>
 						<input id="img-offset-y" type="range" min="0" max="100" bind:value={data.imageOffsetY} class="w-full accent-red-800" />
 					</div>
 					<div>
-						<label class="sublabel" for="img-zoom">Zoom</label>
+						<label class="sublabel" for="img-zoom">{t('ui.form-zoom')}</label>
 						<input id="img-zoom" type="range" min="1" max="3" step="0.05" bind:value={data.imageZoom} class="w-full accent-red-800" />
 					</div>
 				</div>
 				<p class="lg:hidden text-sm text-zinc-300">Adjust image position and zoom in the <strong class="text-white font-semibold">Preview</strong> tab.</p>
 				<div>
-					<label class="sublabel" for="img-caption">Caption</label>
+					<label class="sublabel" for="img-caption">{t('ui.form-caption')}</label>
 					<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />
 				</div>
 			</div>
@@ -102,7 +103,7 @@
 			<label
 				class="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 bg-zinc-800/50 p-6 transition hover:border-zinc-500"
 			>
-				<span class="text-zinc-300">Click to upload image</span>
+				<span class="text-zinc-300">{t('ui.form-click-to-upload')}</span>
 				<span class="mt-1 text-xs text-zinc-400">PNG, JPG, WebP</span>
 				<input type="file" accept="image/*" class="sr-only" onchange={handleImageUpload} />
 			</label>
@@ -111,10 +112,10 @@
 
 	<!-- Runemarks -->
 	<section>
-		<p class="field-label mb-2">Runemarks</p>
+		<p class="field-label mb-2">{t('ui.form-runemarks')}</p>
 		<FactionSelect {data} />
 		<div class="mt-3">
-			<p class="sublabel mb-1">Fighter Runemarks</p>
+			<p class="sublabel mb-1">{t('ui.form-fighter-runemarks')}</p>
 			<div class="flex flex-col gap-2">
 				{#each [0, 1, 2] as i}
 					<select class="field-input" bind:value={rmKeys[i]}>
@@ -124,7 +125,7 @@
 								(rmKeys[i] !== name && rmKeys.some((k, j) => j !== i && k === name)) ||
 								(name === 'Monster' && rmKeys.some(k => k === 'Hero')) ||
 								(name === 'Hero' && rmKeys.some(k => k === 'Monster'))
-							}>{name}</option>
+							}>{t('runemarks.' + name)}</option>
 						{/each}
 					</select>
 				{/each}
@@ -134,10 +135,10 @@
 
 	<!-- Characteristics -->
 	<section>
-		<p class="field-label mb-2">Characteristics</p>
+		<p class="field-label mb-2">{t('ui.form-characteristics')}</p>
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 			<div>
-				<label class="sublabel" for="baseSize">Base Size</label>
+				<label class="sublabel" for="baseSize">{t('ui.form-base-size')}</label>
 				<select id="baseSize" class="field-input text-center" style="text-align-last: center" bind:value={data.baseSize}>
 					<option>⌀ 20</option>
 					<option>⌀ 25</option>
@@ -163,11 +164,11 @@
 				</select>
 			</div>
 			<div>
-				<label class="sublabel" for="points">Points Value</label>
+				<label class="sublabel" for="points">{t('ui.form-points-value')}</label>
 				<input id="points" class="field-input text-center" placeholder="—" bind:value={data.points} />
 			</div>
 			<div>
-				<label class="sublabel" for="move">Move</label>
+				<label class="sublabel" for="move">{t('ui.form-move')}</label>
 				{#if data.isMonster}
 					<input id="move" class="field-input text-center opacity-40 cursor-not-allowed" value="*" disabled />
 				{:else}
@@ -175,11 +176,11 @@
 				{/if}
 			</div>
 			<div>
-				<label class="sublabel" for="toughness">Toughness</label>
+				<label class="sublabel" for="toughness">{t('ui.form-toughness')}</label>
 				<input id="toughness" class="field-input text-center" placeholder="—" bind:value={data.toughness} />
 			</div>
 			<div>
-				<label class="sublabel" for="wounds">Wounds</label>
+				<label class="sublabel" for="wounds">{t('ui.form-wounds')}</label>
 				<input id="wounds" class="field-input text-center" placeholder="—" bind:value={data.wounds} />
 			</div>
 		</div>
@@ -188,45 +189,31 @@
 	<!-- Weapons -->
 	{#each data.weapons as weapon, i}
 		<section>
-			<p class="field-label mb-2">Weapon {i + 1}</p>
+			<p class="field-label mb-2">{t('ui.form-weapon', { n: String(i + 1) })}</p>
 			<div class="grid grid-cols-3 gap-2 sm:grid-cols-5">
 				<div>
-					<span class="sublabel">Type</span>
+					<span class="sublabel">{t('ui.form-type')}</span>
 					<select class="field-input text-center" style="text-align-last: center" bind:value={weapon.name}>
 						<option value="">—</option>
-						<option value="Axe">Axe</option>
-						<option value="Bident">Bident</option>
-						<option value="Blast">Blast</option>
-						<option value="Claws">Claws</option>
-						<option value="Club">Club</option>
-						<option value="Dagger">Dagger</option>
-						<option value="Fangs">Fangs</option>
-						<option value="Hammer">Hammer</option>
-						<option value="Hook">Hook</option>
-						<option value="Mace">Mace</option>
-						<option value="Pistol">Pistol</option>
-						<option value="Ranged Weapon">Ranged Weapon</option>
-						<option value="Reach Weapon">Reach Weapon</option>
-						<option value="Scythe">Scythe</option>
-						<option value="Spear">Spear</option>
-						<option value="Sword">Sword</option>
-						<option value="Unarmed">Unarmed</option>
+						{#each ['Axe','Bident','Blast','Claws','Club','Dagger','Fangs','Hammer','Hook','Mace','Pistol','Ranged Weapon','Reach Weapon','Scythe','Spear','Sword','Unarmed'] as w}
+							<option value={w}>{t(`weapons.${w}`).replaceAll('|', '')}</option>
+						{/each}
 					</select>
 				</div>
 				<div>
-					<span class="sublabel">Range</span>
+					<span class="sublabel">{t('ui.form-range')}</span>
 					<input class="field-input text-center" bind:value={weapon.range} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Attacks</span>
+					<span class="sublabel">{t('ui.form-attacks')}</span>
 					<input class="field-input text-center" bind:value={weapon.attacks} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Strength</span>
+					<span class="sublabel">{t('ui.form-strength')}</span>
 					<input class="field-input text-center" bind:value={weapon.strength} placeholder="—" />
 				</div>
 				<div>
-					<span class="sublabel">Damage</span>
+					<span class="sublabel">{t('ui.form-damage')}</span>
 					{#if data.isMonster}
 						<input class="field-input text-center opacity-40 cursor-not-allowed" value={!weapon.range && !weapon.attacks && !weapon.strength ? '—' : '*/*'} disabled />
 					{:else}
@@ -240,12 +227,12 @@
 	<!-- Damage brackets -->
 	{#if data.isMonster}
 		<section>
-			<p class="field-label mb-2">Damage Table</p>
+			<p class="field-label mb-2">{t('ui.form-damage-table')}</p>
 			<div class="space-y-2">
 				<div class="grid grid-cols-3 gap-1">
-					<span class="sublabel">Damage Points Allocated</span>
-					<span class="sublabel">Move</span>
-					<span class="sublabel">Damage</span>
+					<span class="sublabel">{t('ui.form-damage-points-allocated')}</span>
+					<span class="sublabel">{t('ui.form-move')}</span>
+					<span class="sublabel">{t('ui.form-damage')}</span>
 				</div>
 				{#each data.damageBrackets as bracket}
 					<div class="grid grid-cols-3 gap-1 items-center">

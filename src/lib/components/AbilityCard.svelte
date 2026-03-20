@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { AbilityCardData } from '$lib/types';
 	import { getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
@@ -9,17 +10,18 @@
 
 	let { data, printerFriendly = false }: { data: AbilityCardData; printerFriendly?: boolean } = $props();
 
+	const presetSlugs = new Set(['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact']);
+
+	function resolveCardLabel(label: string): string {
+		return presetSlugs.has(label) ? t('card.label-' + label) : label;
+	}
+
 	function parseMarkup(text: string): string {
 		return text
 			.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 			.replace(/\*(.+?)\*/g, '<em>$1</em>');
 	}
 
-	const activationLabels: Record<string, string> = {
-		double: 'DOUBLE',
-		triple: 'TRIPLE',
-		quad: 'QUAD',
-	};
 </script>
 
 <div class="card" class:is-printer-friendly={printerFriendly}>
@@ -61,7 +63,7 @@
 				{#if data.activationType}
 					<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
 						<div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
-							<span class="activation-text">{activationLabels[data.activationType]}</span>
+							<span class="activation-text">{t(`card.activation-${data.activationType}`)}</span>
 						</div>
 					</div>
 				{/if}
@@ -70,21 +72,21 @@
 
 		{#if !data.showRunemarks}
 			<div class="pills-row">
-				{#if data.grandAlliance}<div class="runemark-pill">{data.grandAlliance}</div>{/if}
-				{#if data.faction}<div class="runemark-pill">{data.faction}</div>{/if}
-				{#if data.bladeborn}<div class="runemark-pill">{data.bladeborn}</div>{/if}
+				{#if data.grandAlliance}<div class="runemark-pill">{t(`alliances.${data.grandAlliance}`)}</div>{/if}
+				{#if data.faction}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
+				{#if data.bladeborn}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
 				{#each data.fighterRunemarks as rm}
 					<div class="runemark-pill">{rm.label}</div>
 				{/each}
 				{#if data.activationType}
-					<div class="runemark-pill">{activationLabels[data.activationType]}</div>
+					<div class="runemark-pill">{t(`card.activation-${data.activationType}`)}</div>
 				{/if}
 			</div>
 		{/if}
 
 		<div class="card-type-area">
 			{#if data.cardLabel}
-				<div class="card-label-text">{data.cardLabel}</div>
+				<div class="card-label-text">{resolveCardLabel(data.cardLabel)}</div>
 			{/if}
 		</div>
 
@@ -99,7 +101,7 @@
 
 	<!-- PARCHMENT -->
 	<div class="parchment">
-		<h1 class="ability-name">{#each (data.name || 'CARD NAME').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
+		<h1 class="ability-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
 		{#if data.flavorText}
 			<p class="flavor-text">{data.flavorText}</p>
 		{/if}

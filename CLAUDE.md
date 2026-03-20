@@ -24,6 +24,7 @@ make preview   # preview production build
 ```
 
 Or directly with the correct Node:
+
 ```bash
 PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/bin:$PATH" npm run dev
 ```
@@ -31,40 +32,49 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 ## Architecture
 
 ### Routes
+
 - `/` — landing page, links to both card editors
 - `/fighter` — fighter card editor
 - `/ability` — ability card editor
 
 ### Key files
+
 - `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `AbilityCardData`, `Weapon`, `Runemark`, etc.)
 - `src/app.css` — global styles, Tailwind import, custom font declarations
 - `static/fonts/` — self-hosted font files and license texts
 
 ### Card rendering approach
+
 Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-image-more` at 2× scale for crisp PNGs. This means card visual components are regular Svelte components styled with CSS — no coordinate math.
 
 ### Card structure
+
 **Fighter card** (portrait ~600×940px preview):
+
 - Top ~55%: model image area with runemarks overlaid at left/right columns (up to 3 each side)
 - Torn paper edge divider (SVG mask)
 - Bottom ~45%: parchment area — fighter name, characteristics table, weapons table
 - If `isMonster: true`: damage bracket table appended below weapons
 
 **Ability card** (portrait, same ratio):
+
 - Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (ABILITY / HEROIC TRAIT / BATTLE TRAIT / REACTION)
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, optional italic flavor text, body text
 
 ### Fonts
+
 - **Germania One** (`static/fonts/GermaniaOne-Regular.ttf`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
 - **Alegreya** (`static/fonts/Alegreya-Regular.ttf` + `Alegreya-Italic.ttf`, family `'Alegreya'`, SIL OFL) — damage table, ability card body/flavor text
 
 ### Background / textures
+
 - Parchment texture: `static/background.jpg` applied to `.card` (full card coverage)
 - Dark header / stat tables: `#5a0a14`
 - Table value rows and parchment section are transparent so the texture shows through
 
 ### Runemark library
+
 SVGs live in `src/lib/runemarks/svg/` (not yet populated). Library metadata in `src/lib/runemarks/index.ts`. Will be sourced from the public domain SVGs in the previous project (HENNIROCKS/warcry-card-creator on GitHub, master branch, `runemarks/` directory).
 
 ## Code style
@@ -74,6 +84,7 @@ SVGs live in `src/lib/runemarks/svg/` (not yet populated). Library metadata in `
 - **On-touch cleanup**: when editing any file, also fix incremental-accumulation artifacts in that file — unsorted imports, duplicate or `(additional)`-suffixed section headers, unnecessary quotes. Do not audit unrelated files speculatively.
 
 ## Workflow preferences
+
 - Explain plan before making changes. Wait for confirmation.
 - At session start, consult `docs/index.html` for prior decisions.
 - When asked to "document the session", append a new session panel to `docs/index.html`. Do NOT create separate session files.
@@ -90,6 +101,7 @@ Single-file, multi-session format. All sessions live in one file with a sidebar 
 **Session IDs** use `march-DD` format (e.g. `march-12`). Panel element: `id="session-march-DD"`. Section IDs inside: `march-DD-sectionname`.
 
 **Adding a session:**
+
 1. Add a `<button class="session-btn" data-session="march-DD">` entry at the top of the `#session-list` ul (newest first).
 2. Add the panel `<div id="session-march-DD" class="session-panel">` before the previous session's panel.
 3. Add the new ID at the front of `const sessions = [...]` in the script block.
@@ -98,6 +110,7 @@ Single-file, multi-session format. All sessions live in one file with a sidebar 
 **Every `<section>` inside a panel must have both** `id="march-DD-sectionname"` and `data-nav="Label"` attributes — `data-nav` populates the sidebar nav.
 
 **Standard panel structure:**
+
 - Hero: date badge (`badge-blue`) + exactly 3 `badge-green` badges (short noun phrases, never "Done") + title + one-line summary
 - **What Was Built** — `<h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>` + `<ul>`
 - **Key Decisions** — `<h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>` + `<div class="decision">` blocks (`.decision-q` / `.decision-a`)
