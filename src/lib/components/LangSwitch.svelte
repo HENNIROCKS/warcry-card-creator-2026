@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { i18n, availableLocales, t } from '$lib/i18n/index.svelte';
 
-	const NEW_LANG_URL = 'https://github.com/HENNIROCKS/warcry-card-creator-2026/issues/new';
+	const NEW_LANG_URL = 'https://github.com/HENNIROCKS/warcry-card-creator-2026/issues/new?template=new_language.md';
 
 	function handleChange(e: Event) {
 		const val = (e.target as HTMLSelectElement).value;
