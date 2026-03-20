@@ -342,7 +342,9 @@ export const hierarchy: AllianceEntry[] = [
 				id: 'nighthaunt',
 				label: 'Nighthaunt', svg: dNighthaunt,
 				subfactions: [
-					{ id: 'headmans-curse',           label: "The Headman's Curse",       svg: dBbHeadmansCurse },
+					{ id: 'drepurs-wraithcreepers',    label: "Drepur's Wraithcreepers",   svg: null },
+					{ id: 'headmans-curse',            label: "The Headman's Curse",       svg: dBbHeadmansCurse },
+					{ id: 'lady-harrows-mournflight',  label: "Lady Harrow's Mournflight", svg: null },
 					{ id: 'thorns-of-the-briar-queen', label: 'Thorns of the Briar Queen', svg: dBbThornsOfBriarQueen },
 				],
 			},
@@ -352,6 +354,7 @@ export const hierarchy: AllianceEntry[] = [
 				label: 'Ossiarch Bonereapers', svg: dOssiarchBonereapers,
 				subfactions: [
 					{ id: 'kainans-reapers', label: "Kainan's Reapers", svg: dBbKainansReavers },
+					{ id: 'thanateks-tithe', label: "Thanatek's Tithe",  svg: null },
 				],
 			},
 			{ id: 'ossiarch-bonereapers-teratic-cohort',      label: 'Ossiarch Bonereapers: Teratic Cohort',     svg: dTeraticCohort,     subfactions: [] },
@@ -514,7 +517,9 @@ export const hierarchy: AllianceEntry[] = [
 				id: 'stormcast-eternals-sacrosanct-chamber',
 				label: 'Stormcast Eternals: Sacrosanct Chamber', svg: oStormcastSacrosanctChamber,
 				subfactions: [
-					{ id: 'stormsires-cursebreakers', label: "Stormsire's Cursebreakers", svg: oBbStormsiresCursebreakers },
+					{ id: 'ironsouls-condemnors',     label: "Ironsoul's Condemnors",     svg: null },
+					{ id: 'storm-of-celestus',        label: 'Storm of Celestus',          svg: null },
+					{ id: 'stormsires-cursebreakers', label: "Stormsire's Cursebreakers",  svg: oBbStormsiresCursebreakers },
 				],
 			},
 			{ id: 'stormcast-eternals-the-blacktalons',  label: 'Stormcast Eternals: The Blacktalons',  svg: oTheBlacktalons,       subfactions: [] },
