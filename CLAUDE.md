@@ -58,7 +58,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 
 **Ability card** (portrait, same ratio):
 
-- Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (ABILITY / HEROIC TRAIT / BATTLE TRAIT / REACTION)
+- Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (preset slugs: ability, reaction, heroic-trait, battle-trait, lesser-artefact, greater-artefact, divine-blessing — or custom text)
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, optional italic flavor text, body text
 
