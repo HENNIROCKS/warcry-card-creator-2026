@@ -55,4 +55,6 @@ export interface AbilityCardData {
 	showRunemarks: boolean;
 	flavorText: string;         // italic block, shown above bodyText if non-empty
 	bodyText: string;
+	regularPointsValue?: number; // shown on divine-blessings cards
+	elitePointsValue?: number;   // shown on divine-blessings cards
 }

@@ -9,7 +9,7 @@
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
 
-	const presetLabels = ['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact'];
+	const presetLabels = ['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact', 'divine-blessing'];
 	let selectValue = $state(presetLabels.includes(data.cardLabel) ? data.cardLabel : '__custom__');
 	let customText = $state(presetLabels.includes(data.cardLabel) ? '' : data.cardLabel);
 
@@ -46,6 +46,7 @@
 			<option value="reaction">{t('card.label-reaction')}</option>
 			<option value="heroic-trait">{t('card.label-heroic-trait')}</option>
 			<option value="battle-trait">{t('card.label-battle-trait')}</option>
+			<option value="divine-blessing">{t('card.label-divine-blessing')}</option>
 			<option value="lesser-artefact">{t('card.label-lesser-artefact')}</option>
 			<option value="greater-artefact">{t('card.label-greater-artefact')}</option>
 			<option value="__custom__">{t('ui.form-custom')}</option>
@@ -71,6 +72,33 @@
 			placeholder={t('card.card-name-placeholder')}
 			bind:value={data.name}
 		/>
+	</section>
+
+	<!-- Divine Blessing Points -->
+	{#if selectValue === 'divine-blessing'}
+	<section>
+		<div class="points-row">
+			<div class="points-field">
+				<label class="field-label" for="regular-points">{t('ui.form-regular-points')}</label>
+				<input id="regular-points" class="field-input" type="text" placeholder="15" bind:value={data.regularPointsValue} />
+			</div>
+			<div class="points-field">
+				<label class="field-label" for="elite-points">{t('ui.form-elite-points')}</label>
+				<input id="elite-points" class="field-input" type="text" placeholder="20" bind:value={data.elitePointsValue} />
+			</div>
+		</div>
+	</section>
+	{/if}
+
+	<!-- Activation -->
+	<section>
+		<label class="field-label" for="activation">{t('ui.form-activation')}</label>
+		<select id="activation" class="field-input" bind:value={data.activationType}>
+			<option value={null}>—</option>
+			<option value="double">{t('card.activation-double')}</option>
+			<option value="triple">{t('card.activation-triple').replaceAll('|', '')}</option>
+			<option value="quad">{t('card.activation-quad').replaceAll('|', '')}</option>
+		</select>
 	</section>
 
 	<!-- Show Runemarks -->
@@ -103,18 +131,6 @@
 			</div>
 		</div>
 	</section>
-
-	<!-- Activation -->
-	<section>
-		<label class="field-label" for="activation">{t('ui.form-activation')}</label>
-		<select id="activation" class="field-input" bind:value={data.activationType}>
-			<option value={null}>—</option>
-			<option value="double">{t('card.activation-double')}</option>
-			<option value="triple">{t('card.activation-triple').replaceAll('|', '')}</option>
-			<option value="quad">{t('card.activation-quad').replaceAll('|', '')}</option>
-		</select>
-	</section>
-
 
 	<!-- Flavor Text -->
 	<section>
@@ -161,6 +177,15 @@
 		font-size: 0.65rem;
 		color: var(--ui-field-label);
 		margin-bottom: 2px;
+	}
+
+	.points-row {
+		display: flex;
+		gap: 12px;
+	}
+
+	.points-field {
+		flex: 1;
 	}
 
 	.markup-toolbar {

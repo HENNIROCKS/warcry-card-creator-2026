@@ -10,7 +10,7 @@
 
 	let { data, printerFriendly = false }: { data: AbilityCardData; printerFriendly?: boolean } = $props();
 
-	const presetSlugs = new Set(['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact']);
+	const presetSlugs = new Set(['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact', 'divine-blessing']);
 
 	function resolveCardLabel(label: string): string {
 		return presetSlugs.has(label) ? t('card.label-' + label) : label;
@@ -102,6 +102,18 @@
 	<!-- PARCHMENT -->
 	<div class="parchment">
 		<h1 class="ability-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
+		{#if data.cardLabel === 'divine-blessing'}
+			<div class="points-table">
+				<div class="points-row">
+					<div class="points-label">{t('card.points-regular')}</div>
+					<div class="points-value">{data.regularPointsValue ?? 15}</div>
+				</div>
+				<div class="points-row points-row-bottom">
+					<div class="points-label">{t('card.points-elite')}</div>
+					<div class="points-value">{data.elitePointsValue ?? 20}</div>
+				</div>
+			</div>
+		{/if}
 		{#if data.flavorText}
 			<p class="flavor-text">{data.flavorText}</p>
 		{/if}
@@ -336,6 +348,55 @@
 		background: transparent;
 	}
 
+	/* ── POINTS TABLE ───────────────────────────── */
+
+	.points-table {
+		display: flex;
+		flex-direction: column;
+		border-radius: 7.5px;
+		overflow: hidden;
+		width: 100%;
+		border: 0;
+		outline: none;
+		background: transparent;
+		box-shadow: 0 0 0 1px #5a0a14;
+	}
+
+	.points-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 5px 12px;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.points-row-bottom {
+		box-shadow: inset 0 1px 0 0 #5a0a14;
+	}
+
+	.points-label {
+		font-family: 'Alegreya', serif;
+		font-size: 16px;
+		font-weight: 400;
+		color: #3a2a1a;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.points-value {
+		font-family: 'Germania One', serif;
+		font-weight: 400;
+		font-size: 22px;
+		color: #000;
+		line-height: 1.1;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
 	/* ── PRINTER-FRIENDLY ───────────────────────── */
 
 	.is-printer-friendly {
@@ -379,6 +440,18 @@
 	.is-printer-friendly .ability-name,
 	.is-printer-friendly .flavor-text,
 	.is-printer-friendly .body-text {
+		color: #000;
+	}
+
+	.is-printer-friendly .points-table {
+		box-shadow: 0 0 0 1px #000;
+	}
+
+	.is-printer-friendly .points-row-bottom {
+		box-shadow: inset 0 1px 0 0 #000;
+	}
+
+	.is-printer-friendly .points-label {
 		color: #000;
 	}
 

@@ -49,6 +49,8 @@
 		showRunemarks: true,
 		flavorText: '',
 		bodyText: '',
+		regularPointsValue: undefined,
+		elitePointsValue: undefined,
 	});
 
 	function makeSlug() {
