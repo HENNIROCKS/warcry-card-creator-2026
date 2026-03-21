@@ -1708,6 +1708,11 @@
               reactively on locale change. Code quality pass fixed a structural typing bug
               in <code>FactionSelect</code>, a redundant code path in
               <code>computeFiltered</code>, and stale comments in CLAUDE.md and types.ts.
+              Follow-up: the points table was restructured with a proper header row
+              ("Fighter Wounds" / "Points Cost Increase"), threshold qualifiers on the
+              row labels (≤ 22 / ≥ 23), and restyled to match the fighter card table
+              pattern — dark maroon header, <code>border: 1px solid</code>, inner
+              border-radius on the header row.
             </p>
           </div>
 
@@ -1716,15 +1721,21 @@
               <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
               What Was Built
             </h2>
+            <h3>Divine Blessing &amp; Locale Sorting</h3>
             <ul>
-              <li><strong>Divine Blessing card type</strong> — new preset slug <code>divine-blessing</code>; German: "Göttliche Segen"; added to both form select and card <code>presetSlugs</code></li>
+              <li><strong>Divine Blessing card type</strong> — new preset slug <code>divine-blessing</code>; German: "Göttlicher Segen"; added to both form select and card <code>presetSlugs</code></li>
               <li><strong>Points value fields</strong> — <code>regularPointsValue</code> and <code>elitePointsValue</code> added to <code>AbilityCardData</code>; form inputs appear conditionally below Card Name when Divine Blessing is selected</li>
-              <li><strong>Points table on card</strong> — horizontal rows (label left, value right), <code>box-shadow: 0 0 0 1px #5a0a14</code> border, 7.5px rounded corners, inset divider; printer-friendly overrides switch all colours to <code>#000</code></li>
               <li><strong>Form field order</strong> — Activation moved below Card Name and Points section, before Runemarks; Divine Blessing positioned before Lesser Artefact in the type dropdown</li>
               <li><strong>Locale-aware sorting</strong> — <code>FactionSelect</code> sorts alliances, factions, and subfactions; <code>FighterForm</code> and <code>AbilityForm</code> sort weapon types and fighter runemarks — all via <code>localeCompare(b, i18n.code)</code> in <code>$derived</code></li>
               <li><strong>FactionSelect refactor</strong> — extracted <code>sortAll()</code> for the no-search path; eliminated redundant <code>!lc</code> guard branches inside the filter map</li>
               <li><strong>FactionSelect type fix</strong> — replaced <code>FighterCardData</code> import with a structural prop type <code>{ grandAlliance, faction, bladeborn }</code>, making it correctly usable with both card types</li>
               <li><strong>Info file cleanup</strong> — stale <code>cardLabel</code> comment in <code>types.ts</code>; ability card label list in <code>CLAUDE.md</code>; march-20 locale sorting pending item marked Done</li>
+            </ul>
+            <h3>Points Table Refinements</h3>
+            <ul>
+              <li><strong>Header row</strong> — restructured divine blessing table with a dark maroon header row ("Fighter Wounds" / "Points Cost Increase") styled like the fighter stat table; row labels shortened to "Regular (≤ 22)" and "Elite (≥ 23)"</li>
+              <li><strong>Border approach</strong> — switched from <code>box-shadow: 0 0 0 1px</code> to <code>border: 1px solid #5a0a14</code> + <code>border-radius: 6.5px 6.5px 0 0</code> on the inner header row, matching the fighter table pattern; removed <code>overflow: hidden</code></li>
+              <li><strong>i18n additions</strong> — added <code>points-col-wounds</code> ("Fighter Wounds" / "Lebenspunkte des Kämpfers") and <code>points-col-cost</code> ("Points Cost Increase" / "Punktwertzuschlag"); shortened <code>points-regular</code> / <code>points-elite</code> to just "Regular" / "Elite"</li>
             </ul>
           </section>
 
@@ -1734,8 +1745,8 @@
               Key Decisions
             </h2>
             <div class="decision">
-              <div class="decision-q">Why <code>box-shadow</code> for the points table border rather than CSS <code>border</code>?</div>
-              <div class="decision-a"><code>border-radius</code> on an element with <code>border: 1px</code> works in-browser but is unreliable in <code>dom-to-image-more</code>'s foreignObject serialiser — the border can disappear or render square. <code>box-shadow: 0 0 0 1px</code> renders as a painted layer that survives the export pipeline correctly, matching the pattern already used elsewhere on the fighter card.</div>
+              <div class="decision-q">Why change the points table border from <code>box-shadow</code> to <code>border: 1px solid</code>?</div>
+              <div class="decision-a">Initially used <code>box-shadow: 0 0 0 1px</code> as a workaround for suspected export fidelity issues with <code>border-radius</code> + <code>border</code> in <code>dom-to-image-more</code>. On review, the fighter card's <code>.stats-box</code> and <code>.weapons-box</code> already use <code>border: 1px solid #5a0a14</code> successfully in exports. Switching to the same pattern gives a proper header row with matching inner border-radius (6.5px inside the 7.5px outer) without needing <code>overflow: hidden</code>.</div>
             </div>
             <div class="decision">
               <div class="decision-q">Why <code>$derived</code> for sorted weapon/runemark lists rather than sorting once at module load?</div>
@@ -1756,10 +1767,10 @@
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
                 <tr><td><code>src/lib/types.ts</code></td><td>Added <code>regularPointsValue?</code> and <code>elitePointsValue?</code> to <code>AbilityCardData</code>; updated stale <code>cardLabel</code> comment</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>label-divine-blessing</code>, <code>points-regular</code>, <code>points-elite</code>, <code>form-regular-points</code>, <code>form-elite-points</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same keys in German</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>label-divine-blessing</code>, <code>points-regular</code>, <code>points-elite</code>, <code>form-regular-points</code>, <code>form-elite-points</code>; added <code>points-col-wounds</code>, <code>points-col-cost</code>; shortened <code>points-regular</code> / <code>points-elite</code> to "Regular" / "Elite"</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same keys in German; <code>points-col-wounds</code> = "Lebenspunkte des Kämpfers", <code>points-col-cost</code> = "Punktwertzuschlag"</td></tr>
                 <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>New divine-blessing option + conditional points fields; locale-sorted runemarks via <code>$derived</code>; Activation reordered</td></tr>
-                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code></td></tr>
+                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code>; restructured with header row, threshold qualifiers, <code>border: 1px solid</code> pattern</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Locale-sorted weapon types and runemarks via <code>$derived</code></td></tr>
                 <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Removed <code>FighterCardData</code> import; structural prop type; <code>sortAll()</code> helper; cleaned <code>computeFiltered</code></td></tr>
                 <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Alignment fix on <code>Pistol</code> entry</td></tr>
