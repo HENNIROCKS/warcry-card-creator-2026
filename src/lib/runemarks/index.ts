@@ -31,7 +31,7 @@ export const weaponRunemarks: Record<string, string> = {
 	Hammer:         hammer,
 	Hook:           hook,
 	Mace:           mace,
-	Pistol:          pistol,
+	Pistol:         pistol,
 	'Ranged Weapon': rangedWeapon,
 	'Reach Weapon':  reachWeapon,
 	Scythe:         scythe,

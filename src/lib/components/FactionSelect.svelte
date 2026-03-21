@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { hierarchy } from '$lib/runemarks/index';
 	import type { AllianceEntry, FactionEntry } from '$lib/runemarks/hierarchy';
-	import type { FighterCardData } from '$lib/types';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 
-	let { data }: { data: FighterCardData } = $props();
+	let { data }: { data: { grandAlliance: string; faction: string; bladeborn: string } } = $props();
 
 	let search = $state('');
 

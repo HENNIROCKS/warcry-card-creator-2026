@@ -46,7 +46,7 @@ export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
 export interface AbilityCardData {
 	name: string;
-	cardLabel: string;          // "ABILITY" | "HEROIC TRAIT" | "BATTLE TRAIT" | "REACTION" | custom
+	cardLabel: string;          // preset slug or custom string — see presetLabels in AbilityForm.svelte
 	activationType: ActivationType;
 	grandAlliance: string;
 	faction: string;
