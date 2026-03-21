@@ -110,11 +110,11 @@
 				</div>
 				<div class="points-row">
 					<div class="points-label">{t('card.points-regular')} (≤ 22)</div>
-					<div class="points-value">{data.regularPointsValue ?? 15}</div>
+					<div class="points-value" class:is-empty={!data.regularPointsValue}>{data.regularPointsValue || '—'}</div>
 				</div>
 				<div class="points-row points-row-bottom">
 					<div class="points-label">{t('card.points-elite')} (≥ 23)</div>
-					<div class="points-value">{data.elitePointsValue ?? 20}</div>
+					<div class="points-value" class:is-empty={!data.elitePointsValue}>{data.elitePointsValue || '—'}</div>
 				</div>
 			</div>
 		{/if}
@@ -427,11 +427,15 @@
 		font-weight: 400;
 		font-size: 22px;
 		color: #000;
-		line-height: 1.1;
+		line-height: 25px;
 		text-align: right;
 		border: 0;
 		outline: none;
 		background: transparent;
+	}
+
+	.points-value.is-empty {
+		font-size: 16px;
 	}
 
 	/* ── PRINTER-FRIENDLY ───────────────────────── */
