@@ -104,12 +104,16 @@
 		<h1 class="ability-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
 		{#if data.cardLabel === 'divine-blessing'}
 			<div class="points-table">
+				<div class="points-header">
+					<div class="points-col-label">{t('card.points-col-wounds')}</div>
+					<div class="points-col-value">{t('card.points-col-cost')}</div>
+				</div>
 				<div class="points-row">
-					<div class="points-label">{t('card.points-regular')}</div>
+					<div class="points-label">{t('card.points-regular')} (≤ 22)</div>
 					<div class="points-value">{data.regularPointsValue ?? 15}</div>
 				</div>
 				<div class="points-row points-row-bottom">
-					<div class="points-label">{t('card.points-elite')}</div>
+					<div class="points-label">{t('card.points-elite')} (≥ 23)</div>
 					<div class="points-value">{data.elitePointsValue ?? 20}</div>
 				</div>
 			</div>
@@ -354,18 +358,49 @@
 		display: flex;
 		flex-direction: column;
 		border-radius: 7.5px;
-		overflow: hidden;
 		width: 100%;
+		border: 1px solid #5a0a14;
+		outline: none;
+		background: transparent;
+	}
+
+	.points-header {
+		display: flex;
+		align-items: center;
+		background: #5a0a14;
+		border-radius: 6.5px 6.5px 0 0;
+		padding: 14px 12px;
+		border: 0;
+		outline: none;
+	}
+
+	.points-col-label {
+		flex: 1;
+		font-family: 'Germania One', serif;
+		font-size: 16px;
+		font-weight: 400;
+		color: #FAF6F3;
+		text-transform: uppercase;
 		border: 0;
 		outline: none;
 		background: transparent;
-		box-shadow: 0 0 0 1px #5a0a14;
+	}
+
+	.points-col-value {
+		font-family: 'Germania One', serif;
+		font-size: 16px;
+		font-weight: 400;
+		color: #FAF6F3;
+		text-transform: uppercase;
+		text-align: right;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.points-row {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 		padding: 5px 12px;
 		border: 0;
 		outline: none;
@@ -377,6 +412,7 @@
 	}
 
 	.points-label {
+		flex: 1;
 		font-family: 'Alegreya', serif;
 		font-size: 16px;
 		font-weight: 400;
@@ -392,6 +428,7 @@
 		font-size: 22px;
 		color: #000;
 		line-height: 1.1;
+		text-align: right;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -444,7 +481,16 @@
 	}
 
 	.is-printer-friendly .points-table {
-		box-shadow: 0 0 0 1px #000;
+		border-color: #000;
+	}
+
+	.is-printer-friendly .points-header {
+		background: transparent;
+	}
+
+	.is-printer-friendly .points-col-label,
+	.is-printer-friendly .points-col-value {
+		color: #000;
 	}
 
 	.is-printer-friendly .points-row-bottom {
