@@ -1,12 +1,22 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
-	import { t } from '$lib/i18n/index.svelte';
+	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
 	let { data }: { data: FighterCardData } = $props();
 
 	let rmKeys = $state(['', '', '']);
+
+	const weaponKeys = $derived(
+		['Axe','Bident','Blast','Claws','Club','Dagger','Fangs','Hammer','Hook','Mace','Pistol','Ranged Weapon','Reach Weapon','Scythe','Spear','Sword','Unarmed']
+			.sort((a, b) => t(`weapons.${a}`).replaceAll('|', '').localeCompare(t(`weapons.${b}`).replaceAll('|', ''), i18n.code))
+	);
+
+	const runemarkKeys = $derived(
+		Object.keys(fighterRunemarks)
+			.sort((a, b) => t(`runemarks.${a}`).localeCompare(t(`runemarks.${b}`), i18n.code))
+	);
 
 	$effect(() => {
 		const priority = (k: string) => k === 'Hero' || k === 'Monster' ? -1 : 0;
@@ -120,7 +130,7 @@
 				{#each [0, 1, 2] as i}
 					<select class="field-input" bind:value={rmKeys[i]}>
 						<option value="">—</option>
-						{#each Object.keys(fighterRunemarks) as name}
+						{#each runemarkKeys as name}
 							<option value={name} disabled={
 								(rmKeys[i] !== name && rmKeys.some((k, j) => j !== i && k === name)) ||
 								(name === 'Monster' && rmKeys.some(k => k === 'Hero')) ||
@@ -195,7 +205,7 @@
 					<span class="sublabel">{t('ui.form-type')}</span>
 					<select class="field-input text-center" style="text-align-last: center" bind:value={weapon.name}>
 						<option value="">—</option>
-						{#each ['Axe','Bident','Blast','Claws','Club','Dagger','Fangs','Hammer','Hook','Mace','Pistol','Ranged Weapon','Reach Weapon','Scythe','Spear','Sword','Unarmed'] as w}
+						{#each weaponKeys as w}
 							<option value={w}>{t(`weapons.${w}`).replaceAll('|', '')}</option>
 						{/each}
 					</select>

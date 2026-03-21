@@ -2,7 +2,7 @@
 	import { hierarchy } from '$lib/runemarks/index';
 	import type { AllianceEntry, FactionEntry } from '$lib/runemarks/hierarchy';
 	import type { FighterCardData } from '$lib/types';
-	import { t } from '$lib/i18n/index.svelte';
+	import { t, i18n } from '$lib/i18n/index.svelte';
 
 	let { data }: { data: FighterCardData } = $props();
 
@@ -12,22 +12,39 @@
 	function tFaction(id: string)  { return t(`factions.${id}`); }
 	function tSubfaction(id: string) { return t(`subfactions.${id}`); }
 
+	function sortedLabel<T>(items: T[], label: (item: T) => string): T[] {
+		const loc = i18n.code;
+		return [...items].sort((a, b) => label(a).localeCompare(label(b), loc));
+	}
+
+	function sortAll(alliances: AllianceEntry[]): AllianceEntry[] {
+		return sortedLabel(alliances, a => tAlliance(a.id)).map(alliance => ({
+			...alliance,
+			factions: sortedLabel(alliance.factions, f => tFaction(f.id)).map(faction => ({
+				...faction,
+				subfactions: sortedLabel(faction.subfactions, sf => tSubfaction(sf.id)),
+			})),
+		}));
+	}
+
 	function computeFiltered(q: string): AllianceEntry[] {
 		const lc = q.trim().toLowerCase();
-		if (!lc) return hierarchy;
+		if (!lc) return sortAll(hierarchy);
 		return hierarchy
 			.map(alliance => {
 				const allianceMatch = tAlliance(alliance.id).toLowerCase().includes(lc);
-				const factions = alliance.factions
+				const factions = sortedLabel(alliance.factions, f => tFaction(f.id))
 					.map(faction => {
 						const factionMatch = tFaction(faction.id).toLowerCase().includes(lc);
-						const subfactions = (allianceMatch || factionMatch)
-							? faction.subfactions
-							: faction.subfactions.filter(sf => tSubfaction(sf.id).toLowerCase().includes(lc));
-						if (allianceMatch || factionMatch || subfactions.length > 0) {
-							return { ...faction, subfactions } as FactionEntry;
-						}
-						return null;
+						const subfactions = sortedLabel(
+							(allianceMatch || factionMatch)
+								? faction.subfactions
+								: faction.subfactions.filter(sf => tSubfaction(sf.id).toLowerCase().includes(lc)),
+							sf => tSubfaction(sf.id)
+						);
+						return (allianceMatch || factionMatch || subfactions.length > 0)
+							? { ...faction, subfactions } as FactionEntry
+							: null;
 					})
 					.filter((f): f is FactionEntry => f !== null);
 				return factions.length > 0 ? { ...alliance, factions } as AllianceEntry : null;

@@ -1,13 +1,18 @@
 <script lang="ts">
 	import type { AbilityCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
-	import { t } from '$lib/i18n/index.svelte';
+	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
 	let { data }: { data: AbilityCardData } = $props();
 
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
+
+	const runemarkKeys = $derived(
+		Object.keys(fighterRunemarks)
+			.sort((a, b) => t(`runemarks.${a}`).localeCompare(t(`runemarks.${b}`), i18n.code))
+	);
 
 	const presetLabels = ['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact', 'divine-blessing'];
 	let selectValue = $state(presetLabels.includes(data.cardLabel) ? data.cardLabel : '__custom__');
@@ -119,7 +124,7 @@
 				{#each [0, 1] as i}
 					<select class="field-input" bind:value={rmKeys[i]}>
 						<option value="">—</option>
-						{#each Object.keys(fighterRunemarks) as name}
+						{#each runemarkKeys as name}
 							<option value={name} disabled={
 								(rmKeys[i] !== name && rmKeys.some((k, j) => j !== i && k === name)) ||
 								(name === 'Monster' && rmKeys.some(k => k === 'Hero')) ||
