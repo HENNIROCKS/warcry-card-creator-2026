@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-21">
+              <span class="session-date">2026-03-21</span>
+              <span class="session-title">Divine Blessing &amp; Locale Sorting</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-20">
               <span class="session-date">2026-03-20</span>
               <span class="session-title">i18n &amp; Custom Card Type Label</span>
@@ -1136,6 +1142,20 @@
                   </td>
                   <td>Mar 20</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-21-decisions" onclick="activateSession('march-21')"
+                      >Locale-aware sorting: <code>$derived</code> + <code>localeCompare(b, i18n.code)</code> for factions, weapons, runemarks — re-sorts reactively on locale change</a>
+                  </td>
+                  <td>Mar 21</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-21-decisions" onclick="activateSession('march-21')"
+                      ><code>FactionSelect</code> prop typed structurally as <code>{ grandAlliance, faction, bladeborn }</code> — works with both card types</a>
+                  </td>
+                  <td>Mar 21</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1669,6 +1689,90 @@
         <!-- /session-index -->
 
         <!-- ══════════════════════════════════════════
+         2026-03-21 — Divine Blessing & Locale Sorting
+    ══════════════════════════════════════════ -->
+        <div id="session-march-21" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-21</span>
+              <span class="badge badge-green">Divine Blessing type</span>
+              <span class="badge badge-green">Locale-aware sorting</span>
+              <span class="badge badge-green">Code quality pass</span>
+            </div>
+            <h1>Divine Blessing Card Type &amp; Locale-Aware Sorting</h1>
+            <p>
+              Added "Divine Blessing" as a new ability card type with German translation,
+              two conditional points-value fields (Regular / Elite) shown on the card as
+              a horizontal table with reddish border. Locale-aware sorting implemented for
+              factions, subfactions, weapon types, and fighter runemarks — all re-sort
+              reactively on locale change. Code quality pass fixed a structural typing bug
+              in <code>FactionSelect</code>, a redundant code path in
+              <code>computeFiltered</code>, and stale comments in CLAUDE.md and types.ts.
+            </p>
+          </div>
+
+          <section id="march-21-built" data-nav="What Was Built">
+            <h2>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              What Was Built
+            </h2>
+            <ul>
+              <li><strong>Divine Blessing card type</strong> — new preset slug <code>divine-blessing</code>; German: "Göttliche Segen"; added to both form select and card <code>presetSlugs</code></li>
+              <li><strong>Points value fields</strong> — <code>regularPointsValue</code> and <code>elitePointsValue</code> added to <code>AbilityCardData</code>; form inputs appear conditionally below Card Name when Divine Blessing is selected</li>
+              <li><strong>Points table on card</strong> — horizontal rows (label left, value right), <code>box-shadow: 0 0 0 1px #5a0a14</code> border, 7.5px rounded corners, inset divider; printer-friendly overrides switch all colours to <code>#000</code></li>
+              <li><strong>Form field order</strong> — Activation moved below Card Name and Points section, before Runemarks; Divine Blessing positioned before Lesser Artefact in the type dropdown</li>
+              <li><strong>Locale-aware sorting</strong> — <code>FactionSelect</code> sorts alliances, factions, and subfactions; <code>FighterForm</code> and <code>AbilityForm</code> sort weapon types and fighter runemarks — all via <code>localeCompare(b, i18n.code)</code> in <code>$derived</code></li>
+              <li><strong>FactionSelect refactor</strong> — extracted <code>sortAll()</code> for the no-search path; eliminated redundant <code>!lc</code> guard branches inside the filter map</li>
+              <li><strong>FactionSelect type fix</strong> — replaced <code>FighterCardData</code> import with a structural prop type <code>{ grandAlliance, faction, bladeborn }</code>, making it correctly usable with both card types</li>
+              <li><strong>Info file cleanup</strong> — stale <code>cardLabel</code> comment in <code>types.ts</code>; ability card label list in <code>CLAUDE.md</code>; march-20 locale sorting pending item marked Done</li>
+            </ul>
+          </section>
+
+          <section id="march-21-decisions" data-nav="Key Decisions">
+            <h2>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              Key Decisions
+            </h2>
+            <div class="decision">
+              <div class="decision-q">Why <code>box-shadow</code> for the points table border rather than CSS <code>border</code>?</div>
+              <div class="decision-a"><code>border-radius</code> on an element with <code>border: 1px</code> works in-browser but is unreliable in <code>dom-to-image-more</code>'s foreignObject serialiser — the border can disappear or render square. <code>box-shadow: 0 0 0 1px</code> renders as a painted layer that survives the export pipeline correctly, matching the pattern already used elsewhere on the fighter card.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why <code>$derived</code> for sorted weapon/runemark lists rather than sorting once at module load?</div>
+              <div class="decision-a">The sort order depends on <code>i18n.code</code>, which is <code>$state</code> and changes at runtime when the user switches locale. A <code>$derived</code> reading <code>i18n.code</code> re-runs automatically on locale change. A module-level sort would be frozen at the initial locale.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why type <code>FactionSelect</code>'s prop as a structural type instead of a union of the two card types?</div>
+              <div class="decision-a">The component only reads and writes three fields: <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>. Typing the prop as the exact shape it needs makes it work correctly with any object that has those fields, avoids importing either card type, and documents the actual contract at the call site.</div>
+            </div>
+          </section>
+
+          <section id="march-21-files" data-nav="Files Changed">
+            <h2>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              Files Changed
+            </h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>regularPointsValue?</code> and <code>elitePointsValue?</code> to <code>AbilityCardData</code>; updated stale <code>cardLabel</code> comment</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>label-divine-blessing</code>, <code>points-regular</code>, <code>points-elite</code>, <code>form-regular-points</code>, <code>form-elite-points</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same keys in German</td></tr>
+                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>New divine-blessing option + conditional points fields; locale-sorted runemarks via <code>$derived</code>; Activation reordered</td></tr>
+                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code></td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Locale-sorted weapon types and runemarks via <code>$derived</code></td></tr>
+                <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Removed <code>FighterCardData</code> import; structural prop type; <code>sortAll()</code> helper; cleaned <code>computeFiltered</code></td></tr>
+                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Alignment fix on <code>Pistol</code> entry</td></tr>
+                <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Initialized <code>regularPointsValue</code> and <code>elitePointsValue</code> in default card data</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Updated ability card label list to reflect all current presets</td></tr>
+                <tr><td><code>docs/index.html</code></td><td>March-20 locale sorting item marked Done</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-21 -->
+
+        <!-- ══════════════════════════════════════════
          2026-03-20 — Custom Card Type Label
     ══════════════════════════════════════════ -->
         <div id="session-march-20" class="session-panel">
@@ -1918,8 +2022,8 @@
                   <td>Contributor README (<code>src/lib/i18n/README.md</code>) — namespace table, TODO convention, RTL note, <code>|</code> line-break section; false "TODO stripped" claim corrected</td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">later</span></td>
-                  <td>Locale-aware faction/subfaction sorting — <code>FactionSelect</code> order is fixed by <code>hierarchy.ts</code> array order, not sorted by translated label. When a non-English locale is active, entries stay in English-alphabetical order. Fix: sort in <code>computeFiltered</code> using <code>localeCompare</code> with the active locale code.</td>
+                  <td><span class="badge badge-green">Done</span></td>
+                  <td>Locale-aware sorting — factions/subfactions in <code>FactionSelect</code>, weapon types and fighter runemarks in both form components now sorted by translated label using <code>localeCompare</code> with the active locale code. Re-sorts reactively on locale change.</td>
                 </tr>
               </tbody>
             </table>
@@ -5564,6 +5668,7 @@
 
     <script>
       const sessions = [
+        "march-21",
         "march-20",
         "march-19",
         "march-18",
