@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-22">
               <span class="session-date">2026-03-22</span>
-              <span class="session-title">Prerequisite Field</span>
+              <span class="session-title">Prerequisite, Rename &amp; Landing Polish</span>
             </button>
           </li>
           <li>
@@ -1707,24 +1707,18 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-22</span>
               <span class="badge badge-green">Prerequisite field</span>
+              <span class="badge badge-green">Ability → Text rename</span>
               <span class="badge badge-green">Landing page UX</span>
-              <span class="badge badge-green">i18n keys</span>
             </div>
-            <h1>Text Card Prerequisite &amp; Landing Page Polish</h1>
+            <h1>Text Card Prerequisite, Rename &amp; Landing Polish</h1>
             <p>
               Added a new optional "Prerequisite" text field to the text card editor,
-              positioned after Flavor Text in both the form and the card render. The field
-              supports bold/italic markup buttons (same as Body Text) and uses
-              <code>rows="3"</code> (same height as Flavor Text). On the card it renders
-              inside a framed box — <code>border: 1px solid #5a0a14</code>,
-              <code>border-radius: 7.5px</code>, <code>padding: 5px 12px</code> — matching
-              the Divine Blessing table border style. The form label carries a "(framed)"
-              hint, translatable as "umrahmt" in German. <code>wrapSelection</code> was
-              refactored to accept a field name parameter, eliminating the need for a
-              duplicate function. Landing page polish: primary buttons (Fighter Card /
-              Text Card) are now stacked vertically, wider, taller, and moved above the
-              description text for stronger visual hierarchy. A locale-aware "Last updated"
-              line was added below the pill row.
+              rendered in a framed box on the card between flavor text and body text.
+              Fully renamed the editor from "Ability Card" to "Text Card" across all
+              file names, routes, types, i18n keys, and documentation — while preserving
+              the card <em>type</em> slug <code>'ability'</code> (Ability, Reaction, etc.).
+              Landing page polish: primary buttons stacked vertically and moved above the
+              description, plus a locale-aware "Last updated" line.
             </p>
           </div>
 
@@ -1740,6 +1734,17 @@
               <li><strong><code>wrapSelection</code> refactor</strong> — signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code>; both Body Text and Prerequisite buttons pass the field name; no duplication</li>
               <li><strong>i18n keys</strong> — <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung") and <code>form-framed</code> ("framed" / "umrahmt") added to <code>en.json</code> and <code>de.json</code></li>
               <li><strong>Printer-friendly</strong> — <code>.is-printer-friendly .prerequisite-box</code> override sets <code>border-color: #000</code></li>
+            </ul>
+            <h3>Rename: Ability Card → Text Card</h3>
+            <ul>
+              <li><strong>Files renamed</strong> — <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, <code>src/routes/ability/</code> → <code>src/routes/text/</code></li>
+              <li><strong>Type renamed</strong> — <code>AbilityCardData</code> → <code>TextCardData</code> throughout</li>
+              <li><strong>i18n key renamed</strong> — <code>ui.ability-card</code> → <code>ui.text-card</code> (values were already "Text Card" / "Textkarte")</li>
+              <li><strong>CSS class renamed</strong> — <code>.ability-name</code> → <code>.card-name</code> in <code>TextCard.svelte</code></li>
+              <li><strong>Route updated</strong> — <code>/ability</code> → <code>/text</code>; landing page link updated accordingly</li>
+              <li><strong>Export filename fallback</strong> — <code>'ability'</code> → <code>'text-card'</code> in <code>makeSlug()</code></li>
+              <li><strong>CLAUDE.md corrections</strong> — runemark library "not yet populated" note removed (203 SVGs present); prerequisite text added to text card structure description</li>
+              <li><strong>Card type slugs preserved</strong> — <code>'ability'</code> in <code>presetLabels</code>/<code>presetSlugs</code> and <code>card.label-ability</code> i18n key left unchanged — these refer to the card <em>type</em> "Ability", not the editor</li>
             </ul>
             <h3>Landing Page Polish</h3>
             <ul>
@@ -1783,7 +1788,13 @@
                 <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Added <code>.prerequisite-box</code> wrapper + CSS; printer-friendly border-color override</td></tr>
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>prerequisiteText: ''</code> to default card data</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked vertically, larger, moved above description; <code>LAST_UPDATED</code> constant + <code>$derived</code> formatted date; "Last updated" line below pill row</td></tr>
-                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card editor description</td></tr>
+                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card editor description; "ability card editor" → "text card editor"</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Route, type, component names updated; stale runemark "not yet populated" note removed; prerequisite added to text card structure</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code> <em>(was ability)</em></td><td>File/route/type/component renames; export filename fallback <code>'ability'</code> → <code>'text-card'</code></td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code> <em>(was AbilityCard)</em></td><td>Type import + <code>.ability-name</code> CSS class renamed</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code> <em>(was AbilityForm)</em></td><td>Type import renamed</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Key <code>ability-card</code> renamed to <code>text-card</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Key <code>ability-card</code> renamed to <code>text-card</code></td></tr>
               </tbody>
             </table>
           </section>
