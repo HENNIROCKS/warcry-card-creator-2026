@@ -120,10 +120,14 @@
 	});
 
 	function makeSlug() {
-		const slug = (data.name || 'fighter').toLowerCase().replace(/\s+/g, '-');
+		const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, '-');
+		const parts = [data.grandAlliance, data.faction, data.bladeborn]
+			.filter(Boolean)
+			.map(toSlug);
+		parts.push(toSlug(data.name || 'fighter'));
 		const now = new Date();
 		const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`;
-		return `${slug}_${ts}`;
+		return `${parts.join('_')}_${ts}`;
 	}
 
 	async function doExport(suffix: string) {
