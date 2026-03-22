@@ -39,7 +39,7 @@
 </script>
 
 <div class="space-y-10 text-sm">
-	<!-- Fighter Name + Subtitle -->
+	<!-- Name / Subtitle / Caption -->
 	<section>
 		<label class="field-label" for="fighter-name">{t('ui.form-fighter')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
 		<input
@@ -49,30 +49,47 @@
 			bind:value={data.name}
 			placeholder={t('ui.form-placeholder-fighter')}
 		/>
-		<label class="field-label mt-2" for="fighter-subtitle">{t('ui.form-subtitle')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-optional')})</span> <span class="normal-case font-normal text-zinc-500">{(data.subtitle ?? '').length}/120</span></label>
-		<input
-			id="fighter-subtitle"
-			class="field-input"
-			type="text"
-			maxlength="120"
-			bind:value={data.subtitle}
-		/>
+		{#if data.showSubtitle}
+			<label class="field-label mt-2" for="fighter-subtitle">{t('ui.form-subtitle')} <span class="normal-case font-normal text-zinc-500">{(data.subtitle ?? '').length}/120</span></label>
+			<input
+				id="fighter-subtitle"
+				class="field-input"
+				type="text"
+				maxlength="120"
+				bind:value={data.subtitle}
+			/>
+		{/if}
+		{#if data.showCaption}
+			<label class="field-label mt-2" for="img-caption">{t('ui.form-caption')}</label>
+			<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />
+		{/if}
 	</section>
 
-	<!-- Checkboxes -->
-	<section class="flex flex-col gap-3">
-		<label class="flex cursor-pointer items-center gap-3">
-			<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">{t('ui.form-named-fighter')}</span>
-		</label>
-		<label class="flex cursor-pointer items-center gap-3">
-			<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">{t('ui.form-monster-damage-table')}</span>
-		</label>
-		<label class="flex cursor-pointer items-center gap-3">
-			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-120">{t('ui.form-show-runemarks')}</span>
-		</label>
+	<!-- Card Elements -->
+	<section>
+		<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
+		<div class="flex flex-col gap-3">
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-named-fighter')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-monster-damage-table')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showSubtitle} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-subtitle')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
+			</label>
+		</div>
 	</section>
 
 	<!-- Model Image -->
@@ -104,10 +121,6 @@
 					</div>
 				</div>
 				<p class="lg:hidden text-sm text-zinc-300">Adjust image position and zoom in the <strong class="text-white font-semibold">Preview</strong> tab.</p>
-				<div>
-					<label class="sublabel" for="img-caption">{t('ui.form-caption')}</label>
-					<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />
-				</div>
 			</div>
 		{:else}
 			<label
