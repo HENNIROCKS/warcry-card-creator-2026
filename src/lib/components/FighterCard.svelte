@@ -141,7 +141,7 @@
 					<div class="dcol dcol-stat">{t('card.col-damage')}</div>
 				</div>
 				{#each data.damageBrackets.slice(0, 5) as bracket, i}
-					<div class="damage-row" class:damage-row-alt={i % 2 === 0}>
+					<div class="damage-row">
 						<div class="dcol dcol-wide">{bracket.damageRange}</div>
 						<div class="dcol dcol-stat">{bracket.move}</div>
 						<div class="dcol dcol-stat">{bracket.damage}</div>
@@ -340,7 +340,7 @@
 		padding: 29px 38px 38px;
 		display: flex;
 		flex-direction: column;
-		gap: 29px;
+		gap: 20px;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -395,6 +395,10 @@
 		border: 1px solid #5a0a14;
 	}
 
+	.weapons-box {
+		background: rgba(255, 255, 255, 0.25);
+	}
+
 	.damage-box {
 		width: 100%;
 		flex-shrink: 0;
@@ -403,7 +407,7 @@
 		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
 		border: 0;
 		outline: none;
-		background: transparent;
+		background: rgba(255, 255, 255, 0.25);
 	}
 
 	/* ── CHARACTERISTICS BOX ───────────────────── */
@@ -416,7 +420,7 @@
 
 	.stats-values {
 		border-radius: 0 0 6.5px 6.5px;
-		background: transparent;
+		background: rgba(255, 255, 255, 0.25);
 	}
 
 	.stats-header {
@@ -520,7 +524,7 @@
 	}
 
 	.weapon-row:nth-child(odd) {
-		background: rgba(90, 10, 20, 0.04);
+		background: rgba(90, 10, 20, 0.08);
 	}
 
 	.weapon-row:last-child {
@@ -622,26 +626,24 @@
 
 	.weapon-val.is-empty {
 		font-size: 16px;
-
 	}
-
 
 	/* ── DAMAGE BRACKETS ───────────────────────── */
 
 	.damage-row {
 		display: flex;
-		height: 23px;
+		height: 28px;
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
-	.damage-row-alt {
-		background: rgba(90, 10, 20, 0.04);
+	.damage-row:nth-child(even) {
+		background: rgba(90, 10, 20, 0.06);
 	}
 
 	.damage-row:not(:first-child) {
-		box-shadow: inset 0 1px 0 0 #000;
+		box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4);
 	}
 
 	.dcol {
@@ -659,7 +661,6 @@
 		font-family: 'Alegreya', serif;
 		font-size: 17px;
 		font-weight: 400;
-		text-transform: uppercase;
 		color: #000;
 		padding: 0 8px;
 		border: 0;
@@ -732,11 +733,11 @@
 		color: #000;
 	}
 
-	.is-printer-friendly .weapon-row:nth-child(odd) {
-		background: transparent;
-	}
-
-	.is-printer-friendly .damage-row-alt {
+	.is-printer-friendly .weapons-box,
+	.is-printer-friendly .weapon-row:nth-child(odd),
+	.is-printer-friendly .damage-box,
+	.is-printer-friendly .damage-row:nth-child(even),
+	.is-printer-friendly .stats-values {
 		background: transparent;
 	}
 </style>

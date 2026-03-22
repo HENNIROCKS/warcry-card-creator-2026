@@ -115,7 +115,7 @@
 					<div class="points-label">{t('card.points-regular')} (≤ 22)</div>
 					<div class="points-value" class:is-empty={!data.regularPointsValue}>{data.regularPointsValue || '—'}</div>
 				</div>
-				<div class="points-row points-row-bottom">
+				<div class="points-row">
 					<div class="points-label">{t('card.points-elite')} (≥ 23)</div>
 					<div class="points-value" class:is-empty={!data.elitePointsValue}>{data.elitePointsValue || '—'}</div>
 				</div>
@@ -376,31 +376,31 @@
 	.points-table {
 		display: flex;
 		flex-direction: column;
-		border-radius: 7.5px;
 		width: 100%;
-		border: 1px solid #5a0a14;
+		flex-shrink: 0;
+		border: 0;
 		outline: none;
-		background: transparent;
+		background: rgba(255, 255, 255, 0.25);
+		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
 	}
 
 	.points-header {
 		display: flex;
 		align-items: center;
-		background: #5a0a14;
-		border-radius: 6.5px 6.5px 0 0;
-		padding: 14px 12px;
+		height: 28px;
+		background: transparent;
 		border: 0;
 		outline: none;
 	}
 
 	.points-col-label {
 		flex: 1;
-		font-family: 'Germania One', serif;
-		font-size: 16px;
+		font-family: 'Alegreya', serif;
+		font-size: 17px;
 		font-weight: 400;
-		color: #FAF6F3;
-		text-transform: uppercase;
+		color: #000;
 		text-align: center;
+		padding: 0 8px;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -408,12 +408,12 @@
 
 	.points-col-value {
 		flex: 1;
-		font-family: 'Germania One', serif;
-		font-size: 16px;
+		font-family: 'Alegreya', serif;
+		font-size: 17px;
 		font-weight: 400;
-		color: #FAF6F3;
-		text-transform: uppercase;
+		color: #000;
 		text-align: center;
+		padding: 0 8px;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -422,23 +422,25 @@
 	.points-row {
 		display: flex;
 		align-items: center;
-		padding: 5px 12px;
+		height: 28px;
+		box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4);
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
-	.points-row-bottom {
-		box-shadow: inset 0 1px 0 0 #5a0a14;
+	.points-table > *:nth-child(even) {
+		background: rgba(90, 10, 20, 0.06);
 	}
 
 	.points-label {
 		flex: 1;
 		font-family: 'Alegreya', serif;
-		font-size: 16px;
+		font-size: 17px;
 		font-weight: 400;
-		color: #3a2a1a;
+		color: #000;
 		text-align: center;
+		padding: 0 8px;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -446,19 +448,15 @@
 
 	.points-value {
 		flex: 1;
-		font-family: 'Germania One', serif;
+		font-family: 'Alegreya', serif;
+		font-size: 17px;
 		font-weight: 400;
-		font-size: 22px;
 		color: #000;
-		line-height: 25px;
 		text-align: center;
+		padding: 0 8px;
 		border: 0;
 		outline: none;
 		background: transparent;
-	}
-
-	.points-value.is-empty {
-		font-size: 16px;
 	}
 
 	/* ── PRINTER-FRIENDLY ───────────────────────── */
@@ -511,25 +509,13 @@
 		border-color: #000;
 	}
 
-	.is-printer-friendly .points-table {
-		border-color: #000;
+	.is-printer-friendly .points-table,
+	.is-printer-friendly .points-table > *:nth-child(even) {
+		background: transparent;
 	}
 
 	.is-printer-friendly .points-header {
 		background: transparent;
-	}
-
-	.is-printer-friendly .points-col-label,
-	.is-printer-friendly .points-col-value {
-		color: #000;
-	}
-
-	.is-printer-friendly .points-row-bottom {
-		box-shadow: inset 0 1px 0 0 #000;
-	}
-
-	.is-printer-friendly .points-label {
-		color: #000;
 	}
 
 	.is-printer-friendly .image-section {

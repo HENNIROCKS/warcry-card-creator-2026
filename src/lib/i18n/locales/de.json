@@ -220,7 +220,7 @@
     "form-strength": "Stärke",
     "form-damage": "Schaden",
     "form-damage-table": "Schadenstabelle",
-    "form-damage-points-allocated": "Zugeteilte Schadenspunkte",
+    "form-damage-points-allocated": "Zugewiesener Schaden",
     "form-activation": "Aktivierung",
     "form-regular-points": "Regulär-Punktwert",
     "form-elite-points": "Elite-Punktwert",
@@ -229,7 +229,7 @@
     "form-text": "Text",
     "form-bold": "Fett",
     "form-italic": "Kursiv",
-    "form-caption": "Beschriftung",
+    "form-caption": "Bildunterschrift",
     "form-position-x": "Position X",
     "form-position-x-hint": "links/rechts",
     "form-position-y": "Position Y",
@@ -319,6 +319,6 @@
     "col-attacks": "Attacken",
     "col-strength": "Stärke",
     "col-damage": "Schaden",
-    "col-damage-points-allocated": "* Erlittener Schaden"
+    "col-damage-points-allocated": "* Zugewiesener Schaden"
   }
 }

@@ -89,12 +89,12 @@
 				<span class="text-zinc-200">{t('ui.form-show-activation')}</span>
 			</label>
 			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showPointsTable} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-points-table')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
 				<input type="checkbox" bind:checked={data.showFlavorText} class="h-4 w-4 rounded accent-red-800" />
 				<span class="text-zinc-200">{t('ui.form-show-flavor-text')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showPointsTable} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-points-table')}</span>
 			</label>
 			<label class="flex cursor-pointer items-center gap-3">
 				<input type="checkbox" bind:checked={data.showPrerequisite} class="h-4 w-4 rounded accent-red-800" />

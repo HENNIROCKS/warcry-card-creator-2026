@@ -38,7 +38,7 @@
 
 <main class="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-6">
 	<h1 class="text-4xl font-bold tracking-wide text-center px-6">Warcry Card Creator 2026</h1>
-	<div class="flex flex-col items-stretch gap-3 w-full max-w-xs px-6">
+	<div class="flex flex-col items-stretch gap-3 w-full max-w-xs px-6 my-4">
 		<a href="{base}/fighter" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
 			{t('ui.fighter-card')}
 		</a>
