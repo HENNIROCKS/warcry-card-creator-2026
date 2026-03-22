@@ -1734,20 +1734,20 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-22</span>
-              <span class="badge badge-green">Card Elements checkboxes</span>
-              <span class="badge badge-green">Fighter parity</span>
-              <span class="badge badge-green">Prerequisite &amp; Rename</span>
+              <span class="badge badge-green">Card Elements & translations</span>
+              <span class="badge badge-green">Table row contrast</span>
+              <span class="badge badge-green">Points table restyle</span>
             </div>
-            <h1>Card Elements, Fighter Parity &amp; Text Card Polish</h1>
+            <h1>Card Elements, Fighter Parity &amp; Table Visual Polish</h1>
             <p>
-              Added an independent "Card Elements" checkbox system to both editors —
-              text card gains toggles for activation badge, flavor text, prerequisite,
-              and points cost increases table (each collapsing its card element and its
-              form field). Fighter card gains Show Subtitle and Show Caption toggles
-              with the caption moved out of the image block. Labels unified to
-              Is&nbsp;Named&nbsp;Fighter / Is&nbsp;Monster, font sizes aligned between
-              both forms. Earlier in the same day: Prerequisite field added and the
-              editor fully renamed from Ability Card to Text Card.
+              Two conversations. First: added an independent "Card Elements" checkbox
+              system to both editors, prerequisite field, fighter subtitle/caption
+              toggles, and fully renamed the editor from Ability Card to Text Card.
+              Second: visual polish pass — semi-transparent white backgrounds on all
+              data rows, alternating maroon row tints, damage table row heights and
+              spacing, points table restyled to match damage table (Alegreya 17px,
+              shadow borders, no dark header), German label corrections, and minor
+              landing page spacing.
             </p>
           </div>
 
@@ -1760,46 +1760,50 @@
             <ul>
               <li><strong>Four new boolean flags</strong> on <code>TextCardData</code>: <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code></li>
               <li><strong>Defaults</strong> — <code>showRunemarks: true</code>, <code>showActivation: true</code>, <code>showFlavorText: true</code>; prerequisite and points table default <code>false</code></li>
-              <li><strong>Form reorder</strong> — sections now: Name + Type (merged) → Card Elements → Runemarks (+ activation) → text fields</li>
+              <li><strong>Card Elements checkbox order</strong> — Show Runemarks → Show Activation → Show Flavor Text → Show Points Cost Increases → Show Prerequisite</li>
               <li><strong>Card render gates</strong> — <code>{#if data.showActivation && data.activationType}</code>, <code>{#if data.showFlavorText && data.flavorText}</code>, <code>{#if data.showPointsTable}</code>, <code>{#if data.showPrerequisite && data.prerequisiteText}</code></li>
               <li><strong>Parchment render order</strong> — flavor text → points table → prerequisite → body text</li>
               <li><strong>Points table decoupled</strong> — no longer gated on <code>cardLabel === 'divine-blessing'</code>; works with any card type</li>
-              <li><strong>Points section heading</strong> — <code>form-points-cost-increases</code> key added (en: "Points Cost Increases", de: "Punktwertzuschläge") used as section label above the two inputs</li>
-              <li><strong>Points table columns</strong> — both columns <code>flex: 1</code>, all cells <code>text-align: center</code></li>
-              <li><strong>Prerequisite font</strong> — scoped <code>.prerequisite-box .body-text { font-size: 18px }</code>; main body text stays 20px</li>
             </ul>
             <h3>Card Elements — Fighter Card</h3>
             <ul>
               <li><strong>Two new boolean flags</strong> on <code>FighterCardData</code>: <code>showSubtitle</code>, <code>showCaption</code></li>
-              <li><strong>Card Elements section</strong> added to <code>FighterForm.svelte</code> with a <code>field-label</code> heading; <code>showSubtitle</code> and <code>showCaption</code> checkboxes added alongside existing flags</li>
-              <li><strong>Caption field moved</strong> — extracted from the image block, now appears below the subtitle input in the Name section (visible only when <code>showCaption</code> is checked)</li>
-              <li><strong>Card render gates</strong> — <code>{#if data.showSubtitle && data.subtitle}</code>, <code>{#if data.showCaption && data.imageCaption}</code></li>
+              <li><strong>Caption field moved</strong> — extracted from the image block, now appears below the subtitle input; gated on <code>showCaption</code></li>
             </ul>
-            <h3>Label &amp; Copy Polish</h3>
+            <h3>Prerequisite Field &amp; Rename</h3>
             <ul>
-              <li><code>form-card</code> → "Name" (was "Card"), <code>form-fighter</code> → "Name" (was "Fighter") — removes redundant noun from the label</li>
-              <li><code>form-named-fighter</code> → "Is Named Fighter", <code>form-monster-damage-table</code> → "Is Monster" — consistent "Is…" prefix for boolean card-trait checkboxes</li>
-              <li><code>card-name-placeholder</code> → "Card name" (lowercase, consistent with Tailwind/shadcn style)</li>
-              <li>Flavor Text label hint: <code>(italic, optional)</code> → <code>(italic)</code> — "(optional)" is redundant now that the checkbox controls visibility</li>
-              <li>Input font size unified: <code>TextForm</code> was 0.875 rem, <code>FighterForm</code> was 1 rem — both now 1 rem</li>
+              <li><code>prerequisiteText: string</code> added to <code>TextCardData</code>; card renders <code>.prerequisite-box</code> wrapping <code>.body-text</code> with <code>parseMarkup()</code></li>
+              <li>Files renamed: <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, route <code>/ability</code> → <code>/text</code></li>
+              <li>Type <code>AbilityCardData</code> → <code>TextCardData</code>; card type slug <code>'ability'</code> preserved in preset labels</li>
             </ul>
-            <h3>Prerequisite Field</h3>
+            <h3>Table Row Contrast — Fighter Card</h3>
             <ul>
-              <li><code>prerequisiteText: string</code> added to <code>TextCardData</code>; default <code>''</code></li>
-              <li>Form section: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
-              <li>Card render: <code>.prerequisite-box</code> wrapping <code>.body-text</code> with <code>parseMarkup()</code>; hidden when empty; printer-friendly border override</li>
-              <li><code>wrapSelection</code> signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code></li>
-              <li>i18n keys: <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung"), <code>form-framed</code> ("framed" / "umrahmt")</li>
+              <li><strong>White wash</strong> — <code>rgba(255, 255, 255, 0.25)</code> on <code>.stats-values</code>, <code>.weapons-box</code>, and <code>.damage-box</code></li>
+              <li><strong>Alternating tints</strong> — <code>rgba(90, 10, 20, 0.06)</code> on even damage rows; <code>rgba(90, 10, 20, 0.08)</code> on second weapon row (<code>:nth-child(odd)</code> due to header being first child)</li>
+              <li><strong>Row dividers</strong> — <code>box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4)</code> on damage rows after the first</li>
+              <li><strong>Damage row height</strong> — bumped to 28px; <code>damage-box</code> vertical padding/gap tuned to 0</li>
+              <li><strong>Removed</strong> <code>text-transform: uppercase</code> from <code>.dcol-wide</code> (the "* Zugewiesener Schaden" label)</li>
+              <li><strong>Gap between tables</strong> reduced to 20px (was 29px)</li>
+              <li><strong>Printer-friendly</strong> — all backgrounds and alternating tints reset to transparent</li>
             </ul>
-            <h3>Rename: Ability Card → Text Card</h3>
+            <h3>Points Table Restyle — Text Card</h3>
             <ul>
-              <li>Files: <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, route <code>/ability</code> → <code>/text</code></li>
-              <li>Type <code>AbilityCardData</code> → <code>TextCardData</code>; i18n key <code>ability-card</code> → <code>text-card</code>; CSS class <code>.ability-name</code> → <code>.card-name</code></li>
-              <li>Card type slug <code>'ability'</code> in <code>presetLabels</code> and <code>card.label-ability</code> key preserved — these name the card <em>type</em>, not the editor</li>
+              <li><strong>Matches damage table</strong> — removed dark maroon header and outer border/radius; replaced with <code>box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000</code> outer borders and <code>rgba(255, 255, 255, 0.25)</code> container background</li>
+              <li><strong>All text</strong> — Alegreya 17px, <code>color: #000</code>, <code>padding: 0 8px</code>; Germania One and colored header removed</li>
+              <li><strong>Row height</strong> — 28px for header, regular, and elite rows; row dividers <code>rgba(0, 0, 0, 0.4)</code></li>
+              <li><strong>Alternating tint</strong> — <code>.points-table > *:nth-child(even)</code> gets <code>rgba(90, 10, 20, 0.06)</code> (regular row = 2nd child)</li>
+              <li><strong>Printer-friendly</strong> — container and tint both cleared</li>
+              <li><strong>Dead code removed</strong> — <code>points-row-bottom</code> class and <code>.points-value.is-empty</code> rule</li>
             </ul>
-            <h3>Landing Page Polish</h3>
+            <h3>German Translation Corrections</h3>
             <ul>
-              <li>Fighter Card / Text Card buttons stacked vertically, full-width, moved above the description for stronger visual hierarchy</li>
+              <li><code>form-caption</code>: "Beschriftung" → "Bildunterschrift"</li>
+              <li><code>form-damage-points-allocated</code>: "Zugeteilte Schadenspunkte" → "Zugewiesener Schaden"</li>
+              <li><code>col-damage-points-allocated</code>: "* Erlittener Schaden" → "* Zugewiesener Schaden"</li>
+            </ul>
+            <h3>Landing Page</h3>
+            <ul>
+              <li>Button group gains <code>my-4</code> for extra breathing room above and below</li>
               <li><code>LAST_UPDATED</code> constant + locale-aware "Last updated" line via <code>Intl.DateTimeFormat</code> + <code>$derived</code></li>
             </ul>
           </section>
@@ -1843,18 +1847,17 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code> to <code>TextCardData</code>; added <code>showSubtitle</code>, <code>showCaption</code> to <code>FighterCardData</code>; <code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText</code></td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Sections reordered; Card Elements section added; activation moved into Runemarks; flavor/prerequisite/points gated on show flags; Name + Type merged; font size unified to 1rem; flavor text hint trimmed to "(italic)"</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Parchment render order updated; activation, flavor text, points table, prerequisite each gated on their show flag; points table no longer tied to card label; prerequisite font 18px scoped override</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section label added; <code>showSubtitle</code> + <code>showCaption</code> checkboxes added; caption input moved from image block to name section; "Is Named Fighter" / "Is Monster" labels</td></tr>
-                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Subtitle and caption gated on their show flags</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added show flags to <code>TextCardData</code> and <code>FighterCardData</code>; <code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText</code></td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Subtitle/caption gated; white wash + alternating tints on stats/weapons/damage rows; row heights, dividers, gap tuned; damage table uppercase removed; printer-friendly overrides updated</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section; <code>showSubtitle</code> + <code>showCaption</code> checkboxes; caption moved to name section; "Is Named Fighter" / "Is Monster" labels</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Show-flag gates; points table restyled to match damage table (Alegreya 17px, shadow borders, alternating tint, no dark header); dead class removed</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Card Elements section; checkbox order: Runemarks → Activation → Flavor Text → Points Cost Increases → Prerequisite</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>"Beschriftung" → "Bildunterschrift"; "Zugeteilte Schadenspunkte" / "Erlittener Schaden" → "Zugewiesener Schaden"; all new keys translated</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>All new show-flag and prerequisite i18n keys added</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked above description; <code>my-4</code> margin on button group; <code>LAST_UPDATED</code> + locale-aware date</td></tr>
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code></td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-card-elements</code>, <code>form-show-activation</code>, <code>form-show-flavor-text</code>, <code>form-show-prerequisite</code>, <code>form-show-points-table</code>, <code>form-points-cost-increases</code>, <code>form-show-subtitle</code>, <code>form-show-caption</code>; updated <code>form-card</code>, <code>form-fighter</code>, <code>form-named-fighter</code>, <code>form-monster-damage-table</code>, <code>card-name-placeholder</code>; added <code>form-prerequisite</code>, <code>form-framed</code>, <code>last-updated</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same — German translations for all new/changed keys</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked + moved above description; <code>LAST_UPDATED</code> constant + locale-aware "Last updated" line</td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags documented, parchment render order, prerequisite</td></tr>
-                <tr><td><code>README.md</code></td><td>Text card editor description updated</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags, parchment render order, prerequisite</td></tr>
               </tbody>
             </table>
           </section>
