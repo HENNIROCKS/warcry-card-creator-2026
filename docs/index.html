@@ -1781,20 +1781,15 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>prerequisiteText: string</code> to <code>TextCardData</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-prerequisite</code> ("Prerequisite"), <code>form-framed</code> ("framed"), <code>last-updated</code> ("Last updated")</td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-prerequisite</code> ("Voraussetzung"), <code>form-framed</code> ("umrahmt"), <code>last-updated</code> ("Zuletzt aktualisiert")</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Added <code>prerequisiteTextEl</code> ref; refactored <code>wrapSelection</code> to take a field name; added Prerequisite section with B/I toolbar and <code>rows="3"</code> textarea</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Added <code>.prerequisite-box</code> wrapper + CSS; printer-friendly border-color override</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>prerequisiteText: ''</code> to default card data</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked vertically, larger, moved above description; <code>LAST_UPDATED</code> constant + <code>$derived</code> formatted date; "Last updated" line below pill row</td></tr>
-                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card editor description; "ability card editor" → "text card editor"</td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Route, type, component names updated; stale runemark "not yet populated" note removed; prerequisite added to text card structure</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code> <em>(was ability)</em></td><td>File/route/type/component renames; export filename fallback <code>'ability'</code> → <code>'text-card'</code></td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code> <em>(was AbilityCard)</em></td><td>Type import + <code>.ability-name</code> CSS class renamed</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code> <em>(was AbilityForm)</em></td><td>Type import renamed</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Key <code>ability-card</code> renamed to <code>text-card</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Key <code>ability-card</code> renamed to <code>text-card</code></td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText: string</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Key <code>ability-card</code> → <code>text-card</code>; added <code>form-prerequisite</code>, <code>form-framed</code>, <code>last-updated</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same — German translations for all four keys</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code> <em>(was AbilityCard)</em></td><td>Type import renamed; <code>.ability-name</code> → <code>.card-name</code>; <code>.prerequisite-box</code> wrapper + CSS; printer-friendly override</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code> <em>(was AbilityForm)</em></td><td>Type import renamed; <code>wrapSelection</code> refactored to take field name; Prerequisite section added</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code> <em>(was ability)</em></td><td>Route, type, component imports renamed; <code>prerequisiteText: ''</code> default; export fallback <code>'ability'</code> → <code>'text-card'</code></td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Route link <code>/ability</code> → <code>/text</code>; buttons stacked + moved above description; <code>LAST_UPDATED</code> constant + locale-aware "Last updated" line</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Route, type, component names updated; stale runemark note removed; prerequisite added to text card structure description</td></tr>
+                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card description; renamed editor references</td></tr>
               </tbody>
             </table>
           </section>
