@@ -19,7 +19,7 @@
 	);
 
 	$effect(() => {
-		const priority = (k: string) => k === 'Hero' || k === 'Monster' ? -1 : 0;
+		const priority = (k: string) => k === 'Hero' || k === 'Monster' || k === 'Thrall' ? -1 : 0;
 		data.rightRunemarks = rmKeys
 			.filter(k => k !== '')
 			.sort((a, b) => priority(a) - priority(b))
@@ -146,8 +146,7 @@
 						{#each runemarkKeys as name}
 							<option value={name} disabled={
 								(rmKeys[i] !== name && rmKeys.some((k, j) => j !== i && k === name)) ||
-								(name === 'Monster' && rmKeys.some(k => k === 'Hero')) ||
-								(name === 'Hero' && rmKeys.some(k => k === 'Monster'))
+								(['Hero', 'Monster', 'Thrall'].includes(name) && rmKeys.some(k => k !== name && ['Hero', 'Monster', 'Thrall'].includes(k)))
 							}>{t('runemarks.' + name)}</option>
 						{/each}
 					</select>
