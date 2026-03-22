@@ -532,7 +532,7 @@
             <button class="session-btn" data-session="march-19">
               <span class="session-date">2026-03-19</span>
               <span class="session-title"
-                >Ability Card Form &amp; Export Polish</span
+                >Text Card Form &amp; Export Polish</span
               >
             </button>
           </li>
@@ -563,7 +563,7 @@
             <button class="session-btn" data-session="march-15">
               <span class="session-date">2026-03-15</span>
               <span class="session-title"
-                >Fighter Card Polish &amp; Ability Card</span
+                >Fighter Card Polish &amp; Text Card</span
               >
             </button>
           </li>
@@ -658,8 +658,7 @@
                     <a
                       href="#march-11-decisions"
                       onclick="activateSession('march-11')"
-                      >Separate routes: /fighter and /ability</a
-                    >
+                      >Separate routes: /fighter and /text</a>
                   </td>
                   <td>Mar 11</td>
                 </tr>
@@ -803,9 +802,9 @@
                     <a
                       href="#march-15-built"
                       onclick="activateSession('march-15')"
-                      >Ability card editor: <code>/ability</code> route,
-                      <code>AbilityCard.svelte</code> +
-                      <code>AbilityForm.svelte</code> built from scratch</a
+                      >Ability card editor: <code>/text</code> route,
+                      <code>TextCard.svelte</code> +
+                      <code>TextForm.svelte</code> built from scratch</a
                     >
                   </td>
                   <td>Mar 15</td>
@@ -851,8 +850,7 @@
                       href="#session-march-16"
                       onclick="activateSession('march-16')"
                       >Pipe <code>|</code> as manual line break in fighter name
-                      and ability card name</a
-                    >
+                      and text card name</a>
                   </td>
                   <td>Mar 16</td>
                 </tr>
@@ -1712,9 +1710,9 @@
               <span class="badge badge-green">Landing page UX</span>
               <span class="badge badge-green">i18n keys</span>
             </div>
-            <h1>Ability Card Prerequisite &amp; Landing Page Polish</h1>
+            <h1>Text Card Prerequisite &amp; Landing Page Polish</h1>
             <p>
-              Added a new optional "Prerequisite" text field to the ability card editor,
+              Added a new optional "Prerequisite" text field to the text card editor,
               positioned after Flavor Text in both the form and the card render. The field
               supports bold/italic markup buttons (same as Body Text) and uses
               <code>rows="3"</code> (same height as Flavor Text). On the card it renders
@@ -1724,7 +1722,7 @@
               hint, translatable as "umrahmt" in German. <code>wrapSelection</code> was
               refactored to accept a field name parameter, eliminating the need for a
               duplicate function. Landing page polish: primary buttons (Fighter Card /
-              Ability Card) are now stacked vertically, wider, taller, and moved above the
+              Text Card) are now stacked vertically, wider, taller, and moved above the
               description text for stronger visual hierarchy. A locale-aware "Last updated"
               line was added below the pill row.
             </p>
@@ -1736,8 +1734,8 @@
               What Was Built
             </h2>
             <ul>
-              <li><strong>Prerequisite field</strong> — <code>prerequisiteText: string</code> added to <code>AbilityCardData</code> in <code>types.ts</code>; default <code>''</code> in <code>+page.svelte</code></li>
-              <li><strong>Form section</strong> — Prerequisite section in <code>AbilityForm.svelte</code> after Flavor Text: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
+              <li><strong>Prerequisite field</strong> — <code>prerequisiteText: string</code> added to <code>TextCardData</code> in <code>types.ts</code>; default <code>''</code> in <code>+page.svelte</code></li>
+              <li><strong>Form section</strong> — Prerequisite section in <code>TextForm.svelte</code> after Flavor Text: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
               <li><strong>Card render</strong> — <code>.prerequisite-box</code> div wrapping a <code>.body-text</code> paragraph with <code>parseMarkup()</code>; renders between flavor text and body text; hidden when empty</li>
               <li><strong><code>wrapSelection</code> refactor</strong> — signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code>; both Body Text and Prerequisite buttons pass the field name; no duplication</li>
               <li><strong>i18n keys</strong> — <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung") and <code>form-framed</code> ("framed" / "umrahmt") added to <code>en.json</code> and <code>de.json</code></li>
@@ -1745,7 +1743,7 @@
             </ul>
             <h3>Landing Page Polish</h3>
             <ul>
-              <li><strong>Primary buttons redesigned</strong> — Fighter Card / Ability Card buttons stacked vertically, full-width (<code>max-w-xs</code>), larger padding (<code>px-8 py-4</code>), larger text (<code>text-lg</code>), moved above the tagline/disclaimer paragraph for stronger visual hierarchy</li>
+              <li><strong>Primary buttons redesigned</strong> — Fighter Card / Text Card buttons stacked vertically, full-width (<code>max-w-xs</code>), larger padding (<code>px-8 py-4</code>), larger text (<code>text-lg</code>), moved above the tagline/disclaimer paragraph for stronger visual hierarchy</li>
               <li><strong>"Last updated" line</strong> — <code>LAST_UPDATED</code> constant (<code>'2026-03-22'</code>) in <code>+page.svelte</code>; formatted via <code>Intl.DateTimeFormat</code> using <code>i18n.code</code> in a <code>$derived</code>; re-formats reactively on locale change; rendered below the pill row</li>
               <li><strong>i18n key</strong> — <code>ui.last-updated</code> ("Last updated" / "Zuletzt aktualisiert") added to <code>en.json</code> and <code>de.json</code></li>
             </ul>
@@ -1778,14 +1776,14 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>prerequisiteText: string</code> to <code>AbilityCardData</code></td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>prerequisiteText: string</code> to <code>TextCardData</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-prerequisite</code> ("Prerequisite"), <code>form-framed</code> ("framed"), <code>last-updated</code> ("Last updated")</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-prerequisite</code> ("Voraussetzung"), <code>form-framed</code> ("umrahmt"), <code>last-updated</code> ("Zuletzt aktualisiert")</td></tr>
-                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added <code>prerequisiteTextEl</code> ref; refactored <code>wrapSelection</code> to take a field name; added Prerequisite section with B/I toolbar and <code>rows="3"</code> textarea</td></tr>
-                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Added <code>.prerequisite-box</code> wrapper + CSS; printer-friendly border-color override</td></tr>
-                <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Added <code>prerequisiteText: ''</code> to default card data</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Added <code>prerequisiteTextEl</code> ref; refactored <code>wrapSelection</code> to take a field name; added Prerequisite section with B/I toolbar and <code>rows="3"</code> textarea</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Added <code>.prerequisite-box</code> wrapper + CSS; printer-friendly border-color override</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>prerequisiteText: ''</code> to default card data</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked vertically, larger, moved above description; <code>LAST_UPDATED</code> constant + <code>$derived</code> formatted date; "Last updated" line below pill row</td></tr>
-                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to ability card editor description</td></tr>
+                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card editor description</td></tr>
               </tbody>
             </table>
           </section>
@@ -1832,9 +1830,9 @@
             <h3>Divine Blessing &amp; Locale Sorting</h3>
             <ul>
               <li><strong>Divine Blessing card type</strong> — new preset slug <code>divine-blessing</code>; German: "Göttlicher Segen"; added to both form select and card <code>presetSlugs</code></li>
-              <li><strong>Points value fields</strong> — <code>regularPointsValue</code> and <code>elitePointsValue</code> added to <code>AbilityCardData</code>; form inputs appear conditionally below Card Name when Divine Blessing is selected</li>
+              <li><strong>Points value fields</strong> — <code>regularPointsValue</code> and <code>elitePointsValue</code> added to <code>TextCardData</code>; form inputs appear conditionally below Card Name when Divine Blessing is selected</li>
               <li><strong>Form field order</strong> — Activation moved below Card Name and Points section, before Runemarks; Divine Blessing positioned before Lesser Artefact in the type dropdown</li>
-              <li><strong>Locale-aware sorting</strong> — <code>FactionSelect</code> sorts alliances, factions, and subfactions; <code>FighterForm</code> and <code>AbilityForm</code> sort weapon types and fighter runemarks — all via <code>localeCompare(b, i18n.code)</code> in <code>$derived</code></li>
+              <li><strong>Locale-aware sorting</strong> — <code>FactionSelect</code> sorts alliances, factions, and subfactions; <code>FighterForm</code> and <code>TextForm</code> sort weapon types and fighter runemarks — all via <code>localeCompare(b, i18n.code)</code> in <code>$derived</code></li>
               <li><strong>FactionSelect refactor</strong> — extracted <code>sortAll()</code> for the no-search path; eliminated redundant <code>!lc</code> guard branches inside the filter map</li>
               <li><strong>FactionSelect type fix</strong> — replaced <code>FighterCardData</code> import with a structural prop type <code>{ grandAlliance, faction, bladeborn }</code>, making it correctly usable with both card types</li>
               <li><strong>Info file cleanup</strong> — stale <code>cardLabel</code> comment in <code>types.ts</code>; ability card label list in <code>CLAUDE.md</code>; march-20 locale sorting pending item marked Done</li>
@@ -1885,15 +1883,15 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>regularPointsValue?</code> and <code>elitePointsValue?</code> to <code>AbilityCardData</code>; updated stale <code>cardLabel</code> comment; changed points field types from <code>number?</code> to <code>string?</code></td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>regularPointsValue?</code> and <code>elitePointsValue?</code> to <code>TextCardData</code>; updated stale <code>cardLabel</code> comment; changed points field types from <code>number?</code> to <code>string?</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>label-divine-blessing</code>, <code>points-regular</code>, <code>points-elite</code>, <code>form-regular-points</code>, <code>form-elite-points</code>; added <code>points-col-wounds</code>, <code>points-col-cost</code>; shortened <code>points-regular</code> / <code>points-elite</code> to "Regular" / "Elite"</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same keys in German; <code>points-col-wounds</code> = "Lebenspunkte des Kämpfers", <code>points-col-cost</code> = "Punktwertzuschlag"</td></tr>
-                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>New divine-blessing option + conditional points fields; locale-sorted runemarks via <code>$derived</code>; Activation reordered; points placeholders updated to <code>15</code> / <code>20</code></td></tr>
-                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code>; restructured with header row, threshold qualifiers, <code>border: 1px solid</code> pattern; <code>is-empty</code> class + em dash fallback; <code>line-height: 25px</code> absolute to lock row height</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>New divine-blessing option + conditional points fields; locale-sorted runemarks via <code>$derived</code>; Activation reordered; points placeholders updated to <code>15</code> / <code>20</code></td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code>; restructured with header row, threshold qualifiers, <code>border: 1px solid</code> pattern; <code>is-empty</code> class + em dash fallback; <code>line-height: 25px</code> absolute to lock row height</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Locale-sorted weapon types and runemarks via <code>$derived</code></td></tr>
                 <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Removed <code>FighterCardData</code> import; structural prop type; <code>sortAll()</code> helper; cleaned <code>computeFiltered</code></td></tr>
                 <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Alignment fix on <code>Pistol</code> entry</td></tr>
-                <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Initialized <code>regularPointsValue</code> and <code>elitePointsValue</code> in default card data; pre-filled to <code>'15'</code> / <code>'20'</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Initialized <code>regularPointsValue</code> and <code>elitePointsValue</code> in default card data; pre-filled to <code>'15'</code> / <code>'20'</code></td></tr>
                 <tr><td><code>CLAUDE.md</code></td><td>Updated ability card label list to reflect all current presets</td></tr>
                 <tr><td><code>docs/index.html</code></td><td>March-20 locale sorting item marked Done</td></tr>
               </tbody>
@@ -1975,8 +1973,8 @@
               </li>
               <li>
                 <strong>All components wired</strong> — every visible string in
-                FighterForm, AbilityForm, FighterCard, AbilityCard, ThemeToggle,
-                FactionSelect, fighter page, and ability page now uses <code>t()</code>.
+                FighterForm, TextForm, FighterCard, TextCard, ThemeToggle,
+                FactionSelect, fighter page, and text page now uses <code>t()</code>.
               </li>
               <li>
                 <strong>Card values translated</strong> — column headers (BASE SIZE,
@@ -2087,7 +2085,7 @@
                 <code>weaponRunemarks</code>. Storing a German label ("Axt") would
                 break the icon lookup. <code>cardLabel</code> was changed from the
                 display string ("ABILITY") to a slug ("ability") so
-                <code>resolveCardLabel()</code> in AbilityCard can translate it
+                <code>resolveCardLabel()</code> in TextCard can translate it
                 reactively on every render.
               </div>
             </div>
@@ -2177,16 +2175,16 @@
                 <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>New — pill-style language select with globe icon and GitHub Issues link</td></tr>
                 <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Updated — display via <code>t()</code>, stores IDs</td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Updated — all column headers, weapon names, placeholder, <code>text-transform</code> added to missing classes; all nine <code>col-*</code> headers and weapon name span now use <code>split('|')</code> + <code>&lt;br&gt;</code> for translator-controlled line breaks</td></tr>
-                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Updated — <code>resolveCardLabel()</code>, pill labels, activation labels</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Updated — <code>resolveCardLabel()</code>, pill labels, activation labels</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels; weapon select refactored to <code>#each</code> loop with <code>.replaceAll('|', '')</code> to strip line-break markers from dropdown</td></tr>
-                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
                 <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>Updated — dark/light mode labels via <code>t()</code></td></tr>
                 <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — Thanatek's Tithe entry wired to <code>dBbThanateksTithe</code>; 4 Underworlds subfactions removed (Drepur's Wraithcreepers, Lady Harrow's Mournflight, Ironsoul's Condemnors, Storm of Celestus)</td></tr>
                 <tr><td><code>src/lib/runemarks/svg/factions-death-bladeborn-thanateks-tithe.svg</code></td><td>New — optimized runemark SVG (Death / Ossiarch Bonereapers)</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Updated — all landing page text, LangSwitch added; title/GitHub made static; pill row (LangSwitch + ThemeToggle + GitHub), mobile flex-wrap</td></tr>
                 <tr><td><code>src/routes/+layout.svelte</code></td><td>Updated — <code>i18n.init()</code> in <code>onMount</code></td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header</td></tr>
-                <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header, initial <code>cardLabel: 'ability'</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header, initial <code>cardLabel: 'ability'</code></td></tr>
                 <tr><td><code>README.md</code></td><td>Updated — Translations section added</td></tr>
                 <tr><td><code>CONTRIBUTING.md</code></td><td>Updated — translations listed as contribution type</td></tr>
                 <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>New — issue template for language contributions</td></tr>
@@ -2197,7 +2195,7 @@
         <!-- /session-march-20 -->
 
         <!-- ══════════════════════════════════════════
-         2026-03-19 — Ability Card Form & Export Polish
+         2026-03-19 — Text Card Form & Export Polish
     ══════════════════════════════════════════ -->
         <div id="session-march-19" class="session-panel">
           <div class="hero">
@@ -2207,10 +2205,10 @@
               <span class="badge badge-green">Favicon &amp; PWA</span>
               <span class="badge badge-green">Pill styling</span>
             </div>
-            <h1>Ability Card Form &amp; Export Polish</h1>
+            <h1>Text Card Form &amp; Export Polish</h1>
             <p>
               Bold/italic markup buttons for ability body text; printer-friendly
-              torn-edge overlay on ability card; form label cleanup; damage
+              torn-edge overlay on text card; form label cleanup; damage
               bracket alignment; Battle Trait added as ability card type.
             </p>
           </div>
@@ -2229,7 +2227,7 @@
                 form body text field — B and I buttons wrap the current
                 selection in <code>**…**</code> / <code>*…*</code> markers;
                 <code>parseMarkup()</code> in
-                <code>AbilityCard.svelte</code> renders them as
+                <code>TextCard.svelte</code> renders them as
                 <code>&lt;strong&gt;</code> / <code>&lt;em&gt;</code> via
                 <code>{@html}</code>.
               </li>
@@ -2330,7 +2328,7 @@
                 <strong>"Ability Card" → "Ability / Text Card"</strong> —
                 updated in both the landing page button
                 (<code>src/routes/+page.svelte</code>) and the editor header
-                (<code>src/routes/ability/+page.svelte</code>) to better reflect
+                (<code>src/routes/text/+page.svelte</code>) to better reflect
                 that the card type is used for plain text cards beyond just
                 abilities.
               </li>
@@ -2414,7 +2412,7 @@
                 <th>Change</th>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityForm.svelte</code></td>
+                <td><code>src/lib/components/TextForm.svelte</code></td>
                 <td>
                   Markup toolbar (B/I buttons + <code>wrapSelection()</code>);
                   label text cleanup; <code>bind:this</code> on body textarea;
@@ -2429,7 +2427,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityCard.svelte</code></td>
+                <td><code>src/lib/components/TextCard.svelte</code></td>
                 <td>
                   <code>parseMarkup()</code>; <code>{@html}</code> on body text;
                   torn-edge SVG overlay for printer-friendly; "CARD NAME"
@@ -2453,7 +2451,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/routes/ability/+page.svelte</code></td>
+                <td><code>src/routes/text/+page.svelte</code></td>
                 <td>Default card name changed to "CARD NAME"</td>
               </tr>
               <tr>
@@ -2481,7 +2479,7 @@
               <tr>
                 <td>
                   <code>src/routes/+page.svelte</code>,
-                  <code>src/routes/ability/+page.svelte</code>
+                  <code>src/routes/text/+page.svelte</code>
                 </td>
                 <td>"Ability Card" label renamed to "Ability / Text Card"</td>
               </tr>
@@ -2987,7 +2985,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityForm.svelte</code></td>
+                <td><code>src/lib/components/TextForm.svelte</code></td>
                 <td>Hardcoded hex → CSS vars; font-size <code>1rem</code></td>
               </tr>
               <tr>
@@ -3001,7 +2999,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/routes/ability/+page.svelte</code></td>
+                <td><code>src/routes/text/+page.svelte</code></td>
                 <td>
                   Same mobile export changes as fighter page; html2canvas code
                   removed
@@ -3136,7 +3134,7 @@
                   }</code
                 >
                 added to both <code>FighterForm.svelte</code> and
-                <code>AbilityForm.svelte</code> — prevents iOS Safari from
+                <code>TextForm.svelte</code> — prevents iOS Safari from
                 auto-zooming on focus
               </li>
               <li>
@@ -3259,7 +3257,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/routes/ability/+page.svelte</code></td>
+                <td><code>src/routes/text/+page.svelte</code></td>
                 <td>
                   Same changes as fighter page; layout breakpoint raised to
                   <code>lg:</code> (1024px)
@@ -3274,7 +3272,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityForm.svelte</code></td>
+                <td><code>src/lib/components/TextForm.svelte</code></td>
                 <td>
                   iOS font-size fix raised to <code>max-width: 1023px</code>
                 </td>
@@ -3376,7 +3374,7 @@
               </li>
               <li>
                 Applied to both editors — <code>FighterForm.svelte</code> and
-                <code>AbilityForm.svelte</code>; cascading selects removed from
+                <code>TextForm.svelte</code>; cascading selects removed from
                 both
               </li>
             </ul>
@@ -3385,11 +3383,11 @@
             <ul>
               <li>
                 <strong>Activation badge font-size</strong> increased from 14px
-                → 24px in <code>AbilityCard.svelte</code>
+                → 24px in <code>TextCard.svelte</code>
               </li>
               <li>
                 <strong>Pipe line break</strong> (<code>|</code>) supported in
-                fighter name and ability card name — card renders
+                fighter name and text card name — card renders
                 <code>&lt;br&gt;</code> at each <code>|</code>; form label hints
                 updated
               </li>
@@ -3473,14 +3471,14 @@
                 <th>Change</th>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityCard.svelte</code></td>
+                <td><code>src/lib/components/TextCard.svelte</code></td>
                 <td>
                   Activation badge font-size 14px → 24px; pipe line break in
                   ability name
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityForm.svelte</code></td>
+                <td><code>src/lib/components/TextForm.svelte</code></td>
                 <td>
                   Lesser Artefact + Greater Artefact options; pipe hint;
                   cascading selects → <code>FactionSelect</code>
@@ -3551,7 +3549,7 @@
         <!-- /session-march-16 -->
 
         <!-- ══════════════════════════════════════════
-         2026-03-15 — Fighter Card Polish & Ability Card
+         2026-03-15 — Fighter Card Polish & Text Card
     ══════════════════════════════════════════ -->
         <div id="session-march-15" class="session-panel">
           <div class="hero">
@@ -3561,11 +3559,11 @@
               <span class="badge badge-green">Font swap</span>
               <span class="badge badge-green">Fighter card polish</span>
             </div>
-            <h1>Fighter Card Polish &amp; Ability Card</h1>
+            <h1>Fighter Card Polish &amp; Text Card</h1>
             <p>
               Completed final polish on the fighter card (custom runemark shape,
               image caption, table radii, empty value dashes) and built the
-              ability card editor from scratch.
+              text card editor from scratch.
             </p>
           </div>
 
@@ -3645,7 +3643,7 @@
               </li>
               <li>
                 Page <code>&lt;title&gt;</code> tags added to
-                <code>/fighter</code> and <code>/ability</code> routes
+                <code>/fighter</code> and <code>/text</code> routes
               </li>
             </ul>
 
@@ -3674,21 +3672,21 @@
               </li>
             </ul>
 
-            <h3>Ability Card</h3>
+            <h3>Text Card</h3>
             <ul>
               <li>
-                Built <strong>AbilityCard.svelte</strong>: 574×915px, torn-edge
+                Built <strong>TextCard.svelte</strong>: 574×915px, torn-edge
                 header with dark maroon background, horizontal runemarks row (GA
                 + faction + subfaction + 2 fighter runemarks + activation
                 badge), card type label, parchment with title / flavor text /
                 body text
               </li>
               <li>
-                Built <strong>AbilityForm.svelte</strong>: card type, name,
+                Built <strong>TextForm.svelte</strong>: card type, name,
                 runemarks selects, activation select, flavor + body textareas
               </li>
               <li>
-                Built <strong>/ability/+page.svelte</strong>: split-panel
+                Built <strong>/text/+page.svelte</strong>: split-panel
                 layout, Export PNG + printer-friendly export
               </li>
               <li>
@@ -3759,7 +3757,7 @@
                 <td>
                   Added <code>imageCaption</code>, <code>subtitle</code> to
                   FighterCardData; replaced <code>runemarks</code> in
-                  AbilityCardData with individual fields; removed
+                  TextCardData with individual fields; removed
                   <code>Weapon.icon</code>
                 </td>
               </tr>
@@ -3807,20 +3805,20 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityCard.svelte</code></td>
+                <td><code>src/lib/components/TextCard.svelte</code></td>
                 <td>
-                  NEW — ability card visual component; fonts → Germania One /
+                  NEW — text card visual component; fonts → Germania One /
                   Alegreya
                 </td>
               </tr>
               <tr>
-                <td><code>src/lib/components/AbilityForm.svelte</code></td>
-                <td>NEW — ability card form component</td>
+                <td><code>src/lib/components/TextForm.svelte</code></td>
+                <td>NEW — text card form component</td>
               </tr>
               <tr>
-                <td><code>src/routes/ability/+page.svelte</code></td>
+                <td><code>src/routes/text/+page.svelte</code></td>
                 <td>
-                  Full ability card editor; <code>&lt;title&gt;</code> tag
+                  Full text card editor; <code>&lt;title&gt;</code> tag
                 </td>
               </tr>
               <tr>
@@ -4086,7 +4084,7 @@
               </li>
               <li>
                 <strong>Ability page restriction</strong> — same mobile
-                restriction applied to the ability card placeholder page.
+                restriction applied to the text card placeholder page.
               </li>
               <li>
                 <strong>Form readability</strong> — sublabel color bumped from
@@ -4521,7 +4519,7 @@
                 </td>
               </tr>
               <tr>
-                <td><code>src/routes/ability/+page.svelte</code></td>
+                <td><code>src/routes/text/+page.svelte</code></td>
                 <td>
                   Mobile/portrait restriction logic + notice; back link uses
                   <code>{base}/</code>
@@ -4532,7 +4530,7 @@
                 <td>
                   Updated title, copy, page title tag, mobile restriction note;
                   links use <code>{base}/fighter</code> and
-                  <code>{base}/ability</code>
+                  <code>{base}/text</code>
                 </td>
               </tr>
               <tr>
@@ -5081,7 +5079,7 @@
                 <tr>
                   <td><span class="badge badge-amber">todo</span></td>
                   <td>
-                    Ability card editor — <code>/ability</code> route (runemarks
+                    Ability card editor — <code>/text</code> route (runemarks
                     reusable from same index)
                   </td>
                 </tr>
@@ -5379,7 +5377,7 @@
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">todo</span></td>
-                  <td>Ability card editor — <code>/ability</code> route</td>
+                  <td>Ability card editor — <code>/text</code> route</td>
                 </tr>
               </tbody>
             </table>
@@ -5471,7 +5469,7 @@
             </h2>
             <div class="tree"><span class="tree-dir">src/</span>
 ├── <span class="tree-dir">lib/</span>
-│   ├── <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, AbilityCardData, Weapon, …)</span>
+│   ├── <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, TextCardData, Weapon, …)</span>
 │   ├── <span class="tree-file">index.ts</span>
 │   └── <span class="tree-dir">assets/</span>
 ├── <span class="tree-dir">routes/</span>
@@ -5515,7 +5513,7 @@
             </div>
             <div class="decision">
               <div class="decision-q">
-                Separate routes: /fighter and /ability
+                Separate routes: /fighter and /text
               </div>
               <div class="decision-a">
                 Different enough in structure that sharing a route would add
@@ -5559,7 +5557,7 @@
               </li>
               <li>Optional monster damage bracket table</li>
             </ul>
-            <h3>Ability Card (also Heroic Trait / Reaction)</h3>
+            <h3>Text Card (also Heroic Trait / Reaction)</h3>
             <ul>
               <li>Same portrait ratio</li>
               <li>
@@ -5786,7 +5784,7 @@
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">todo</span></td>
-                  <td>Ability card editor (<code>/ability</code> route)</td>
+                  <td>Ability card editor (<code>/text</code> route)</td>
                 </tr>
               </tbody>
             </table>
