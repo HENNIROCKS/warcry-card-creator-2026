@@ -1195,6 +1195,13 @@
                   </td>
                   <td>Mar 22</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-built" onclick="activateSession('march-22')"
+                      ><code>LangSwitch</code>: <code>&lt;details&gt;</code> dropdown replaces native <code>&lt;select&gt;</code> — "Add a language..." is a real <code>&lt;a&gt;</code>, fixing iOS Safari popup-block</a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1748,6 +1755,9 @@
               spacing, points table restyled to match damage table (Alegreya 17px,
               shadow borders, no dark header), German label corrections, and minor
               landing page spacing.
+              Third: landing page LangSwitch rewritten as a custom <code>&lt;details&gt;</code>
+              dropdown — fixes "Add a language..." not working on mobile (was blocked
+              as a popup by iOS Safari).
             </p>
           </div>
 
@@ -1806,6 +1816,15 @@
               <li>Button group gains <code>my-4</code> for extra breathing room above and below</li>
               <li><code>LAST_UPDATED</code> constant + locale-aware "Last updated" line via <code>Intl.DateTimeFormat</code> + <code>$derived</code></li>
             </ul>
+            <h3>LangSwitch — Custom Dropdown</h3>
+            <ul>
+              <li><strong>Replaced</strong> native <code>&lt;select&gt;</code> + separate link with a single <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pill dropdown</li>
+              <li><strong>Summary</strong> — globe SVG icon + current language name, styled to match the GitHub and theme-toggle pills</li>
+              <li><strong>Menu</strong> — language <code>&lt;button&gt;</code>s (active state bold), horizontal divider, <code>&lt;a&gt;</code> link for "Add a language..."</li>
+              <li><strong>Close on select</strong> — <code>details.open = false</code> after <code>i18n.setLocale()</code></li>
+              <li><strong>Close on outside tap</strong> — <code>document</code> click listener registered via <code>$effect</code> with cleanup</li>
+              <li><strong>Redundant <code>.lang-add</code> CSS rule</strong> removed (duplicate of <code>.lang-option</code> color)</li>
+            </ul>
           </section>
 
           <section id="march-22-decisions" data-nav="Key Decisions">
@@ -1837,6 +1856,10 @@
               <div class="decision-q">What happens when all Card Elements are checked and text is long on the text card?</div>
               <div class="decision-a">The card is fixed-size (574×915px). Overflow clips silently — deliberate choice. The header height is fixed; there is no dynamic shrinking. Users are expected to adjust text length or toggle elements off if content doesn't fit.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why use <code>&lt;details&gt;</code> for LangSwitch instead of keeping the native <code>&lt;select&gt;</code>?</div>
+              <div class="decision-a">The native select's <code>change</code> event is not treated as a trusted user gesture by iOS Safari — any <code>window.open()</code> call from it is blocked as a popup. By using a custom <code>&lt;details&gt;</code> element, the "Add a language..." entry becomes a real <code>&lt;a href&gt;</code> anchor, which always works on mobile. As a side benefit, all language options and the link live in a single dropdown instead of two separate UI elements.</div>
+            </div>
           </section>
 
           <section id="march-22-files" data-nav="Files Changed">
@@ -1858,6 +1881,7 @@
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code></td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code></td></tr>
                 <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags, parchment render order, prerequisite</td></tr>
+                <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>Replaced native <code>&lt;select&gt;</code> + separate link with <code>&lt;details&gt;</code> dropdown; "Add a language..." is now a real <code>&lt;a&gt;</code> anchor — fixes mobile popup-block bug</td></tr>
               </tbody>
             </table>
           </section>
