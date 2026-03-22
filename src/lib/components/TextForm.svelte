@@ -44,9 +44,17 @@
 
 <div class="space-y-10 text-sm">
 
-	<!-- Card Type -->
+	<!-- Card Name + Type -->
 	<section>
-		<label class="field-label" for="card-label">{t('ui.form-type')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-select')})</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
+		<label class="field-label" for="card-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
+		<input
+			id="card-name"
+			class="field-input"
+			type="text"
+			placeholder={t('card.card-name-placeholder')}
+			bind:value={data.name}
+		/>
+		<label class="field-label mt-2" for="card-label">{t('ui.form-type')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-select')})</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
 		<select id="card-label" class="field-input" bind:value={selectValue}>
 			<option value="ability">{t('card.label-ability')}</option>
 			<option value="reaction">{t('card.label-reaction')}</option>
@@ -68,51 +76,31 @@
 		{/if}
 	</section>
 
-	<!-- Card Name -->
+	<!-- Card Elements -->
 	<section>
-		<label class="field-label" for="card-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
-		<input
-			id="card-name"
-			class="field-input"
-			type="text"
-			placeholder={t('card.card-name-placeholder')}
-			bind:value={data.name}
-		/>
-	</section>
-
-	<!-- Divine Blessing Points -->
-	{#if selectValue === 'divine-blessing'}
-	<section>
-		<div class="points-row">
-			<div class="points-field">
-				<label class="field-label" for="regular-points">{t('ui.form-regular-points')}</label>
-				<input id="regular-points" class="field-input" type="text" placeholder="15" bind:value={data.regularPointsValue} />
-			</div>
-			<div class="points-field">
-				<label class="field-label" for="elite-points">{t('ui.form-elite-points')}</label>
-				<input id="elite-points" class="field-input" type="text" placeholder="20" bind:value={data.elitePointsValue} />
-			</div>
+		<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
+		<div class="flex flex-col gap-3">
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showActivation} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-activation')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showPointsTable} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-points-table')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showFlavorText} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-flavor-text')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showPrerequisite} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-prerequisite')}</span>
+			</label>
 		</div>
-	</section>
-	{/if}
-
-	<!-- Activation -->
-	<section>
-		<label class="field-label" for="activation">{t('ui.form-activation')}</label>
-		<select id="activation" class="field-input" bind:value={data.activationType}>
-			<option value={null}>—</option>
-			<option value="double">{t('card.activation-double')}</option>
-			<option value="triple">{t('card.activation-triple').replaceAll('|', '')}</option>
-			<option value="quad">{t('card.activation-quad').replaceAll('|', '')}</option>
-		</select>
-	</section>
-
-	<!-- Show Runemarks -->
-	<section>
-		<label class="flex cursor-pointer items-center gap-3">
-			<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-			<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
-		</label>
 	</section>
 
 	<!-- Runemarks -->
@@ -136,36 +124,65 @@
 				{/each}
 			</div>
 		</div>
+		{#if data.showActivation}
+			<div class="mt-3">
+				<label class="sublabel" for="activation">{t('ui.form-activation')}</label>
+				<select id="activation" class="field-input" bind:value={data.activationType}>
+					<option value={null}>—</option>
+					<option value="double">{t('card.activation-double')}</option>
+					<option value="triple">{t('card.activation-triple').replaceAll('|', '')}</option>
+					<option value="quad">{t('card.activation-quad').replaceAll('|', '')}</option>
+				</select>
+			</div>
+		{/if}
 	</section>
 
-	<!-- Flavor Text -->
-	<section>
-		<label class="field-label" for="flavor-text">{t('ui.form-flavor-text')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-italic-optional')})</span></label>
-		<textarea
-			id="flavor-text"
-			class="field-input resize-none"
-			rows="3"
-			bind:value={data.flavorText}
-		></textarea>
-	</section>
+	<!-- Text -->
+	{#if data.showFlavorText}
+		<section>
+			<label class="field-label" for="flavor-text">{t('ui.form-flavor-text')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-italic')})</span></label>
+			<textarea
+				id="flavor-text"
+				class="field-input resize-none"
+				rows="3"
+				bind:value={data.flavorText}
+			></textarea>
+		</section>
+	{/if}
 
-	<!-- Prerequisite -->
-	<section>
-		<label class="field-label" for="prerequisite-text">{t('ui.form-prerequisite')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-framed')})</span></label>
-		<div class="markup-toolbar">
-			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(prerequisiteTextEl, '**', 'prerequisiteText')}>B</button>
-			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(prerequisiteTextEl, '*', 'prerequisiteText')}>I</button>
-		</div>
-		<textarea
-			id="prerequisite-text"
-			class="field-input resize-none"
-			rows="3"
-			bind:value={data.prerequisiteText}
-			bind:this={prerequisiteTextEl}
-		></textarea>
-	</section>
+	{#if data.showPointsTable}
+		<section>
+			<p class="field-label mb-2">{t('ui.form-points-cost-increases')}</p>
+			<div class="points-row">
+				<div class="points-field">
+					<label class="sublabel" for="regular-points">{t('ui.form-regular-points')}</label>
+					<input id="regular-points" class="field-input" type="text" placeholder="15" bind:value={data.regularPointsValue} />
+				</div>
+				<div class="points-field">
+					<label class="sublabel" for="elite-points">{t('ui.form-elite-points')}</label>
+					<input id="elite-points" class="field-input" type="text" placeholder="20" bind:value={data.elitePointsValue} />
+				</div>
+			</div>
+		</section>
+	{/if}
 
-	<!-- Body Text -->
+	{#if data.showPrerequisite}
+		<section>
+			<label class="field-label" for="prerequisite-text">{t('ui.form-prerequisite')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-framed')})</span></label>
+			<div class="markup-toolbar">
+				<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(prerequisiteTextEl, '**', 'prerequisiteText')}>B</button>
+				<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(prerequisiteTextEl, '*', 'prerequisiteText')}>I</button>
+			</div>
+			<textarea
+				id="prerequisite-text"
+				class="field-input resize-none"
+				rows="3"
+				bind:value={data.prerequisiteText}
+				bind:this={prerequisiteTextEl}
+			></textarea>
+		</section>
+	{/if}
+
 	<section>
 		<label class="field-label" for="body-text">{t('ui.form-text')}</label>
 		<div class="markup-toolbar">
@@ -245,7 +262,7 @@
 		border-radius: 6px;
 		padding: 6px 10px;
 		color: var(--ui-text);
-		font-size: 0.875rem;
+		font-size: 1rem;
 		outline: none;
 		transition: border-color 0.15s;
 	}
@@ -255,10 +272,6 @@
 	}
 
 	@media (max-width: 1023px) {
-		.field-input {
-			font-size: 1rem;
-		}
-
 		.markup-btn {
 			font-size: 1rem;
 			padding: 12px 20px;
