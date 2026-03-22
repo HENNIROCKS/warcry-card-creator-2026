@@ -108,6 +108,8 @@
 		isNamedCharacter: false,
 		isMonster: false,
 		showRunemarks: true,
+		showSubtitle: false,
+		showCaption: false,
 		damageBrackets: [
 			{ damageRange: '0–3', move: '6', damage: '6/12' },
 			{ damageRange: '4–7', move: '5', damage: '5/10' },
