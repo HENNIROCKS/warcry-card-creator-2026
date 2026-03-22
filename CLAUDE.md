@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter and ability cards with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
+Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter and text cards with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
 
 ## Stack
 
@@ -35,11 +35,11 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 
 - `/` — landing page, links to both card editors
 - `/fighter` — fighter card editor
-- `/ability` — ability card editor
+- `/text` — text card editor
 
 ### Key files
 
-- `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `AbilityCardData`, `Weapon`, `Runemark`, etc.)
+- `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `TextCardData`, `Weapon`, `Runemark`, etc.)
 - `src/app.css` — global styles, Tailwind import, custom font declarations
 - `static/fonts/` — self-hosted font files and license texts
 
@@ -56,16 +56,16 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Bottom ~45%: parchment area — fighter name, characteristics table, weapons table
 - If `isMonster: true`: damage bracket table appended below weapons
 
-**Ability card** (portrait, same ratio):
+**Text card** (portrait, same ratio):
 
 - Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (preset slugs: ability, reaction, heroic-trait, battle-trait, lesser-artefact, greater-artefact, divine-blessing — or custom text)
 - Torn paper edge divider
-- Bottom ~72%: parchment area — card name, optional italic flavor text, body text
+- Bottom ~72%: parchment area — card name, optional italic flavor text, optional framed prerequisite text, body text
 
 ### Fonts
 
 - **Germania One** (`static/fonts/GermaniaOne-Regular.ttf`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
-- **Alegreya** (`static/fonts/Alegreya-Regular.ttf` + `Alegreya-Italic.ttf`, family `'Alegreya'`, SIL OFL) — damage table, ability card body/flavor text
+- **Alegreya** (`static/fonts/Alegreya-Regular.ttf` + `Alegreya-Italic.ttf`, family `'Alegreya'`, SIL OFL) — damage table, text card body/flavor text
 
 ### Background / textures
 
@@ -75,7 +75,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 
 ### Runemark library
 
-SVGs live in `src/lib/runemarks/svg/` (not yet populated). Library metadata in `src/lib/runemarks/index.ts`. Will be sourced from the public domain SVGs in the previous project (HENNIROCKS/warcry-card-creator on GitHub, master branch, `runemarks/` directory).
+SVGs live in `src/lib/runemarks/svg/` (203 files). Library metadata in `src/lib/runemarks/index.ts`.
 
 ## Code style
 
