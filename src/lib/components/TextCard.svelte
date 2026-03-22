@@ -30,7 +30,7 @@
 	<div class="image-section">
 		<div class="image-inner" style="mask-image: {maskUrl}; -webkit-mask-image: {maskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"></div>
 
-		{#if data.showRunemarks && (data.grandAlliance || data.faction || data.bladeborn || data.fighterRunemarks.length > 0 || data.activationType)}
+		{#if data.showRunemarks && (data.grandAlliance || data.faction || data.bladeborn || data.fighterRunemarks.length > 0 || (data.showActivation && data.activationType))}
 			<div class="runemarks-row">
 				{#if data.grandAlliance}
 					<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
@@ -60,7 +60,7 @@
 						</div>
 					</div>
 				{/each}
-				{#if data.activationType}
+				{#if data.showActivation && data.activationType}
 					<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
 						<div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">
 							<span class="activation-text">{#each t(`card.activation-${data.activationType}`).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>
@@ -78,7 +78,7 @@
 				{#each data.fighterRunemarks as rm}
 					<div class="runemark-pill">{rm.label}</div>
 				{/each}
-				{#if data.activationType}
+				{#if data.showActivation && data.activationType}
 					<div class="runemark-pill">{t(`card.activation-${data.activationType}`).replace('|', '')}</div>
 				{/if}
 			</div>
@@ -102,7 +102,10 @@
 	<!-- PARCHMENT -->
 	<div class="parchment">
 		<h1 class="card-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
-		{#if data.cardLabel === 'divine-blessing'}
+		{#if data.showFlavorText && data.flavorText}
+			<p class="flavor-text">{data.flavorText}</p>
+		{/if}
+		{#if data.showPointsTable}
 			<div class="points-table">
 				<div class="points-header">
 					<div class="points-col-label">{t('card.points-col-wounds')}</div>
@@ -118,10 +121,7 @@
 				</div>
 			</div>
 		{/if}
-		{#if data.flavorText}
-			<p class="flavor-text">{data.flavorText}</p>
-		{/if}
-		{#if data.prerequisiteText}
+		{#if data.showPrerequisite && data.prerequisiteText}
 			<div class="prerequisite-box">
 				<p class="body-text">{@html parseMarkup(data.prerequisiteText)}</p>
 			</div>
@@ -359,6 +359,10 @@
 
 	/* ── PREREQUISITE ───────────────────────────── */
 
+	.prerequisite-box .body-text {
+		font-size: 18px;
+	}
+
 	.prerequisite-box {
 		border: 1px solid #5a0a14;
 		border-radius: 7.5px;
@@ -396,18 +400,20 @@
 		font-weight: 400;
 		color: #FAF6F3;
 		text-transform: uppercase;
+		text-align: center;
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
 	.points-col-value {
+		flex: 1;
 		font-family: 'Germania One', serif;
 		font-size: 16px;
 		font-weight: 400;
 		color: #FAF6F3;
 		text-transform: uppercase;
-		text-align: right;
+		text-align: center;
 		border: 0;
 		outline: none;
 		background: transparent;
@@ -432,18 +438,20 @@
 		font-size: 16px;
 		font-weight: 400;
 		color: #3a2a1a;
+		text-align: center;
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
 	.points-value {
+		flex: 1;
 		font-family: 'Germania One', serif;
 		font-weight: 400;
 		font-size: 22px;
 		color: #000;
 		line-height: 25px;
-		text-align: right;
+		text-align: center;
 		border: 0;
 		outline: none;
 		background: transparent;
