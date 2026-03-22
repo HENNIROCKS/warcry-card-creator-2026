@@ -82,7 +82,7 @@
 			{#each (data.name || t('card.fighter-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}
 			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
 		</h1>
-		{#if data.subtitle}
+		{#if data.showSubtitle && data.subtitle}
 			<p class="fighter-subtitle">{data.subtitle}</p>
 		{/if}
 
@@ -150,7 +150,7 @@
 			</div>
 		{/if}
 	</div>
-	{#if data.imageCaption}
+	{#if data.showCaption && data.imageCaption}
 		<div class="image-caption">{data.imageCaption}</div>
 	{/if}
 </div>
