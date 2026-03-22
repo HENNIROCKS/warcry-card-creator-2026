@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { AbilityCardData } from '$lib/types';
+	import type { TextCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
-	let { data }: { data: AbilityCardData } = $props();
+	let { data }: { data: TextCardData } = $props();
 
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
@@ -70,9 +70,9 @@
 
 	<!-- Card Name -->
 	<section>
-		<label class="field-label" for="ability-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
+		<label class="field-label" for="card-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
 		<input
-			id="ability-name"
+			id="card-name"
 			class="field-input"
 			type="text"
 			placeholder={t('card.card-name-placeholder')}

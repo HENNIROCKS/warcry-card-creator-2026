@@ -1,13 +1,13 @@
 <svelte:head>
-	<title>Ability Card — Warcry Card Creator</title>
+	<title>Text Card — Warcry Card Creator</title>
 </svelte:head>
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { AbilityCardData } from '$lib/types';
+	import type { TextCardData } from '$lib/types';
 	import { t } from '$lib/i18n/index.svelte';
-	import AbilityCard from '$lib/components/AbilityCard.svelte';
-	import AbilityForm from '$lib/components/AbilityForm.svelte';
+	import TextCard from '$lib/components/TextCard.svelte';
+	import TextForm from '$lib/components/TextForm.svelte';
 
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
@@ -38,7 +38,7 @@
 			: Math.min(1, (viewportHeight - 64) / 915)
 	);
 
-	let data = $state<AbilityCardData>({
+	let data = $state<TextCardData>({
 		name: '',
 		cardLabel: 'ability',
 		activationType: null,
@@ -55,7 +55,7 @@
 	});
 
 	function makeSlug() {
-		const slug = (data.name || 'ability').toLowerCase().replace(/\s+/g, '-');
+		const slug = (data.name || 'text-card').toLowerCase().replace(/\s+/g, '-');
 		const now = new Date();
 		const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`;
 		return `${slug}_${ts}`;
@@ -125,7 +125,7 @@
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
 			<div class="flex items-center gap-3">
 				<a href="{base}/" class="text-zinc-500 transition hover:text-white" aria-label="Back">←</a>
-				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">{t('ui.ability-card')}</h1>
+				<h1 class="text-sm font-semibold tracking-widest text-zinc-200 uppercase">{t('ui.text-card')}</h1>
 			</div>
 			<div class="relative hidden lg:block">
 				<div class="flex rounded-md overflow-hidden">
@@ -163,7 +163,7 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto p-5">
-			<AbilityForm {data} />
+			<TextForm {data} />
 		</div>
 	</aside>
 
@@ -209,7 +209,7 @@
 		<div style="width: {574 * cardScale}px; height: {915 * cardScale}px; position: relative; flex-shrink: 0;">
 			<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
 				<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-					<AbilityCard {data} {printerFriendly} />
+					<TextCard {data} {printerFriendly} />
 				</div>
 			</div>
 		</div>

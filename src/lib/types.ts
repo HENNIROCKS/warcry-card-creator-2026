@@ -44,9 +44,9 @@ export interface FighterCardData {
 
 export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
-export interface AbilityCardData {
+export interface TextCardData {
 	name: string;
-	cardLabel: string;          // preset slug or custom string — see presetLabels in AbilityForm.svelte
+	cardLabel: string;          // preset slug or custom string — see presetLabels in TextForm.svelte
 	activationType: ActivationType;
 	grandAlliance: string;
 	faction: string;

@@ -42,8 +42,8 @@
 		<a href="{base}/fighter" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
 			{t('ui.fighter-card')}
 		</a>
-		<a href="{base}/ability" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
-			{t('ui.ability-card')}
+		<a href="{base}/text" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
+			{t('ui.text-card')}
 		</a>
 	</div>
 	<p class="text-zinc-400 text-sm text-center max-w-md px-6">

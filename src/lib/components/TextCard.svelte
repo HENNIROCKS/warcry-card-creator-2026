@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AbilityCardData } from '$lib/types';
+	import type { TextCardData } from '$lib/types';
 	import { getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
@@ -8,7 +8,7 @@
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
 
-	let { data, printerFriendly = false }: { data: AbilityCardData; printerFriendly?: boolean } = $props();
+	let { data, printerFriendly = false }: { data: TextCardData; printerFriendly?: boolean } = $props();
 
 	const presetSlugs = new Set(['ability', 'reaction', 'heroic-trait', 'battle-trait', 'lesser-artefact', 'greater-artefact', 'divine-blessing']);
 
@@ -101,7 +101,7 @@
 
 	<!-- PARCHMENT -->
 	<div class="parchment">
-		<h1 class="ability-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
+		<h1 class="card-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
 		{#if data.cardLabel === 'divine-blessing'}
 			<div class="points-table">
 				<div class="points-header">
@@ -309,7 +309,7 @@
 		background: transparent;
 	}
 
-	.ability-name {
+	.card-name {
 		font-family: 'Germania One', serif;
 		font-weight: 600;
 		font-size: 42px;
@@ -493,7 +493,7 @@
 		color: #000;
 	}
 
-	.is-printer-friendly .ability-name,
+	.is-printer-friendly .card-name,
 	.is-printer-friendly .flavor-text,
 	.is-printer-friendly .body-text {
 		color: #000;
