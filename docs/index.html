@@ -1758,6 +1758,9 @@
               Third: landing page LangSwitch rewritten as a custom <code>&lt;details&gt;</code>
               dropdown — fixes "Add a language..." not working on mobile (was blocked
               as a popup by iOS Safari).
+              Fourth: export PNG filename now prefixes grand alliance, faction, and bladeborn
+              before the card name; Hero/Monster/Thrall runemarks made mutually exclusive,
+              with Thrall sorting to the top in the preview.
             </p>
           </div>
 
@@ -1816,6 +1819,15 @@
               <li>Button group gains <code>my-4</code> for extra breathing room above and below</li>
               <li><code>LAST_UPDATED</code> constant + locale-aware "Last updated" line via <code>Intl.DateTimeFormat</code> + <code>$derived</code></li>
             </ul>
+            <h3>Export Filename — Faction Prefix</h3>
+            <ul>
+              <li><code>makeSlug()</code> in both <code>/fighter</code> and <code>/text</code> pages now collects <code>grandAlliance</code>, <code>faction</code>, and <code>bladeborn</code> (skipping empty values), slugifies each, and prepends them before the card name — e.g. <code>stormcast-eternals_prosecutors_my-fighter_2026-03-22_14-30.png</code></li>
+            </ul>
+            <h3>Runemark Rules — Hero / Monster / Thrall Mutual Exclusion</h3>
+            <ul>
+              <li>Picking any of Hero, Monster, or Thrall disables the other two in all three runemark selects</li>
+              <li>Thrall added to the priority sort (<code>priority = -1</code>) so it floats to the top of the right-column runemark display, matching Hero and Monster behaviour</li>
+            </ul>
             <h3>LangSwitch — Custom Dropdown</h3>
             <ul>
               <li><strong>Replaced</strong> native <code>&lt;select&gt;</code> + separate link with a single <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pill dropdown</li>
@@ -1872,14 +1884,14 @@
               <tbody>
                 <tr><td><code>src/lib/types.ts</code></td><td>Added show flags to <code>TextCardData</code> and <code>FighterCardData</code>; <code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText</code></td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Subtitle/caption gated; white wash + alternating tints on stats/weapons/damage rows; row heights, dividers, gap tuned; damage table uppercase removed; printer-friendly overrides updated</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section; <code>showSubtitle</code> + <code>showCaption</code> checkboxes; caption moved to name section; "Is Named Fighter" / "Is Monster" labels</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section; <code>showSubtitle</code> + <code>showCaption</code> checkboxes; caption moved to name section; "Is Named Fighter" / "Is Monster" labels; Hero/Monster/Thrall mutually exclusive; Thrall added to priority sort</td></tr>
                 <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Show-flag gates; points table restyled to match damage table (Alegreya 17px, shadow borders, alternating tint, no dark header); dead class removed</td></tr>
                 <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Card Elements section; checkbox order: Runemarks → Activation → Flavor Text → Points Cost Increases → Prerequisite</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>"Beschriftung" → "Bildunterschrift"; "Zugeteilte Schadenspunkte" / "Erlittener Schaden" → "Zugewiesener Schaden"; all new keys translated</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>All new show-flag and prerequisite i18n keys added</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked above description; <code>my-4</code> margin on button group; <code>LAST_UPDATED</code> + locale-aware date</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code></td></tr>
-                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code>; <code>makeSlug()</code> prefixes grandAlliance/faction/bladeborn</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code>; <code>makeSlug()</code> prefixes grandAlliance/faction/bladeborn</td></tr>
                 <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags, parchment render order, prerequisite</td></tr>
                 <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>Replaced native <code>&lt;select&gt;</code> + separate link with <code>&lt;details&gt;</code> dropdown; "Add a language..." is now a real <code>&lt;a&gt;</code> anchor — fixes mobile popup-block bug</td></tr>
               </tbody>
