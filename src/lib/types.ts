@@ -54,6 +54,7 @@ export interface AbilityCardData {
 	fighterRunemarks: Runemark[];
 	showRunemarks: boolean;
 	flavorText: string;         // italic block, shown above bodyText if non-empty
+	prerequisiteText: string;   // shown between flavorText and bodyText if non-empty
 	bodyText: string;
 	regularPointsValue?: string; // shown on divine-blessings cards
 	elitePointsValue?: string;   // shown on divine-blessings cards

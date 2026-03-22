@@ -48,6 +48,7 @@
 		fighterRunemarks: [],
 		showRunemarks: true,
 		flavorText: '',
+		prerequisiteText: '',
 		bodyText: '',
 		regularPointsValue: '15',
 		elitePointsValue: '20',

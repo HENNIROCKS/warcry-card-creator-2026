@@ -121,6 +121,11 @@
 		{#if data.flavorText}
 			<p class="flavor-text">{data.flavorText}</p>
 		{/if}
+		{#if data.prerequisiteText}
+			<div class="prerequisite-box">
+				<p class="body-text">{@html parseMarkup(data.prerequisiteText)}</p>
+			</div>
+		{/if}
 		{#if data.bodyText}
 			<p class="body-text">{@html parseMarkup(data.bodyText)}</p>
 		{/if}
@@ -352,6 +357,16 @@
 		background: transparent;
 	}
 
+	/* ── PREREQUISITE ───────────────────────────── */
+
+	.prerequisite-box {
+		border: 1px solid #5a0a14;
+		border-radius: 7.5px;
+		padding: 5px 12px;
+		outline: none;
+		background: transparent;
+	}
+
 	/* ── POINTS TABLE ───────────────────────────── */
 
 	.points-table {
@@ -482,6 +497,10 @@
 	.is-printer-friendly .flavor-text,
 	.is-printer-friendly .body-text {
 		color: #000;
+	}
+
+	.is-printer-friendly .prerequisite-box {
+		border-color: #000;
 	}
 
 	.is-printer-friendly .points-table {

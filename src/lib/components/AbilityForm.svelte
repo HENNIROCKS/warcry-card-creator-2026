@@ -8,6 +8,7 @@
 
 	let rmKeys = $state(['', '']);
 	let bodyTextEl: HTMLTextAreaElement;
+	let prerequisiteTextEl: HTMLTextAreaElement;
 
 	const runemarkKeys = $derived(
 		Object.keys(fighterRunemarks)
@@ -22,11 +23,11 @@
 		data.cardLabel = selectValue === '__custom__' ? customText : selectValue;
 	});
 
-	function wrapSelection(el: HTMLTextAreaElement, marker: string) {
+	function wrapSelection(el: HTMLTextAreaElement, marker: string, field: 'bodyText' | 'prerequisiteText') {
 		const start = el.selectionStart;
 		const end = el.selectionEnd;
-		const selected = data.bodyText.slice(start, end);
-		data.bodyText = data.bodyText.slice(0, start) + marker + selected + marker + data.bodyText.slice(end);
+		const selected = data[field].slice(start, end);
+		data[field] = data[field].slice(0, start) + marker + selected + marker + data[field].slice(end);
 		requestAnimationFrame(() => {
 			el.focus();
 			el.setSelectionRange(start + marker.length, end + marker.length);
@@ -148,12 +149,28 @@
 		></textarea>
 	</section>
 
+	<!-- Prerequisite -->
+	<section>
+		<label class="field-label" for="prerequisite-text">{t('ui.form-prerequisite')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-framed')})</span></label>
+		<div class="markup-toolbar">
+			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(prerequisiteTextEl, '**', 'prerequisiteText')}>B</button>
+			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(prerequisiteTextEl, '*', 'prerequisiteText')}>I</button>
+		</div>
+		<textarea
+			id="prerequisite-text"
+			class="field-input resize-none"
+			rows="3"
+			bind:value={data.prerequisiteText}
+			bind:this={prerequisiteTextEl}
+		></textarea>
+	</section>
+
 	<!-- Body Text -->
 	<section>
 		<label class="field-label" for="body-text">{t('ui.form-text')}</label>
 		<div class="markup-toolbar">
-			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(bodyTextEl, '**')}>B</button>
-			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(bodyTextEl, '*')}>I</button>
+			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(bodyTextEl, '**', 'bodyText')}>B</button>
+			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(bodyTextEl, '*', 'bodyText')}>I</button>
 		</div>
 		<textarea
 			id="body-text"
