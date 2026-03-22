@@ -6,7 +6,13 @@
 	import { base } from '$app/paths';
 	import LangSwitch from '$lib/components/LangSwitch.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-	import { t } from '$lib/i18n/index.svelte';
+	import { t, i18n } from '$lib/i18n/index.svelte';
+
+	const LAST_UPDATED = '2026-03-22';
+
+	const formattedDate = $derived(
+		new Date(LAST_UPDATED + 'T00:00:00').toLocaleDateString(i18n.code, { dateStyle: 'long' })
+	);
 </script>
 
 <style>
@@ -32,18 +38,18 @@
 
 <main class="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-6">
 	<h1 class="text-4xl font-bold tracking-wide text-center px-6">Warcry Card Creator 2026</h1>
+	<div class="flex flex-col items-stretch gap-3 w-full max-w-xs px-6">
+		<a href="{base}/fighter" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
+			{t('ui.fighter-card')}
+		</a>
+		<a href="{base}/ability" class="px-8 py-4 bg-red-900 hover:bg-red-800 rounded text-white font-semibold text-lg text-center transition">
+			{t('ui.ability-card')}
+		</a>
+	</div>
 	<p class="text-zinc-400 text-sm text-center max-w-md px-6">
 		{t('ui.tagline')}
 		{t('ui.disclaimer')}
 	</p>
-	<div class="flex gap-4">
-		<a href="{base}/fighter" class="px-6 py-3 bg-red-900 hover:bg-red-800 rounded text-white font-semibold transition">
-			{t('ui.fighter-card')}
-		</a>
-		<a href="{base}/ability" class="px-6 py-3 bg-red-900 hover:bg-red-800 rounded text-white font-semibold transition">
-			{t('ui.ability-card')}
-		</a>
-	</div>
 	<div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-2">
 		<LangSwitch />
 		<ThemeToggle />
@@ -53,4 +59,5 @@
 			GitHub
 		</a>
 	</div>
+	<p class="text-zinc-500 text-xs">{t('ui.last-updated')}: {formattedDate}</p>
 </main>

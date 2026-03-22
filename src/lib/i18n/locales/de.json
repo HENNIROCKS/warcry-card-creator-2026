@@ -172,6 +172,7 @@
   "ui": {
     "tagline": "Eine aktualisierte Version meines ursprünglichen Karten-Generators für Warhammer Age of Sigmar: Warcry, neu umgesetzt mit einer modernen technischen Basis für höhere Exportqualität und einfachere Anpassungsmöglichkeiten.",
     "disclaimer": "Dieses Projekt ist ein Fanprojekt, das für die Community entwickelt wurde; es ist nicht kommerziell und steht in keiner Verbindung zu Games Workshop und wird auch nicht von diesem Unternehmen unterstützt.",
+    "last-updated": "Zuletzt aktualisiert",
     "fighter-card": "Kämpferkarte",
     "ability-card": "Textkarte",
     "filter-factions": "Fraktionen filtern\u2026",
