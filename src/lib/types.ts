@@ -29,7 +29,7 @@ export interface FighterCardData {
 	grandAlliance: string;  // left top circle
 	faction: string;        // left middle circle
 	bladeborn: string;      // left bottom circle
-	rightRunemarks: Runemark[]; // up to 3, top-right column (TBD)
+	rightRunemarks: Runemark[]; // up to 3, top-right column
 	baseSize: string;           // e.g. "ø 32"
 	points: string;
 	move: string;
@@ -39,6 +39,8 @@ export interface FighterCardData {
 	isNamedCharacter: boolean;
 	isMonster: boolean;
 	showRunemarks: boolean;
+	showSubtitle: boolean;
+	showCaption: boolean;
 	damageBrackets: DamageBracket[]; // typically 5 rows
 }
 
@@ -53,9 +55,13 @@ export interface TextCardData {
 	bladeborn: string;
 	fighterRunemarks: Runemark[];
 	showRunemarks: boolean;
-	flavorText: string;         // italic block, shown above bodyText if non-empty
-	prerequisiteText: string;   // shown between flavorText and bodyText if non-empty
+	showActivation: boolean;
+	showFlavorText: boolean;
+	showPrerequisite: boolean;
+	showPointsTable: boolean;
+	flavorText: string;         // italic block; render order: flavor → points table → prerequisite → body
+	prerequisiteText: string;   // framed box, shown after points table if non-empty
 	bodyText: string;
-	regularPointsValue?: string; // shown on divine-blessings cards
-	elitePointsValue?: string;   // shown on divine-blessings cards
+	regularPointsValue?: string; // points cost increases table (independent of card type)
+	elitePointsValue?: string;   // points cost increases table (independent of card type)
 }
