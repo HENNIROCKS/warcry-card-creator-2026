@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-22">
+              <span class="session-date">2026-03-22</span>
+              <span class="session-title">Prerequisite Field</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-21">
               <span class="session-date">2026-03-21</span>
               <span class="session-title">Divine Blessing &amp; Locale Sorting</span>
@@ -1156,6 +1162,13 @@
                   </td>
                   <td>Mar 21</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-built" onclick="activateSession('march-22')"
+                      >Ability card: <code>prerequisiteText</code> field — framed box between flavor text and body text; B/I markup buttons; <code>wrapSelection</code> refactored to take a field name</a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1687,6 +1700,97 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-03-22 — Prerequisite Field
+    ══════════════════════════════════════════ -->
+        <div id="session-march-22" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-22</span>
+              <span class="badge badge-green">Prerequisite field</span>
+              <span class="badge badge-green">Landing page UX</span>
+              <span class="badge badge-green">i18n keys</span>
+            </div>
+            <h1>Ability Card Prerequisite &amp; Landing Page Polish</h1>
+            <p>
+              Added a new optional "Prerequisite" text field to the ability card editor,
+              positioned after Flavor Text in both the form and the card render. The field
+              supports bold/italic markup buttons (same as Body Text) and uses
+              <code>rows="3"</code> (same height as Flavor Text). On the card it renders
+              inside a framed box — <code>border: 1px solid #5a0a14</code>,
+              <code>border-radius: 7.5px</code>, <code>padding: 5px 12px</code> — matching
+              the Divine Blessing table border style. The form label carries a "(framed)"
+              hint, translatable as "umrahmt" in German. <code>wrapSelection</code> was
+              refactored to accept a field name parameter, eliminating the need for a
+              duplicate function. Landing page polish: primary buttons (Fighter Card /
+              Ability Card) are now stacked vertically, wider, taller, and moved above the
+              description text for stronger visual hierarchy. A locale-aware "Last updated"
+              line was added below the pill row.
+            </p>
+          </div>
+
+          <section id="march-22-built" data-nav="What Was Built">
+            <h2>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              What Was Built
+            </h2>
+            <ul>
+              <li><strong>Prerequisite field</strong> — <code>prerequisiteText: string</code> added to <code>AbilityCardData</code> in <code>types.ts</code>; default <code>''</code> in <code>+page.svelte</code></li>
+              <li><strong>Form section</strong> — Prerequisite section in <code>AbilityForm.svelte</code> after Flavor Text: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
+              <li><strong>Card render</strong> — <code>.prerequisite-box</code> div wrapping a <code>.body-text</code> paragraph with <code>parseMarkup()</code>; renders between flavor text and body text; hidden when empty</li>
+              <li><strong><code>wrapSelection</code> refactor</strong> — signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code>; both Body Text and Prerequisite buttons pass the field name; no duplication</li>
+              <li><strong>i18n keys</strong> — <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung") and <code>form-framed</code> ("framed" / "umrahmt") added to <code>en.json</code> and <code>de.json</code></li>
+              <li><strong>Printer-friendly</strong> — <code>.is-printer-friendly .prerequisite-box</code> override sets <code>border-color: #000</code></li>
+            </ul>
+            <h3>Landing Page Polish</h3>
+            <ul>
+              <li><strong>Primary buttons redesigned</strong> — Fighter Card / Ability Card buttons stacked vertically, full-width (<code>max-w-xs</code>), larger padding (<code>px-8 py-4</code>), larger text (<code>text-lg</code>), moved above the tagline/disclaimer paragraph for stronger visual hierarchy</li>
+              <li><strong>"Last updated" line</strong> — <code>LAST_UPDATED</code> constant (<code>'2026-03-22'</code>) in <code>+page.svelte</code>; formatted via <code>Intl.DateTimeFormat</code> using <code>i18n.code</code> in a <code>$derived</code>; re-formats reactively on locale change; rendered below the pill row</li>
+              <li><strong>i18n key</strong> — <code>ui.last-updated</code> ("Last updated" / "Zuletzt aktualisiert") added to <code>en.json</code> and <code>de.json</code></li>
+            </ul>
+          </section>
+
+          <section id="march-22-decisions" data-nav="Key Decisions">
+            <h2>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              Key Decisions
+            </h2>
+            <div class="decision">
+              <div class="decision-q">Why "framed" for the label hint rather than "bordered" or "outlined"?</div>
+              <div class="decision-a">"Bordered" felt informal; "outlined" is common in UI design systems but slightly technical. "Framed" is more fitting for a card game context — it suggests a deliberate visual container without implying UI component vocabulary. The German "umrahmt" translates naturally.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why keep Prerequisite between Flavor Text and Body Text in the form?</div>
+              <div class="decision-a">The form order mirrors the card render order: name → flavor text → prerequisite → body text. Reordering the form to put functional fields before decorative ones was considered but rejected — matching render order makes it easier to reason about what the card will look like as you fill it in.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why reuse the same border values as the Divine Blessing table?</div>
+              <div class="decision-a"><code>border: 1px solid #5a0a14</code> + <code>border-radius: 7.5px</code> is the established pattern for framed elements on the parchment. Reusing it keeps the visual language consistent. The padding (<code>5px 12px</code>) matches the points table row padding.</div>
+            </div>
+          </section>
+
+          <section id="march-22-files" data-nav="Files Changed">
+            <h2>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              Files Changed
+            </h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>prerequisiteText: string</code> to <code>AbilityCardData</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-prerequisite</code> ("Prerequisite"), <code>form-framed</code> ("framed"), <code>last-updated</code> ("Last updated")</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-prerequisite</code> ("Voraussetzung"), <code>form-framed</code> ("umrahmt"), <code>last-updated</code> ("Zuletzt aktualisiert")</td></tr>
+                <tr><td><code>src/lib/components/AbilityForm.svelte</code></td><td>Added <code>prerequisiteTextEl</code> ref; refactored <code>wrapSelection</code> to take a field name; added Prerequisite section with B/I toolbar and <code>rows="3"</code> textarea</td></tr>
+                <tr><td><code>src/lib/components/AbilityCard.svelte</code></td><td>Added <code>.prerequisite-box</code> wrapper + CSS; printer-friendly border-color override</td></tr>
+                <tr><td><code>src/routes/ability/+page.svelte</code></td><td>Added <code>prerequisiteText: ''</code> to default card data</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked vertically, larger, moved above description; <code>LAST_UPDATED</code> constant + <code>$derived</code> formatted date; "Last updated" line below pill row</td></tr>
+                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to ability card editor description</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-22 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-21 — Divine Blessing & Locale Sorting
@@ -5694,6 +5798,7 @@
 
     <script>
       const sessions = [
+        "march-22",
         "march-21",
         "march-20",
         "march-19",
