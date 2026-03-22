@@ -4,13 +4,7 @@
 	const NEW_LANG_URL = 'https://github.com/HENNIROCKS/warcry-card-creator-2026/issues/new?template=new_language.md';
 
 	function handleChange(e: Event) {
-		const val = (e.target as HTMLSelectElement).value;
-		if (val === '__new-lang__') {
-			(e.target as HTMLSelectElement).value = i18n.code;
-			window.open(NEW_LANG_URL, '_blank', 'noopener,noreferrer');
-		} else {
-			i18n.setLocale(val);
-		}
+		i18n.setLocale((e.target as HTMLSelectElement).value);
 	}
 </script>
 
@@ -31,10 +25,9 @@
 			{#each availableLocales as loc}
 				<option value={loc.code}>{loc.language}</option>
 			{/each}
-			<option disabled>──────────</option>
-			<option value="__new-lang__">{t('ui.add-language')}</option>
 		</select>
 	</div>
+	<a href={NEW_LANG_URL} target="_blank" rel="noopener noreferrer" class="add-lang-link">{t('ui.add-language')}</a>
 {/if}
 
 <style>
@@ -74,6 +67,22 @@
 	.lang-select:hover {
 		color: var(--ui-text);
 		-webkit-text-fill-color: var(--ui-text);
+		border-color: var(--ui-text-subtle);
+	}
+
+	.add-lang-link {
+		border: 1px solid var(--ui-border);
+		border-radius: 20px;
+		padding: 6px 14px;
+		color: var(--ui-text-muted);
+		font-size: 0.8rem;
+		line-height: 1;
+		text-decoration: none;
+		transition: color 0.15s, border-color 0.15s;
+	}
+
+	.add-lang-link:hover {
+		color: var(--ui-text);
 		border-color: var(--ui-text-subtle);
 	}
 </style>
