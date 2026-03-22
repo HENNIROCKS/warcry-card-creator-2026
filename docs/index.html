@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-22">
               <span class="session-date">2026-03-22</span>
-              <span class="session-title">Prerequisite, Rename &amp; Landing Polish</span>
+              <span class="session-title">Card Elements, Fighter Parity &amp; Text Polish</span>
             </button>
           </li>
           <li>
@@ -1163,7 +1163,35 @@
                 <tr>
                   <td>
                     <a href="#march-22-built" onclick="activateSession('march-22')"
-                      >Ability card: <code>prerequisiteText</code> field — framed box between flavor text and body text; B/I markup buttons; <code>wrapSelection</code> refactored to take a field name</a>
+                      >Text card: <code>prerequisiteText</code> field — framed box between flavor text and body text; B/I markup buttons; <code>wrapSelection</code> refactored to take a field name</a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-built" onclick="activateSession('march-22')"
+                      >Card Elements checkbox system — text card: <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code>; each collapses both card element and form field</a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-built" onclick="activateSession('march-22')"
+                      >Fighter card: <code>showSubtitle</code>, <code>showCaption</code> flags; Card Elements section added to form; caption moved out of image block</a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-built" onclick="activateSession('march-22')"
+                      >Text card parchment render order: flavor text → points table → prerequisite → body text; points table decoupled from <code>cardLabel</code></a>
+                  </td>
+                  <td>Mar 22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-22-decisions" onclick="activateSession('march-22')"
+                      >Fixed-size card overflow: header height stays fixed; content clips silently — no dynamic shrinking</a>
                   </td>
                   <td>Mar 22</td>
                 </tr>
@@ -1700,25 +1728,26 @@
         <!-- /session-index -->
 
         <!-- ══════════════════════════════════════════
-         2026-03-22 — Prerequisite Field
+         2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
         <div id="session-march-22" class="session-panel">
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-22</span>
-              <span class="badge badge-green">Prerequisite field</span>
-              <span class="badge badge-green">Ability → Text rename</span>
-              <span class="badge badge-green">Landing page UX</span>
+              <span class="badge badge-green">Card Elements checkboxes</span>
+              <span class="badge badge-green">Fighter parity</span>
+              <span class="badge badge-green">Prerequisite &amp; Rename</span>
             </div>
-            <h1>Text Card Prerequisite, Rename &amp; Landing Polish</h1>
+            <h1>Card Elements, Fighter Parity &amp; Text Card Polish</h1>
             <p>
-              Added a new optional "Prerequisite" text field to the text card editor,
-              rendered in a framed box on the card between flavor text and body text.
-              Fully renamed the editor from "Ability Card" to "Text Card" across all
-              file names, routes, types, i18n keys, and documentation — while preserving
-              the card <em>type</em> slug <code>'ability'</code> (Ability, Reaction, etc.).
-              Landing page polish: primary buttons stacked vertically and moved above the
-              description, plus a locale-aware "Last updated" line.
+              Added an independent "Card Elements" checkbox system to both editors —
+              text card gains toggles for activation badge, flavor text, prerequisite,
+              and points cost increases table (each collapsing its card element and its
+              form field). Fighter card gains Show Subtitle and Show Caption toggles
+              with the caption moved out of the image block. Labels unified to
+              Is&nbsp;Named&nbsp;Fighter / Is&nbsp;Monster, font sizes aligned between
+              both forms. Earlier in the same day: Prerequisite field added and the
+              editor fully renamed from Ability Card to Text Card.
             </p>
           </div>
 
@@ -1727,30 +1756,51 @@
               <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
               What Was Built
             </h2>
+            <h3>Card Elements — Text Card</h3>
             <ul>
-              <li><strong>Prerequisite field</strong> — <code>prerequisiteText: string</code> added to <code>TextCardData</code> in <code>types.ts</code>; default <code>''</code> in <code>+page.svelte</code></li>
-              <li><strong>Form section</strong> — Prerequisite section in <code>TextForm.svelte</code> after Flavor Text: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
-              <li><strong>Card render</strong> — <code>.prerequisite-box</code> div wrapping a <code>.body-text</code> paragraph with <code>parseMarkup()</code>; renders between flavor text and body text; hidden when empty</li>
-              <li><strong><code>wrapSelection</code> refactor</strong> — signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code>; both Body Text and Prerequisite buttons pass the field name; no duplication</li>
-              <li><strong>i18n keys</strong> — <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung") and <code>form-framed</code> ("framed" / "umrahmt") added to <code>en.json</code> and <code>de.json</code></li>
-              <li><strong>Printer-friendly</strong> — <code>.is-printer-friendly .prerequisite-box</code> override sets <code>border-color: #000</code></li>
+              <li><strong>Four new boolean flags</strong> on <code>TextCardData</code>: <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code></li>
+              <li><strong>Defaults</strong> — <code>showRunemarks: true</code>, <code>showActivation: true</code>, <code>showFlavorText: true</code>; prerequisite and points table default <code>false</code></li>
+              <li><strong>Form reorder</strong> — sections now: Name + Type (merged) → Card Elements → Runemarks (+ activation) → text fields</li>
+              <li><strong>Card render gates</strong> — <code>{#if data.showActivation && data.activationType}</code>, <code>{#if data.showFlavorText && data.flavorText}</code>, <code>{#if data.showPointsTable}</code>, <code>{#if data.showPrerequisite && data.prerequisiteText}</code></li>
+              <li><strong>Parchment render order</strong> — flavor text → points table → prerequisite → body text</li>
+              <li><strong>Points table decoupled</strong> — no longer gated on <code>cardLabel === 'divine-blessing'</code>; works with any card type</li>
+              <li><strong>Points section heading</strong> — <code>form-points-cost-increases</code> key added (en: "Points Cost Increases", de: "Punktwertzuschläge") used as section label above the two inputs</li>
+              <li><strong>Points table columns</strong> — both columns <code>flex: 1</code>, all cells <code>text-align: center</code></li>
+              <li><strong>Prerequisite font</strong> — scoped <code>.prerequisite-box .body-text { font-size: 18px }</code>; main body text stays 20px</li>
+            </ul>
+            <h3>Card Elements — Fighter Card</h3>
+            <ul>
+              <li><strong>Two new boolean flags</strong> on <code>FighterCardData</code>: <code>showSubtitle</code>, <code>showCaption</code></li>
+              <li><strong>Card Elements section</strong> added to <code>FighterForm.svelte</code> with a <code>field-label</code> heading; <code>showSubtitle</code> and <code>showCaption</code> checkboxes added alongside existing flags</li>
+              <li><strong>Caption field moved</strong> — extracted from the image block, now appears below the subtitle input in the Name section (visible only when <code>showCaption</code> is checked)</li>
+              <li><strong>Card render gates</strong> — <code>{#if data.showSubtitle && data.subtitle}</code>, <code>{#if data.showCaption && data.imageCaption}</code></li>
+            </ul>
+            <h3>Label &amp; Copy Polish</h3>
+            <ul>
+              <li><code>form-card</code> → "Name" (was "Card"), <code>form-fighter</code> → "Name" (was "Fighter") — removes redundant noun from the label</li>
+              <li><code>form-named-fighter</code> → "Is Named Fighter", <code>form-monster-damage-table</code> → "Is Monster" — consistent "Is…" prefix for boolean card-trait checkboxes</li>
+              <li><code>card-name-placeholder</code> → "Card name" (lowercase, consistent with Tailwind/shadcn style)</li>
+              <li>Flavor Text label hint: <code>(italic, optional)</code> → <code>(italic)</code> — "(optional)" is redundant now that the checkbox controls visibility</li>
+              <li>Input font size unified: <code>TextForm</code> was 0.875 rem, <code>FighterForm</code> was 1 rem — both now 1 rem</li>
+            </ul>
+            <h3>Prerequisite Field</h3>
+            <ul>
+              <li><code>prerequisiteText: string</code> added to <code>TextCardData</code>; default <code>''</code></li>
+              <li>Form section: B/I markup buttons, <code>rows="3"</code> textarea, <code>bind:this</code> ref for selection tracking</li>
+              <li>Card render: <code>.prerequisite-box</code> wrapping <code>.body-text</code> with <code>parseMarkup()</code>; hidden when empty; printer-friendly border override</li>
+              <li><code>wrapSelection</code> signature changed to <code>(el, marker, field: 'bodyText' | 'prerequisiteText')</code></li>
+              <li>i18n keys: <code>form-prerequisite</code> ("Prerequisite" / "Voraussetzung"), <code>form-framed</code> ("framed" / "umrahmt")</li>
             </ul>
             <h3>Rename: Ability Card → Text Card</h3>
             <ul>
-              <li><strong>Files renamed</strong> — <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, <code>src/routes/ability/</code> → <code>src/routes/text/</code></li>
-              <li><strong>Type renamed</strong> — <code>AbilityCardData</code> → <code>TextCardData</code> throughout</li>
-              <li><strong>i18n key renamed</strong> — <code>ui.ability-card</code> → <code>ui.text-card</code> (values were already "Text Card" / "Textkarte")</li>
-              <li><strong>CSS class renamed</strong> — <code>.ability-name</code> → <code>.card-name</code> in <code>TextCard.svelte</code></li>
-              <li><strong>Route updated</strong> — <code>/ability</code> → <code>/text</code>; landing page link updated accordingly</li>
-              <li><strong>Export filename fallback</strong> — <code>'ability'</code> → <code>'text-card'</code> in <code>makeSlug()</code></li>
-              <li><strong>CLAUDE.md corrections</strong> — runemark library "not yet populated" note removed (203 SVGs present); prerequisite text added to text card structure description</li>
-              <li><strong>Card type slugs preserved</strong> — <code>'ability'</code> in <code>presetLabels</code>/<code>presetSlugs</code> and <code>card.label-ability</code> i18n key left unchanged — these refer to the card <em>type</em> "Ability", not the editor</li>
+              <li>Files: <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, route <code>/ability</code> → <code>/text</code></li>
+              <li>Type <code>AbilityCardData</code> → <code>TextCardData</code>; i18n key <code>ability-card</code> → <code>text-card</code>; CSS class <code>.ability-name</code> → <code>.card-name</code></li>
+              <li>Card type slug <code>'ability'</code> in <code>presetLabels</code> and <code>card.label-ability</code> key preserved — these name the card <em>type</em>, not the editor</li>
             </ul>
             <h3>Landing Page Polish</h3>
             <ul>
-              <li><strong>Primary buttons redesigned</strong> — Fighter Card / Text Card buttons stacked vertically, full-width (<code>max-w-xs</code>), larger padding (<code>px-8 py-4</code>), larger text (<code>text-lg</code>), moved above the tagline/disclaimer paragraph for stronger visual hierarchy</li>
-              <li><strong>"Last updated" line</strong> — <code>LAST_UPDATED</code> constant (<code>'2026-03-22'</code>) in <code>+page.svelte</code>; formatted via <code>Intl.DateTimeFormat</code> using <code>i18n.code</code> in a <code>$derived</code>; re-formats reactively on locale change; rendered below the pill row</li>
-              <li><strong>i18n key</strong> — <code>ui.last-updated</code> ("Last updated" / "Zuletzt aktualisiert") added to <code>en.json</code> and <code>de.json</code></li>
+              <li>Fighter Card / Text Card buttons stacked vertically, full-width, moved above the description for stronger visual hierarchy</li>
+              <li><code>LAST_UPDATED</code> constant + locale-aware "Last updated" line via <code>Intl.DateTimeFormat</code> + <code>$derived</code></li>
             </ul>
           </section>
 
@@ -1760,16 +1810,28 @@
               Key Decisions
             </h2>
             <div class="decision">
-              <div class="decision-q">Why "framed" for the label hint rather than "bordered" or "outlined"?</div>
-              <div class="decision-a">"Bordered" felt informal; "outlined" is common in UI design systems but slightly technical. "Framed" is more fitting for a card game context — it suggests a deliberate visual container without implying UI component vocabulary. The German "umrahmt" translates naturally.</div>
+              <div class="decision-q">Why does each checkbox collapse both the card element AND its form field?</div>
+              <div class="decision-a">The form mirrors the card — if an element is hidden on the card there's nothing to configure, so hiding the form field eliminates noise. The user navigates a shorter form and sees a direct correspondence between what's checked and what's visible on both sides.</div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why keep Prerequisite between Flavor Text and Body Text in the form?</div>
-              <div class="decision-a">The form order mirrors the card render order: name → flavor text → prerequisite → body text. Reordering the form to put functional fields before decorative ones was considered but rejected — matching render order makes it easier to reason about what the card will look like as you fill it in.</div>
+              <div class="decision-q">Why is the points table independent of card type instead of only on Divine Blessing?</div>
+              <div class="decision-a">The points cost increases table is a game mechanic that could apply to any text card (abilities, traits, artefacts). Tying it to a specific card type label was an arbitrary coupling. An independent checkbox is simpler and more flexible.</div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why reuse the same border values as the Divine Blessing table?</div>
-              <div class="decision-a"><code>border: 1px solid #5a0a14</code> + <code>border-radius: 7.5px</code> is the established pattern for framed elements on the parchment. Reusing it keeps the visual language consistent. The padding (<code>5px 12px</code>) matches the points table row padding.</div>
+              <div class="decision-q">Why not make weapons/stats toggleable on the fighter card?</div>
+              <div class="decision-a">Stats and weapons are the core data on a fighter card — there's no meaningful fighter card without them. Toggling decorative extras (subtitle, caption) makes sense; toggling structural data does not.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why "Is Named Fighter" / "Is Monster" instead of "Named Fighter" / "Monster (Damage Table)"?</div>
+              <div class="decision-a">Checkbox labels that describe a state read better with a verb. "Show Runemarks" (imperative) and "Is Named Fighter" (state predicate) are both consistent with the toggle pattern. The old labels were noun phrases that didn't clearly signal they were boolean flags.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why "framed" for the prerequisite hint rather than "bordered" or "outlined"?</div>
+              <div class="decision-a">"Framed" fits card game vocabulary better than UI-system terms. The German "umrahmt" translates naturally.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">What happens when all Card Elements are checked and text is long on the text card?</div>
+              <div class="decision-a">The card is fixed-size (574×915px). Overflow clips silently — deliberate choice. The header height is fixed; there is no dynamic shrinking. Users are expected to adjust text length or toggle elements off if content doesn't fit.</div>
             </div>
           </section>
 
@@ -1781,15 +1843,18 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td><code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText: string</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Key <code>ability-card</code> → <code>text-card</code>; added <code>form-prerequisite</code>, <code>form-framed</code>, <code>last-updated</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same — German translations for all four keys</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code> <em>(was AbilityCard)</em></td><td>Type import renamed; <code>.ability-name</code> → <code>.card-name</code>; <code>.prerequisite-box</code> wrapper + CSS; printer-friendly override</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code> <em>(was AbilityForm)</em></td><td>Type import renamed; <code>wrapSelection</code> refactored to take field name; Prerequisite section added</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code> <em>(was ability)</em></td><td>Route, type, component imports renamed; <code>prerequisiteText: ''</code> default; export fallback <code>'ability'</code> → <code>'text-card'</code></td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Route link <code>/ability</code> → <code>/text</code>; buttons stacked + moved above description; <code>LAST_UPDATED</code> constant + locale-aware "Last updated" line</td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Route, type, component names updated; stale runemark note removed; prerequisite added to text card structure description</td></tr>
-                <tr><td><code>README.md</code></td><td>Added Divine Blessing and Prerequisite to text card description; renamed editor references</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code> to <code>TextCardData</code>; added <code>showSubtitle</code>, <code>showCaption</code> to <code>FighterCardData</code>; <code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText</code></td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Sections reordered; Card Elements section added; activation moved into Runemarks; flavor/prerequisite/points gated on show flags; Name + Type merged; font size unified to 1rem; flavor text hint trimmed to "(italic)"</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Parchment render order updated; activation, flavor text, points table, prerequisite each gated on their show flag; points table no longer tied to card label; prerequisite font 18px scoped override</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section label added; <code>showSubtitle</code> + <code>showCaption</code> checkboxes added; caption input moved from image block to name section; "Is Named Fighter" / "Is Monster" labels</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Subtitle and caption gated on their show flags</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code></td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-card-elements</code>, <code>form-show-activation</code>, <code>form-show-flavor-text</code>, <code>form-show-prerequisite</code>, <code>form-show-points-table</code>, <code>form-points-cost-increases</code>, <code>form-show-subtitle</code>, <code>form-show-caption</code>; updated <code>form-card</code>, <code>form-fighter</code>, <code>form-named-fighter</code>, <code>form-monster-damage-table</code>, <code>card-name-placeholder</code>; added <code>form-prerequisite</code>, <code>form-framed</code>, <code>last-updated</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same — German translations for all new/changed keys</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked + moved above description; <code>LAST_UPDATED</code> constant + locale-aware "Last updated" line</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags documented, parchment render order, prerequisite</td></tr>
+                <tr><td><code>README.md</code></td><td>Text card editor description updated</td></tr>
               </tbody>
             </table>
           </section>
