@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-23">
+              <span class="session-date">2026-03-23</span>
+              <span class="session-title">Card Back Editor</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-22">
               <span class="session-date">2026-03-22</span>
               <span class="session-title">Card Elements, Fighter Parity &amp; Text Polish</span>
@@ -1202,6 +1208,27 @@
                   </td>
                   <td>Mar 22</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Card back editor: <code>/card-back</code> route; <code>CardBackData</code> in <code>types.ts</code>; texture suppressed when custom image uploaded (<code>has-bg-image</code> class)</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
+                      ><code>--card-text-color</code> CSS variable drives both name colour and SVG fill; printer-friendly forces <code>#000</code> at variable level</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Runemark picker: searchable list (FactionSelect pattern) replaces native <code>&lt;select&gt;</code> for 200+ entries across all categories</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1737,6 +1764,127 @@
         <!-- ══════════════════════════════════════════
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
+        <!-- ══════════════════════════════════════════
+         2026-03-23 — Card Back Editor
+    ══════════════════════════════════════════ -->
+        <div id="session-march-23" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-23</span>
+              <span class="badge badge-green">Card back editor</span>
+              <span class="badge badge-green">Runemark search</span>
+              <span class="badge badge-green">Issue template fix</span>
+            </div>
+            <h1>Card Back Editor</h1>
+            <p>
+              Full card back editor at <code>/card-back</code>: name (with pipe line-break),
+              mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
+              (replacing the native <code>&lt;select&gt;</code> with the FactionSelect pattern),
+              and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
+              mobile. Printer-friendly export forces black on white. Hardcoded English "Adjust
+              image" hint in FighterForm fixed to use the shared i18n key. README and CLAUDE.md
+              updated to document all three card editors. The "New language" issue template's
+              relative link to <code>src/lib/i18n/README.md</code> was broken (resolved without
+              repo name on GitHub) — replaced with the full absolute URL.
+            </p>
+          </div>
+
+          <section id="march-23-built" data-nav="What Was Built">
+            <h2>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              What Was Built
+            </h2>
+            <h3>Card Back Editor — <code>/card-back</code></h3>
+            <ul>
+              <li><strong>New route</strong> — <code>src/routes/card-back/+page.svelte</code>; same two-panel layout (form left, card preview right) as fighter and text editors</li>
+              <li><strong><code>CardBackData</code> interface</strong> in <code>types.ts</code>: <code>title</code>, <code>backgroundImage</code>, <code>imageOffsetX/Y</code>, <code>imageZoom</code>, <code>runemark</code>, <code>textColor</code>, <code>showFlippedName</code></li>
+              <li><strong>Card visual</strong> — 574×915px; default texture (<code>static/background.jpg</code>); <code>has-bg-image</code> class suppresses CSS background when custom image is uploaded (avoids double-layering)</li>
+              <li><strong>Name + runemark overlay</strong> — Germania One 56px; runemark 280×280px SVG; mirrored name (rotated 180°) above/below runemark or flanking name when no runemark</li>
+              <li><strong>Mirrored name</strong> — <code>showFlippedName</code> flag (default <code>true</code>); works for name-only and name+runemark; <code>name-overlay-text-only</code> class widens gap to 220px when no runemark between the two names</li>
+              <li><strong>Text colour</strong> — three swatches: white (<code>#fff</code>), black (<code>#000</code>), red (<code>#c0392b</code>); drives <code>--card-text-color</code> CSS custom property on <code>.card</code>; printer-friendly always forces <code>#000</code></li>
+              <li><strong>Runemark picker</strong> — search input + scrollable grouped list (identical pattern to <code>FactionSelect</code>); covers all fighter, weapon, characteristic, and faction/hierarchy runemarks; selection badge with clear button; "no matches" empty state</li>
+              <li><strong>Background image</strong> — upload, remove, sliders for X/Y position and zoom (desktop); Adjust Image button + full-card touch overlay for drag-to-pan + pinch-to-zoom (mobile)</li>
+              <li><strong>Export</strong> — PNG + printer-friendly PNG via dom-to-image-more (desktop) / modern-screenshot (mobile); Web Share API on iOS</li>
+            </ul>
+            <h3>i18n</h3>
+            <ul>
+              <li>New keys in both locales: <code>card-back</code>, <code>form-placeholder-card-back</code>, <code>form-runemark</code>, <code>form-filter-runemarks</code>, <code>form-text-color</code>, <code>form-show-flipped-name</code>, <code>adjust-image-hint-mobile</code></li>
+              <li>Fixed hardcoded English "Adjust image position and zoom in the Preview tab." in <code>FighterForm.svelte</code> — now uses <code>t('ui.adjust-image-hint-mobile')</code></li>
+              <li>JSON parse bug fixed in <code>de.json</code>: stray ASCII <code>"</code> inside a German string containing typographic quotes was terminating the JSON value early</li>
+            </ul>
+            <h3>Docs &amp; Code Cleanup</h3>
+            <ul>
+              <li><code>README.md</code> — card back editor described; "Both editors" → "All three editors"</li>
+              <li><code>CLAUDE.md</code> — project description, routes list, and Card structure section updated</li>
+              <li>Bug fix: <code>adjustMode</code> now resets to <code>false</code> when background image is removed (was sticky, would re-activate on next upload)</li>
+            </ul>
+          </section>
+
+          <section id="march-23-decisions" data-nav="Key Decisions">
+            <h2>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              Key Decisions
+            </h2>
+            <div class="decision">
+              <div class="decision-q">Why suppress the CSS background texture when a custom image is uploaded?</div>
+              <div class="decision-a">Without suppression, the parchment texture renders underneath the custom image — both images are composited into the export, increasing file size unnecessarily. The <code>has-bg-image</code> class sets <code>background-image: none</code> so only the uploaded image is used. The <code>background-color: #5a0a14</code> fallback still shows at any transparent edges.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why a custom searchable list instead of a native <code>&lt;select&gt;</code> for the runemark picker?</div>
+              <div class="decision-a">The runemark library has 200+ entries across many groups — a native select is unnavigable at that scale. The FactionSelect pattern (search input + scrollable button list + selection badge) already existed in the project and is proven on both desktop and mobile. Reusing it gave instant locale-reactive filtering and a consistent UX at minimal extra code.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why <code>--card-text-color</code> CSS custom property rather than directly inlining colour per element?</div>
+              <div class="decision-a">The colour must apply to both the <code>.card-name</code> text and the injected <code>{@html}</code> SVG fill. Setting a single CSS variable on the <code>.card</code> div propagates to both via <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> in scoped CSS. The printer-friendly override sets the variable to <code>#000</code> at the same level, so no element-level overrides are needed. Export risk: <code>getComputedStyle</code> resolves CSS variables, so dom-to-image-more should copy the resolved values — worth verifying in a real export test.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why is the mirrored name on by default?</div>
+              <div class="decision-a">The symmetrical playing-card style was the original design intent — it looks deliberate and purposeful when both name and runemark are set. Defaulting it on means new users immediately see the "full" effect. The checkbox exists for users who prefer a single name (e.g. text-only backs or minimalist designs).</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why 220px gap for text-only (no runemark) mirrored name?</div>
+              <div class="decision-a">With a runemark the visual separation between the two names is roughly 56 + 280 + 56 = 392px. Without a runemark the 220px gap preserves a similarly generous breathing room so the card doesn't look cramped. The number is tunable without touching logic.</div>
+            </div>
+          </section>
+
+          <section id="march-23-pending" data-nav="Still Pending">
+            <h2>
+              <span class="icon" style="background: rgba(251, 191, 36, 0.15)">⏳</span>
+              Still Pending
+            </h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Test</span></td>
+                  <td>Verify <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> resolve correctly in dom-to-image-more PNG exports for all three colour options</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-23-files" data-nav="Files Changed">
+            <h2>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              Files Changed
+            </h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>CardBackData</code> interface with <code>textColor</code> and <code>showFlippedName</code></td></tr>
+                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>New file — full card back editor: form, card visual, export, touch handlers</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Card back keys added; <code>adjust-image-hint-mobile</code> added</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same; stray ASCII <code>"</code> inside typographic-quote string fixed</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded "Adjust image position…" → <code>t('ui.adjust-image-hint-mobile')</code></td></tr>
+                <tr><td><code>README.md</code></td><td>Card back editor described; "Both editors" → "All three editors"</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Routes, project description, and Card structure section updated for card back</td></tr>
+                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link <code>../../src/lib/i18n/README.md</code> → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-23 -->
+
         <div id="session-march-22" class="session-panel">
           <div class="hero">
             <div class="meta">
@@ -5906,6 +6054,7 @@
 
     <script>
       const sessions = [
+        "march-23",
         "march-22",
         "march-21",
         "march-20",
