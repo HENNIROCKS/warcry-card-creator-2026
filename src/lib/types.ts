@@ -55,6 +55,42 @@ export interface CardBackData {
 	showFlippedName: boolean;
 }
 
+export type DeploymentIconType = 'dagger' | 'shield' | 'hammer';
+export type DeploymentColor = 'red' | 'blue';
+export type DeploymentCapType = 'arrow' | 'tick' | 'none';
+export type DeploymentDirection = 'up' | 'down' | 'left' | 'right';
+
+// Inside: TL TC TR ML CC MR BL BC BR
+// Outside: top-left top-center top-right right-center bottom-right bottom-center bottom-left left-center
+export type DeploymentPosition =
+	| 'TL' | 'TC' | 'TR'
+	| 'ML' | 'CC' | 'MR'
+	| 'BL' | 'BC' | 'BR'
+	| 'OUT-TL' | 'OUT-TC' | 'OUT-TR'
+	| 'OUT-RC'
+	| 'OUT-BR' | 'OUT-BC' | 'OUT-BL'
+	| 'OUT-LC';
+
+export interface DeploymentMeasurement {
+	direction: DeploymentDirection;
+	label: string;        // e.g. '8"'
+	startCap: DeploymentCapType;
+	endCap: DeploymentCapType;
+}
+
+export interface DeploymentPoint {
+	position: DeploymentPosition;
+	icon: DeploymentIconType;
+	color: DeploymentColor;
+	rnd: string;          // e.g. 'RND2'
+	measurements: DeploymentMeasurement[];
+}
+
+export interface DeploymentCardData {
+	name: string;
+	points: DeploymentPoint[];
+}
+
 export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
 export interface TextCardData {

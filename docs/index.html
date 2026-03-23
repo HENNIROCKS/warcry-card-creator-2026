@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-23">
               <span class="session-date">2026-03-23</span>
-              <span class="session-title">Card Back Editor</span>
+              <span class="session-title">Card Back + Deployment Card</span>
             </button>
           </li>
           <li>
@@ -1243,6 +1243,20 @@
                   </td>
                   <td>Mar 23</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Deployment card: SVG-based (not CSS/HTML); landscape 915×574px; 17 snap positions (3×3 inside + 8 outside); dagger ▽ / hammer ◇ / shield ⊙ icons; 2-player red/blue</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
+                      >Deployment icons: <code>deployment-*.svg</code> imported <code>?raw</code>; fill replaced with <code>fill="white"</code>; embedded in nested <code>&lt;svg&gt;</code> inside colored outer shape</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1345,6 +1359,13 @@
                     >
                   </td>
                   <td>Mar 15</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Deployment card: landscape 915×574px; battlefield rect 100px L/R / 60px T/B inset; parchment <code>#d9b8a8</code>; dashed centre lines 8/6</a>
+                  </td>
+                  <td>Mar 23</td>
                 </tr>
               </tbody>
             </table>
@@ -1786,10 +1807,10 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-23</span>
               <span class="badge badge-green">Card back editor</span>
-              <span class="badge badge-green">Runemark picker</span>
-              <span class="badge badge-green">Runemark library</span>
+              <span class="badge badge-green">Deployment card scaffold</span>
+              <span class="badge badge-green">Deployment icon rendering</span>
             </div>
-            <h1>Card Back Editor + Runemark Library</h1>
+            <h1>Card Back Editor + Deployment Card Foundation</h1>
             <p>
               Full card back editor at <code>/card-back</code>: name (with pipe line-break),
               mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
@@ -1797,9 +1818,13 @@
               and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
               mobile. Printer-friendly export forces black on white. Runemark library expanded
               with 28 new SVGs across 5 new categories (Card Decks, Deployment, Misc, Treasure,
-              Twists) — card back only; each category gets its own i18n namespace and grouped
-              section in the picker. SVG <code>fill="#000"</code> stripped from two source files
-              where hardcoded path attributes were overriding the CSS colour variable.
+              Twists). In a second pass, the deployment card editor at <code>/deployment</code>
+              was scaffolded: landscape 915×574px layout, parchment-on-white battlefield rectangle
+              with dashed centre lines, a 17-position snap grid (9 inside 3×3 + 8 outer edge slots),
+              and three deployment icon types (dagger ▽, hammer ◇, shield ⊙) rendered via
+              <code>?raw</code> SVG imports with white inner content on a player-colour outer shape.
+              The data model (<code>DeploymentCardData</code>, <code>DeploymentPoint</code>,
+              measurement annotations) is fully typed and ready; the form UI is the next chunk.
             </p>
           </div>
 
@@ -1847,6 +1872,18 @@
               <li><strong>SVG fill bug fix</strong> — <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code> had <code>fill="#000"</code> on their <code>&lt;path&gt;</code> elements; stripped so paths inherit <code>--card-text-color</code> from the parent <code>&lt;svg&gt;</code> correctly</li>
               <li><strong>i18n README</strong> — namespace table extended with 5 new entries</li>
             </ul>
+            <h3>Deployment Card Editor — <code>/deployment</code></h3>
+            <ul>
+              <li><strong>Landscape layout</strong> — 915×574px card (portrait dimensions rotated); sidebar 360px; scale formula <code>min((viewportWidth − 360) / 915, (viewportHeight − 64) / 574, 1)</code> constrains both axes; mobile tab bar identical to other editors</li>
+              <li><strong>Battlefield rectangle</strong> — parchment-coloured (<code>#d9b8a8</code>) rect inset 100px left/right, 60px top/bottom; dashed centre lines (8px dash / 6px gap) divide it into 4 quadrants; card name renders faintly at centre of battlefield</li>
+              <li><strong>SVG-based card</strong> — <code>DeploymentCard.svelte</code> renders an inline <code>&lt;svg width="915" height="574"&gt;</code> directly; parchment texture via CSS <code>background-image</code> on the wrapper <code>.card</code> div (same as other cards)</li>
+              <li><strong>17 snap positions</strong> — 9 inside (3×3 grid: TL TC TR / ML CC MR / BL BC BR) + 8 outside (OUT-TL/TC/TR, OUT-LC, OUT-RC, OUT-BL/BC/BR); each maps to an (x, y) coordinate on the SVG canvas</li>
+              <li><strong>Deployment icon types</strong> — dagger (downward triangle ▽), hammer (diamond ◇), shield (circle ⊙); outer shapes drawn as SVG polygon/circle with <code>fill="currentColor"</code>; inner icon imported via <code>?raw</code> from <code>deployment-dagger.svg</code> / <code>deployment-hammer.svg</code> / <code>deployment-shield.svg</code> and embedded as white content in a nested <code>&lt;svg&gt;</code></li>
+              <li><strong>Player colours</strong> — 2-player for now: red <code>#c0272d</code>, blue <code>#1a3a6e</code>; set via <code>style="color: {color}"</code> on <code>&lt;use&gt;</code>, picked up by <code>fill="currentColor"</code> on outer shapes</li>
+              <li><strong>RND labels</strong> — positioned adjacent to icon in the "outward" direction from the rectangle (above for top positions, below for bottom, left/right for side); colour matches player colour (or black in printer-friendly mode)</li>
+              <li><strong>Data model fully typed</strong> — <code>DeploymentCardData</code>, <code>DeploymentPoint</code>, <code>DeploymentMeasurement</code>, <code>DeploymentPosition</code>, <code>DeploymentIconType</code>, <code>DeploymentColor</code>, <code>DeploymentCapType</code>, <code>DeploymentDirection</code> all in <code>src/lib/types.ts</code></li>
+              <li><strong>Measurement model defined</strong> — each point supports 0–2 <code>DeploymentMeasurement</code> entries: <code>direction</code> (up/down/left/right), <code>label</code> (e.g. <code>8"</code>), <code>startCap</code> + <code>endCap</code> (<code>'arrow' | 'tick' | 'none'</code>); rendering not yet implemented</li>
+            </ul>
           </section>
 
           <section id="march-23-decisions" data-nav="Key Decisions">
@@ -1880,6 +1917,24 @@
             </div>
           </section>
 
+            <div class="decision">
+              <div class="decision-q">Why SVG (not CSS/HTML) for the deployment card?</div>
+              <div class="decision-a">The card content is fundamentally a 2D diagram: a rectangle, dashed lines, icons at arbitrary coordinates, and annotation lines with arrows. SVG is the right tool — coordinate-based placement is natural, and all elements (shapes, icons, text) compose cleanly without fighting CSS layout. The other card editors use CSS/HTML because their content is largely text-flow + image; deployment cards are diagram-first.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why 17 snap positions (3×3 inside + 8 outside) rather than free-form placement?</div>
+              <div class="decision-a">Analysing 13 example deployment cards, all icons landed at one of these 17 logical positions — quadrant centres, edge midpoints, centre, and outer-margin slots. Free-form placement would require drag-to-position UI which is complex and fiddly on desktop + mobile. Snap positions cover every real-world card in the examples and keep the form UI simple (a position picker, not a coordinate editor).</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why import deployment SVGs via <code>?raw</code> and embed as white inner content, rather than using the existing weapon SVGs or drawing from scratch?</div>
+              <div class="decision-a">Three deployment-specific SVGs already existed in the runemark library (<code>deployment-dagger.svg</code>, <code>deployment-hammer.svg</code>, <code>deployment-shield.svg</code>). Using them via <code>?raw</code>, stripping the outer <code>&lt;svg&gt;</code> wrapper, and replacing all <code>fill</code> attributes with <code>fill="white"</code> gives authentic Warcry icons inside the coloured shapes with zero path-drawing effort. A nested <code>&lt;svg&gt;</code> with its own <code>viewBox</code> handles scaling cleanly.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Measurement lines: arrows or tick marks at each end?</div>
+              <div class="decision-a">Both are needed — real Warcry deployment cards use both double-headed arrows (↔) and bracket-style tick marks at edges (|——|). The data model stores <code>startCap</code> and <code>endCap</code> independently (<code>'arrow' | 'tick' | 'none'</code>) so both styles are supported. Rendering is deferred to the next session.</div>
+            </div>
+          </section>
+
           <section id="march-23-pending" data-nav="Still Pending">
             <h2>
               <span class="icon" style="background: rgba(251, 191, 36, 0.15)">⏳</span>
@@ -1890,7 +1945,23 @@
               <tbody>
                 <tr>
                   <td><span class="badge badge-amber">Test</span></td>
-                  <td>Verify <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> resolve correctly in dom-to-image-more PNG exports for all three colour options</td>
+                  <td>Verify <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> resolve correctly in dom-to-image-more PNG exports for all three colour options (card back)</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Deployment card form: snap position picker, icon type selector, player colour, RND field — add/remove points UI in <code>DeploymentForm.svelte</code></td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Measurement line rendering in <code>DeploymentCard.svelte</code>: arrow / tick-mark line from icon toward reference edge, with distance label at midpoint</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Later</span></td>
+                  <td>4-player support (yellow + green colours) — currently 2-player only</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Later</span></td>
+                  <td>Optional quadrant colour fills (some official cards shade player zones)</td>
                 </tr>
               </tbody>
             </table>
@@ -1917,7 +1988,11 @@
                 <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
                 <tr><td><code>vite.config.ts</code></td><td>Added <code>define: { __BUILD_DATE__ }</code> — injects build date at compile time</td></tr>
                 <tr><td><code>src/app.d.ts</code></td><td>Added <code>declare const __BUILD_DATE__: string</code> ambient declaration</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code>; Card Back button restyled to secondary (zinc-700) to de-emphasise relative to primary red buttons</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code>; Card Back button restyled to secondary (zinc-700) to de-emphasise relative to primary red buttons; Deployment Card button added</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>DeploymentCardData</code>, <code>DeploymentPoint</code>, <code>DeploymentMeasurement</code> interfaces + <code>DeploymentPosition</code>, <code>DeploymentIconType</code>, <code>DeploymentColor</code>, <code>DeploymentCapType</code>, <code>DeploymentDirection</code> types</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>New file — 915×574px SVG card; battlefield rect + dashed centre lines; 17 snap-position coordinate map; dagger/hammer/shield symbols using <code>?raw</code> deployment SVG inner content</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>New file — name field only (form UI for deployment points deferred to next session)</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Replaced placeholder "Coming soon" with full editor page: 360px sidebar, landscape scale formula, export dropdown, mobile tab bar</td></tr>
               </tbody>
             </table>
           </section>
