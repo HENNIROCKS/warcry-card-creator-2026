@@ -26,5 +26,5 @@ Any context about official localised faction/warband names, regional variants, o
 
 ---
 
-> See [`src/lib/i18n/README.md`](../../src/lib/i18n/README.md) for the full contributor guide.
+> See [`src/lib/i18n/README.md`](https://github.com/HENNIROCKS/warcry-card-creator-2026/blob/main/src/lib/i18n/README.md) for the full contributor guide.
 > Copy `src/lib/i18n/locales/en.json`, translate the values, and open a PR — no other code changes needed.

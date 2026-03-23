@@ -44,6 +44,17 @@ export interface FighterCardData {
 	damageBrackets: DamageBracket[]; // typically 5 rows
 }
 
+export interface CardBackData {
+	title: string;
+	backgroundImage: string | null;
+	imageOffsetX: number;
+	imageOffsetY: number;
+	imageZoom: number;
+	runemark: string;
+	textColor: 'white' | 'black' | 'red';
+	showFlippedName: boolean;
+}
+
 export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
 export interface TextCardData {
