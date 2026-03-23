@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter and text cards with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
+Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter cards, text cards, and card backs with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
 
 ## Stack
 
@@ -33,9 +33,10 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 
 ### Routes
 
-- `/` — landing page, links to both card editors
+- `/` — landing page, links to all three card editors
 - `/fighter` — fighter card editor
 - `/text` — text card editor
+- `/card-back` — card back editor
 
 ### Key files
 
@@ -62,6 +63,14 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
 - Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable` — collapsing both the card element and its form field
+
+**Card back** (portrait, same 574×915px):
+
+- Full-card background: `static/background.jpg` texture by default; replaced entirely when a custom background image is uploaded (no double-layering)
+- Centred overlay: optional name (Germania One, large, uppercase) + optional runemark (280×280px SVG) + optional mirrored name (rotated 180°) for playing-card symmetry
+- `showFlippedName` flag on `CardBackData` controls the mirrored duplicate
+- `textColor` (`'white' | 'black' | 'red'`) drives a `--card-text-color` CSS variable for both name and SVG fill; printer-friendly export always forces black
+- Custom background image: pan/zoom via sliders on desktop, touch drag + pinch-to-zoom on mobile (`adjustMode` toggle)
 
 ### Fonts
 

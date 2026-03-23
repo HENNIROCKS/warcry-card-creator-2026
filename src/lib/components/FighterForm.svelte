@@ -120,7 +120,7 @@
 						<input id="img-zoom" type="range" min="1" max="3" step="0.05" bind:value={data.imageZoom} class="w-full accent-red-800" />
 					</div>
 				</div>
-				<p class="lg:hidden text-sm text-zinc-300">Adjust image position and zoom in the <strong class="text-white font-semibold">Preview</strong> tab.</p>
+				<p class="lg:hidden text-sm text-zinc-500">{t('ui.adjust-image-hint-mobile')}</p>
 			</div>
 		{:else}
 			<label
