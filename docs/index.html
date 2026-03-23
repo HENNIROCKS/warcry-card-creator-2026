@@ -1229,6 +1229,20 @@
                   </td>
                   <td>Mar 23</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >28 new runemark SVGs in 5 categories (Card Decks, Deployment, Misc, Treasure, Twists) — card back only; 5 new i18n namespaces</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
+                      >SVG fill bug: inline <code>fill="#000"</code> on <code>&lt;path&gt;</code> beats inherited CSS — fix by stripping attribute at source</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1772,20 +1786,20 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-23</span>
               <span class="badge badge-green">Card back editor</span>
-              <span class="badge badge-green">Runemark search</span>
-              <span class="badge badge-green">Issue template fix</span>
+              <span class="badge badge-green">Runemark picker</span>
+              <span class="badge badge-green">Runemark library</span>
             </div>
-            <h1>Card Back Editor</h1>
+            <h1>Card Back Editor + Runemark Library</h1>
             <p>
               Full card back editor at <code>/card-back</code>: name (with pipe line-break),
               mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
               (replacing the native <code>&lt;select&gt;</code> with the FactionSelect pattern),
               and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
-              mobile. Printer-friendly export forces black on white. Hardcoded English "Adjust
-              image" hint in FighterForm fixed to use the shared i18n key. README and CLAUDE.md
-              updated to document all three card editors. The "New language" issue template's
-              relative link to <code>src/lib/i18n/README.md</code> was broken (resolved without
-              repo name on GitHub) — replaced with the full absolute URL.
+              mobile. Printer-friendly export forces black on white. Runemark library expanded
+              with 28 new SVGs across 5 new categories (Card Decks, Deployment, Misc, Treasure,
+              Twists) — card back only; each category gets its own i18n namespace and grouped
+              section in the picker. SVG <code>fill="#000"</code> stripped from two source files
+              where hardcoded path attributes were overriding the CSS colour variable.
             </p>
           </div>
 
@@ -1818,6 +1832,16 @@
               <li><code>CLAUDE.md</code> — project description, routes list, and Card structure section updated</li>
               <li>Bug fix: <code>adjustMode</code> now resets to <code>false</code> when background image is removed (was sticky, would re-activate on next upload)</li>
             </ul>
+            <h3>Runemark Library — New Categories (card back only)</h3>
+            <ul>
+              <li><strong>28 new SVG files</strong> — Card Decks (6), Deployment (3), Misc (3), Treasure (8), Twists (7)</li>
+              <li><strong>5 new export Records</strong> in <code>src/lib/runemarks/index.ts</code>: <code>cardDecksRunemarks</code>, <code>deploymentRunemarks</code>, <code>miscRunemarks</code>, <code>treasureRunemarks</code>, <code>twistsRunemarks</code></li>
+              <li><strong>5 new i18n namespaces</strong> (<code>card-decks</code>, <code>deployment</code>, <code>misc</code>, <code>treasure</code>, <code>twists</code>) with translations in both <code>en.json</code> and <code>de.json</code>; group labels added to the <code>ui</code> namespace</li>
+              <li><strong><code>LocaleData</code> interface</strong> in <code>types.ts</code> updated with the 5 new fields</li>
+              <li><strong>Card back picker</strong> — 5 new sorted groups appended to <code>allRunemarkOptions</code>; new records spread into <code>allRunemarkSvgs</code></li>
+              <li><strong>SVG fill bug fix</strong> — <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code> had <code>fill="#000"</code> on their <code>&lt;path&gt;</code> elements; stripped so paths inherit <code>--card-text-color</code> from the parent <code>&lt;svg&gt;</code> correctly</li>
+              <li><strong>i18n README</strong> — namespace table extended with 5 new entries</li>
+            </ul>
           </section>
 
           <section id="march-23-decisions" data-nav="Key Decisions">
@@ -1845,6 +1869,10 @@
               <div class="decision-q">Why 220px gap for text-only (no runemark) mirrored name?</div>
               <div class="decision-a">With a runemark the visual separation between the two names is roughly 56 + 280 + 56 = 392px. Without a runemark the 220px gap preserves a similarly generous breathing room so the card doesn't look cramped. The number is tunable without touching logic.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why strip <code>fill="#000"</code> from SVG path elements rather than fixing it in CSS?</div>
+              <div class="decision-a">SVG inline presentation attributes on child elements (<code>&lt;path fill="#000"&gt;</code>) override <em>inherited</em> CSS — the parent <code>&lt;svg&gt;</code>'s <code>fill: var(--card-text-color)</code> propagates via CSS inheritance, but a child's own presentation attribute beats an inherited value. The clean fix is to remove the attribute at source: paths with no fill then correctly inherit from the <code>&lt;svg&gt;</code>. An alternative would be adding <code>.card-runemark :global(svg *) { fill: var(--card-text-color) }</code> (CSS author rule beats presentation attributes), but stripping at source is simpler and correct in any rendering context.</div>
+            </div>
           </section>
 
           <section id="march-23-pending" data-nav="Still Pending">
@@ -1871,14 +1899,17 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>CardBackData</code> interface with <code>textColor</code> and <code>showFlippedName</code></td></tr>
-                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>New file — full card back editor: form, card visual, export, touch handlers</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Card back keys added; <code>adjust-image-hint-mobile</code> added</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>CardBackData</code> interface; added 5 new fields to <code>LocaleData</code></td></tr>
+                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>New file — full card back editor; 5 new runemark categories wired into picker and SVG map</td></tr>
+                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>5 new import groups + exported Records for Card Decks, Deployment, Misc, Treasure, Twists</td></tr>
+                <tr><td><code>src/lib/runemarks/svg/</code></td><td>28 new SVG files added; <code>fill="#000"</code> stripped from <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Card back keys added; 5 new namespaces + group labels in <code>ui</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same; stray ASCII <code>"</code> inside typographic-quote string fixed</td></tr>
+                <tr><td><code>src/lib/i18n/README.md</code></td><td>Namespace table extended with 5 new card-back-only namespaces</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded "Adjust image position…" → <code>t('ui.adjust-image-hint-mobile')</code></td></tr>
                 <tr><td><code>README.md</code></td><td>Card back editor described; "Both editors" → "All three editors"</td></tr>
                 <tr><td><code>CLAUDE.md</code></td><td>Routes, project description, and Card structure section updated for card back</td></tr>
-                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link <code>../../src/lib/i18n/README.md</code> → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
+                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
               </tbody>
             </table>
           </section>
