@@ -8,10 +8,8 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 
-	const LAST_UPDATED = '2026-03-22';
-
 	const formattedDate = $derived(
-		new Date(LAST_UPDATED + 'T00:00:00').toLocaleDateString(i18n.code, { dateStyle: 'long' })
+		new Date(__BUILD_DATE__ + 'T00:00:00').toLocaleDateString(i18n.code, { dateStyle: 'long' })
 	);
 </script>
 
