@@ -519,19 +519,25 @@
           <li>
             <button class="session-btn" data-session="march-22">
               <span class="session-date">2026-03-22</span>
-              <span class="session-title">Card Elements, Fighter Parity &amp; Text Polish</span>
+              <span class="session-title"
+                >Card Elements, Fighter Parity &amp; Text Polish</span
+              >
             </button>
           </li>
           <li>
             <button class="session-btn" data-session="march-21">
               <span class="session-date">2026-03-21</span>
-              <span class="session-title">Divine Blessing &amp; Locale Sorting</span>
+              <span class="session-title"
+                >Divine Blessing &amp; Locale Sorting</span
+              >
             </button>
           </li>
           <li>
             <button class="session-btn" data-session="march-20">
               <span class="session-date">2026-03-20</span>
-              <span class="session-title">i18n &amp; Custom Card Type Label</span>
+              <span class="session-title"
+                >i18n &amp; Custom Card Type Label</span
+              >
             </button>
           </li>
           <li>
@@ -664,7 +670,8 @@
                     <a
                       href="#march-11-decisions"
                       onclick="activateSession('march-11')"
-                      >Separate routes: /fighter and /text</a>
+                      >Separate routes: /fighter and /text</a
+                    >
                   </td>
                   <td>Mar 11</td>
                 </tr>
@@ -856,7 +863,8 @@
                       href="#session-march-16"
                       onclick="activateSession('march-16')"
                       >Pipe <code>|</code> as manual line break in fighter name
-                      and text card name</a>
+                      and text card name</a
+                    >
                   </td>
                   <td>Mar 16</td>
                 </tr>
@@ -1129,117 +1137,200 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-20-built" onclick="activateSession('march-20')"
-                      >i18n: <code>import.meta.glob</code> locale auto-discovery;
-                      module-level <code>$state</code> + inline <code>t()</code>
-                      for cross-module reactivity</a>
+                    <a
+                      href="#march-20-built"
+                      onclick="activateSession('march-20')"
+                      >i18n: <code>import.meta.glob</code> locale
+                      auto-discovery; module-level <code>$state</code> + inline
+                      <code>t()</code> for cross-module reactivity</a
+                    >
                   </td>
                   <td>Mar 20</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-20-decisions" onclick="activateSession('march-20')"
-                      >i18n: stable English keys stored for icon lookup; translation
-                      at render time only (weapons, runemarks, cardLabel slug)</a>
+                    <a
+                      href="#march-20-decisions"
+                      onclick="activateSession('march-20')"
+                      >i18n: stable English keys stored for icon lookup;
+                      translation at render time only (weapons, runemarks,
+                      cardLabel slug)</a
+                    >
                   </td>
                   <td>Mar 20</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-20-decisions" onclick="activateSession('march-20')"
-                      ><code>text-transform: uppercase</code> via CSS —
-                      locale files store natural case throughout</a>
+                    <a
+                      href="#march-20-decisions"
+                      onclick="activateSession('march-20')"
+                      ><code>text-transform: uppercase</code> via CSS — locale
+                      files store natural case throughout</a
+                    >
                   </td>
                   <td>Mar 20</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-21-decisions" onclick="activateSession('march-21')"
-                      >Locale-aware sorting: <code>$derived</code> + <code>localeCompare(b, i18n.code)</code> for factions, weapons, runemarks — re-sorts reactively on locale change</a>
+                    <a
+                      href="#march-21-decisions"
+                      onclick="activateSession('march-21')"
+                      >Locale-aware sorting: <code>$derived</code> +
+                      <code>localeCompare(b, i18n.code)</code> for factions,
+                      weapons, runemarks — re-sorts reactively on locale
+                      change</a
+                    >
                   </td>
                   <td>Mar 21</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-21-decisions" onclick="activateSession('march-21')"
-                      ><code>FactionSelect</code> prop typed structurally as <code>{ grandAlliance, faction, bladeborn }</code> — works with both card types</a>
+                    <a
+                      href="#march-21-decisions"
+                      onclick="activateSession('march-21')"
+                      ><code>FactionSelect</code> prop typed structurally as
+                      <code>{ grandAlliance, faction, bladeborn }</code> — works
+                      with both card types</a
+                    >
                   </td>
                   <td>Mar 21</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-built" onclick="activateSession('march-22')"
-                      >Text card: <code>prerequisiteText</code> field — framed box between flavor text and body text; B/I markup buttons; <code>wrapSelection</code> refactored to take a field name</a>
+                    <a
+                      href="#march-22-built"
+                      onclick="activateSession('march-22')"
+                      >Text card: <code>prerequisiteText</code> field — framed
+                      box between flavor text and body text; B/I markup buttons;
+                      <code>wrapSelection</code> refactored to take a field
+                      name</a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-built" onclick="activateSession('march-22')"
-                      >Card Elements checkbox system — text card: <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code>; each collapses both card element and form field</a>
+                    <a
+                      href="#march-22-built"
+                      onclick="activateSession('march-22')"
+                      >Card Elements checkbox system — text card:
+                      <code>showActivation</code>, <code>showFlavorText</code>,
+                      <code>showPrerequisite</code>,
+                      <code>showPointsTable</code>; each collapses both card
+                      element and form field</a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-built" onclick="activateSession('march-22')"
-                      >Fighter card: <code>showSubtitle</code>, <code>showCaption</code> flags; Card Elements section added to form; caption moved out of image block</a>
+                    <a
+                      href="#march-22-built"
+                      onclick="activateSession('march-22')"
+                      >Fighter card: <code>showSubtitle</code>,
+                      <code>showCaption</code> flags; Card Elements section
+                      added to form; caption moved out of image block</a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-built" onclick="activateSession('march-22')"
-                      >Text card parchment render order: flavor text → points table → prerequisite → body text; points table decoupled from <code>cardLabel</code></a>
+                    <a
+                      href="#march-22-built"
+                      onclick="activateSession('march-22')"
+                      >Text card parchment render order: flavor text → points
+                      table → prerequisite → body text; points table decoupled
+                      from <code>cardLabel</code></a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-decisions" onclick="activateSession('march-22')"
-                      >Fixed-size card overflow: header height stays fixed; content clips silently — no dynamic shrinking</a>
+                    <a
+                      href="#march-22-decisions"
+                      onclick="activateSession('march-22')"
+                      >Fixed-size card overflow: header height stays fixed;
+                      content clips silently — no dynamic shrinking</a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-22-built" onclick="activateSession('march-22')"
-                      ><code>LangSwitch</code>: <code>&lt;details&gt;</code> dropdown replaces native <code>&lt;select&gt;</code> — "Add a language..." is a real <code>&lt;a&gt;</code>, fixing iOS Safari popup-block</a>
+                    <a
+                      href="#march-22-built"
+                      onclick="activateSession('march-22')"
+                      ><code>LangSwitch</code>:
+                      <code>&lt;details&gt;</code> dropdown replaces native
+                      <code>&lt;select&gt;</code> — "Add a language..." is a
+                      real <code>&lt;a&gt;</code>, fixing iOS Safari
+                      popup-block</a
+                    >
                   </td>
                   <td>Mar 22</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-23-built" onclick="activateSession('march-23')"
-                      >Card back editor: <code>/card-back</code> route; <code>CardBackData</code> in <code>types.ts</code>; texture suppressed when custom image uploaded (<code>has-bg-image</code> class)</a>
+                    <a
+                      href="#march-23-built"
+                      onclick="activateSession('march-23')"
+                      >Card back editor: <code>/card-back</code> route;
+                      <code>CardBackData</code> in <code>types.ts</code>;
+                      texture suppressed when custom image uploaded (<code
+                        >has-bg-image</code
+                      >
+                      class)</a
+                    >
                   </td>
                   <td>Mar 23</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
-                      ><code>--card-text-color</code> CSS variable drives both name colour and SVG fill; printer-friendly forces <code>#000</code> at variable level</a>
+                    <a
+                      href="#march-23-decisions"
+                      onclick="activateSession('march-23')"
+                      ><code>--card-text-color</code> CSS variable drives both
+                      name colour and SVG fill; printer-friendly forces
+                      <code>#000</code> at variable level</a
+                    >
                   </td>
                   <td>Mar 23</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-23-built" onclick="activateSession('march-23')"
-                      >Runemark picker: searchable list (FactionSelect pattern) replaces native <code>&lt;select&gt;</code> for 200+ entries across all categories</a>
+                    <a
+                      href="#march-23-built"
+                      onclick="activateSession('march-23')"
+                      >Runemark picker: searchable list (FactionSelect pattern)
+                      replaces native <code>&lt;select&gt;</code> for 200+
+                      entries across all categories</a
+                    >
                   </td>
                   <td>Mar 23</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-23-built" onclick="activateSession('march-23')"
-                      >28 new runemark SVGs in 5 categories (Card Decks, Deployment, Misc, Treasure, Twists) — card back only; 5 new i18n namespaces</a>
+                    <a
+                      href="#march-23-built"
+                      onclick="activateSession('march-23')"
+                      >28 new runemark SVGs in 5 categories (Card Decks,
+                      Deployment, Misc, Treasure, Twists) — card back only; 5
+                      new i18n namespaces</a
+                    >
                   </td>
                   <td>Mar 23</td>
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
-                      >SVG fill bug: inline <code>fill="#000"</code> on <code>&lt;path&gt;</code> beats inherited CSS — fix by stripping attribute at source</a>
+                    <a
+                      href="#march-23-decisions"
+                      onclick="activateSession('march-23')"
+                      >SVG fill bug: inline <code>fill="#000"</code> on
+                      <code>&lt;path&gt;</code> beats inherited CSS — fix by
+                      stripping attribute at source</a
+                    >
                   </td>
                   <td>Mar 23</td>
                 </tr>
@@ -1493,7 +1584,7 @@
                     <a
                       href="#march-13-decisions"
                       onclick="activateSession('march-13')"
-                      >Alliance names: Allies of Chaos / Bringers of Death /
+                      >Alliance names: Agents of Chaos / Bringers of Death /
                       Harbingers of Destruction / Sentinels of Order</a
                     >
                   </td>
@@ -1699,10 +1790,16 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="#march-20-built" onclick="activateSession('march-20')"
-                      >Runemark SVG checklist: strip editor <code>class</code>/<code>id</code>/<code>style</code>; add <code>width</code>/<code>height="300"</code>
-                      + <code>&lt;title&gt;</code>; normalize viewBox to <code>0 0</code> with translate;
-                      remove path <code>id</code>s and redundant <code>fill</code></a>
+                    <a
+                      href="#march-20-built"
+                      onclick="activateSession('march-20')"
+                      >Runemark SVG checklist: strip editor
+                      <code>class</code>/<code>id</code>/<code>style</code>; add
+                      <code>width</code>/<code>height="300"</code> +
+                      <code>&lt;title&gt;</code>; normalize viewBox to
+                      <code>0 0</code> with translate; remove path
+                      <code>id</code>s and redundant <code>fill</code></a
+                    >
                   </td>
                   <td>Mar 20</td>
                 </tr>
@@ -1791,106 +1888,316 @@
             </div>
             <h1>Card Back Editor + Runemark Library</h1>
             <p>
-              Full card back editor at <code>/card-back</code>: name (with pipe line-break),
-              mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
-              (replacing the native <code>&lt;select&gt;</code> with the FactionSelect pattern),
-              and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
-              mobile. Printer-friendly export forces black on white. Runemark library expanded
-              with 28 new SVGs across 5 new categories (Card Decks, Deployment, Misc, Treasure,
-              Twists) — card back only; each category gets its own i18n namespace and grouped
-              section in the picker. SVG <code>fill="#000"</code> stripped from two source files
-              where hardcoded path attributes were overriding the CSS colour variable.
+              Full card back editor at <code>/card-back</code>: name (with pipe
+              line-break), mirrored-name toggle, text/runemark colour swatches,
+              a searchable runemark picker (replacing the native
+              <code>&lt;select&gt;</code> with the FactionSelect pattern), and a
+              background image with pan/zoom on desktop and touch drag +
+              pinch-to-zoom on mobile. Printer-friendly export forces black on
+              white. Runemark library expanded with 28 new SVGs across 5 new
+              categories (Card Decks, Deployment, Misc, Treasure, Twists) — card
+              back only; each category gets its own i18n namespace and grouped
+              section in the picker. SVG <code>fill="#000"</code> stripped from
+              two source files where hardcoded path attributes were overriding
+              the CSS colour variable.
             </p>
           </div>
 
           <section id="march-23-built" data-nav="What Was Built">
             <h2>
-              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)"
+                >✓</span
+              >
               What Was Built
             </h2>
             <h3>Card Back Editor — <code>/card-back</code></h3>
             <ul>
-              <li><strong>New route</strong> — <code>src/routes/card-back/+page.svelte</code>; same two-panel layout (form left, card preview right) as fighter and text editors</li>
-              <li><strong><code>CardBackData</code> interface</strong> in <code>types.ts</code>: <code>title</code>, <code>backgroundImage</code>, <code>imageOffsetX/Y</code>, <code>imageZoom</code>, <code>runemark</code>, <code>textColor</code>, <code>showFlippedName</code></li>
-              <li><strong>Card visual</strong> — 574×915px; default texture (<code>static/background.jpg</code>); <code>has-bg-image</code> class suppresses CSS background when custom image is uploaded (avoids double-layering)</li>
-              <li><strong>Name + runemark overlay</strong> — Germania One 56px; runemark 280×280px SVG; mirrored name (rotated 180°) above/below runemark or flanking name when no runemark</li>
-              <li><strong>Mirrored name</strong> — <code>showFlippedName</code> flag (default <code>true</code>); works for name-only and name+runemark; <code>name-overlay-text-only</code> class widens gap to 220px when no runemark between the two names</li>
-              <li><strong>Text colour</strong> — three swatches: white (<code>#fff</code>), black (<code>#000</code>), red (<code>#c0392b</code>); drives <code>--card-text-color</code> CSS custom property on <code>.card</code>; printer-friendly always forces <code>#000</code></li>
-              <li><strong>Runemark picker</strong> — search input + scrollable grouped list (identical pattern to <code>FactionSelect</code>); covers all fighter, weapon, characteristic, and faction/hierarchy runemarks; selection badge with clear button; "no matches" empty state</li>
-              <li><strong>Background image</strong> — upload, remove, sliders for X/Y position and zoom (desktop); Adjust Image button + full-card touch overlay for drag-to-pan + pinch-to-zoom (mobile)</li>
-              <li><strong>Export</strong> — PNG + printer-friendly PNG via dom-to-image-more (desktop) / modern-screenshot (mobile); Web Share API on iOS</li>
+              <li>
+                <strong>New route</strong> —
+                <code>src/routes/card-back/+page.svelte</code>; same two-panel
+                layout (form left, card preview right) as fighter and text
+                editors
+              </li>
+              <li>
+                <strong><code>CardBackData</code> interface</strong> in
+                <code>types.ts</code>: <code>title</code>,
+                <code>backgroundImage</code>, <code>imageOffsetX/Y</code>,
+                <code>imageZoom</code>, <code>runemark</code>,
+                <code>textColor</code>, <code>showFlippedName</code>
+              </li>
+              <li>
+                <strong>Card visual</strong> — 574×915px; default texture
+                (<code>static/background.jpg</code>);
+                <code>has-bg-image</code> class suppresses CSS background when
+                custom image is uploaded (avoids double-layering)
+              </li>
+              <li>
+                <strong>Name + runemark overlay</strong> — Germania One 56px;
+                runemark 280×280px SVG; mirrored name (rotated 180°) above/below
+                runemark or flanking name when no runemark
+              </li>
+              <li>
+                <strong>Mirrored name</strong> —
+                <code>showFlippedName</code> flag (default <code>true</code>);
+                works for name-only and name+runemark;
+                <code>name-overlay-text-only</code> class widens gap to 220px
+                when no runemark between the two names
+              </li>
+              <li>
+                <strong>Text colour</strong> — three swatches: white
+                (<code>#fff</code>), black (<code>#000</code>), red
+                (<code>#c0392b</code>); drives
+                <code>--card-text-color</code> CSS custom property on
+                <code>.card</code>; printer-friendly always forces
+                <code>#000</code>
+              </li>
+              <li>
+                <strong>Runemark picker</strong> — search input + scrollable
+                grouped list (identical pattern to <code>FactionSelect</code>);
+                covers all fighter, weapon, characteristic, and
+                faction/hierarchy runemarks; selection badge with clear button;
+                "no matches" empty state
+              </li>
+              <li>
+                <strong>Background image</strong> — upload, remove, sliders for
+                X/Y position and zoom (desktop); Adjust Image button + full-card
+                touch overlay for drag-to-pan + pinch-to-zoom (mobile)
+              </li>
+              <li>
+                <strong>Export</strong> — PNG + printer-friendly PNG via
+                dom-to-image-more (desktop) / modern-screenshot (mobile); Web
+                Share API on iOS
+              </li>
             </ul>
             <h3>i18n</h3>
             <ul>
-              <li>New keys in both locales: <code>card-back</code>, <code>form-placeholder-card-back</code>, <code>form-runemark</code>, <code>form-filter-runemarks</code>, <code>form-text-color</code>, <code>form-show-flipped-name</code>, <code>adjust-image-hint-mobile</code></li>
-              <li>Fixed hardcoded English "Adjust image position and zoom in the Preview tab." in <code>FighterForm.svelte</code> — now uses <code>t('ui.adjust-image-hint-mobile')</code></li>
-              <li>JSON parse bug fixed in <code>de.json</code>: stray ASCII <code>"</code> inside a German string containing typographic quotes was terminating the JSON value early</li>
+              <li>
+                New keys in both locales: <code>card-back</code>,
+                <code>form-placeholder-card-back</code>,
+                <code>form-runemark</code>, <code>form-filter-runemarks</code>,
+                <code>form-text-color</code>,
+                <code>form-show-flipped-name</code>,
+                <code>adjust-image-hint-mobile</code>
+              </li>
+              <li>
+                Fixed hardcoded English "Adjust image position and zoom in the
+                Preview tab." in <code>FighterForm.svelte</code> — now uses
+                <code>t('ui.adjust-image-hint-mobile')</code>
+              </li>
+              <li>
+                JSON parse bug fixed in <code>de.json</code>: stray ASCII
+                <code>"</code> inside a German string containing typographic
+                quotes was terminating the JSON value early
+              </li>
             </ul>
             <h3>Docs &amp; Code Cleanup</h3>
             <ul>
-              <li><code>README.md</code> — card back editor described; "Both editors" → "All three editors"</li>
-              <li><code>CLAUDE.md</code> — project description, routes list, and Card structure section updated</li>
-              <li>Bug fix: <code>adjustMode</code> now resets to <code>false</code> when background image is removed (was sticky, would re-activate on next upload)</li>
+              <li>
+                <code>README.md</code> — card back editor described; "Both
+                editors" → "All three editors"
+              </li>
+              <li>
+                <code>CLAUDE.md</code> — project description, routes list, and
+                Card structure section updated
+              </li>
+              <li>
+                Bug fix: <code>adjustMode</code> now resets to
+                <code>false</code> when background image is removed (was sticky,
+                would re-activate on next upload)
+              </li>
             </ul>
             <h3>Landing Page</h3>
             <ul>
-              <li><strong>Build-time date injection</strong> — <code>LAST_UPDATED</code> hardcoded string removed; Vite <code>define</code> injects <code>__BUILD_DATE__</code> as the ISO date at build time; ambient <code>declare const</code> added to <code>src/app.d.ts</code> for TypeScript; "Last updated" on the landing page now advances automatically on every build with no manual edit needed</li>
-              <li><strong>Card Back button secondary style</strong> — button visually de-emphasised relative to Fighter Card and Text Card buttons; uses <code>bg-zinc-700 hover:bg-zinc-600</code> fill with <code>text-zinc-300 hover:text-white</code> for a clear hover effect, while the primary editors keep <code>bg-red-900</code></li>
+              <li>
+                <strong>Build-time date injection</strong> —
+                <code>LAST_UPDATED</code> hardcoded string removed; Vite
+                <code>define</code> injects <code>__BUILD_DATE__</code> as the
+                ISO date at build time; ambient <code>declare const</code> added
+                to <code>src/app.d.ts</code> for TypeScript; "Last updated" on
+                the landing page now advances automatically on every build with
+                no manual edit needed
+              </li>
+              <li>
+                <strong>Card Back button secondary style</strong> — button
+                visually de-emphasised relative to Fighter Card and Text Card
+                buttons; uses <code>bg-zinc-700 hover:bg-zinc-600</code> fill
+                with <code>text-zinc-300 hover:text-white</code> for a clear
+                hover effect, while the primary editors keep
+                <code>bg-red-900</code>
+              </li>
             </ul>
             <h3>Runemark Library — New Categories (card back only)</h3>
             <ul>
-              <li><strong>28 new SVG files</strong> — Card Decks (6), Deployment (3), Misc (3), Treasure (8), Twists (7)</li>
-              <li><strong>5 new export Records</strong> in <code>src/lib/runemarks/index.ts</code>: <code>cardDecksRunemarks</code>, <code>deploymentRunemarks</code>, <code>miscRunemarks</code>, <code>treasureRunemarks</code>, <code>twistsRunemarks</code></li>
-              <li><strong>5 new i18n namespaces</strong> (<code>card-decks</code>, <code>deployment</code>, <code>misc</code>, <code>treasure</code>, <code>twists</code>) with translations in both <code>en.json</code> and <code>de.json</code>; group labels added to the <code>ui</code> namespace</li>
-              <li><strong><code>LocaleData</code> interface</strong> in <code>types.ts</code> updated with the 5 new fields</li>
-              <li><strong>Card back picker</strong> — 5 new sorted groups appended to <code>allRunemarkOptions</code>; new records spread into <code>allRunemarkSvgs</code></li>
-              <li><strong>SVG fill bug fix</strong> — <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code> had <code>fill="#000"</code> on their <code>&lt;path&gt;</code> elements; stripped so paths inherit <code>--card-text-color</code> from the parent <code>&lt;svg&gt;</code> correctly</li>
-              <li><strong>i18n README</strong> — namespace table extended with 5 new entries</li>
+              <li>
+                <strong>28 new SVG files</strong> — Card Decks (6), Deployment
+                (3), Misc (3), Treasure (8), Twists (7)
+              </li>
+              <li>
+                <strong>5 new export Records</strong> in
+                <code>src/lib/runemarks/index.ts</code>:
+                <code>cardDecksRunemarks</code>,
+                <code>deploymentRunemarks</code>, <code>miscRunemarks</code>,
+                <code>treasureRunemarks</code>, <code>twistsRunemarks</code>
+              </li>
+              <li>
+                <strong>5 new i18n namespaces</strong> (<code>card-decks</code>,
+                <code>deployment</code>, <code>misc</code>,
+                <code>treasure</code>, <code>twists</code>) with translations in
+                both <code>en.json</code> and <code>de.json</code>; group labels
+                added to the <code>ui</code> namespace
+              </li>
+              <li>
+                <strong><code>LocaleData</code> interface</strong> in
+                <code>types.ts</code> updated with the 5 new fields
+              </li>
+              <li>
+                <strong>Card back picker</strong> — 5 new sorted groups appended
+                to <code>allRunemarkOptions</code>; new records spread into
+                <code>allRunemarkSvgs</code>
+              </li>
+              <li>
+                <strong>SVG fill bug fix</strong> —
+                <code>card-decks-scales-of-talaxis.svg</code> and
+                <code>deployment-shield.svg</code> had
+                <code>fill="#000"</code> on their
+                <code>&lt;path&gt;</code> elements; stripped so paths inherit
+                <code>--card-text-color</code> from the parent
+                <code>&lt;svg&gt;</code> correctly
+              </li>
+              <li>
+                <strong>i18n README</strong> — namespace table extended with 5
+                new entries
+              </li>
             </ul>
           </section>
 
           <section id="march-23-decisions" data-nav="Key Decisions">
             <h2>
-              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)"
+                >💡</span
+              >
               Key Decisions
             </h2>
             <div class="decision">
-              <div class="decision-q">Why suppress the CSS background texture when a custom image is uploaded?</div>
-              <div class="decision-a">Without suppression, the parchment texture renders underneath the custom image — both images are composited into the export, increasing file size unnecessarily. The <code>has-bg-image</code> class sets <code>background-image: none</code> so only the uploaded image is used. The <code>background-color: #5a0a14</code> fallback still shows at any transparent edges.</div>
+              <div class="decision-q">
+                Why suppress the CSS background texture when a custom image is
+                uploaded?
+              </div>
+              <div class="decision-a">
+                Without suppression, the parchment texture renders underneath
+                the custom image — both images are composited into the export,
+                increasing file size unnecessarily. The
+                <code>has-bg-image</code> class sets
+                <code>background-image: none</code> so only the uploaded image
+                is used. The <code>background-color: #5a0a14</code> fallback
+                still shows at any transparent edges.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why a custom searchable list instead of a native <code>&lt;select&gt;</code> for the runemark picker?</div>
-              <div class="decision-a">The runemark library has 200+ entries across many groups — a native select is unnavigable at that scale. The FactionSelect pattern (search input + scrollable button list + selection badge) already existed in the project and is proven on both desktop and mobile. Reusing it gave instant locale-reactive filtering and a consistent UX at minimal extra code.</div>
+              <div class="decision-q">
+                Why a custom searchable list instead of a native
+                <code>&lt;select&gt;</code> for the runemark picker?
+              </div>
+              <div class="decision-a">
+                The runemark library has 200+ entries across many groups — a
+                native select is unnavigable at that scale. The FactionSelect
+                pattern (search input + scrollable button list + selection
+                badge) already existed in the project and is proven on both
+                desktop and mobile. Reusing it gave instant locale-reactive
+                filtering and a consistent UX at minimal extra code.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why <code>--card-text-color</code> CSS custom property rather than directly inlining colour per element?</div>
-              <div class="decision-a">The colour must apply to both the <code>.card-name</code> text and the injected <code>{@html}</code> SVG fill. Setting a single CSS variable on the <code>.card</code> div propagates to both via <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> in scoped CSS. The printer-friendly override sets the variable to <code>#000</code> at the same level, so no element-level overrides are needed. Export risk: <code>getComputedStyle</code> resolves CSS variables, so dom-to-image-more should copy the resolved values — worth verifying in a real export test.</div>
+              <div class="decision-q">
+                Why <code>--card-text-color</code> CSS custom property rather
+                than directly inlining colour per element?
+              </div>
+              <div class="decision-a">
+                The colour must apply to both the <code>.card-name</code> text
+                and the injected <code>{@html}</code> SVG fill. Setting a single
+                CSS variable on the <code>.card</code> div propagates to both
+                via <code>color: var(--card-text-color)</code> and
+                <code>fill: var(--card-text-color)</code> in scoped CSS. The
+                printer-friendly override sets the variable to
+                <code>#000</code> at the same level, so no element-level
+                overrides are needed. Export risk:
+                <code>getComputedStyle</code> resolves CSS variables, so
+                dom-to-image-more should copy the resolved values — worth
+                verifying in a real export test.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why is the mirrored name on by default?</div>
-              <div class="decision-a">The symmetrical playing-card style was the original design intent — it looks deliberate and purposeful when both name and runemark are set. Defaulting it on means new users immediately see the "full" effect. The checkbox exists for users who prefer a single name (e.g. text-only backs or minimalist designs).</div>
+              <div class="decision-q">
+                Why is the mirrored name on by default?
+              </div>
+              <div class="decision-a">
+                The symmetrical playing-card style was the original design
+                intent — it looks deliberate and purposeful when both name and
+                runemark are set. Defaulting it on means new users immediately
+                see the "full" effect. The checkbox exists for users who prefer
+                a single name (e.g. text-only backs or minimalist designs).
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why 220px gap for text-only (no runemark) mirrored name?</div>
-              <div class="decision-a">With a runemark the visual separation between the two names is roughly 56 + 280 + 56 = 392px. Without a runemark the 220px gap preserves a similarly generous breathing room so the card doesn't look cramped. The number is tunable without touching logic.</div>
+              <div class="decision-q">
+                Why 220px gap for text-only (no runemark) mirrored name?
+              </div>
+              <div class="decision-a">
+                With a runemark the visual separation between the two names is
+                roughly 56 + 280 + 56 = 392px. Without a runemark the 220px gap
+                preserves a similarly generous breathing room so the card
+                doesn't look cramped. The number is tunable without touching
+                logic.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why strip <code>fill="#000"</code> from SVG path elements rather than fixing it in CSS?</div>
-              <div class="decision-a">SVG inline presentation attributes on child elements (<code>&lt;path fill="#000"&gt;</code>) override <em>inherited</em> CSS — the parent <code>&lt;svg&gt;</code>'s <code>fill: var(--card-text-color)</code> propagates via CSS inheritance, but a child's own presentation attribute beats an inherited value. The clean fix is to remove the attribute at source: paths with no fill then correctly inherit from the <code>&lt;svg&gt;</code>. An alternative would be adding <code>.card-runemark :global(svg *) { fill: var(--card-text-color) }</code> (CSS author rule beats presentation attributes), but stripping at source is simpler and correct in any rendering context.</div>
+              <div class="decision-q">
+                Why strip <code>fill="#000"</code> from SVG path elements rather
+                than fixing it in CSS?
+              </div>
+              <div class="decision-a">
+                SVG inline presentation attributes on child elements (<code
+                  >&lt;path fill="#000"&gt;</code
+                >) override <em>inherited</em> CSS — the parent
+                <code>&lt;svg&gt;</code>'s
+                <code>fill: var(--card-text-color)</code> propagates via CSS
+                inheritance, but a child's own presentation attribute beats an
+                inherited value. The clean fix is to remove the attribute at
+                source: paths with no fill then correctly inherit from the
+                <code>&lt;svg&gt;</code>. An alternative would be adding
+                <code
+                  >.card-runemark :global(svg *) { fill: var(--card-text-color)
+                  }</code
+                >
+                (CSS author rule beats presentation attributes), but stripping
+                at source is simpler and correct in any rendering context.
+              </div>
             </div>
           </section>
 
           <section id="march-23-pending" data-nav="Still Pending">
             <h2>
-              <span class="icon" style="background: rgba(251, 191, 36, 0.15)">⏳</span>
+              <span class="icon" style="background: rgba(251, 191, 36, 0.15)"
+                >⏳</span
+              >
               Still Pending
             </h2>
             <table>
-              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Item</th>
+                </tr>
+              </thead>
               <tbody>
                 <tr>
                   <td><span class="badge badge-amber">Test</span></td>
-                  <td>Verify <code>color: var(--card-text-color)</code> and <code>fill: var(--card-text-color)</code> resolve correctly in dom-to-image-more PNG exports for all three colour options</td>
+                  <td>
+                    Verify <code>color: var(--card-text-color)</code> and
+                    <code>fill: var(--card-text-color)</code> resolve correctly
+                    in dom-to-image-more PNG exports for all three colour
+                    options
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -1898,26 +2205,121 @@
 
           <section id="march-23-files" data-nav="Files Changed">
             <h2>
-              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)"
+                >📁</span
+              >
               Files Changed
             </h2>
             <table>
-              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>CardBackData</code> interface; added 5 new fields to <code>LocaleData</code></td></tr>
-                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>New file — full card back editor; 5 new runemark categories wired into picker and SVG map</td></tr>
-                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>5 new import groups + exported Records for Card Decks, Deployment, Misc, Treasure, Twists</td></tr>
-                <tr><td><code>src/lib/runemarks/svg/</code></td><td>28 new SVG files added; <code>fill="#000"</code> stripped from <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Card back keys added; 5 new namespaces + group labels in <code>ui</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same; stray ASCII <code>"</code> inside typographic-quote string fixed</td></tr>
-                <tr><td><code>src/lib/i18n/README.md</code></td><td>Namespace table extended with 5 new card-back-only namespaces</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Hardcoded "Adjust image position…" → <code>t('ui.adjust-image-hint-mobile')</code></td></tr>
-                <tr><td><code>README.md</code></td><td>Card back editor described; "Both editors" → "All three editors"</td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Routes, project description, and Card structure section updated for card back</td></tr>
-                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
-                <tr><td><code>vite.config.ts</code></td><td>Added <code>define: { __BUILD_DATE__ }</code> — injects build date at compile time</td></tr>
-                <tr><td><code>src/app.d.ts</code></td><td>Added <code>declare const __BUILD_DATE__: string</code> ambient declaration</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code>; Card Back button restyled to secondary (zinc-700) to de-emphasise relative to primary red buttons</td></tr>
+                <tr>
+                  <td><code>src/lib/types.ts</code></td>
+                  <td>
+                    Added <code>CardBackData</code> interface; added 5 new
+                    fields to <code>LocaleData</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/card-back/+page.svelte</code></td>
+                  <td>
+                    New file — full card back editor; 5 new runemark categories
+                    wired into picker and SVG map
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/runemarks/index.ts</code></td>
+                  <td>
+                    5 new import groups + exported Records for Card Decks,
+                    Deployment, Misc, Treasure, Twists
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/runemarks/svg/</code></td>
+                  <td>
+                    28 new SVG files added; <code>fill="#000"</code> stripped
+                    from <code>card-decks-scales-of-talaxis.svg</code> and
+                    <code>deployment-shield.svg</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/en.json</code></td>
+                  <td>
+                    Card back keys added; 5 new namespaces + group labels in
+                    <code>ui</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/de.json</code></td>
+                  <td>
+                    Same; stray ASCII <code>"</code> inside typographic-quote
+                    string fixed
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/README.md</code></td>
+                  <td>
+                    Namespace table extended with 5 new card-back-only
+                    namespaces
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterForm.svelte</code></td>
+                  <td>
+                    Hardcoded "Adjust image position…" →
+                    <code>t('ui.adjust-image-hint-mobile')</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>README.md</code></td>
+                  <td>
+                    Card back editor described; "Both editors" → "All three
+                    editors"
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>CLAUDE.md</code></td>
+                  <td>
+                    Routes, project description, and Card structure section
+                    updated for card back
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td>
+                  <td>
+                    Relative link → absolute GitHub URL (relative resolved
+                    without repo name on issue creation page)
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>vite.config.ts</code></td>
+                  <td>
+                    Added <code>define: { __BUILD_DATE__ }</code> — injects
+                    build date at compile time
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/app.d.ts</code></td>
+                  <td>
+                    Added
+                    <code>declare const __BUILD_DATE__: string</code> ambient
+                    declaration
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/+page.svelte</code></td>
+                  <td>
+                    Replaced hardcoded <code>LAST_UPDATED</code> constant with
+                    <code>__BUILD_DATE__</code>; Card Back button restyled to
+                    secondary (zinc-700) to de-emphasise relative to primary red
+                    buttons
+                  </td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1928,159 +2330,477 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-22</span>
-              <span class="badge badge-green">Card Elements & translations</span>
+              <span class="badge badge-green"
+                >Card Elements & translations</span
+              >
               <span class="badge badge-green">Table row contrast</span>
               <span class="badge badge-green">Points table restyle</span>
             </div>
             <h1>Card Elements, Fighter Parity &amp; Table Visual Polish</h1>
             <p>
-              Two conversations. First: added an independent "Card Elements" checkbox
-              system to both editors, prerequisite field, fighter subtitle/caption
-              toggles, and fully renamed the editor from Ability Card to Text Card.
-              Second: visual polish pass — semi-transparent white backgrounds on all
-              data rows, alternating maroon row tints, damage table row heights and
-              spacing, points table restyled to match damage table (Alegreya 17px,
-              shadow borders, no dark header), German label corrections, and minor
-              landing page spacing.
-              Third: landing page LangSwitch rewritten as a custom <code>&lt;details&gt;</code>
-              dropdown — fixes "Add a language..." not working on mobile (was blocked
-              as a popup by iOS Safari).
-              Fourth: export PNG filename now prefixes grand alliance, faction, and bladeborn
-              before the card name; Hero/Monster/Thrall runemarks made mutually exclusive,
-              with Thrall sorting to the top in the preview.
+              Two conversations. First: added an independent "Card Elements"
+              checkbox system to both editors, prerequisite field, fighter
+              subtitle/caption toggles, and fully renamed the editor from
+              Ability Card to Text Card. Second: visual polish pass —
+              semi-transparent white backgrounds on all data rows, alternating
+              maroon row tints, damage table row heights and spacing, points
+              table restyled to match damage table (Alegreya 17px, shadow
+              borders, no dark header), German label corrections, and minor
+              landing page spacing. Third: landing page LangSwitch rewritten as
+              a custom <code>&lt;details&gt;</code>
+              dropdown — fixes "Add a language..." not working on mobile (was
+              blocked as a popup by iOS Safari). Fourth: export PNG filename now
+              prefixes grand alliance, faction, and bladeborn before the card
+              name; Hero/Monster/Thrall runemarks made mutually exclusive, with
+              Thrall sorting to the top in the preview.
             </p>
           </div>
 
           <section id="march-22-built" data-nav="What Was Built">
             <h2>
-              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)"
+                >✓</span
+              >
               What Was Built
             </h2>
             <h3>Card Elements — Text Card</h3>
             <ul>
-              <li><strong>Four new boolean flags</strong> on <code>TextCardData</code>: <code>showActivation</code>, <code>showFlavorText</code>, <code>showPrerequisite</code>, <code>showPointsTable</code></li>
-              <li><strong>Defaults</strong> — <code>showRunemarks: true</code>, <code>showActivation: true</code>, <code>showFlavorText: true</code>; prerequisite and points table default <code>false</code></li>
-              <li><strong>Card Elements checkbox order</strong> — Show Runemarks → Show Activation → Show Flavor Text → Show Points Cost Increases → Show Prerequisite</li>
-              <li><strong>Card render gates</strong> — <code>{#if data.showActivation && data.activationType}</code>, <code>{#if data.showFlavorText && data.flavorText}</code>, <code>{#if data.showPointsTable}</code>, <code>{#if data.showPrerequisite && data.prerequisiteText}</code></li>
-              <li><strong>Parchment render order</strong> — flavor text → points table → prerequisite → body text</li>
-              <li><strong>Points table decoupled</strong> — no longer gated on <code>cardLabel === 'divine-blessing'</code>; works with any card type</li>
+              <li>
+                <strong>Four new boolean flags</strong> on
+                <code>TextCardData</code>: <code>showActivation</code>,
+                <code>showFlavorText</code>, <code>showPrerequisite</code>,
+                <code>showPointsTable</code>
+              </li>
+              <li>
+                <strong>Defaults</strong> — <code>showRunemarks: true</code>,
+                <code>showActivation: true</code>,
+                <code>showFlavorText: true</code>; prerequisite and points table
+                default <code>false</code>
+              </li>
+              <li>
+                <strong>Card Elements checkbox order</strong> — Show Runemarks →
+                Show Activation → Show Flavor Text → Show Points Cost Increases
+                → Show Prerequisite
+              </li>
+              <li>
+                <strong>Card render gates</strong> —
+                <code>{#if data.showActivation && data.activationType}</code>,
+                <code>{#if data.showFlavorText && data.flavorText}</code>,
+                <code>{#if data.showPointsTable}</code>,
+                <code
+                  >{#if data.showPrerequisite && data.prerequisiteText}</code
+                >
+              </li>
+              <li>
+                <strong>Parchment render order</strong> — flavor text → points
+                table → prerequisite → body text
+              </li>
+              <li>
+                <strong>Points table decoupled</strong> — no longer gated on
+                <code>cardLabel === 'divine-blessing'</code>; works with any
+                card type
+              </li>
             </ul>
             <h3>Card Elements — Fighter Card</h3>
             <ul>
-              <li><strong>Two new boolean flags</strong> on <code>FighterCardData</code>: <code>showSubtitle</code>, <code>showCaption</code></li>
-              <li><strong>Caption field moved</strong> — extracted from the image block, now appears below the subtitle input; gated on <code>showCaption</code></li>
+              <li>
+                <strong>Two new boolean flags</strong> on
+                <code>FighterCardData</code>: <code>showSubtitle</code>,
+                <code>showCaption</code>
+              </li>
+              <li>
+                <strong>Caption field moved</strong> — extracted from the image
+                block, now appears below the subtitle input; gated on
+                <code>showCaption</code>
+              </li>
             </ul>
             <h3>Prerequisite Field &amp; Rename</h3>
             <ul>
-              <li><code>prerequisiteText: string</code> added to <code>TextCardData</code>; card renders <code>.prerequisite-box</code> wrapping <code>.body-text</code> with <code>parseMarkup()</code></li>
-              <li>Files renamed: <code>AbilityCard.svelte</code> → <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> → <code>TextForm.svelte</code>, route <code>/ability</code> → <code>/text</code></li>
-              <li>Type <code>AbilityCardData</code> → <code>TextCardData</code>; card type slug <code>'ability'</code> preserved in preset labels</li>
+              <li>
+                <code>prerequisiteText: string</code> added to
+                <code>TextCardData</code>; card renders
+                <code>.prerequisite-box</code> wrapping
+                <code>.body-text</code> with <code>parseMarkup()</code>
+              </li>
+              <li>
+                Files renamed: <code>AbilityCard.svelte</code> →
+                <code>TextCard.svelte</code>, <code>AbilityForm.svelte</code> →
+                <code>TextForm.svelte</code>, route <code>/ability</code> →
+                <code>/text</code>
+              </li>
+              <li>
+                Type <code>AbilityCardData</code> → <code>TextCardData</code>;
+                card type slug <code>'ability'</code> preserved in preset labels
+              </li>
             </ul>
             <h3>Table Row Contrast — Fighter Card</h3>
             <ul>
-              <li><strong>White wash</strong> — <code>rgba(255, 255, 255, 0.25)</code> on <code>.stats-values</code>, <code>.weapons-box</code>, and <code>.damage-box</code></li>
-              <li><strong>Alternating tints</strong> — <code>rgba(90, 10, 20, 0.06)</code> on even damage rows; <code>rgba(90, 10, 20, 0.08)</code> on second weapon row (<code>:nth-child(odd)</code> due to header being first child)</li>
-              <li><strong>Row dividers</strong> — <code>box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4)</code> on damage rows after the first</li>
-              <li><strong>Damage row height</strong> — bumped to 28px; <code>damage-box</code> vertical padding/gap tuned to 0</li>
-              <li><strong>Removed</strong> <code>text-transform: uppercase</code> from <code>.dcol-wide</code> (the "* Zugewiesener Schaden" label)</li>
-              <li><strong>Gap between tables</strong> reduced to 20px (was 29px)</li>
-              <li><strong>Printer-friendly</strong> — all backgrounds and alternating tints reset to transparent</li>
+              <li>
+                <strong>White wash</strong> —
+                <code>rgba(255, 255, 255, 0.25)</code> on
+                <code>.stats-values</code>, <code>.weapons-box</code>, and
+                <code>.damage-box</code>
+              </li>
+              <li>
+                <strong>Alternating tints</strong> —
+                <code>rgba(90, 10, 20, 0.06)</code> on even damage rows;
+                <code>rgba(90, 10, 20, 0.08)</code> on second weapon row (<code
+                  >:nth-child(odd)</code
+                >
+                due to header being first child)
+              </li>
+              <li>
+                <strong>Row dividers</strong> —
+                <code>box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4)</code> on
+                damage rows after the first
+              </li>
+              <li>
+                <strong>Damage row height</strong> — bumped to 28px;
+                <code>damage-box</code> vertical padding/gap tuned to 0
+              </li>
+              <li>
+                <strong>Removed</strong>
+                <code>text-transform: uppercase</code> from
+                <code>.dcol-wide</code> (the "* Zugewiesener Schaden" label)
+              </li>
+              <li>
+                <strong>Gap between tables</strong> reduced to 20px (was 29px)
+              </li>
+              <li>
+                <strong>Printer-friendly</strong> — all backgrounds and
+                alternating tints reset to transparent
+              </li>
             </ul>
             <h3>Points Table Restyle — Text Card</h3>
             <ul>
-              <li><strong>Matches damage table</strong> — removed dark maroon header and outer border/radius; replaced with <code>box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000</code> outer borders and <code>rgba(255, 255, 255, 0.25)</code> container background</li>
-              <li><strong>All text</strong> — Alegreya 17px, <code>color: #000</code>, <code>padding: 0 8px</code>; Germania One and colored header removed</li>
-              <li><strong>Row height</strong> — 28px for header, regular, and elite rows; row dividers <code>rgba(0, 0, 0, 0.4)</code></li>
-              <li><strong>Alternating tint</strong> — <code>.points-table > *:nth-child(even)</code> gets <code>rgba(90, 10, 20, 0.06)</code> (regular row = 2nd child)</li>
-              <li><strong>Printer-friendly</strong> — container and tint both cleared</li>
-              <li><strong>Dead code removed</strong> — <code>points-row-bottom</code> class and <code>.points-value.is-empty</code> rule</li>
+              <li>
+                <strong>Matches damage table</strong> — removed dark maroon
+                header and outer border/radius; replaced with
+                <code
+                  >box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000</code
+                >
+                outer borders and
+                <code>rgba(255, 255, 255, 0.25)</code> container background
+              </li>
+              <li>
+                <strong>All text</strong> — Alegreya 17px,
+                <code>color: #000</code>, <code>padding: 0 8px</code>; Germania
+                One and colored header removed
+              </li>
+              <li>
+                <strong>Row height</strong> — 28px for header, regular, and
+                elite rows; row dividers <code>rgba(0, 0, 0, 0.4)</code>
+              </li>
+              <li>
+                <strong>Alternating tint</strong> —
+                <code>.points-table > *:nth-child(even)</code> gets
+                <code>rgba(90, 10, 20, 0.06)</code> (regular row = 2nd child)
+              </li>
+              <li>
+                <strong>Printer-friendly</strong> — container and tint both
+                cleared
+              </li>
+              <li>
+                <strong>Dead code removed</strong> —
+                <code>points-row-bottom</code> class and
+                <code>.points-value.is-empty</code> rule
+              </li>
             </ul>
             <h3>German Translation Corrections</h3>
             <ul>
-              <li><code>form-caption</code>: "Beschriftung" → "Bildunterschrift"</li>
-              <li><code>form-damage-points-allocated</code>: "Zugeteilte Schadenspunkte" → "Zugewiesener Schaden"</li>
-              <li><code>col-damage-points-allocated</code>: "* Erlittener Schaden" → "* Zugewiesener Schaden"</li>
+              <li>
+                <code>form-caption</code>: "Beschriftung" → "Bildunterschrift"
+              </li>
+              <li>
+                <code>form-damage-points-allocated</code>: "Zugeteilte
+                Schadenspunkte" → "Zugewiesener Schaden"
+              </li>
+              <li>
+                <code>col-damage-points-allocated</code>: "* Erlittener Schaden"
+                → "* Zugewiesener Schaden"
+              </li>
             </ul>
             <h3>Landing Page</h3>
             <ul>
-              <li>Button group gains <code>my-4</code> for extra breathing room above and below</li>
-              <li><code>LAST_UPDATED</code> constant + locale-aware "Last updated" line via <code>Intl.DateTimeFormat</code> + <code>$derived</code></li>
+              <li>
+                Button group gains <code>my-4</code> for extra breathing room
+                above and below
+              </li>
+              <li>
+                <code>LAST_UPDATED</code> constant + locale-aware "Last updated"
+                line via <code>Intl.DateTimeFormat</code> +
+                <code>$derived</code>
+              </li>
             </ul>
             <h3>Export Filename — Faction Prefix</h3>
             <ul>
-              <li><code>makeSlug()</code> in both <code>/fighter</code> and <code>/text</code> pages now collects <code>grandAlliance</code>, <code>faction</code>, and <code>bladeborn</code> (skipping empty values), slugifies each, and prepends them before the card name — e.g. <code>stormcast-eternals_prosecutors_my-fighter_2026-03-22_14-30.png</code></li>
+              <li>
+                <code>makeSlug()</code> in both <code>/fighter</code> and
+                <code>/text</code> pages now collects
+                <code>grandAlliance</code>, <code>faction</code>, and
+                <code>bladeborn</code> (skipping empty values), slugifies each,
+                and prepends them before the card name — e.g.
+                <code
+                  >stormcast-eternals_prosecutors_my-fighter_2026-03-22_14-30.png</code
+                >
+              </li>
             </ul>
             <h3>Runemark Rules — Hero / Monster / Thrall Mutual Exclusion</h3>
             <ul>
-              <li>Picking any of Hero, Monster, or Thrall disables the other two in all three runemark selects</li>
-              <li>Thrall added to the priority sort (<code>priority = -1</code>) so it floats to the top of the right-column runemark display, matching Hero and Monster behaviour</li>
+              <li>
+                Picking any of Hero, Monster, or Thrall disables the other two
+                in all three runemark selects
+              </li>
+              <li>
+                Thrall added to the priority sort (<code>priority = -1</code>)
+                so it floats to the top of the right-column runemark display,
+                matching Hero and Monster behaviour
+              </li>
             </ul>
             <h3>LangSwitch — Custom Dropdown</h3>
             <ul>
-              <li><strong>Replaced</strong> native <code>&lt;select&gt;</code> + separate link with a single <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> pill dropdown</li>
-              <li><strong>Summary</strong> — globe SVG icon + current language name, styled to match the GitHub and theme-toggle pills</li>
-              <li><strong>Menu</strong> — language <code>&lt;button&gt;</code>s (active state bold), horizontal divider, <code>&lt;a&gt;</code> link for "Add a language..."</li>
-              <li><strong>Close on select</strong> — <code>details.open = false</code> after <code>i18n.setLocale()</code></li>
-              <li><strong>Close on outside tap</strong> — <code>document</code> click listener registered via <code>$effect</code> with cleanup</li>
-              <li><strong>Redundant <code>.lang-add</code> CSS rule</strong> removed (duplicate of <code>.lang-option</code> color)</li>
+              <li>
+                <strong>Replaced</strong> native <code>&lt;select&gt;</code> +
+                separate link with a single <code>&lt;details&gt;</code>/<code
+                  >&lt;summary&gt;</code
+                >
+                pill dropdown
+              </li>
+              <li>
+                <strong>Summary</strong> — globe SVG icon + current language
+                name, styled to match the GitHub and theme-toggle pills
+              </li>
+              <li>
+                <strong>Menu</strong> — language <code>&lt;button&gt;</code>s
+                (active state bold), horizontal divider,
+                <code>&lt;a&gt;</code> link for "Add a language..."
+              </li>
+              <li>
+                <strong>Close on select</strong> —
+                <code>details.open = false</code> after
+                <code>i18n.setLocale()</code>
+              </li>
+              <li>
+                <strong>Close on outside tap</strong> —
+                <code>document</code> click listener registered via
+                <code>$effect</code> with cleanup
+              </li>
+              <li>
+                <strong>Redundant <code>.lang-add</code> CSS rule</strong>
+                removed (duplicate of <code>.lang-option</code> color)
+              </li>
             </ul>
           </section>
 
           <section id="march-22-decisions" data-nav="Key Decisions">
             <h2>
-              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)"
+                >💡</span
+              >
               Key Decisions
             </h2>
             <div class="decision">
-              <div class="decision-q">Why does each checkbox collapse both the card element AND its form field?</div>
-              <div class="decision-a">The form mirrors the card — if an element is hidden on the card there's nothing to configure, so hiding the form field eliminates noise. The user navigates a shorter form and sees a direct correspondence between what's checked and what's visible on both sides.</div>
+              <div class="decision-q">
+                Why does each checkbox collapse both the card element AND its
+                form field?
+              </div>
+              <div class="decision-a">
+                The form mirrors the card — if an element is hidden on the card
+                there's nothing to configure, so hiding the form field
+                eliminates noise. The user navigates a shorter form and sees a
+                direct correspondence between what's checked and what's visible
+                on both sides.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why is the points table independent of card type instead of only on Divine Blessing?</div>
-              <div class="decision-a">The points cost increases table is a game mechanic that could apply to any text card (abilities, traits, artefacts). Tying it to a specific card type label was an arbitrary coupling. An independent checkbox is simpler and more flexible.</div>
+              <div class="decision-q">
+                Why is the points table independent of card type instead of only
+                on Divine Blessing?
+              </div>
+              <div class="decision-a">
+                The points cost increases table is a game mechanic that could
+                apply to any text card (abilities, traits, artefacts). Tying it
+                to a specific card type label was an arbitrary coupling. An
+                independent checkbox is simpler and more flexible.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why not make weapons/stats toggleable on the fighter card?</div>
-              <div class="decision-a">Stats and weapons are the core data on a fighter card — there's no meaningful fighter card without them. Toggling decorative extras (subtitle, caption) makes sense; toggling structural data does not.</div>
+              <div class="decision-q">
+                Why not make weapons/stats toggleable on the fighter card?
+              </div>
+              <div class="decision-a">
+                Stats and weapons are the core data on a fighter card — there's
+                no meaningful fighter card without them. Toggling decorative
+                extras (subtitle, caption) makes sense; toggling structural data
+                does not.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why "Is Named Fighter" / "Is Monster" instead of "Named Fighter" / "Monster (Damage Table)"?</div>
-              <div class="decision-a">Checkbox labels that describe a state read better with a verb. "Show Runemarks" (imperative) and "Is Named Fighter" (state predicate) are both consistent with the toggle pattern. The old labels were noun phrases that didn't clearly signal they were boolean flags.</div>
+              <div class="decision-q">
+                Why "Is Named Fighter" / "Is Monster" instead of "Named Fighter"
+                / "Monster (Damage Table)"?
+              </div>
+              <div class="decision-a">
+                Checkbox labels that describe a state read better with a verb.
+                "Show Runemarks" (imperative) and "Is Named Fighter" (state
+                predicate) are both consistent with the toggle pattern. The old
+                labels were noun phrases that didn't clearly signal they were
+                boolean flags.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why "framed" for the prerequisite hint rather than "bordered" or "outlined"?</div>
-              <div class="decision-a">"Framed" fits card game vocabulary better than UI-system terms. The German "umrahmt" translates naturally.</div>
+              <div class="decision-q">
+                Why "framed" for the prerequisite hint rather than "bordered" or
+                "outlined"?
+              </div>
+              <div class="decision-a">
+                "Framed" fits card game vocabulary better than UI-system terms.
+                The German "umrahmt" translates naturally.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">What happens when all Card Elements are checked and text is long on the text card?</div>
-              <div class="decision-a">The card is fixed-size (574×915px). Overflow clips silently — deliberate choice. The header height is fixed; there is no dynamic shrinking. Users are expected to adjust text length or toggle elements off if content doesn't fit.</div>
+              <div class="decision-q">
+                What happens when all Card Elements are checked and text is long
+                on the text card?
+              </div>
+              <div class="decision-a">
+                The card is fixed-size (574×915px). Overflow clips silently —
+                deliberate choice. The header height is fixed; there is no
+                dynamic shrinking. Users are expected to adjust text length or
+                toggle elements off if content doesn't fit.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why use <code>&lt;details&gt;</code> for LangSwitch instead of keeping the native <code>&lt;select&gt;</code>?</div>
-              <div class="decision-a">The native select's <code>change</code> event is not treated as a trusted user gesture by iOS Safari — any <code>window.open()</code> call from it is blocked as a popup. By using a custom <code>&lt;details&gt;</code> element, the "Add a language..." entry becomes a real <code>&lt;a href&gt;</code> anchor, which always works on mobile. As a side benefit, all language options and the link live in a single dropdown instead of two separate UI elements.</div>
+              <div class="decision-q">
+                Why use <code>&lt;details&gt;</code> for LangSwitch instead of
+                keeping the native <code>&lt;select&gt;</code>?
+              </div>
+              <div class="decision-a">
+                The native select's <code>change</code> event is not treated as
+                a trusted user gesture by iOS Safari — any
+                <code>window.open()</code> call from it is blocked as a popup.
+                By using a custom <code>&lt;details&gt;</code> element, the "Add
+                a language..." entry becomes a real
+                <code>&lt;a href&gt;</code> anchor, which always works on
+                mobile. As a side benefit, all language options and the link
+                live in a single dropdown instead of two separate UI elements.
+              </div>
             </div>
           </section>
 
           <section id="march-22-files" data-nav="Files Changed">
             <h2>
-              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)"
+                >📁</span
+              >
               Files Changed
             </h2>
             <table>
-              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added show flags to <code>TextCardData</code> and <code>FighterCardData</code>; <code>AbilityCardData</code> → <code>TextCardData</code>; added <code>prerequisiteText</code></td></tr>
-                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Subtitle/caption gated; white wash + alternating tints on stats/weapons/damage rows; row heights, dividers, gap tuned; damage table uppercase removed; printer-friendly overrides updated</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Card Elements section; <code>showSubtitle</code> + <code>showCaption</code> checkboxes; caption moved to name section; "Is Named Fighter" / "Is Monster" labels; Hero/Monster/Thrall mutually exclusive; Thrall added to priority sort</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Show-flag gates; points table restyled to match damage table (Alegreya 17px, shadow borders, alternating tint, no dark header); dead class removed</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Card Elements section; checkbox order: Runemarks → Activation → Flavor Text → Points Cost Increases → Prerequisite</td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>"Beschriftung" → "Bildunterschrift"; "Zugeteilte Schadenspunkte" / "Erlittener Schaden" → "Zugewiesener Schaden"; all new keys translated</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>All new show-flag and prerequisite i18n keys added</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Buttons stacked above description; <code>my-4</code> margin on button group; <code>LAST_UPDATED</code> + locale-aware date</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Defaults for all four new show flags; <code>prerequisiteText: ''</code>; <code>makeSlug()</code> prefixes grandAlliance/faction/bladeborn</td></tr>
-                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Defaults <code>showSubtitle: false</code>, <code>showCaption: false</code>; <code>makeSlug()</code> prefixes grandAlliance/faction/bladeborn</td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Text card structure updated: show/hide flags, parchment render order, prerequisite</td></tr>
-                <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>Replaced native <code>&lt;select&gt;</code> + separate link with <code>&lt;details&gt;</code> dropdown; "Add a language..." is now a real <code>&lt;a&gt;</code> anchor — fixes mobile popup-block bug</td></tr>
+                <tr>
+                  <td><code>src/lib/types.ts</code></td>
+                  <td>
+                    Added show flags to <code>TextCardData</code> and
+                    <code>FighterCardData</code>; <code>AbilityCardData</code> →
+                    <code>TextCardData</code>; added
+                    <code>prerequisiteText</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterCard.svelte</code></td>
+                  <td>
+                    Subtitle/caption gated; white wash + alternating tints on
+                    stats/weapons/damage rows; row heights, dividers, gap tuned;
+                    damage table uppercase removed; printer-friendly overrides
+                    updated
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterForm.svelte</code></td>
+                  <td>
+                    Card Elements section; <code>showSubtitle</code> +
+                    <code>showCaption</code> checkboxes; caption moved to name
+                    section; "Is Named Fighter" / "Is Monster" labels;
+                    Hero/Monster/Thrall mutually exclusive; Thrall added to
+                    priority sort
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextCard.svelte</code></td>
+                  <td>
+                    Show-flag gates; points table restyled to match damage table
+                    (Alegreya 17px, shadow borders, alternating tint, no dark
+                    header); dead class removed
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextForm.svelte</code></td>
+                  <td>
+                    Card Elements section; checkbox order: Runemarks →
+                    Activation → Flavor Text → Points Cost Increases →
+                    Prerequisite
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/de.json</code></td>
+                  <td>
+                    "Beschriftung" → "Bildunterschrift"; "Zugeteilte
+                    Schadenspunkte" / "Erlittener Schaden" → "Zugewiesener
+                    Schaden"; all new keys translated
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/en.json</code></td>
+                  <td>All new show-flag and prerequisite i18n keys added</td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/+page.svelte</code></td>
+                  <td>
+                    Buttons stacked above description; <code>my-4</code> margin
+                    on button group; <code>LAST_UPDATED</code> + locale-aware
+                    date
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/text/+page.svelte</code></td>
+                  <td>
+                    Defaults for all four new show flags;
+                    <code>prerequisiteText: ''</code>;
+                    <code>makeSlug()</code> prefixes
+                    grandAlliance/faction/bladeborn
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/fighter/+page.svelte</code></td>
+                  <td>
+                    Defaults <code>showSubtitle: false</code>,
+                    <code>showCaption: false</code>;
+                    <code>makeSlug()</code> prefixes
+                    grandAlliance/faction/bladeborn
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>CLAUDE.md</code></td>
+                  <td>
+                    Text card structure updated: show/hide flags, parchment
+                    render order, prerequisite
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/LangSwitch.svelte</code></td>
+                  <td>
+                    Replaced native <code>&lt;select&gt;</code> + separate link
+                    with <code>&lt;details&gt;</code> dropdown; "Add a
+                    language..." is now a real <code>&lt;a&gt;</code> anchor —
+                    fixes mobile popup-block bug
+                  </td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -2100,97 +2820,307 @@
             </div>
             <h1>Divine Blessing Card Type &amp; Locale-Aware Sorting</h1>
             <p>
-              Added "Divine Blessing" as a new ability card type with German translation,
-              two conditional points-value fields (Regular / Elite) shown on the card as
-              a horizontal table with reddish border. Locale-aware sorting implemented for
-              factions, subfactions, weapon types, and fighter runemarks — all re-sort
-              reactively on locale change. Code quality pass fixed a structural typing bug
-              in <code>FactionSelect</code>, a redundant code path in
-              <code>computeFiltered</code>, and stale comments in CLAUDE.md and types.ts.
-              Follow-up: the points table was restructured with a proper header row
-              ("Fighter Wounds" / "Points Cost Increase"), threshold qualifiers on the
-              row labels (≤ 22 / ≥ 23), and restyled to match the fighter card table
-              pattern — dark maroon header, <code>border: 1px solid</code>, inner
-              border-radius on the header row. A second follow-up fixed empty-state
-              behaviour: fields now pre-fill with <code>15</code> / <code>20</code>,
-              show <code>—</code> with an <code>is-empty</code> class when cleared
-              (matching the fighter weapon stat pattern), and row height is locked via
-              an absolute <code>line-height: 25px</code>.
+              Added "Divine Blessing" as a new ability card type with German
+              translation, two conditional points-value fields (Regular / Elite)
+              shown on the card as a horizontal table with reddish border.
+              Locale-aware sorting implemented for factions, subfactions, weapon
+              types, and fighter runemarks — all re-sort reactively on locale
+              change. Code quality pass fixed a structural typing bug in
+              <code>FactionSelect</code>, a redundant code path in
+              <code>computeFiltered</code>, and stale comments in CLAUDE.md and
+              types.ts. Follow-up: the points table was restructured with a
+              proper header row ("Fighter Wounds" / "Points Cost Increase"),
+              threshold qualifiers on the row labels (≤ 22 / ≥ 23), and restyled
+              to match the fighter card table pattern — dark maroon header,
+              <code>border: 1px solid</code>, inner border-radius on the header
+              row. A second follow-up fixed empty-state behaviour: fields now
+              pre-fill with <code>15</code> / <code>20</code>, show
+              <code>—</code> with an <code>is-empty</code> class when cleared
+              (matching the fighter weapon stat pattern), and row height is
+              locked via an absolute <code>line-height: 25px</code>.
             </p>
           </div>
 
           <section id="march-21-built" data-nav="What Was Built">
             <h2>
-              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)"
+                >✓</span
+              >
               What Was Built
             </h2>
             <h3>Divine Blessing &amp; Locale Sorting</h3>
             <ul>
-              <li><strong>Divine Blessing card type</strong> — new preset slug <code>divine-blessing</code>; German: "Göttlicher Segen"; added to both form select and card <code>presetSlugs</code></li>
-              <li><strong>Points value fields</strong> — <code>regularPointsValue</code> and <code>elitePointsValue</code> added to <code>TextCardData</code>; form inputs appear conditionally below Card Name when Divine Blessing is selected</li>
-              <li><strong>Form field order</strong> — Activation moved below Card Name and Points section, before Runemarks; Divine Blessing positioned before Lesser Artefact in the type dropdown</li>
-              <li><strong>Locale-aware sorting</strong> — <code>FactionSelect</code> sorts alliances, factions, and subfactions; <code>FighterForm</code> and <code>TextForm</code> sort weapon types and fighter runemarks — all via <code>localeCompare(b, i18n.code)</code> in <code>$derived</code></li>
-              <li><strong>FactionSelect refactor</strong> — extracted <code>sortAll()</code> for the no-search path; eliminated redundant <code>!lc</code> guard branches inside the filter map</li>
-              <li><strong>FactionSelect type fix</strong> — replaced <code>FighterCardData</code> import with a structural prop type <code>{ grandAlliance, faction, bladeborn }</code>, making it correctly usable with both card types</li>
-              <li><strong>Info file cleanup</strong> — stale <code>cardLabel</code> comment in <code>types.ts</code>; ability card label list in <code>CLAUDE.md</code>; march-20 locale sorting pending item marked Done</li>
+              <li>
+                <strong>Divine Blessing card type</strong> — new preset slug
+                <code>divine-blessing</code>; German: "Göttlicher Segen"; added
+                to both form select and card <code>presetSlugs</code>
+              </li>
+              <li>
+                <strong>Points value fields</strong> —
+                <code>regularPointsValue</code> and
+                <code>elitePointsValue</code> added to
+                <code>TextCardData</code>; form inputs appear conditionally
+                below Card Name when Divine Blessing is selected
+              </li>
+              <li>
+                <strong>Form field order</strong> — Activation moved below Card
+                Name and Points section, before Runemarks; Divine Blessing
+                positioned before Lesser Artefact in the type dropdown
+              </li>
+              <li>
+                <strong>Locale-aware sorting</strong> —
+                <code>FactionSelect</code> sorts alliances, factions, and
+                subfactions; <code>FighterForm</code> and
+                <code>TextForm</code> sort weapon types and fighter runemarks —
+                all via <code>localeCompare(b, i18n.code)</code> in
+                <code>$derived</code>
+              </li>
+              <li>
+                <strong>FactionSelect refactor</strong> — extracted
+                <code>sortAll()</code> for the no-search path; eliminated
+                redundant <code>!lc</code> guard branches inside the filter map
+              </li>
+              <li>
+                <strong>FactionSelect type fix</strong> — replaced
+                <code>FighterCardData</code> import with a structural prop type
+                <code>{ grandAlliance, faction, bladeborn }</code>, making it
+                correctly usable with both card types
+              </li>
+              <li>
+                <strong>Info file cleanup</strong> — stale
+                <code>cardLabel</code> comment in <code>types.ts</code>; ability
+                card label list in <code>CLAUDE.md</code>; march-20 locale
+                sorting pending item marked Done
+              </li>
             </ul>
             <h3>Points Table Empty State</h3>
             <ul>
-              <li><strong>Pre-filled defaults</strong> — initial state changed from <code>undefined</code> to <code>'15'</code> / <code>'20'</code>; type changed from <code>number?</code> to <code>string?</code> to match what text inputs actually bind</li>
-              <li><strong><code>is-empty</code> class</strong> — card shows <code>—</code> (em dash) at 16px with <code>class:is-empty</code> when field is cleared, matching the fighter card weapon stat pattern (<code>.weapon-val.is-empty</code>)</li>
-              <li><strong>Stable row height</strong> — <code>line-height: 1.1</code> (relative) replaced with <code>line-height: 25px</code> (absolute) on <code>.points-value</code>; font-size changes in <code>.is-empty</code> no longer affect the row height</li>
-              <li><strong>Form placeholders</strong> — inputs show <code>15</code> / <code>20</code> as placeholders when cleared</li>
+              <li>
+                <strong>Pre-filled defaults</strong> — initial state changed
+                from <code>undefined</code> to <code>'15'</code> /
+                <code>'20'</code>; type changed from <code>number?</code> to
+                <code>string?</code> to match what text inputs actually bind
+              </li>
+              <li>
+                <strong><code>is-empty</code> class</strong> — card shows
+                <code>—</code> (em dash) at 16px with
+                <code>class:is-empty</code> when field is cleared, matching the
+                fighter card weapon stat pattern
+                (<code>.weapon-val.is-empty</code>)
+              </li>
+              <li>
+                <strong>Stable row height</strong> —
+                <code>line-height: 1.1</code> (relative) replaced with
+                <code>line-height: 25px</code> (absolute) on
+                <code>.points-value</code>; font-size changes in
+                <code>.is-empty</code> no longer affect the row height
+              </li>
+              <li>
+                <strong>Form placeholders</strong> — inputs show
+                <code>15</code> / <code>20</code> as placeholders when cleared
+              </li>
             </ul>
             <h3>Points Table Refinements</h3>
             <ul>
-              <li><strong>Header row</strong> — restructured divine blessing table with a dark maroon header row ("Fighter Wounds" / "Points Cost Increase") styled like the fighter stat table; row labels shortened to "Regular (≤ 22)" and "Elite (≥ 23)"</li>
-              <li><strong>Border approach</strong> — switched from <code>box-shadow: 0 0 0 1px</code> to <code>border: 1px solid #5a0a14</code> + <code>border-radius: 6.5px 6.5px 0 0</code> on the inner header row, matching the fighter table pattern; removed <code>overflow: hidden</code></li>
-              <li><strong>i18n additions</strong> — added <code>points-col-wounds</code> ("Fighter Wounds" / "Lebenspunkte des Kämpfers") and <code>points-col-cost</code> ("Points Cost Increase" / "Punktwertzuschlag"); shortened <code>points-regular</code> / <code>points-elite</code> to just "Regular" / "Elite"</li>
+              <li>
+                <strong>Header row</strong> — restructured divine blessing table
+                with a dark maroon header row ("Fighter Wounds" / "Points Cost
+                Increase") styled like the fighter stat table; row labels
+                shortened to "Regular (≤ 22)" and "Elite (≥ 23)"
+              </li>
+              <li>
+                <strong>Border approach</strong> — switched from
+                <code>box-shadow: 0 0 0 1px</code> to
+                <code>border: 1px solid #5a0a14</code> +
+                <code>border-radius: 6.5px 6.5px 0 0</code> on the inner header
+                row, matching the fighter table pattern; removed
+                <code>overflow: hidden</code>
+              </li>
+              <li>
+                <strong>i18n additions</strong> — added
+                <code>points-col-wounds</code> ("Fighter Wounds" / "Lebenspunkte
+                des Kämpfers") and <code>points-col-cost</code> ("Points Cost
+                Increase" / "Punktwertzuschlag"); shortened
+                <code>points-regular</code> / <code>points-elite</code> to just
+                "Regular" / "Elite"
+              </li>
             </ul>
           </section>
 
           <section id="march-21-decisions" data-nav="Key Decisions">
             <h2>
-              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)"
+                >💡</span
+              >
               Key Decisions
             </h2>
             <div class="decision">
-              <div class="decision-q">Why change the points table border from <code>box-shadow</code> to <code>border: 1px solid</code>?</div>
-              <div class="decision-a">Initially used <code>box-shadow: 0 0 0 1px</code> as a workaround for suspected export fidelity issues with <code>border-radius</code> + <code>border</code> in <code>dom-to-image-more</code>. On review, the fighter card's <code>.stats-box</code> and <code>.weapons-box</code> already use <code>border: 1px solid #5a0a14</code> successfully in exports. Switching to the same pattern gives a proper header row with matching inner border-radius (6.5px inside the 7.5px outer) without needing <code>overflow: hidden</code>.</div>
+              <div class="decision-q">
+                Why change the points table border from
+                <code>box-shadow</code> to <code>border: 1px solid</code>?
+              </div>
+              <div class="decision-a">
+                Initially used <code>box-shadow: 0 0 0 1px</code> as a
+                workaround for suspected export fidelity issues with
+                <code>border-radius</code> + <code>border</code> in
+                <code>dom-to-image-more</code>. On review, the fighter card's
+                <code>.stats-box</code> and <code>.weapons-box</code> already
+                use <code>border: 1px solid #5a0a14</code> successfully in
+                exports. Switching to the same pattern gives a proper header row
+                with matching inner border-radius (6.5px inside the 7.5px outer)
+                without needing <code>overflow: hidden</code>.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why use absolute <code>line-height: 25px</code> on <code>.points-value</code> instead of keeping <code>1.1</code>?</div>
-              <div class="decision-a">The <code>.is-empty</code> class reduces <code>font-size</code> from 22px to 16px to render the em dash at a smaller size. With a relative <code>line-height: 1.1</code>, the effective line height changes from 24.2px to 17.6px, shrinking the row. Setting an absolute value locks the line box height regardless of font-size changes, keeping the row height identical whether a value is present or not.</div>
+              <div class="decision-q">
+                Why use absolute <code>line-height: 25px</code> on
+                <code>.points-value</code> instead of keeping <code>1.1</code>?
+              </div>
+              <div class="decision-a">
+                The <code>.is-empty</code> class reduces
+                <code>font-size</code> from 22px to 16px to render the em dash
+                at a smaller size. With a relative
+                <code>line-height: 1.1</code>, the effective line height changes
+                from 24.2px to 17.6px, shrinking the row. Setting an absolute
+                value locks the line box height regardless of font-size changes,
+                keeping the row height identical whether a value is present or
+                not.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why <code>$derived</code> for sorted weapon/runemark lists rather than sorting once at module load?</div>
-              <div class="decision-a">The sort order depends on <code>i18n.code</code>, which is <code>$state</code> and changes at runtime when the user switches locale. A <code>$derived</code> reading <code>i18n.code</code> re-runs automatically on locale change. A module-level sort would be frozen at the initial locale.</div>
+              <div class="decision-q">
+                Why <code>$derived</code> for sorted weapon/runemark lists
+                rather than sorting once at module load?
+              </div>
+              <div class="decision-a">
+                The sort order depends on <code>i18n.code</code>, which is
+                <code>$state</code> and changes at runtime when the user
+                switches locale. A <code>$derived</code> reading
+                <code>i18n.code</code> re-runs automatically on locale change. A
+                module-level sort would be frozen at the initial locale.
+              </div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why type <code>FactionSelect</code>'s prop as a structural type instead of a union of the two card types?</div>
-              <div class="decision-a">The component only reads and writes three fields: <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code>. Typing the prop as the exact shape it needs makes it work correctly with any object that has those fields, avoids importing either card type, and documents the actual contract at the call site.</div>
+              <div class="decision-q">
+                Why type <code>FactionSelect</code>'s prop as a structural type
+                instead of a union of the two card types?
+              </div>
+              <div class="decision-a">
+                The component only reads and writes three fields:
+                <code>grandAlliance</code>, <code>faction</code>,
+                <code>bladeborn</code>. Typing the prop as the exact shape it
+                needs makes it work correctly with any object that has those
+                fields, avoids importing either card type, and documents the
+                actual contract at the call site.
+              </div>
             </div>
           </section>
 
           <section id="march-21-files" data-nav="Files Changed">
             <h2>
-              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)"
+                >📁</span
+              >
               Files Changed
             </h2>
             <table>
-              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>regularPointsValue?</code> and <code>elitePointsValue?</code> to <code>TextCardData</code>; updated stale <code>cardLabel</code> comment; changed points field types from <code>number?</code> to <code>string?</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>label-divine-blessing</code>, <code>points-regular</code>, <code>points-elite</code>, <code>form-regular-points</code>, <code>form-elite-points</code>; added <code>points-col-wounds</code>, <code>points-col-cost</code>; shortened <code>points-regular</code> / <code>points-elite</code> to "Regular" / "Elite"</td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same keys in German; <code>points-col-wounds</code> = "Lebenspunkte des Kämpfers", <code>points-col-cost</code> = "Punktwertzuschlag"</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>New divine-blessing option + conditional points fields; locale-sorted runemarks via <code>$derived</code>; Activation reordered; points placeholders updated to <code>15</code> / <code>20</code></td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Points table HTML + CSS; printer-friendly overrides; <code>divine-blessing</code> slug in <code>presetSlugs</code>; restructured with header row, threshold qualifiers, <code>border: 1px solid</code> pattern; <code>is-empty</code> class + em dash fallback; <code>line-height: 25px</code> absolute to lock row height</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Locale-sorted weapon types and runemarks via <code>$derived</code></td></tr>
-                <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Removed <code>FighterCardData</code> import; structural prop type; <code>sortAll()</code> helper; cleaned <code>computeFiltered</code></td></tr>
-                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Alignment fix on <code>Pistol</code> entry</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Initialized <code>regularPointsValue</code> and <code>elitePointsValue</code> in default card data; pre-filled to <code>'15'</code> / <code>'20'</code></td></tr>
-                <tr><td><code>CLAUDE.md</code></td><td>Updated ability card label list to reflect all current presets</td></tr>
-                <tr><td><code>docs/index.html</code></td><td>March-20 locale sorting item marked Done</td></tr>
+                <tr>
+                  <td><code>src/lib/types.ts</code></td>
+                  <td>
+                    Added <code>regularPointsValue?</code> and
+                    <code>elitePointsValue?</code> to <code>TextCardData</code>;
+                    updated stale <code>cardLabel</code> comment; changed points
+                    field types from <code>number?</code> to
+                    <code>string?</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/en.json</code></td>
+                  <td>
+                    Added <code>label-divine-blessing</code>,
+                    <code>points-regular</code>, <code>points-elite</code>,
+                    <code>form-regular-points</code>,
+                    <code>form-elite-points</code>; added
+                    <code>points-col-wounds</code>,
+                    <code>points-col-cost</code>; shortened
+                    <code>points-regular</code> / <code>points-elite</code> to
+                    "Regular" / "Elite"
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/de.json</code></td>
+                  <td>
+                    Same keys in German; <code>points-col-wounds</code> =
+                    "Lebenspunkte des Kämpfers", <code>points-col-cost</code> =
+                    "Punktwertzuschlag"
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextForm.svelte</code></td>
+                  <td>
+                    New divine-blessing option + conditional points fields;
+                    locale-sorted runemarks via <code>$derived</code>;
+                    Activation reordered; points placeholders updated to
+                    <code>15</code> / <code>20</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextCard.svelte</code></td>
+                  <td>
+                    Points table HTML + CSS; printer-friendly overrides;
+                    <code>divine-blessing</code> slug in
+                    <code>presetSlugs</code>; restructured with header row,
+                    threshold qualifiers,
+                    <code>border: 1px solid</code> pattern;
+                    <code>is-empty</code> class + em dash fallback;
+                    <code>line-height: 25px</code> absolute to lock row height
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterForm.svelte</code></td>
+                  <td>
+                    Locale-sorted weapon types and runemarks via
+                    <code>$derived</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FactionSelect.svelte</code></td>
+                  <td>
+                    Removed <code>FighterCardData</code> import; structural prop
+                    type; <code>sortAll()</code> helper; cleaned
+                    <code>computeFiltered</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/runemarks/index.ts</code></td>
+                  <td>Alignment fix on <code>Pistol</code> entry</td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/text/+page.svelte</code></td>
+                  <td>
+                    Initialized <code>regularPointsValue</code> and
+                    <code>elitePointsValue</code> in default card data;
+                    pre-filled to <code>'15'</code> / <code>'20'</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>CLAUDE.md</code></td>
+                  <td>
+                    Updated ability card label list to reflect all current
+                    presets
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>docs/index.html</code></td>
+                  <td>March-20 locale sorting item marked Done</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -2216,146 +3146,171 @@
               fixes, 1 new subfaction (Thanatek's Tithe) with optimized SVG,
               removed 4 Underworlds-only factions deemed redundant, and a
               contributor documentation pass (i18n README, issue template,
-              CONTRIBUTING). Follow-up session: <code>|</code> line-break support
-              in all column headers and weapon name cells, FighterForm weapon select
-              updated to strip <code>|</code>, and a full pre-release QA pass on
-              docs and locale files.
+              CONTRIBUTING). Follow-up session: <code>|</code> line-break
+              support in all column headers and weapon name cells, FighterForm
+              weapon select updated to strip <code>|</code>, and a full
+              pre-release QA pass on docs and locale files.
             </p>
           </div>
 
           <section id="march-20-built" data-nav="What Was Built">
             <h2>
-              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)"
+                >✓</span
+              >
               What Was Built
             </h2>
             <h3>i18n System</h3>
             <ul>
               <li>
-                <strong>i18n module</strong> — <code>src/lib/i18n/index.svelte.ts</code>
-                with module-level <code>$state</code> locale, reactive <code>t(key, vars?)</code>
-                with fallback to <code>en.json</code>, <code>i18n.setLocale()</code> +
+                <strong>i18n module</strong> —
+                <code>src/lib/i18n/index.svelte.ts</code> with module-level
+                <code>$state</code> locale, reactive
+                <code>t(key, vars?)</code> with fallback to
+                <code>en.json</code>, <code>i18n.setLocale()</code> +
                 <code>i18n.init()</code> (localStorage persistence).
               </li>
               <li>
-                <strong>Auto-discovery</strong> — <code>import.meta.glob('./locales/*.json', { eager: true })</code>
-                discovers locale files automatically; contributors only need to add a
+                <strong>Auto-discovery</strong> —
+                <code
+                  >import.meta.glob('./locales/*.json', { eager: true })</code
+                >
+                discovers locale files automatically; contributors only need to
+                add a
                 <code>.json</code> file, no code changes.
               </li>
               <li>
                 <strong>EN + DE locale files</strong> — 7 namespaces each:
-                <code>meta</code>, <code>alliances</code>, <code>factions</code>,
-                <code>subfactions</code>, <code>ui</code> (~55 keys), <code>card</code>
-                (~20 keys incl. column headers), <code>runemarks</code> (26 keys),
-                <code>weapons</code> (17 keys). All values natural case; CSS handles
-                <code>text-transform: uppercase</code>.
+                <code>meta</code>, <code>alliances</code>,
+                <code>factions</code>, <code>subfactions</code>,
+                <code>ui</code> (~55 keys), <code>card</code> (~20 keys incl.
+                column headers), <code>runemarks</code> (26 keys),
+                <code>weapons</code> (17 keys). All values natural case; CSS
+                handles <code>text-transform: uppercase</code>.
               </li>
               <li>
-                <strong>Stable key pattern</strong> — stored values remain English
-                slugs/keys (weapon names, cardLabel, runemark IDs) for icon/SVG lookup;
-                translation happens at render time only.
+                <strong>Stable key pattern</strong> — stored values remain
+                English slugs/keys (weapon names, cardLabel, runemark IDs) for
+                icon/SVG lookup; translation happens at render time only.
               </li>
               <li>
-                <strong>i18n bug fixes</strong> — activation options (Double/Triple/Quad)
-                now use <code>t('card.activation-*')</code>; card name placeholder
-                wired to <code>t('card.card-name-placeholder')</code>; <code>ui.title</code>
-                and <code>ui.github</code> removed from locale files and made static.
+                <strong>i18n bug fixes</strong> — activation options
+                (Double/Triple/Quad) now use
+                <code>t('card.activation-*')</code>; card name placeholder wired
+                to <code>t('card.card-name-placeholder')</code>;
+                <code>ui.title</code> and <code>ui.github</code> removed from
+                locale files and made static.
               </li>
             </ul>
             <h3>Components &amp; UI</h3>
             <ul>
               <li>
-                <strong>LangSwitch</strong> — native <code>&lt;select&gt;</code> styled
-                as pill (matches ThemeToggle), globe icon, "Add a language…" option
-                opens GitHub Issues in a new tab. Hidden when only one locale present.
+                <strong>LangSwitch</strong> — native
+                <code>&lt;select&gt;</code> styled as pill (matches
+                ThemeToggle), globe icon, "Add a language…" option opens GitHub
+                Issues in a new tab. Hidden when only one locale present.
               </li>
               <li>
                 <strong>All components wired</strong> — every visible string in
                 FighterForm, TextForm, FighterCard, TextCard, ThemeToggle,
-                FactionSelect, fighter page, and text page now uses <code>t()</code>.
+                FactionSelect, fighter page, and text page now uses
+                <code>t()</code>.
               </li>
               <li>
-                <strong>Card values translated</strong> — column headers (BASE SIZE,
-                POINTS VALUE, MOVE, TOUGHNESS, WOUNDS, RANGE, ATTACKS, STRENGTH,
-                DAMAGE, damage bracket header), runemark pills, weapon names, fighter
-                name / card name placeholders, card type label.
+                <strong>Card values translated</strong> — column headers (BASE
+                SIZE, POINTS VALUE, MOVE, TOUGHNESS, WOUNDS, RANGE, ATTACKS,
+                STRENGTH, DAMAGE, damage bracket header), runemark pills, weapon
+                names, fighter name / card name placeholders, card type label.
               </li>
               <li>
-                <strong>Custom card type option</strong> — "Custom…" sentinel in Type
-                select; reveals free-text input with 30-char limit and live counter.
+                <strong>Custom card type option</strong> — "Custom…" sentinel in
+                Type select; reveals free-text input with 30-char limit and live
+                counter.
               </li>
               <li>
-                <strong>Landing page pill row</strong> — GitHub link, LangSwitch, and
-                ThemeToggle grouped into one consistent pill row; flex-wrap for mobile.
+                <strong>Landing page pill row</strong> — GitHub link,
+                LangSwitch, and ThemeToggle grouped into one consistent pill
+                row; flex-wrap for mobile.
               </li>
             </ul>
             <h3>Faction Data</h3>
             <ul>
               <li>
-                <strong>Thanatek's Tithe subfaction</strong> — added under Death /
-                Ossiarch Bonereapers in <code>hierarchy.ts</code> and both locale files.
-                SVG optimized from editor source: stripped <code>class</code>,
-                <code>id</code>, and <code>style</code> attributes; normalized
+                <strong>Thanatek's Tithe subfaction</strong> — added under Death
+                / Ossiarch Bonereapers in <code>hierarchy.ts</code> and both
+                locale files. SVG optimized from editor source: stripped
+                <code>class</code>, <code>id</code>, and
+                <code>style</code> attributes; normalized
                 <code>viewBox</code> to <code>0 0</code> origin with translate;
                 added <code>width</code>/<code>height="300"</code> and
-                <code>&lt;title&gt;</code>; removed all path <code>id</code>s and
-                redundant <code>fill</code>. Import wired up as <code>dBbThanateksTithe</code>.
+                <code>&lt;title&gt;</code>; removed all path <code>id</code>s
+                and redundant <code>fill</code>. Import wired up as
+                <code>dBbThanateksTithe</code>.
               </li>
               <li>
                 <strong>Removed 4 Underworlds-only factions</strong> — Drepur's
                 Wraithcreepers and Lady Harrow's Mournflight (Nighthaunt);
-                Ironsoul's Condemnors and Storm of Celestus (Stormcast Sacrosanct
-                Chamber). These Warhammer Underworlds warbands are redundant for a
-                Warcry card creator.
+                Ironsoul's Condemnors and Storm of Celestus (Stormcast
+                Sacrosanct Chamber). These Warhammer Underworlds warbands are
+                redundant for a Warcry card creator.
               </li>
             </ul>
             <h3>Contributor Docs</h3>
             <ul>
               <li>
-                <strong>Contributor docs</strong> — <code>src/lib/i18n/README.md</code>
-                expanded with namespace table, TODO convention, RTL note, and what not to
-                translate; <code>README.md</code> Translations section added;
-                <code>CONTRIBUTING.md</code> lists translations as a contribution type;
+                <strong>Contributor docs</strong> —
+                <code>src/lib/i18n/README.md</code> expanded with namespace
+                table, TODO convention, RTL note, and what not to translate;
+                <code>README.md</code> Translations section added;
+                <code>CONTRIBUTING.md</code> lists translations as a
+                contribution type;
                 <code>.github/ISSUE_TEMPLATE/new_language.md</code> created.
               </li>
             </ul>
             <h3>i18n Polish (2026-03-21)</h3>
             <ul>
               <li>
-                <strong><code>|</code> line-break in card headers</strong> — all nine
-                <code>col-*</code> column headers in <code>FighterCard.svelte</code> now
-                render via <code>split('|')</code> + <code>&lt;br&gt;</code>, allowing
-                long translated labels (e.g. <code>"Lebens|punkte"</code>) to wrap
+                <strong><code>|</code> line-break in card headers</strong> — all
+                nine <code>col-*</code> column headers in
+                <code>FighterCard.svelte</code> now render via
+                <code>split('|')</code> + <code>&lt;br&gt;</code>, allowing long
+                translated labels (e.g. <code>"Lebens|punkte"</code>) to wrap
                 within narrow cells. <code>col-base-size</code> and
                 <code>col-points</code> migrated to the same consistent pattern.
               </li>
               <li>
-                <strong><code>|</code> line-break in weapon names</strong> — weapon name
-                span in <code>FighterCard.svelte</code> uses the same split pattern
-                (e.g. <code>"Reichweiten|waffe"</code>). FighterForm weapon
-                <code>&lt;select&gt;</code> refactored to an <code>#each</code> loop
-                and strips <code>|</code> via <code>.replaceAll('|', '')</code> so
-                the split character never appears in the dropdown.
+                <strong><code>|</code> line-break in weapon names</strong> —
+                weapon name span in <code>FighterCard.svelte</code> uses the
+                same split pattern (e.g. <code>"Reichweiten|waffe"</code>).
+                FighterForm weapon <code>&lt;select&gt;</code> refactored to an
+                <code>#each</code> loop and strips <code>|</code> via
+                <code>.replaceAll('|', '')</code> so the split character never
+                appears in the dropdown.
               </li>
               <li>
-                <strong>i18n README corrections</strong> — new "Line breaks in card
-                text" section documents the <code>|</code> feature with examples and
-                clarifies that only <code>card.*</code> and <code>weapons.*</code>
-                support it. False claim that "TODO suffix is stripped in display"
-                corrected: the <code>t()</code> function returns raw values as-is.
+                <strong>i18n README corrections</strong> — new "Line breaks in
+                card text" section documents the <code>|</code> feature with
+                examples and clarifies that only <code>card.*</code> and
+                <code>weapons.*</code> support it. False claim that "TODO suffix
+                is stripped in display" corrected: the <code>t()</code> function
+                returns raw values as-is.
               </li>
               <li>
-                <strong>Pre-release QA pass</strong> — <code>de.json</code> typos
-                fixed (double-O in "Ordnung", "Geingeres" → "Geringeres");
-                duplicate translation on <code>cities-of-sigmar-dispossessed</code>
-                resolved; all templates, README, CONTRIBUTING, and issue templates
-                reviewed and confirmed accurate.
+                <strong>Pre-release QA pass</strong> —
+                <code>de.json</code> typos fixed (double-O in "Ordnung",
+                "Geingeres" → "Geringeres"); duplicate translation on
+                <code>cities-of-sigmar-dispossessed</code>
+                resolved; all templates, README, CONTRIBUTING, and issue
+                templates reviewed and confirmed accurate.
               </li>
             </ul>
           </section>
 
           <section id="march-20-decisions" data-nav="Key Decisions">
             <h2>
-              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)"
+                >💡</span
+              >
               Key Decisions
             </h2>
             <div class="decision">
@@ -2364,24 +3319,25 @@
                 <code>$derived</code>?
               </div>
               <div class="decision-a">
-                <code>$derived({ label: t('x') })</code> in a <code>.svelte.ts</code>
-                module does not reliably track the module-level <code>$state</code>
-                locale dependency across the module boundary. Calling <code>t()</code>
-                directly in the template expression works because Svelte 5 tracks
-                reactive reads at render time. All reactive label updates now happen
-                this way.
+                <code>$derived({ label: t('x') })</code> in a
+                <code>.svelte.ts</code> module does not reliably track the
+                module-level <code>$state</code> locale dependency across the
+                module boundary. Calling <code>t()</code>
+                directly in the template expression works because Svelte 5
+                tracks reactive reads at render time. All reactive label updates
+                now happen this way.
               </div>
             </div>
             <div class="decision">
               <div class="decision-q">
-                Why store weapon names and <code>cardLabel</code> as English slugs
-                rather than translated strings?
+                Why store weapon names and <code>cardLabel</code> as English
+                slugs rather than translated strings?
               </div>
               <div class="decision-a">
                 Weapon names are also used as keys to look up SVG icons in
-                <code>weaponRunemarks</code>. Storing a German label ("Axt") would
-                break the icon lookup. <code>cardLabel</code> was changed from the
-                display string ("ABILITY") to a slug ("ability") so
+                <code>weaponRunemarks</code>. Storing a German label ("Axt")
+                would break the icon lookup. <code>cardLabel</code> was changed
+                from the display string ("ABILITY") to a slug ("ability") so
                 <code>resolveCardLabel()</code> in TextCard can translate it
                 reactively on every render.
               </div>
@@ -2393,32 +3349,40 @@
               </div>
               <div class="decision-a">
                 Locale files store natural case ("Base Size", "Bewegung") so
-                translations read naturally and contributors don't need to worry about
-                casing. CSS applies <code>text-transform: uppercase</code> to
+                translations read naturally and contributors don't need to worry
+                about casing. CSS applies
+                <code>text-transform: uppercase</code> to
                 <code>.label-col</code>, <code>.header-text</code>,
-                <code>.dcol-wide</code>, and the existing pill / card-label classes.
-              </div>
-            </div>
-            <div class="decision">
-              <div class="decision-q">Why a sentinel <code>__custom__</code> for the custom card type?</div>
-              <div class="decision-a">
-                The select's <code>bind:value</code> already carries state — one sentinel
-                keeps the reactive graph simple (one <code>$effect</code>, no extra
-                boolean) and avoids the select ever showing a blank option.
+                <code>.dcol-wide</code>, and the existing pill / card-label
+                classes.
               </div>
             </div>
             <div class="decision">
               <div class="decision-q">
-                Why encode line breaks as <code>|</code> in locale values rather than
-                using CSS <code>word-break</code> or <code>overflow-wrap</code>?
+                Why a sentinel <code>__custom__</code> for the custom card type?
               </div>
               <div class="decision-a">
-                CSS word-breaking splits at arbitrary points mid-syllable, which looks
-                wrong in a small all-caps header cell. The <code>|</code> convention
-                gives translators deliberate control over exactly where the break falls
-                (<code>"Lebens|punkte"</code>, <code>"Reichweiten|waffe"</code>), and
-                it costs nothing for languages whose strings already fit — no <code>|</code>,
-                no break. The character is stripped at the one place it would be
+                The select's <code>bind:value</code> already carries state — one
+                sentinel keeps the reactive graph simple (one
+                <code>$effect</code>, no extra boolean) and avoids the select
+                ever showing a blank option.
+              </div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">
+                Why encode line breaks as <code>|</code> in locale values rather
+                than using CSS <code>word-break</code> or
+                <code>overflow-wrap</code>?
+              </div>
+              <div class="decision-a">
+                CSS word-breaking splits at arbitrary points mid-syllable, which
+                looks wrong in a small all-caps header cell. The
+                <code>|</code> convention gives translators deliberate control
+                over exactly where the break falls
+                (<code>"Lebens|punkte"</code>,
+                <code>"Reichweiten|waffe"</code>), and it costs nothing for
+                languages whose strings already fit — no <code>|</code>, no
+                break. The character is stripped at the one place it would be
                 visible to the user (the editor dropdown).
               </div>
             </div>
@@ -2426,29 +3390,53 @@
 
           <section id="march-20-pending" data-nav="Still Pending">
             <h2>
-              <span class="icon" style="background: rgba(251, 191, 36, 0.15)">⏳</span>
+              <span class="icon" style="background: rgba(251, 191, 36, 0.15)"
+                >⏳</span
+              >
               Still Pending
             </h2>
             <table>
               <thead>
-                <tr><th>Status</th><th>Item</th></tr>
+                <tr>
+                  <th>Status</th>
+                  <th>Item</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><span class="badge badge-green">Done</span></td>
-                  <td>German QA pass — typos fixed (double-O "Oordnung", "Geingeres"); duplicate <code>cities-of-sigmar-dispossessed</code> translation resolved; official game-term review by contributor</td>
+                  <td>
+                    German QA pass — typos fixed (double-O "Oordnung",
+                    "Geingeres"); duplicate
+                    <code>cities-of-sigmar-dispossessed</code> translation
+                    resolved; official game-term review by contributor
+                  </td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-blue">open</span></td>
-                  <td>Additional community languages — architecture supports drop-in JSON files; open for community contributions</td>
+                  <td>
+                    Additional community languages — architecture supports
+                    drop-in JSON files; open for community contributions
+                  </td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-green">Done</span></td>
-                  <td>Contributor README (<code>src/lib/i18n/README.md</code>) — namespace table, TODO convention, RTL note, <code>|</code> line-break section; false "TODO stripped" claim corrected</td>
+                  <td>
+                    Contributor README (<code>src/lib/i18n/README.md</code>) —
+                    namespace table, TODO convention, RTL note,
+                    <code>|</code> line-break section; false "TODO stripped"
+                    claim corrected
+                  </td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-green">Done</span></td>
-                  <td>Locale-aware sorting — factions/subfactions in <code>FactionSelect</code>, weapon types and fighter runemarks in both form components now sorted by translated label using <code>localeCompare</code> with the active locale code. Re-sorts reactively on locale change.</td>
+                  <td>
+                    Locale-aware sorting — factions/subfactions in
+                    <code>FactionSelect</code>, weapon types and fighter
+                    runemarks in both form components now sorted by translated
+                    label using <code>localeCompare</code> with the active
+                    locale code. Re-sorts reactively on locale change.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -2456,35 +3444,166 @@
 
           <section id="march-20-files" data-nav="Files Changed">
             <h2>
-              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)"
+                >📁</span
+              >
               Files Changed
             </h2>
             <table>
               <thead>
-                <tr><th>File</th><th>Change</th></tr>
+                <tr>
+                  <th>File</th>
+                  <th>Change</th>
+                </tr>
               </thead>
               <tbody>
-                <tr><td><code>src/lib/i18n/types.ts</code></td><td>New — <code>LocaleMeta</code>, <code>LocaleData</code> interfaces (7 namespaces)</td></tr>
-                <tr><td><code>src/lib/i18n/index.svelte.ts</code></td><td>New — reactive locale store, <code>t()</code>, <code>i18n</code> object, <code>availableLocales</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>New — English source of truth, ~130 keys across 7 namespaces; updated: 5 new subfaction keys, removed <code>title</code> + <code>github</code> from <code>ui</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>New — German translation, all keys covered; updated: 5 new subfaction entries; QA pass: typos + duplicate translation fixed</td></tr>
-                <tr><td><code>src/lib/i18n/README.md</code></td><td>New then expanded — namespace table, TODO convention, RTL note, partial translation guidance; added "Line breaks in card text" section; corrected false "TODO stripped in display" claim</td></tr>
-                <tr><td><code>src/lib/components/LangSwitch.svelte</code></td><td>New — pill-style language select with globe icon and GitHub Issues link</td></tr>
-                <tr><td><code>src/lib/components/FactionSelect.svelte</code></td><td>Updated — display via <code>t()</code>, stores IDs</td></tr>
-                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Updated — all column headers, weapon names, placeholder, <code>text-transform</code> added to missing classes; all nine <code>col-*</code> headers and weapon name span now use <code>split('|')</code> + <code>&lt;br&gt;</code> for translator-controlled line breaks</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Updated — <code>resolveCardLabel()</code>, pill labels, activation labels</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Updated — all form labels, weapon options, runemark options + labels; weapon select refactored to <code>#each</code> loop with <code>.replaceAll('|', '')</code> to strip line-break markers from dropdown</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Updated — all form labels, card type slugs, custom option, runemark labels; activation options via <code>t('card.activation-*')</code>, card name placeholder wired</td></tr>
-                <tr><td><code>src/lib/components/ThemeToggle.svelte</code></td><td>Updated — dark/light mode labels via <code>t()</code></td></tr>
-                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Updated — Thanatek's Tithe entry wired to <code>dBbThanateksTithe</code>; 4 Underworlds subfactions removed (Drepur's Wraithcreepers, Lady Harrow's Mournflight, Ironsoul's Condemnors, Storm of Celestus)</td></tr>
-                <tr><td><code>src/lib/runemarks/svg/factions-death-bladeborn-thanateks-tithe.svg</code></td><td>New — optimized runemark SVG (Death / Ossiarch Bonereapers)</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Updated — all landing page text, LangSwitch added; title/GitHub made static; pill row (LangSwitch + ThemeToggle + GitHub), mobile flex-wrap</td></tr>
-                <tr><td><code>src/routes/+layout.svelte</code></td><td>Updated — <code>i18n.init()</code> in <code>onMount</code></td></tr>
-                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header</td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Updated — export buttons, tab labels, page header, initial <code>cardLabel: 'ability'</code></td></tr>
-                <tr><td><code>README.md</code></td><td>Updated — Translations section added</td></tr>
-                <tr><td><code>CONTRIBUTING.md</code></td><td>Updated — translations listed as contribution type</td></tr>
-                <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>New — issue template for language contributions</td></tr>
+                <tr>
+                  <td><code>src/lib/i18n/types.ts</code></td>
+                  <td>
+                    New — <code>LocaleMeta</code>,
+                    <code>LocaleData</code> interfaces (7 namespaces)
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/index.svelte.ts</code></td>
+                  <td>
+                    New — reactive locale store, <code>t()</code>,
+                    <code>i18n</code> object, <code>availableLocales</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/en.json</code></td>
+                  <td>
+                    New — English source of truth, ~130 keys across 7
+                    namespaces; updated: 5 new subfaction keys, removed
+                    <code>title</code> + <code>github</code> from
+                    <code>ui</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/de.json</code></td>
+                  <td>
+                    New — German translation, all keys covered; updated: 5 new
+                    subfaction entries; QA pass: typos + duplicate translation
+                    fixed
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/README.md</code></td>
+                  <td>
+                    New then expanded — namespace table, TODO convention, RTL
+                    note, partial translation guidance; added "Line breaks in
+                    card text" section; corrected false "TODO stripped in
+                    display" claim
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/LangSwitch.svelte</code></td>
+                  <td>
+                    New — pill-style language select with globe icon and GitHub
+                    Issues link
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FactionSelect.svelte</code></td>
+                  <td>Updated — display via <code>t()</code>, stores IDs</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterCard.svelte</code></td>
+                  <td>
+                    Updated — all column headers, weapon names, placeholder,
+                    <code>text-transform</code> added to missing classes; all
+                    nine <code>col-*</code> headers and weapon name span now use
+                    <code>split('|')</code> + <code>&lt;br&gt;</code> for
+                    translator-controlled line breaks
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextCard.svelte</code></td>
+                  <td>
+                    Updated — <code>resolveCardLabel()</code>, pill labels,
+                    activation labels
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterForm.svelte</code></td>
+                  <td>
+                    Updated — all form labels, weapon options, runemark options
+                    + labels; weapon select refactored to
+                    <code>#each</code> loop with
+                    <code>.replaceAll('|', '')</code> to strip line-break
+                    markers from dropdown
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextForm.svelte</code></td>
+                  <td>
+                    Updated — all form labels, card type slugs, custom option,
+                    runemark labels; activation options via
+                    <code>t('card.activation-*')</code>, card name placeholder
+                    wired
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/ThemeToggle.svelte</code></td>
+                  <td>Updated — dark/light mode labels via <code>t()</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/runemarks/hierarchy.ts</code></td>
+                  <td>
+                    Updated — Thanatek's Tithe entry wired to
+                    <code>dBbThanateksTithe</code>; 4 Underworlds subfactions
+                    removed (Drepur's Wraithcreepers, Lady Harrow's Mournflight,
+                    Ironsoul's Condemnors, Storm of Celestus)
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code
+                      >src/lib/runemarks/svg/factions-death-bladeborn-thanateks-tithe.svg</code
+                    >
+                  </td>
+                  <td>
+                    New — optimized runemark SVG (Death / Ossiarch Bonereapers)
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/+page.svelte</code></td>
+                  <td>
+                    Updated — all landing page text, LangSwitch added;
+                    title/GitHub made static; pill row (LangSwitch + ThemeToggle
+                    + GitHub), mobile flex-wrap
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/+layout.svelte</code></td>
+                  <td>
+                    Updated — <code>i18n.init()</code> in <code>onMount</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/fighter/+page.svelte</code></td>
+                  <td>Updated — export buttons, tab labels, page header</td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/text/+page.svelte</code></td>
+                  <td>
+                    Updated — export buttons, tab labels, page header, initial
+                    <code>cardLabel: 'ability'</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>README.md</code></td>
+                  <td>Updated — Translations section added</td>
+                </tr>
+                <tr>
+                  <td><code>CONTRIBUTING.md</code></td>
+                  <td>Updated — translations listed as contribution type</td>
+                </tr>
+                <tr>
+                  <td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td>
+                  <td>New — issue template for language contributions</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -2505,8 +3624,8 @@
             <h1>Text Card Form &amp; Export Polish</h1>
             <p>
               Bold/italic markup buttons for ability body text; printer-friendly
-              torn-edge overlay on text card; form label cleanup; damage
-              bracket alignment; Battle Trait added as ability card type.
+              torn-edge overlay on text card; form label cleanup; damage bracket
+              alignment; Battle Trait added as ability card type.
             </p>
           </div>
 
@@ -3859,8 +4978,8 @@
             <h1>Fighter Card Polish &amp; Text Card</h1>
             <p>
               Completed final polish on the fighter card (custom runemark shape,
-              image caption, table radii, empty value dashes) and built the
-              text card editor from scratch.
+              image caption, table radii, empty value dashes) and built the text
+              card editor from scratch.
             </p>
           </div>
 
@@ -3983,8 +5102,8 @@
                 runemarks selects, activation select, flavor + body textareas
               </li>
               <li>
-                Built <strong>/text/+page.svelte</strong>: split-panel
-                layout, Export PNG + printer-friendly export
+                Built <strong>/text/+page.svelte</strong>: split-panel layout,
+                Export PNG + printer-friendly export
               </li>
               <li>
                 Printer-friendly: white background, no torn-edge mask, black
@@ -4114,9 +5233,7 @@
               </tr>
               <tr>
                 <td><code>src/routes/text/+page.svelte</code></td>
-                <td>
-                  Full text card editor; <code>&lt;title&gt;</code> tag
-                </td>
+                <td>Full text card editor; <code>&lt;title&gt;</code> tag</td>
               </tr>
               <tr>
                 <td><code>src/app.css</code></td>
@@ -4216,7 +5333,7 @@
               </li>
               <li>
                 <strong>4 new monster factions</strong> — "Chaotic Beasts" in
-                Allies of Chaos, "Monsters of Death" in Bringers of Death,
+                Agents of Chaos, "Monsters of Death" in Bringers of Death,
                 "Monsters of Destruction" in Harbingers of Destruction,
                 "Monsters of Order" in Sentinels of Order; 4 new SVGs added to
                 <code>src/lib/runemarks/svg/</code>.
@@ -5015,7 +6132,7 @@
                 separate HTTP requests, reliable export.
               </li>
               <li>
-                <strong>Grand Alliance circles</strong> — 4 SVGs (Allies of
+                <strong>Grand Alliance circles</strong> — 4 SVGs (Agents of
                 Chaos / Bringers of Death / Harbingers of Destruction /
                 Sentinels of Order); top-left circle on card; select in form.
               </li>
@@ -5238,7 +6355,7 @@
                 Alliance display names updated to canonical Warcry names
               </div>
               <div class="decision-a">
-                Changed from "Chaos / Death / Destruction / Order" to "Allies of
+                Changed from "Chaos / Death / Destruction / Order" to "Agents of
                 Chaos / Bringers of Death / Harbingers of Destruction /
                 Sentinels of Order" — matching the actual game terminology.
               </div>
@@ -5764,23 +6881,39 @@
               >
               What Was Built
             </h2>
-            <div class="tree"><span class="tree-dir">src/</span>
-├── <span class="tree-dir">lib/</span>
-│   ├── <span class="tree-file">types.ts</span>          <span class="tree-note">— all TS interfaces (FighterCardData, TextCardData, Weapon, …)</span>
-│   ├── <span class="tree-file">index.ts</span>
-│   └── <span class="tree-dir">assets/</span>
-├── <span class="tree-dir">routes/</span>
-│   ├── <span class="tree-file">+layout.svelte</span>
-│   ├── <span class="tree-file">+page.svelte</span>      <span class="tree-note">— landing page</span>
-│   ├── <span class="tree-dir">fighter/</span>
-│   │   └── <span class="tree-file">+page.svelte</span>  <span class="tree-note">— stub</span>
-│   └── <span class="tree-dir">ability/</span>
-│       └── <span class="tree-file">+page.svelte</span>  <span class="tree-note">— stub</span>
-└── <span class="tree-file">app.css</span>               <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
-<span class="tree-dir">static/</span>
-└── <span class="tree-dir">fonts/</span>                  <span class="tree-note">— empty, awaiting font files</span>
-<span class="tree-file">Makefile</span>                  <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
-<span class="tree-file">CLAUDE.md</span></div>
+            <div class="tree">
+              <span class="tree-dir">src/</span> ├──
+              <span class="tree-dir">lib/</span> │ ├──
+              <span class="tree-file">types.ts</span>
+              <span class="tree-note"
+                >— all TS interfaces (FighterCardData, TextCardData, Weapon,
+                …)</span
+              >
+              │ ├── <span class="tree-file">index.ts</span> │ └──
+              <span class="tree-dir">assets/</span> ├──
+              <span class="tree-dir">routes/</span> │ ├──
+              <span class="tree-file">+layout.svelte</span> │ ├──
+              <span class="tree-file">+page.svelte</span>
+              <span class="tree-note">— landing page</span> │ ├──
+              <span class="tree-dir">fighter/</span> │ │ └──
+              <span class="tree-file">+page.svelte</span>
+              <span class="tree-note">— stub</span> │ └──
+              <span class="tree-dir">ability/</span> │ └──
+              <span class="tree-file">+page.svelte</span>
+              <span class="tree-note">— stub</span> └──
+              <span class="tree-file">app.css</span>
+              <span class="tree-note"
+                >— Tailwind import + @font-face (rodchenkoctt)</span
+              >
+              <span class="tree-dir">static/</span>
+              └── <span class="tree-dir">fonts/</span>
+              <span class="tree-note">— empty, awaiting font files</span>
+              <span class="tree-file">Makefile</span>
+              <span class="tree-note"
+                >— make dev/build/preview (Herd Node v22)</span
+              >
+              <span class="tree-file">CLAUDE.md</span>
+            </div>
           </section>
 
           <section id="march-11-decisions" data-nav="Key Decisions">
@@ -5809,9 +6942,7 @@
               </div>
             </div>
             <div class="decision">
-              <div class="decision-q">
-                Separate routes: /fighter and /text
-              </div>
+              <div class="decision-q">Separate routes: /fighter and /text</div>
               <div class="decision-a">
                 Different enough in structure that sharing a route would add
                 complexity for no benefit.

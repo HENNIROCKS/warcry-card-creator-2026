@@ -18,7 +18,7 @@
 | `card` | Text rendered **on the card itself** — activation labels (Double/Triple/Quad), card type labels (Ability, Reaction…), column headers, name placeholders. |
 | `runemarks` | Runemark names as shown in the selection UI. |
 | `weapons` | Weapon type names in the weapon profile dropdowns. |
-| `alliances` | Grand Alliance display names (Allies of Chaos, Bringers of Death…). |
+| `alliances` | Grand Alliance display names (Agents of Chaos, Bringers of Death…). |
 | `factions` | Faction display names. |
 | `subfactions` | Subfaction / warband display names. |
 | `card-decks` | Card deck type names (Deployment, Terrain, Twist, Victory…). Card back only. |

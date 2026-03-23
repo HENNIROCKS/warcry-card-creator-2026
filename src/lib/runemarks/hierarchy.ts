@@ -1,5 +1,5 @@
 // ── Grand Alliances ──────────────────────────────────────────────────────────
-import gaAlliesOfChaos    from './svg/grand-alliances-chaos.svg?raw';
+import gaAgentsOfChaos    from './svg/grand-alliances-chaos.svg?raw';
 import gaBringersOfDeath  from './svg/grand-alliances-death.svg?raw';
 import gaHarbingersOfDest from './svg/grand-alliances-destruction.svg?raw';
 import gaSentinelsOfOrder from './svg/grand-alliances-order.svg?raw';
@@ -206,9 +206,9 @@ export const PLACEHOLDER_SVG =
 
 export const hierarchy: AllianceEntry[] = [
 	{
-		id: 'allies-of-chaos',
-		label: 'Allies of Chaos',
-		svg: gaAlliesOfChaos,
+		id: 'agents-of-chaos',
+		label: 'Agents of Chaos',
+		svg: gaAgentsOfChaos,
 		factions: [
 			{
 				id: 'beasts-of-chaos',
