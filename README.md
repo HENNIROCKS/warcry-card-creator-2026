@@ -1,6 +1,6 @@
 # Warcry Card Creator 2026
 
-An updated version of my original card creator for Warhammer Age of Sigmar: Warcry, rebuilt with a modern stack for sharper exports and easier customisation. This is a fan project made for the community; it is not commercial and has no affiliation with or endorsement from Games Workshop.
+An updated version of my original card creator for Warhammer Age of Sigmar: Warcry, rebuilt with a modern stack. This is a fan project made for the community; it is not commercial and has no affiliation with or endorsement from Games Workshop.
 
 **[Open the live tool →](https://hennirocks.github.io/warcry-card-creator-2026/)**
 
