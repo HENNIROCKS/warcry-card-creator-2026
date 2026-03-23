@@ -1832,6 +1832,10 @@
               <li><code>CLAUDE.md</code> — project description, routes list, and Card structure section updated</li>
               <li>Bug fix: <code>adjustMode</code> now resets to <code>false</code> when background image is removed (was sticky, would re-activate on next upload)</li>
             </ul>
+            <h3>Landing Page</h3>
+            <ul>
+              <li><strong>Build-time date injection</strong> — <code>LAST_UPDATED</code> hardcoded string removed; Vite <code>define</code> injects <code>__BUILD_DATE__</code> as the ISO date at build time; ambient <code>declare const</code> added to <code>src/app.d.ts</code> for TypeScript; "Last updated" on the landing page now advances automatically on every build with no manual edit needed</li>
+            </ul>
             <h3>Runemark Library — New Categories (card back only)</h3>
             <ul>
               <li><strong>28 new SVG files</strong> — Card Decks (6), Deployment (3), Misc (3), Treasure (8), Twists (7)</li>
@@ -1910,6 +1914,9 @@
                 <tr><td><code>README.md</code></td><td>Card back editor described; "Both editors" → "All three editors"</td></tr>
                 <tr><td><code>CLAUDE.md</code></td><td>Routes, project description, and Card structure section updated for card back</td></tr>
                 <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
+                <tr><td><code>vite.config.ts</code></td><td>Added <code>define: { __BUILD_DATE__ }</code> — injects build date at compile time</td></tr>
+                <tr><td><code>src/app.d.ts</code></td><td>Added <code>declare const __BUILD_DATE__: string</code> ambient declaration</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code></td></tr>
               </tbody>
             </table>
           </section>
