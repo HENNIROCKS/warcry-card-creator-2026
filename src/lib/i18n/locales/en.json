@@ -251,7 +251,12 @@
     "done": "Done",
     "long-press-save": "Long-press the image to save",
     "close": "Close",
-    "add-language": "Add a language\u2026"
+    "add-language": "Add a language\u2026",
+    "card-decks-group": "Card Decks",
+    "deployment-group": "Deployment",
+    "misc-group": "Misc",
+    "treasure-group": "Treasure",
+    "twists-group": "Twists"
   },
   "runemarks": {
     "Agile": "Agile",
@@ -328,5 +333,42 @@
     "col-strength": "Strength",
     "col-damage": "Damage",
     "col-damage-points-allocated": "* Damage Points Allocated"
+  },
+  "card-decks": {
+    "deployment": "Deployment",
+    "scales-of-talaxis": "Scales of Talaxis",
+    "symmetrical": "Symmetrical",
+    "terrain": "Terrain",
+    "twist": "Twist",
+    "victory": "Victory"
+  },
+  "deployment": {
+    "dagger": "Dagger",
+    "hammer": "Hammer",
+    "shield": "Shield"
+  },
+  "misc": {
+    "active": "Active",
+    "circle": "Circle",
+    "wait": "Wait"
+  },
+  "treasure": {
+    "creature": "Creature",
+    "orrery": "Orrery",
+    "potions": "Potions",
+    "realmstone": "Realmstone",
+    "skull": "Skull",
+    "supplies": "Supplies",
+    "totem": "Totem",
+    "weapons": "Weapons"
+  },
+  "twists": {
+    "climate": "Climate",
+    "environment": "Environment",
+    "fate": "Fate",
+    "magical-phenomenon": "Magical Phenomenon",
+    "orientation": "Orientation",
+    "psychology": "Psychology",
+    "wild-creatures": "Wild Creatures"
   }
 }

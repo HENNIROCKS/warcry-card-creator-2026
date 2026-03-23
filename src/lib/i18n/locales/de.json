@@ -251,7 +251,12 @@
     "done": "Fertig",
     "long-press-save": "Gedrückt halten, um das Bild zu speichern",
     "close": "Schließen",
-    "add-language": "Sprache hinzufügen\u2026"
+    "add-language": "Sprache hinzufügen\u2026",
+    "card-decks-group": "Kartendecks",
+    "deployment-group": "Aufstellung",
+    "misc-group": "Sonstiges",
+    "treasure-group": "Schatz",
+    "twists-group": "Wendungen"
   },
   "runemarks": {
     "Agile": "Gewandt",
@@ -328,5 +333,42 @@
     "col-strength": "Stärke",
     "col-damage": "Schaden",
     "col-damage-points-allocated": "* Zugewiesener Schaden"
+  },
+  "card-decks": {
+    "deployment": "Aufstellung",
+    "scales-of-talaxis": "Scales of Talaxis",
+    "symmetrical": "Symmetrisch",
+    "terrain": "Gelände",
+    "twist": "Wendung",
+    "victory": "Sieg"
+  },
+  "deployment": {
+    "dagger": "Dolch",
+    "hammer": "Hammer",
+    "shield": "Schild"
+  },
+  "misc": {
+    "active": "Aktiv",
+    "circle": "Kreis",
+    "wait": "Warten"
+  },
+  "treasure": {
+    "creature": "Kreatur",
+    "orrery": "Orrery",
+    "potions": "Tränke",
+    "realmstone": "Realmstone",
+    "skull": "Schädel",
+    "supplies": "Vorräte",
+    "totem": "Totem",
+    "weapons": "Waffen"
+  },
+  "twists": {
+    "climate": "Klima",
+    "environment": "Umgebung",
+    "fate": "Schicksal",
+    "magical-phenomenon": "Magisches Phänomen",
+    "orientation": "Ausrichtung",
+    "psychology": "Psychologie",
+    "wild-creatures": "Wilde Kreaturen"
   }
 }

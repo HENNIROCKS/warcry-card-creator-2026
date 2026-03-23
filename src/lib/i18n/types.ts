@@ -14,4 +14,9 @@ export interface LocaleData {
 	card: Record<string, string>;
 	runemarks: Record<string, string>;
 	weapons: Record<string, string>;
+	'card-decks': Record<string, string>;
+	deployment: Record<string, string>;
+	misc: Record<string, string>;
+	treasure: Record<string, string>;
+	twists: Record<string, string>;
 }

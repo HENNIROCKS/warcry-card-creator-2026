@@ -5,7 +5,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { CardBackData } from '$lib/types';
-	import { fighterRunemarks, weaponRunemarks, characteristicRunemarks, hierarchy } from '$lib/runemarks/index';
+	import { fighterRunemarks, weaponRunemarks, characteristicRunemarks, hierarchy, cardDecksRunemarks, deploymentRunemarks, miscRunemarks, treasureRunemarks, twistsRunemarks } from '$lib/runemarks/index';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 
 	let cardEl: HTMLElement;
@@ -62,6 +62,11 @@
 			...fighterRunemarks,
 			...weaponRunemarks,
 			...(characteristicRunemarks as Record<string, string>),
+			...cardDecksRunemarks,
+			...deploymentRunemarks,
+			...miscRunemarks,
+			...treasureRunemarks,
+			...twistsRunemarks,
 		};
 		for (const alliance of hierarchy) {
 			map[alliance.id] = alliance.svg;
@@ -148,6 +153,41 @@
 		const charGroupLabel = 'Characteristics';
 		Object.keys(characteristicRunemarks)
 			.map(key => ({ id: key, label: t('card.col-' + key).replace(/\|/g, ' '), group: 'characteristics', groupLabel: charGroupLabel }))
+			.forEach(o => entries.push(o));
+
+		// Card deck runemarks
+		const cardDecksGroupLabel = t('ui.card-decks-group');
+		Object.keys(cardDecksRunemarks)
+			.map(key => ({ id: key, label: t('card-decks.' + key), group: 'card-decks', groupLabel: cardDecksGroupLabel }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => entries.push(o));
+
+		// Deployment runemarks
+		const deploymentGroupLabel = t('ui.deployment-group');
+		Object.keys(deploymentRunemarks)
+			.map(key => ({ id: key, label: t('deployment.' + key), group: 'deployment', groupLabel: deploymentGroupLabel }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => entries.push(o));
+
+		// Misc runemarks
+		const miscGroupLabel = t('ui.misc-group');
+		Object.keys(miscRunemarks)
+			.map(key => ({ id: key, label: t('misc.' + key), group: 'misc', groupLabel: miscGroupLabel }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => entries.push(o));
+
+		// Treasure runemarks
+		const treasureGroupLabel = t('ui.treasure-group');
+		Object.keys(treasureRunemarks)
+			.map(key => ({ id: key, label: t('treasure.' + key), group: 'treasure', groupLabel: treasureGroupLabel }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => entries.push(o));
+
+		// Twist runemarks
+		const twistsGroupLabel = t('ui.twists-group');
+		Object.keys(twistsRunemarks)
+			.map(key => ({ id: key, label: t('twists.' + key), group: 'twists', groupLabel: twistsGroupLabel }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
 			.forEach(o => entries.push(o));
 
 		// Faction hierarchy

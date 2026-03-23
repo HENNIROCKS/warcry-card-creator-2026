@@ -97,6 +97,85 @@ export const fighterRunemarks: Record<string, string> = {
 	Warrior:        fighterWarrior,
 };
 
+// ── Card deck runemarks ───────────────────────────────────────────────────────
+import cardDecksDeployment      from './svg/card-decks-deployment.svg?raw';
+import cardDecksScalesOfTalaxis from './svg/card-decks-scales-of-talaxis.svg?raw';
+import cardDecksSymmetrical     from './svg/card-decks-symmetrical.svg?raw';
+import cardDecksTerrain         from './svg/card-decks-terrain.svg?raw';
+import cardDecksTwist           from './svg/card-decks-twist.svg?raw';
+import cardDecksVictory         from './svg/card-decks-victory.svg?raw';
+
+export const cardDecksRunemarks: Record<string, string> = {
+	deployment:            cardDecksDeployment,
+	'scales-of-talaxis':   cardDecksScalesOfTalaxis,
+	symmetrical:           cardDecksSymmetrical,
+	terrain:               cardDecksTerrain,
+	twist:                 cardDecksTwist,
+	victory:               cardDecksVictory,
+};
+
+// ── Deployment runemarks ──────────────────────────────────────────────────────
+import deploymentDagger from './svg/deployment-dagger.svg?raw';
+import deploymentHammer from './svg/deployment-hammer.svg?raw';
+import deploymentShield from './svg/deployment-shield.svg?raw';
+
+export const deploymentRunemarks: Record<string, string> = {
+	dagger: deploymentDagger,
+	hammer: deploymentHammer,
+	shield: deploymentShield,
+};
+
+// ── Misc runemarks ────────────────────────────────────────────────────────────
+import miscActive from './svg/misc-active.svg?raw';
+import miscCircle from './svg/misc-circle.svg?raw';
+import miscWait   from './svg/misc-wait.svg?raw';
+
+export const miscRunemarks: Record<string, string> = {
+	active: miscActive,
+	circle: miscCircle,
+	wait:   miscWait,
+};
+
+// ── Treasure runemarks ────────────────────────────────────────────────────────
+import treasureCreature   from './svg/treasure-creature.svg?raw';
+import treasureOrrery     from './svg/treasure-orrery.svg?raw';
+import treasurePotions    from './svg/treasure-potions.svg?raw';
+import treasureRealmstone from './svg/treasure-realmstone.svg?raw';
+import treasureSkull      from './svg/treasure-skull.svg?raw';
+import treasureSupplies   from './svg/treasure-supplies.svg?raw';
+import treasureTotem      from './svg/treasure-totem.svg?raw';
+import treasureWeapons    from './svg/treasure-weapons.svg?raw';
+
+export const treasureRunemarks: Record<string, string> = {
+	creature:   treasureCreature,
+	orrery:     treasureOrrery,
+	potions:    treasurePotions,
+	realmstone: treasureRealmstone,
+	skull:      treasureSkull,
+	supplies:   treasureSupplies,
+	totem:      treasureTotem,
+	weapons:    treasureWeapons,
+};
+
+// ── Twist runemarks ───────────────────────────────────────────────────────────
+import twistsClimate           from './svg/twists-climate.svg?raw';
+import twistsEnvironment       from './svg/twists-environment.svg?raw';
+import twistsFate              from './svg/twists-fate.svg?raw';
+import twistsMagicalPhenomenon from './svg/twists-magical-phenomenom.svg?raw';
+import twistsOrientation       from './svg/twists-orientation.svg?raw';
+import twistsPsychology        from './svg/twists-psychology.svg?raw';
+import twistsWildCreatures     from './svg/twists-wild-creatures.svg?raw';
+
+export const twistsRunemarks: Record<string, string> = {
+	climate:              twistsClimate,
+	environment:          twistsEnvironment,
+	fate:                 twistsFate,
+	'magical-phenomenon': twistsMagicalPhenomenon,
+	orientation:          twistsOrientation,
+	psychology:           twistsPsychology,
+	'wild-creatures':     twistsWildCreatures,
+};
+
 // ── Characteristic runemarks ──────────────────────────────────────────────────
 import move      from './svg/characteristics-move.svg?raw';
 import toughness from './svg/characteristics-toughness.svg?raw';
