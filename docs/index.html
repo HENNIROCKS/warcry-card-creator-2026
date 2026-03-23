@@ -1835,6 +1835,7 @@
             <h3>Landing Page</h3>
             <ul>
               <li><strong>Build-time date injection</strong> — <code>LAST_UPDATED</code> hardcoded string removed; Vite <code>define</code> injects <code>__BUILD_DATE__</code> as the ISO date at build time; ambient <code>declare const</code> added to <code>src/app.d.ts</code> for TypeScript; "Last updated" on the landing page now advances automatically on every build with no manual edit needed</li>
+              <li><strong>Card Back button secondary style</strong> — button visually de-emphasised relative to Fighter Card and Text Card buttons; uses <code>bg-zinc-700 hover:bg-zinc-600</code> fill with <code>text-zinc-300 hover:text-white</code> for a clear hover effect, while the primary editors keep <code>bg-red-900</code></li>
             </ul>
             <h3>Runemark Library — New Categories (card back only)</h3>
             <ul>
@@ -1916,7 +1917,7 @@
                 <tr><td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td><td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td></tr>
                 <tr><td><code>vite.config.ts</code></td><td>Added <code>define: { __BUILD_DATE__ }</code> — injects build date at compile time</td></tr>
                 <tr><td><code>src/app.d.ts</code></td><td>Added <code>declare const __BUILD_DATE__: string</code> ambient declaration</td></tr>
-                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code></td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code>; Card Back button restyled to secondary (zinc-700) to de-emphasise relative to primary red buttons</td></tr>
               </tbody>
             </table>
           </section>
