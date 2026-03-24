@@ -1835,9 +1835,9 @@
               <span class="badge badge-blue">2026-03-24</span>
               <span class="badge badge-green">Player-based form</span>
               <span class="badge badge-green">Corner tail fix</span>
-              <span class="badge badge-green">Smart position logic</span>
+              <span class="badge badge-green">Form i18n</span>
             </div>
-            <h1>Deployment Card — Form, Bubbles &amp; UX Polish</h1>
+            <h1>Deployment Card — Form, Bubbles, Layout &amp; i18n</h1>
             <p>
               Full deployment point form built (add/remove, position select, icon toggle, colour
               swatches, RND field) with speech bubbles per point. In a second pass: restructured the
@@ -1847,6 +1847,11 @@
               and unique position across all players; new points and new players auto-assign the first
               free position starting from Centre. General UX lift: larger touch targets, better
               contrast, RND field moved below icon buttons, dashed centre lines radiating from centre.
+              In a third pass: deployment page sidebar matched to 480px (consistent with all other
+              pages); desktop preview made scrollable; mobile preview scales to viewport height with
+              horizontal scroll on the card area only, export button pinned above; all hardcoded form
+              strings replaced with <code>t()</code> and 13 new i18n keys added to both locale files
+              in logical positions.
             </p>
           </div>
 
@@ -1863,6 +1868,11 @@
               <li><strong>Smart position defaulting</strong>: <code>findFreePosition()</code> picks first free slot in CC-first order (CC → ML/MR → TC/BC → corners → outside); used by both <code>addPoint()</code> and <code>addPlayer()</code> (which seeds one point automatically)</li>
               <li><strong>Contrast-aware icon buttons</strong>: <code>contrastText(hex)</code> returns <code>#000</code> or <code>#fff</code> based on luminance — yellow player gets black label text on active buttons</li>
               <li><strong>Form UX sizing</strong>: all interactive elements bumped to <code>text-sm</code>; touch targets raised to <code>py-1.5</code> / <code>py-2</code>; RND field moved below icon buttons (full width); colour swatches grown to <code>w-6 h-6</code></li>
+              <li><strong>Sidebar width aligned</strong>: <code>SIDEBAR_W</code> changed from 360 → 480px; aside now uses <code>lg:w-[480px]</code> class matching fighter, text, and card-back pages</li>
+              <li><strong>Scrollable desktop preview</strong>: removed <code>lg:overflow-hidden</code> from preview <code>&lt;main&gt;</code>; card scale no longer constrained by viewport height — width-only formula; <code>lg:justify-center</code> retained for vertical centering</li>
+              <li><strong>Mobile horizontal scroll</strong>: card scales to viewport height (<code>viewportHeight − 120</code>) so it fills the screen vertically; card area wrapped in <code>overflow-x-auto</code> div; export button is a <code>shrink-0</code> sibling above — it stays fixed while the card scrolls sideways</li>
+              <li><strong>Full form i18n</strong>: <code>DeploymentForm.svelte</code> now imports <code>t()</code>; all hardcoded labels, placeholders, and button text replaced; <code>label</code> removed from <code>icons</code> and <code>colorOptions</code> arrays — resolved inline via <code>t('deployment.*')</code> and <code>t('ui.color-*')</code></li>
+              <li><strong>13 new locale keys</strong>: added to both <code>en.json</code> and <code>de.json</code> in logical positions — <code>color-*</code> after <code>form-text-color</code>; deployment form keys (<code>form-placeholder-deployment</code>, <code>form-players</code>, <code>form-no-players</code>, <code>form-add-player</code>, <code>form-add-point</code>, <code>form-point-n</code>, <code>form-position-inside</code>, <code>form-position-outside</code>, <code>form-round-placeholder</code>) grouped after <code>form-placeholder-fighter</code></li>
             </ul>
           </section>
 
@@ -1887,6 +1897,14 @@
             <div class="decision">
               <div class="decision-q">Outside position coordinates: why fixed values (34, 540, 63, 852)?</div>
               <div class="decision-a">Derived once from <code>BH/2 + margin</code> and <code>BW_ICON/2 + margin</code>, hardcoded for clarity. Must be updated if bubble dimensions change.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why scale the landscape card to viewport height on mobile (not width)?</div>
+              <div class="decision-a">Scaling to width (390px on an iPhone) would shrink a 915px card to ~0.43× — cards become unreadably small. Scaling to height (~0.87×) keeps the card large and readable; the extra width spills beyond the screen edge and is accessible via horizontal scroll.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why is only the card area <code>overflow-x-auto</code> and not the whole preview pane?</div>
+              <div class="decision-a">The export button should stay accessible without scrolling. Making the whole pane scroll would push the button out of view when the user pans the card. The button is a <code>shrink-0</code> flex sibling above a separate scroll container that holds only the card.</div>
             </div>
           </section>
 
@@ -1915,7 +1933,10 @@
                 <tr><td><code>src/lib/types.ts</code></td><td>Added <code>DeploymentPlayer</code>; removed <code>color</code> from <code>DeploymentPoint</code>; <code>DeploymentCardData.points[]</code> → <code>players[]</code></td></tr>
                 <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Corner tail fix (<code>getTailAngle</code> + <code>makeTailPoints</code>); nested player/point loops; dynamic <code>bubbleWidth()</code>; dashed lines as 4 arms from centre</td></tr>
                 <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Player-level structure; colour exclusion; position exclusion + smart defaulting; contrast-aware buttons; UX sizing lift</td></tr>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Initial state updated to <code>players: []</code></td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Initial state updated to <code>players: []</code>; sidebar 360 → 480px; scroll layout; mobile cardScale uses viewport height; export button pinned above card scroll area</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Added <code>t()</code> import; all hardcoded strings replaced; <code>label</code> removed from <code>icons</code> and <code>colorOptions</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>13 new <code>ui.*</code> keys for deployment form; logically ordered</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>13 new German translations matching en.json additions</td></tr>
               </tbody>
             </table>
           </section>
