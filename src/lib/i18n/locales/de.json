@@ -234,6 +234,8 @@
     "form-bold": "Fett",
     "form-italic": "Kursiv",
     "form-caption": "Bildunterschrift",
+    "form-placeholder-caption-fighter": "z. B. Illustration: John Blanche",
+    "form-placeholder-caption-text": "z. B. Quelle: Starter Set",
     "form-position-x": "Position X",
     "form-position-x-hint": "links/rechts",
     "form-position-y": "Position Y",

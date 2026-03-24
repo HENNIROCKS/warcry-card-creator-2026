@@ -234,6 +234,8 @@
     "form-bold": "Bold",
     "form-italic": "Italic",
     "form-caption": "Caption",
+    "form-placeholder-caption-fighter": "e.g. Art by John Blanche",
+    "form-placeholder-caption-text": "e.g. Source: Starter Set",
     "form-position-x": "Position X",
     "form-position-x-hint": "left/right",
     "form-position-y": "Position Y",
