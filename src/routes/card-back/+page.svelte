@@ -865,6 +865,7 @@
 
 	.swatch-black {
 		background: #111111;
+		border-color: rgba(255, 255, 255, 0.3);
 	}
 
 	.swatch-red {
