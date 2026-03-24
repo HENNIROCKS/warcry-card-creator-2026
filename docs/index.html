@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-24">
+              <span class="session-date">2026-03-24</span>
+              <span class="session-title">Deployment Card Form &amp; Bubbles</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-23">
               <span class="session-date">2026-03-23</span>
               <span class="session-title">Card Back + Deployment Card</span>
@@ -1257,6 +1263,27 @@
                   </td>
                   <td>Mar 23</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-built" onclick="activateSession('march-24')"
+                      >Deployment point form: add/remove points; position select (33 options); icon toggle; colour swatches; RND field</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-decisions" onclick="activateSession('march-24')"
+                      >Speech bubble replaces standalone icon + offset RND label — bubble unifies player colour, icon, and label into one visual unit with directional tail</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-built" onclick="activateSession('march-24')"
+                      >33 snap positions: OUT-LT/LB/RT/RB (side edges) + OUT-CNR-TL/TR/BL/BR (corners with diagonal tails); 4 player colours (red/blue/green/yellow)</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1799,6 +1826,88 @@
         <!-- ══════════════════════════════════════════
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
+        <!-- ══════════════════════════════════════════
+         2026-03-24 — Deployment Card Form & Bubbles
+    ══════════════════════════════════════════ -->
+        <div id="session-march-24" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-24</span>
+              <span class="badge badge-green">Deployment form</span>
+              <span class="badge badge-green">Speech bubble icons</span>
+              <span class="badge badge-green">33 snap positions</span>
+            </div>
+            <h1>Deployment Card Form &amp; Speech Bubble Icons</h1>
+            <p>
+              Built out the full deployment point form (add/remove, position select, icon toggle, colour
+              swatches, RND field). Replaced the standalone icon + separate RND label with a coloured
+              speech bubble per point: rounded rect in player colour, directional tail toward the
+              battlefield, white icon inner content, and inline RND label. Expanded snap positions from
+              17 to 33 by adding two slots on each side edge (OUT-LT/LB, OUT-RT/RB) and four corner
+              positions (OUT-CNR-TL/TR/BL/BR) with diagonal tails. Player colours expanded to four
+              (red, blue, green, yellow) with circular swatches matching the card back UI.
+            </p>
+          </div>
+
+          <section id="march-24-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <ul>
+              <li><strong>DeploymentForm.svelte — point management</strong>: add/remove deployment points; per-point fields: position <code>&lt;select&gt;</code> (grouped Inside/Outside), icon toggle (Dagger/Hammer/Shield), circular colour swatches, RND text input</li>
+              <li><strong>Speech bubble rendering</strong>: each deployment point renders as a coloured rounded-rect bubble (BH=48px) with white inner icon (32px, no outer shape wrapper) and optional RND label — replaces the previous standalone icon + offset label approach</li>
+              <li><strong>Directional tail</strong>: tail triangle attached to bubble edge pointing toward battlefield — down for top positions, up for bottom, right for left-side, left for right-side, diagonal for corners, none for CC</li>
+              <li><strong>33 snap positions</strong>: expanded from 17 to 33 — added OUT-LT/OUT-LC/OUT-LB and OUT-RT/OUT-RC/OUT-RB (3 per side edge) plus OUT-CNR-TL/TR/BL/BR (4 corners); all outside positions clamped to ≥10px card margin accounting for BW_FULL=106px</li>
+              <li><strong>Diagonal tails</strong>: corner positions use a 45° triangle (tip offset D=7px) attached to the inner corner of the bubble</li>
+              <li><strong>4 player colours</strong>: red <code>#c0272d</code>, blue <code>#2563eb</code> (lighter than previous <code>#1a3a6e</code>), green <code>#16a34a</code>, yellow <code>#ca8a04</code>; <code>DeploymentColor</code> type updated</li>
+              <li><strong>RND label legibility fix</strong>: outside positions previously pushed label off-card; fixed inward offset, then superseded entirely by the bubble approach</li>
+            </ul>
+          </section>
+
+          <section id="march-24-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <div class="decision-q">Why a speech bubble instead of standalone icon + separate RND label?</div>
+              <div class="decision-a">The original approach had a coloured shape (triangle/diamond/circle) for the icon and a separate coloured text label offset nearby. This was hard to read against the parchment and produced layout issues for outside positions (label ran off-card). The speech bubble unifies both into one visual unit: the player colour is unmistakable, the icon and label are always co-located, and the tail makes the positional intent clear.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why 33 positions instead of free-form placement?</div>
+              <div class="decision-a">Snap positions keep the form simple (a select, later a visual grid) and avoid coordinate-editor complexity. Expanding from 17 to 33 adds side-edge top/bottom slots and corners to cover cards that place icons close to the card margin — all positions still observed in real Warcry deployment cards.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Outside position coordinates: why fixed values (34, 540, 63, 852) instead of derived?</div>
+              <div class="decision-a">The clamped values are computed from <code>BH/2 + margin</code> and <code>BW_FULL/2 + margin</code> — derived once from the bubble geometry constants and hardcoded for clarity. If bubble dimensions change, these need updating too.</div>
+            </div>
+          </section>
+
+          <section id="march-24-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Visual position picker — replace <code>&lt;select&gt;</code> with clickable grid showing all 33 positions laid out like the battlefield</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Measurement lines — form fields (direction, label, start/end cap) + card SVG rendering (arrow/tick lines with distance label at midpoint)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-24-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentPosition</code> expanded 17→33; <code>DeploymentColor</code> expanded to <code>'red' | 'blue' | 'green' | 'yellow'</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Speech bubble rendering (rect + tail + icon + label); 33 position coordinates; diagonal tail geometry; 4 player colours</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Full point management UI: add/remove, position select (33 options, grouped), icon toggle, colour swatches, RND field</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+        </div>
         <!-- ══════════════════════════════════════════
          2026-03-23 — Card Back Editor
     ══════════════════════════════════════════ -->
@@ -6168,6 +6277,7 @@
 
     <script>
       const sessions = [
+        "march-24",
         "march-23",
         "march-22",
         "march-21",

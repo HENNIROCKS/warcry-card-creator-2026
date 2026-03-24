@@ -56,20 +56,23 @@ export interface CardBackData {
 }
 
 export type DeploymentIconType = 'dagger' | 'shield' | 'hammer';
-export type DeploymentColor = 'red' | 'blue';
+export type DeploymentColor = 'red' | 'blue' | 'green' | 'yellow';
 export type DeploymentCapType = 'arrow' | 'tick' | 'none';
 export type DeploymentDirection = 'up' | 'down' | 'left' | 'right';
 
 // Inside: TL TC TR ML CC MR BL BC BR
-// Outside: top-left top-center top-right right-center bottom-right bottom-center bottom-left left-center
+// Outside top/bottom edge: OUT-TL OUT-TC OUT-TR / OUT-BL OUT-BC OUT-BR
+// Outside left/right edge: OUT-LT OUT-LC OUT-LB / OUT-RT OUT-RC OUT-RB
+// Outside corners: OUT-CNR-TL OUT-CNR-TR OUT-CNR-BL OUT-CNR-BR
 export type DeploymentPosition =
 	| 'TL' | 'TC' | 'TR'
 	| 'ML' | 'CC' | 'MR'
 	| 'BL' | 'BC' | 'BR'
-	| 'OUT-TL' | 'OUT-TC' | 'OUT-TR'
-	| 'OUT-RC'
-	| 'OUT-BR' | 'OUT-BC' | 'OUT-BL'
-	| 'OUT-LC';
+	| 'OUT-TL'  | 'OUT-TC'  | 'OUT-TR'
+	| 'OUT-LT'  | 'OUT-LC'  | 'OUT-LB'
+	| 'OUT-RT'  | 'OUT-RC'  | 'OUT-RB'
+	| 'OUT-BL'  | 'OUT-BC'  | 'OUT-BR'
+	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR';
 
 export interface DeploymentMeasurement {
 	direction: DeploymentDirection;

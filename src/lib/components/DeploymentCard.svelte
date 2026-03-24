@@ -6,7 +6,7 @@
 
 	let { data, printerFriendly = false }: { data: DeploymentCardData; printerFriendly?: boolean } = $props();
 
-	// Strip outer <svg> wrapper, comments, title; set all fills to white
+	// Strip outer <svg> wrapper and force all fills to white
 	function innerContent(raw: string): string {
 		return raw
 			.replace(/<!--[\s\S]*?-->/g, '')
@@ -22,6 +22,13 @@
 	const hammerInner = innerContent(hammerRaw);
 	const shieldInner = innerContent(shieldRaw);
 
+	// Icon viewBoxes differ between assets
+	const iconViewBox: Record<string, string> = {
+		dagger: '0 0 32 32',
+		hammer: '0 0 32 32',
+		shield: '0 0 1024 1024',
+	};
+
 	// Battlefield rectangle (inside the 915×574 card)
 	const BF_L = 100;
 	const BF_T = 60;
@@ -32,11 +39,22 @@
 	const BF_CX = BF_L + BF_W / 2;
 	const BF_CY = BF_T  + BF_H / 2;
 
-	const ICON_R = 22;
+	// Bubble geometry
+	const BH       = 48;  // bubble height
+	const BPAD     = 8;   // horizontal padding inside bubble
+	const ICON_SZ  = 32;  // icon size inside bubble
+	const GAP      = 6;   // gap between icon and RND text
+	const BW_ICON  = BPAD + ICON_SZ + BPAD;            // bubble width, icon only  (48)
+	const BW_FULL  = BPAD + ICON_SZ + GAP + 52 + BPAD; // bubble width, icon + RND (106)
+	const BRAD     = 8;   // corner radius
+	const TAIL_LEN = 10;  // tail triangle length
+	const TAIL_W   = 12;  // tail triangle base width
 
 	const COLORS: Record<DeploymentColor, string> = {
-		red: '#c0272d',
-		blue: '#1a3a6e',
+		red:    '#c0272d',
+		blue:   '#2563eb',
+		green:  '#16a34a',
+		yellow: '#ca8a04',
 	};
 
 	function getCoords(pos: DeploymentPosition): [number, number] {
@@ -52,55 +70,47 @@
 			case 'BL': return [BF_L + qx,            BF_B - qy          ];
 			case 'BC': return [BF_CX,                BF_B - qy          ];
 			case 'BR': return [BF_R - qx,            BF_B - qy          ];
-			case 'OUT-TL': return [BF_L + qx,        BF_T / 2           ];
-			case 'OUT-TC': return [BF_CX,            BF_T / 2           ];
-			case 'OUT-TR': return [BF_R - qx,        BF_T / 2           ];
-			case 'OUT-LC': return [BF_L / 2,         BF_CY              ];
-			case 'OUT-RC': return [(BF_R + 915) / 2, BF_CY              ];
-			case 'OUT-BL': return [BF_L + qx,        (BF_B + 574) / 2   ];
-			case 'OUT-BC': return [BF_CX,            (BF_B + 574) / 2   ];
-			case 'OUT-BR': return [BF_R - qx,        (BF_B + 574) / 2   ];
+			case 'OUT-TL': return [BF_L + qx, 34 ];
+			case 'OUT-TC': return [BF_CX,     34 ];
+			case 'OUT-TR': return [BF_R - qx, 34 ];
+			case 'OUT-LT': return [63, BF_T + qy  ];
+			case 'OUT-LC': return [63, BF_CY      ];
+			case 'OUT-LB': return [63, BF_B - qy  ];
+			case 'OUT-RT': return [852, BF_T + qy  ];
+			case 'OUT-RC': return [852, BF_CY      ];
+			case 'OUT-RB': return [852, BF_B - qy  ];
+			case 'OUT-BL': return [BF_L + qx, 540];
+			case 'OUT-BC': return [BF_CX,     540];
+			case 'OUT-BR': return [BF_R - qx, 540];
+			case 'OUT-CNR-TL': return [63,  34 ];
+			case 'OUT-CNR-TR': return [852, 34 ];
+			case 'OUT-CNR-BL': return [63,  540];
+			case 'OUT-CNR-BR': return [852, 540];
 		}
 	}
 
-	// RND label offset from icon centre
-	function getRndOffset(pos: DeploymentPosition): [number, number] {
-		if (['OUT-TL','OUT-TC','OUT-TR','TL','TC','TR'].includes(pos)) return [0, -(ICON_R + 13)];
-		if (['OUT-BL','OUT-BC','OUT-BR','BL','BC','BR'].includes(pos)) return [0,  ICON_R + 13 ];
-		if (['OUT-LC','ML'].includes(pos)) return [-(ICON_R + 36), 0];
-		if (['OUT-RC','MR'].includes(pos)) return [ ICON_R + 36,  0];
-		return [0, ICON_R + 13];
+	type TailDir = 'up' | 'down' | 'left' | 'right' | 'down-right' | 'down-left' | 'up-right' | 'up-left' | null;
+
+	// Tail points toward the battlefield from each position
+	function getTailDir(pos: DeploymentPosition): TailDir {
+		switch (pos) {
+			case 'TL': case 'TC': case 'TR':
+			case 'OUT-TL': case 'OUT-TC': case 'OUT-TR':  return 'down';
+			case 'BL': case 'BC': case 'BR':
+			case 'OUT-BL': case 'OUT-BC': case 'OUT-BR':  return 'up';
+			case 'ML': case 'OUT-LT': case 'OUT-LC': case 'OUT-LB': return 'right';
+			case 'MR': case 'OUT-RT': case 'OUT-RC': case 'OUT-RB': return 'left';
+			case 'OUT-CNR-TL': return 'down-right';
+			case 'OUT-CNR-TR': return 'down-left';
+			case 'OUT-CNR-BL': return 'up-right';
+			case 'OUT-CNR-BR': return 'up-left';
+			default:           return null;
+		}
 	}
 </script>
 
 <div class="card" class:is-printer-friendly={printerFriendly}>
 	<svg width="915" height="574" viewBox="0 0 915 574" xmlns="http://www.w3.org/2000/svg">
-
-		<defs>
-			<!-- Dagger: downward triangle ▽ + deployment-dagger icon -->
-			<symbol id="dep-dagger" viewBox="0 0 44 44" overflow="visible">
-				<polygon points="22,42 3,8 41,8" fill="currentColor"/>
-				<svg x="11" y="12" width="22" height="22" viewBox="0 0 32 32" fill="white">
-					{@html daggerInner}
-				</svg>
-			</symbol>
-
-			<!-- Hammer: diamond ◇ + deployment-hammer icon -->
-			<symbol id="dep-hammer" viewBox="0 0 44 44" overflow="visible">
-				<polygon points="22,2 42,22 22,42 2,22" fill="currentColor"/>
-				<svg x="8" y="8" width="28" height="28" viewBox="0 0 32 32" fill="white">
-					{@html hammerInner}
-				</svg>
-			</symbol>
-
-			<!-- Shield: circle ⊙ + deployment-shield icon -->
-			<symbol id="dep-shield" viewBox="0 0 44 44" overflow="visible">
-				<circle cx="22" cy="22" r="21" fill="currentColor"/>
-				<svg x="3" y="3" width="38" height="38" viewBox="0 0 1024 1024" fill="white">
-					{@html shieldInner}
-				</svg>
-			</symbol>
-		</defs>
 
 		<!-- Battlefield rectangle -->
 		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill="#d9b8a8"/>
@@ -109,7 +119,7 @@
 		<line x1={BF_CX} y1={BF_T} x2={BF_CX} y2={BF_B} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
 		<line x1={BF_L} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
 
-		<!-- Card name -->
+		<!-- Card name (faint watermark at centre) -->
 		{#if data.name}
 			<text
 				x={BF_CX} y={BF_CY + 6}
@@ -121,30 +131,68 @@
 			>{data.name}</text>
 		{/if}
 
-		<!-- Deployment points -->
+		<!-- Deployment point speech bubbles -->
 		{#each data.points as point}
 			{@const [cx, cy] = getCoords(point.position)}
-			{@const [rdx, rdy] = getRndOffset(point.position)}
-			{@const color = COLORS[point.color]}
+			{@const color = printerFriendly ? '#333' : COLORS[point.color]}
+			{@const tailDir = getTailDir(point.position)}
+			{@const hasRnd = !!point.rnd}
+			{@const BW = hasRnd ? BW_FULL : BW_ICON}
+			{@const D = 7}
 
-			<use
-				href={`#dep-${point.icon}`}
-				x={cx - ICON_R} y={cy - ICON_R}
-				width={ICON_R * 2} height={ICON_R * 2}
-				style="color: {color}"
-			/>
+			<g transform="translate({cx - BW / 2}, {cy - BH / 2})">
 
-			{#if point.rnd}
-				<text
-					x={cx + rdx}
-					y={cy + rdy + (rdy === 0 ? 5 : 0)}
-					text-anchor={rdx < 0 ? 'end' : rdx > 0 ? 'start' : 'middle'}
-					font-family="'Germania One', serif"
-					font-size="18"
-					font-weight="bold"
-					fill={printerFriendly ? '#000' : color}
-				>{point.rnd}</text>
-			{/if}
+				<!-- Tail triangle -->
+				{#if tailDir === 'down'}
+					<polygon points="{BW/2 - TAIL_W/2},{BH} {BW/2 + TAIL_W/2},{BH} {BW/2},{BH + TAIL_LEN}" fill={color}/>
+				{:else if tailDir === 'up'}
+					<polygon points="{BW/2 - TAIL_W/2},0 {BW/2 + TAIL_W/2},0 {BW/2},{-TAIL_LEN}" fill={color}/>
+				{:else if tailDir === 'right'}
+					<polygon points="{BW},{BH/2 - TAIL_W/2} {BW},{BH/2 + TAIL_W/2} {BW + TAIL_LEN},{BH/2}" fill={color}/>
+				{:else if tailDir === 'left'}
+					<polygon points="0,{BH/2 - TAIL_W/2} 0,{BH/2 + TAIL_W/2} {-TAIL_LEN},{BH/2}" fill={color}/>
+				{:else if tailDir === 'down-right'}
+					<polygon points="{BW - TAIL_W},{BH} {BW},{BH - TAIL_W} {BW + D},{BH + D}" fill={color}/>
+				{:else if tailDir === 'down-left'}
+					<polygon points="{TAIL_W},{BH} 0,{BH - TAIL_W} {-D},{BH + D}" fill={color}/>
+				{:else if tailDir === 'up-right'}
+					<polygon points="{BW - TAIL_W},0 {BW},{TAIL_W} {BW + D},{-D}" fill={color}/>
+				{:else if tailDir === 'up-left'}
+					<polygon points="{TAIL_W},0 0,{TAIL_W} {-D},{-D}" fill={color}/>
+				{/if}
+
+				<!-- Bubble background -->
+				<rect x="0" y="0" width={BW} height={BH} rx={BRAD} fill={color}/>
+
+				<!-- Icon (white inner content only, no outer shape) -->
+				<svg
+					x={BPAD} y={(BH - ICON_SZ) / 2}
+					width={ICON_SZ} height={ICON_SZ}
+					viewBox={iconViewBox[point.icon]}
+					fill="white"
+					overflow="visible"
+				>
+					{#if point.icon === 'dagger'}
+						{@html daggerInner}
+					{:else if point.icon === 'hammer'}
+						{@html hammerInner}
+					{:else}
+						{@html shieldInner}
+					{/if}
+				</svg>
+
+				<!-- RND label -->
+				{#if hasRnd}
+					<text
+						x={BPAD + ICON_SZ + GAP}
+						y={BH / 2 + 6}
+						font-family="'Germania One', serif"
+						font-size="17"
+						fill="white"
+					>{point.rnd}</text>
+				{/if}
+
+			</g>
 		{/each}
 
 	</svg>
