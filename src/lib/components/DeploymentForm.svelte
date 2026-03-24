@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { t } from '$lib/i18n/index.svelte';
 	import type {
 		DeploymentCardData,
 		DeploymentColor,
@@ -33,17 +34,17 @@
 
 	// -- Icon + colour metadata --------------------------------------------------
 
-	const icons: { value: DeploymentIconType; label: string }[] = [
-		{ value: 'dagger', label: 'Dagger' },
-		{ value: 'hammer', label: 'Hammer' },
-		{ value: 'shield', label: 'Shield' },
+	const icons: { value: DeploymentIconType }[] = [
+		{ value: 'dagger' },
+		{ value: 'hammer' },
+		{ value: 'shield' },
 	];
 
-	const colorOptions: { value: DeploymentColor; hex: string; label: string }[] = [
-		{ value: 'red',    hex: '#c0272d', label: 'Red'    },
-		{ value: 'blue',   hex: '#2563eb', label: 'Blue'   },
-		{ value: 'green',  hex: '#16a34a', label: 'Green'  },
-		{ value: 'yellow', hex: '#ca8a04', label: 'Yellow' },
+	const colorOptions: { value: DeploymentColor; hex: string }[] = [
+		{ value: 'red',    hex: '#c0272d' },
+		{ value: 'blue',   hex: '#2563eb' },
+		{ value: 'green',  hex: '#16a34a' },
+		{ value: 'yellow', hex: '#ca8a04' },
 	];
 
 	// -- Helpers -----------------------------------------------------------------
@@ -113,11 +114,11 @@
 
 	<!-- Card name -->
 	<div class="flex flex-col gap-1.5">
-		<label class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Name</label>
+		<label class="text-xs font-semibold uppercase tracking-widest text-zinc-400">{t('ui.form-card')}</label>
 		<input
 			type="text"
 			bind:value={data.name}
-			placeholder="Deployment card name"
+			placeholder={t('ui.form-placeholder-deployment')}
 			class="w-full rounded bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-red-700"
 		/>
 	</div>
@@ -125,12 +126,12 @@
 	<!-- Players -->
 	<div class="flex flex-col gap-4">
 		<div class="flex items-center justify-between">
-			<span class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Players</span>
+			<span class="text-xs font-semibold uppercase tracking-widest text-zinc-400">{t('ui.form-players')}</span>
 			<button
 				onclick={addPlayer}
 				disabled={data.players.length >= 4}
 				class="rounded bg-red-800 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed"
-			>+ Add Player</button>
+			>{t('ui.form-add-player')}</button>
 		</div>
 
 		{#each data.players as player, pi}
@@ -150,16 +151,16 @@
 									disabled={takenByOther}
 									style="background: {opt.hex}; outline-color: {player.color === opt.value ? opt.hex : 'transparent'}"
 									class="w-6 h-6 rounded-full outline outline-2 outline-offset-1 transition-[outline-color] disabled:opacity-25 disabled:cursor-not-allowed"
-									aria-label={opt.label}
+									aria-label={t('ui.color-' + opt.value)}
 								></button>
 							{/each}
 						</div>
-						<span class="text-xs font-bold uppercase tracking-widest" style="color: {col.hex}">{col.label}</span>
+						<span class="text-xs font-bold uppercase tracking-widest" style="color: {col.hex}">{t('ui.color-' + col.value)}</span>
 					</div>
 					<button
 						onclick={() => removePlayer(pi)}
 						class="rounded px-3 py-1.5 text-sm text-zinc-400 transition hover:bg-zinc-700 hover:text-red-400"
-					>Remove</button>
+					>{t('ui.form-remove')}</button>
 				</div>
 
 				<!-- Points for this player -->
@@ -169,7 +170,7 @@
 						<div class="flex flex-col gap-2 rounded border border-zinc-600 bg-zinc-800 p-2.5">
 
 							<div class="flex items-center justify-between">
-								<span class="text-xs font-semibold uppercase tracking-widest" style="color: {col.hex}">Point {pti + 1}</span>
+								<span class="text-xs font-semibold uppercase tracking-widest" style="color: {col.hex}">{t('ui.form-point-n', { n: String(pti + 1) })}</span>
 								<button
 									onclick={() => removePoint(pi, pti)}
 									class="rounded px-3 py-1.5 text-sm text-zinc-400 transition hover:bg-zinc-700 hover:text-red-400"
@@ -181,12 +182,12 @@
 								bind:value={point.position}
 								class="w-full rounded bg-zinc-700 px-3 py-2 text-sm text-white outline-none focus:ring-1 focus:ring-red-700"
 							>
-								<optgroup label="Inside">
+								<optgroup label={t('ui.form-position-inside')}>
 									{#each insidePositions as pos}
 										<option value={pos} disabled={taken.has(pos)}>{positionLabels[pos]}{taken.has(pos) ? ' ✕' : ''}</option>
 									{/each}
 								</optgroup>
-								<optgroup label="Outside">
+								<optgroup label={t('ui.form-position-outside')}>
 									{#each outsidePositions as pos}
 										<option value={pos} disabled={taken.has(pos)}>{positionLabels[pos]}{taken.has(pos) ? ' ✕' : ''}</option>
 									{/each}
@@ -202,7 +203,7 @@
 											? ''
 											: 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
 										style={point.icon === ic.value ? `background: ${col.hex}; color: ${contrastText(col.hex)}` : ''}
-									>{ic.label}</button>
+									>{t('deployment.' + ic.value)}</button>
 								{/each}
 							</div>
 
@@ -210,7 +211,7 @@
 							<input
 								type="text"
 								bind:value={point.rnd}
-								placeholder="Round (e.g. RND 2)"
+								placeholder={t('ui.form-round-placeholder')}
 								class="w-full rounded bg-zinc-700 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-red-700"
 							/>
 
@@ -220,14 +221,14 @@
 					<button
 						onclick={() => addPoint(pi)}
 						class="w-full rounded border border-dashed border-zinc-600 py-2 text-sm text-zinc-500 transition hover:border-zinc-400 hover:text-zinc-300"
-					>+ Add Point</button>
+					>{t('ui.form-add-point')}</button>
 				</div>
 
 			</div>
 		{/each}
 
 		{#if data.players.length === 0}
-			<p class="text-center text-sm text-zinc-500">No players yet.</p>
+			<p class="text-center text-sm text-zinc-500">{t('ui.form-no-players')}</p>
 		{/if}
 	</div>
 

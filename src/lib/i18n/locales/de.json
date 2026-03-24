@@ -257,7 +257,20 @@
     "deployment-group": "Aufstellung",
     "misc-group": "Sonstiges",
     "treasure-group": "Schatz",
-    "twists-group": "Wendungen"
+    "twists-group": "Wendungen",
+    "form-placeholder-deployment": "Name der Aufstellungskarte",
+    "form-players": "Spieler",
+    "form-add-player": "+ Spieler hinzufügen",
+    "form-point-n": "Punkt {n}",
+    "form-position-inside": "Innen",
+    "form-position-outside": "Außen",
+    "form-round-placeholder": "Runde (z. B. RND 2)",
+    "form-add-point": "+ Punkt hinzufügen",
+    "form-no-players": "Noch keine Spieler.",
+    "color-red": "Rot",
+    "color-blue": "Blau",
+    "color-green": "Grün",
+    "color-yellow": "Gelb"
   },
   "runemarks": {
     "Agile": "Gewandt",

@@ -257,7 +257,20 @@
     "deployment-group": "Deployment",
     "misc-group": "Misc",
     "treasure-group": "Treasure",
-    "twists-group": "Twists"
+    "twists-group": "Twists",
+    "form-placeholder-deployment": "Deployment card name",
+    "form-players": "Players",
+    "form-add-player": "+ Add Player",
+    "form-point-n": "Point {n}",
+    "form-position-inside": "Inside",
+    "form-position-outside": "Outside",
+    "form-round-placeholder": "Round (e.g. RND 2)",
+    "form-add-point": "+ Add Point",
+    "form-no-players": "No players yet.",
+    "color-red": "Red",
+    "color-blue": "Blue",
+    "color-green": "Green",
+    "color-yellow": "Yellow"
   },
   "runemarks": {
     "Agile": "Agile",

@@ -4,15 +4,15 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { DeploymentCardData } from '$lib/types';
-	import { t } from '$lib/i18n/index.svelte';
 	import DeploymentCard from '$lib/components/DeploymentCard.svelte';
 	import DeploymentForm from '$lib/components/DeploymentForm.svelte';
+	import { t } from '$lib/i18n/index.svelte';
+	import type { DeploymentCardData } from '$lib/types';
 
 	// Card dimensions (landscape)
 	const CARD_W = 915;
 	const CARD_H = 574;
-	const SIDEBAR_W = 360;
+	const SIDEBAR_W = 480;
 
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
@@ -41,8 +41,8 @@
 
 	const cardScale = $derived(
 		isMobile
-			? Math.min(1, (viewportWidth - 32) / CARD_W)
-			: Math.min(1, (viewportWidth - SIDEBAR_W - 48) / CARD_W, (viewportHeight - 64) / CARD_H)
+			? Math.min(1, (viewportHeight - 120) / CARD_H)
+			: Math.min(1, (viewportWidth - SIDEBAR_W - 48) / CARD_W)
 	);
 
 	let data = $state<DeploymentCardData>({
@@ -115,8 +115,7 @@
 
 	<!-- LEFT: Sidebar -->
 	<aside
-		class="flex flex-col border-zinc-800 w-full flex-1 min-h-0 lg:flex-none lg:shrink-0 lg:border-r lg:h-full"
-		style:width={isMobile ? undefined : `${SIDEBAR_W}px`}
+		class="flex flex-col border-zinc-800 w-full flex-1 min-h-0 lg:w-[480px] lg:flex-none lg:shrink-0 lg:border-r lg:h-full"
 		style:display={isMobile && activeTab !== 'edit' ? 'none' : 'flex'}
 	>
 		<div class="flex items-center justify-between border-b border-zinc-800 px-5 py-4 shrink-0">
@@ -166,11 +165,11 @@
 
 	<!-- RIGHT: Card preview -->
 	<main
-		class="flex flex-col flex-1 min-h-0 items-center justify-start overflow-y-auto pt-6 lg:justify-center lg:pt-0 lg:h-full lg:overflow-hidden"
+		class="flex flex-col flex-1 min-h-0 items-center lg:justify-center lg:overflow-y-auto lg:h-full"
 		style:display={isMobile && activeTab !== 'preview' ? 'none' : 'flex'}
 	>
 		<!-- Export button: mobile only, above card -->
-		<div class="lg:hidden mb-4 flex items-center gap-3">
+		<div class="lg:hidden shrink-0 pt-6 mb-4 flex items-center gap-3">
 			<div class="relative">
 				<div class="flex rounded-md overflow-hidden">
 					<button
@@ -202,11 +201,14 @@
 			</div>
 		</div>
 
-		<!-- Explicit-dimension wrapper so flex sees the visual size, not the full layout box -->
-		<div style="width: {CARD_W * cardScale}px; height: {CARD_H * cardScale}px; position: relative; flex-shrink: 0;">
-			<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
-				<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-					<DeploymentCard {data} {printerFriendly} />
+		<!-- Card scroll area: scrolls horizontally on mobile -->
+		<div class="overflow-x-auto w-full flex justify-start items-center pb-6 lg:overflow-x-visible lg:justify-center lg:pb-0 lg:flex-1">
+			<!-- Explicit-dimension wrapper so flex sees the visual size, not the full layout box -->
+			<div style="width: {CARD_W * cardScale}px; height: {CARD_H * cardScale}px; position: relative; flex-shrink: 0;">
+				<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
+					<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
+						<DeploymentCard {data} {printerFriendly} />
+					</div>
 				</div>
 			</div>
 		</div>
