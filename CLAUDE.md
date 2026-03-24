@@ -62,7 +62,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (preset slugs: ability, reaction, heroic-trait, battle-trait, lesser-artefact, greater-artefact, divine-blessing — or custom text)
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
-- Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable` — collapsing both the card element and its form field
+- Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable`, `showCaption` — collapsing both the card element and its form field
 
 **Card back** (portrait, same 574×915px):
 
