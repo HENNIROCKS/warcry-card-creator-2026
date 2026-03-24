@@ -61,7 +61,7 @@
 		{/if}
 		{#if data.showCaption}
 			<label class="field-label mt-2" for="img-caption">{t('ui.form-caption')}</label>
-			<input id="img-caption" class="field-input" type="text" bind:value={data.imageCaption} />
+			<input id="img-caption" class="field-input" type="text" placeholder={t('ui.form-placeholder-caption-fighter')} bind:value={data.imageCaption} />
 		{/if}
 	</section>
 

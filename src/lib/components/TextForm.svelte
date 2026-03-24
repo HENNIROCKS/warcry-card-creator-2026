@@ -46,15 +46,7 @@
 
 	<!-- Card Name + Type -->
 	<section>
-		<label class="field-label" for="card-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
-		<input
-			id="card-name"
-			class="field-input"
-			type="text"
-			placeholder={t('card.card-name-placeholder')}
-			bind:value={data.name}
-		/>
-		<label class="field-label mt-2" for="card-label">{t('ui.form-type')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-select')})</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
+		<label class="field-label" for="card-label">{t('ui.form-type')} <span class="normal-case font-normal text-zinc-500">({t('ui.form-select')})</span> {#if selectValue === '__custom__'}<span class="normal-case font-normal text-zinc-500">{customText.length}/30</span>{/if}</label>
 		<select id="card-label" class="field-input" bind:value={selectValue}>
 			<option value="ability">{t('card.label-ability')}</option>
 			<option value="reaction">{t('card.label-reaction')}</option>
@@ -73,6 +65,18 @@
 				maxlength="30"
 				bind:value={customText}
 			/>
+		{/if}
+		<label class="field-label mt-2" for="card-name">{t('ui.form-card')} <span class="normal-case font-normal text-zinc-500">{t('ui.form-line-break-hint')}</span></label>
+		<input
+			id="card-name"
+			class="field-input"
+			type="text"
+			placeholder={t('card.card-name-placeholder')}
+			bind:value={data.name}
+		/>
+		{#if data.showCaption}
+			<label class="field-label mt-2" for="image-caption">{t('ui.form-caption')}</label>
+			<input id="image-caption" class="field-input" type="text" placeholder={t('ui.form-placeholder-caption-text')} bind:value={data.imageCaption} />
 		{/if}
 	</section>
 
@@ -99,6 +103,10 @@
 			<label class="flex cursor-pointer items-center gap-3">
 				<input type="checkbox" bind:checked={data.showPrerequisite} class="h-4 w-4 rounded accent-red-800" />
 				<span class="text-zinc-200">{t('ui.form-show-prerequisite')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
+				<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
 			</label>
 		</div>
 	</section>

@@ -73,6 +73,8 @@ export interface TextCardData {
 	flavorText: string;         // italic block; render order: flavor → points table → prerequisite → body
 	prerequisiteText: string;   // framed box, shown after points table if non-empty
 	bodyText: string;
+	showCaption: boolean;
+	imageCaption: string;
 	regularPointsValue?: string; // points cost increases table (independent of card type)
 	elitePointsValue?: string;   // points cost increases table (independent of card type)
 }

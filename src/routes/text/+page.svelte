@@ -51,6 +51,8 @@
 		showFlavorText: true,
 		showPrerequisite: false,
 		showPointsTable: false,
+		showCaption: false,
+		imageCaption: '',
 		flavorText: '',
 		prerequisiteText: '',
 		bodyText: '',
