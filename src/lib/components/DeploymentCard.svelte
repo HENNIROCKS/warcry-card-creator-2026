@@ -40,15 +40,20 @@
 	const BF_CY = BF_T  + BF_H / 2;
 
 	// Bubble geometry
-	const BH       = 48;  // bubble height
-	const BPAD     = 8;   // horizontal padding inside bubble
-	const ICON_SZ  = 32;  // icon size inside bubble
-	const GAP      = 6;   // gap between icon and RND text
-	const BW_ICON  = BPAD + ICON_SZ + BPAD;            // bubble width, icon only  (48)
-	const BW_FULL  = BPAD + ICON_SZ + GAP + 52 + BPAD; // bubble width, icon + RND (106)
-	const BRAD     = 8;   // corner radius
-	const TAIL_LEN = 10;  // tail triangle length
-	const TAIL_W   = 12;  // tail triangle base width
+	const BH        = 48;  // bubble height
+	const BPAD      = 8;   // horizontal padding inside bubble
+	const ICON_SZ   = 32;  // icon size inside bubble
+	const GAP       = 6;   // gap between icon and RND text
+	const CHAR_W    = 9;   // approximate char width for Germania One at 17px
+	const BW_ICON   = BPAD + ICON_SZ + BPAD; // bubble width, icon only (48)
+	const BRAD      = 8;   // corner radius
+	const TAIL_LEN  = 10;  // tail triangle length
+	const TAIL_W    = 12;  // tail triangle base width
+
+	// Bubble width fitted to the actual RND text length.
+	function bubbleWidth(rnd: string): number {
+		return rnd ? BPAD + ICON_SZ + GAP + Math.ceil(rnd.length * CHAR_W) + BPAD : BW_ICON;
+	}
 
 	const COLORS: Record<DeploymentColor, string> = {
 		red:    '#c0272d',
@@ -89,23 +94,78 @@
 		}
 	}
 
-	type TailDir = 'up' | 'down' | 'left' | 'right' | 'down-right' | 'down-left' | 'up-right' | 'up-left' | null;
-
-	// Tail points toward the battlefield from each position
-	function getTailDir(pos: DeploymentPosition): TailDir {
+	// Returns the angle (radians) the tail should point toward, or null for no tail.
+	// Corner positions use the exact angle to the nearest battlefield corner.
+	function getTailAngle(pos: DeploymentPosition): number | null {
+		const DOWN  =  Math.PI / 2;
+		const UP    = -Math.PI / 2;
+		const RIGHT =  0;
+		const LEFT  =  Math.PI;
 		switch (pos) {
 			case 'TL': case 'TC': case 'TR':
-			case 'OUT-TL': case 'OUT-TC': case 'OUT-TR':  return 'down';
+			case 'OUT-TL': case 'OUT-TC': case 'OUT-TR':           return DOWN;
 			case 'BL': case 'BC': case 'BR':
-			case 'OUT-BL': case 'OUT-BC': case 'OUT-BR':  return 'up';
-			case 'ML': case 'OUT-LT': case 'OUT-LC': case 'OUT-LB': return 'right';
-			case 'MR': case 'OUT-RT': case 'OUT-RC': case 'OUT-RB': return 'left';
-			case 'OUT-CNR-TL': return 'down-right';
-			case 'OUT-CNR-TR': return 'down-left';
-			case 'OUT-CNR-BL': return 'up-right';
-			case 'OUT-CNR-BR': return 'up-left';
-			default:           return null;
+			case 'OUT-BL': case 'OUT-BC': case 'OUT-BR':           return UP;
+			case 'ML': case 'OUT-LT': case 'OUT-LC': case 'OUT-LB': return RIGHT;
+			case 'MR': case 'OUT-RT': case 'OUT-RC': case 'OUT-RB': return LEFT;
+			case 'OUT-CNR-TL': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_T - cy, BF_L - cx); }
+			case 'OUT-CNR-TR': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_T - cy, BF_R - cx); }
+			case 'OUT-CNR-BL': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_B - cy, BF_L - cx); }
+			case 'OUT-CNR-BR': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_B - cy, BF_R - cx); }
+			default: return null;
 		}
+	}
+
+	// Computes tail polygon points in bubble-local coordinates for any angle.
+	// When the exit point lands in the rounded-corner zone the tail base is split
+	// across the two adjacent straight edges (one point on each), keeping the
+	// base flush with the visible rounded rect. The tip always points in the
+	// correct direction.
+	function makeTailPoints(BW: number, BH: number, angle: number): string {
+		const halfW = BW / 2;
+		const halfH = BH / 2;
+		const cos   = Math.cos(angle);
+		const sin   = Math.sin(angle);
+
+		// Exit point relative to bubble centre
+		let ex: number, ey: number;
+		if (Math.abs(cos) * halfH >= Math.abs(sin) * halfW) {
+			ex = cos > 0 ? halfW : -halfW;
+			ey = Math.abs(cos) > 1e-10 ? (sin / cos) * ex : 0;
+		} else {
+			ey = sin > 0 ? halfH : -halfH;
+			ex = Math.abs(sin) > 1e-10 ? (cos / sin) * ey : 0;
+		}
+
+		const fmt = (n: number) => n.toFixed(1);
+
+		// If exit point falls in the rounded-corner zone, anchor the base on the
+		// two straight edges that meet at that corner instead.
+		if (Math.abs(ex) > halfW - BRAD && Math.abs(ey) > halfH - BRAD) {
+			// Bounding-box corner in local coords
+			const lcx = ex + halfW;  // 0 or BW
+			const lcy = ey + halfH;  // 0 or BH
+
+			// One base point on the horizontal edge, one on the vertical edge
+			const b1x = lcx - Math.sign(cos) * TAIL_W;
+			const b2y = lcy - Math.sign(sin) * TAIL_W;
+
+			// Tip: extend from bounding-box corner in the tail direction
+			const tx = lcx + cos * TAIL_LEN;
+			const ty = lcy + sin * TAIL_LEN;
+
+			return `${fmt(b1x)},${fmt(lcy)} ${fmt(lcx)},${fmt(b2y)} ${fmt(tx)},${fmt(ty)}`;
+		}
+
+		// Regular case: base centred on the exit edge, perpendicular offset.
+		const lx = ex + halfW;
+		const ly = ey + halfH;
+		const tx = lx + cos * TAIL_LEN;
+		const ty = ly + sin * TAIL_LEN;
+		const px = -sin * (TAIL_W / 2);
+		const py =  cos * (TAIL_W / 2);
+
+		return `${fmt(lx+px)},${fmt(ly+py)} ${fmt(lx-px)},${fmt(ly-py)} ${fmt(tx)},${fmt(ty)}`;
 	}
 </script>
 
@@ -115,9 +175,11 @@
 		<!-- Battlefield rectangle -->
 		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill="#d9b8a8"/>
 
-		<!-- Dashed centre lines -->
-		<line x1={BF_CX} y1={BF_T} x2={BF_CX} y2={BF_B} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_L} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
+		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
 
 		<!-- Card name (faint watermark at centre) -->
 		{#if data.name}
@@ -132,33 +194,19 @@
 		{/if}
 
 		<!-- Deployment point speech bubbles -->
-		{#each data.points as point}
+		{#each data.players as player}
+		{#each player.points as point}
 			{@const [cx, cy] = getCoords(point.position)}
-			{@const color = printerFriendly ? '#333' : COLORS[point.color]}
-			{@const tailDir = getTailDir(point.position)}
+			{@const color = printerFriendly ? '#333' : COLORS[player.color]}
+			{@const tailAngle = getTailAngle(point.position)}
 			{@const hasRnd = !!point.rnd}
-			{@const BW = hasRnd ? BW_FULL : BW_ICON}
-			{@const D = 7}
+			{@const BW = bubbleWidth(point.rnd)}
 
 			<g transform="translate({cx - BW / 2}, {cy - BH / 2})">
 
 				<!-- Tail triangle -->
-				{#if tailDir === 'down'}
-					<polygon points="{BW/2 - TAIL_W/2},{BH} {BW/2 + TAIL_W/2},{BH} {BW/2},{BH + TAIL_LEN}" fill={color}/>
-				{:else if tailDir === 'up'}
-					<polygon points="{BW/2 - TAIL_W/2},0 {BW/2 + TAIL_W/2},0 {BW/2},{-TAIL_LEN}" fill={color}/>
-				{:else if tailDir === 'right'}
-					<polygon points="{BW},{BH/2 - TAIL_W/2} {BW},{BH/2 + TAIL_W/2} {BW + TAIL_LEN},{BH/2}" fill={color}/>
-				{:else if tailDir === 'left'}
-					<polygon points="0,{BH/2 - TAIL_W/2} 0,{BH/2 + TAIL_W/2} {-TAIL_LEN},{BH/2}" fill={color}/>
-				{:else if tailDir === 'down-right'}
-					<polygon points="{BW - TAIL_W},{BH} {BW},{BH - TAIL_W} {BW + D},{BH + D}" fill={color}/>
-				{:else if tailDir === 'down-left'}
-					<polygon points="{TAIL_W},{BH} 0,{BH - TAIL_W} {-D},{BH + D}" fill={color}/>
-				{:else if tailDir === 'up-right'}
-					<polygon points="{BW - TAIL_W},0 {BW},{TAIL_W} {BW + D},{-D}" fill={color}/>
-				{:else if tailDir === 'up-left'}
-					<polygon points="{TAIL_W},0 0,{TAIL_W} {-D},{-D}" fill={color}/>
+				{#if tailAngle !== null}
+					<polygon points={makeTailPoints(BW, BH, tailAngle)} fill={color}/>
 				{/if}
 
 				<!-- Bubble background -->
@@ -193,6 +241,7 @@
 				{/if}
 
 			</g>
+		{/each}
 		{/each}
 
 	</svg>

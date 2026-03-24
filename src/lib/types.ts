@@ -84,14 +84,18 @@ export interface DeploymentMeasurement {
 export interface DeploymentPoint {
 	position: DeploymentPosition;
 	icon: DeploymentIconType;
-	color: DeploymentColor;
 	rnd: string;          // e.g. 'RND2'
 	measurements: DeploymentMeasurement[];
 }
 
+export interface DeploymentPlayer {
+	color: DeploymentColor;
+	points: DeploymentPoint[];
+}
+
 export interface DeploymentCardData {
 	name: string;
-	points: DeploymentPoint[];
+	players: DeploymentPlayer[];
 }
 
 export type ActivationType = 'double' | 'triple' | 'quad' | null;

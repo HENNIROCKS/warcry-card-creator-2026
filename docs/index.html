@@ -1833,32 +1833,36 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-24</span>
-              <span class="badge badge-green">Deployment form</span>
-              <span class="badge badge-green">Speech bubble icons</span>
-              <span class="badge badge-green">33 snap positions</span>
+              <span class="badge badge-green">Player-based form</span>
+              <span class="badge badge-green">Corner tail fix</span>
+              <span class="badge badge-green">Smart position logic</span>
             </div>
-            <h1>Deployment Card Form &amp; Speech Bubble Icons</h1>
+            <h1>Deployment Card — Form, Bubbles &amp; UX Polish</h1>
             <p>
-              Built out the full deployment point form (add/remove, position select, icon toggle, colour
-              swatches, RND field). Replaced the standalone icon + separate RND label with a coloured
-              speech bubble per point: rounded rect in player colour, directional tail toward the
-              battlefield, white icon inner content, and inline RND label. Expanded snap positions from
-              17 to 33 by adding two slots on each side edge (OUT-LT/LB, OUT-RT/RB) and four corner
-              positions (OUT-CNR-TL/TR/BL/BR) with diagonal tails. Player colours expanded to four
-              (red, blue, green, yellow) with circular swatches matching the card back UI.
+              Full deployment point form built (add/remove, position select, icon toggle, colour
+              swatches, RND field) with speech bubbles per point. In a second pass: restructured the
+              form so players (colours) are the outer level and each player owns their points; fixed
+              corner bubble tails to point at the exact battlefield corner using <code>atan2</code>;
+              made bubble width dynamic (fitted to RND text length); enforced unique colour per player
+              and unique position across all players; new points and new players auto-assign the first
+              free position starting from Centre. General UX lift: larger touch targets, better
+              contrast, RND field moved below icon buttons, dashed centre lines radiating from centre.
             </p>
           </div>
 
           <section id="march-24-built" data-nav="What Was Built">
             <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
             <ul>
-              <li><strong>DeploymentForm.svelte — point management</strong>: add/remove deployment points; per-point fields: position <code>&lt;select&gt;</code> (grouped Inside/Outside), icon toggle (Dagger/Hammer/Shield), circular colour swatches, RND text input</li>
-              <li><strong>Speech bubble rendering</strong>: each deployment point renders as a coloured rounded-rect bubble (BH=48px) with white inner icon (32px, no outer shape wrapper) and optional RND label — replaces the previous standalone icon + offset label approach</li>
-              <li><strong>Directional tail</strong>: tail triangle attached to bubble edge pointing toward battlefield — down for top positions, up for bottom, right for left-side, left for right-side, diagonal for corners, none for CC</li>
-              <li><strong>33 snap positions</strong>: expanded from 17 to 33 — added OUT-LT/OUT-LC/OUT-LB and OUT-RT/OUT-RC/OUT-RB (3 per side edge) plus OUT-CNR-TL/TR/BL/BR (4 corners); all outside positions clamped to ≥10px card margin accounting for BW_FULL=106px</li>
-              <li><strong>Diagonal tails</strong>: corner positions use a 45° triangle (tip offset D=7px) attached to the inner corner of the bubble</li>
-              <li><strong>4 player colours</strong>: red <code>#c0272d</code>, blue <code>#2563eb</code> (lighter than previous <code>#1a3a6e</code>), green <code>#16a34a</code>, yellow <code>#ca8a04</code>; <code>DeploymentColor</code> type updated</li>
-              <li><strong>RND label legibility fix</strong>: outside positions previously pushed label off-card; fixed inward offset, then superseded entirely by the bubble approach</li>
+              <li><strong>Speech bubble rendering</strong>: coloured rounded-rect bubble (BH=48px) with white icon (32px) and optional RND label; directional tail pointing toward battlefield; 33 snap positions</li>
+              <li><strong>Corner tail fix</strong>: replaced hardcoded 45° diagonal tail (<code>D=7</code>) with <code>getTailAngle()</code> using exact <code>atan2</code> to the nearest battlefield corner (~35°). General <code>makeTailPoints(BW, BH, angle)</code> handles all directions; detects rounded-corner zone and splits base across adjacent straight edges to stay flush with the visible bubble</li>
+              <li><strong>Dashed centre lines from centre</strong>: split two full edge-to-edge lines into four arms each originating at <code>(BF_CX, BF_CY)</code> so the first dash of every arm starts at the cross</li>
+              <li><strong>Player-level form structure</strong>: <code>DeploymentPlayer { color, points[] }</code> added to types; <code>color</code> removed from <code>DeploymentPoint</code>; <code>DeploymentCardData</code> now has <code>players[]</code> instead of flat <code>points[]</code>; form shows player cards as outer level with colour picker in header and "+ Add Point" per player</li>
+              <li><strong>Unique colour per player</strong>: already-used colours disabled (25% opacity) in each player's colour picker; <code>nextColor()</code> auto-assigns first unused colour on "Add Player"</li>
+              <li><strong>Dynamic bubble width</strong>: replaced fixed <code>BW_FULL=106</code> with <code>bubbleWidth(rnd)</code> using <code>CHAR_W=9</code> per character — bubble fits its text content</li>
+              <li><strong>Position exclusion</strong>: <code>usedPositions(excludePlayer, excludePoint)</code> collects all taken positions across all players; position <code>&lt;select&gt;</code> disables taken slots with ✕ marker</li>
+              <li><strong>Smart position defaulting</strong>: <code>findFreePosition()</code> picks first free slot in CC-first order (CC → ML/MR → TC/BC → corners → outside); used by both <code>addPoint()</code> and <code>addPlayer()</code> (which seeds one point automatically)</li>
+              <li><strong>Contrast-aware icon buttons</strong>: <code>contrastText(hex)</code> returns <code>#000</code> or <code>#fff</code> based on luminance — yellow player gets black label text on active buttons</li>
+              <li><strong>Form UX sizing</strong>: all interactive elements bumped to <code>text-sm</code>; touch targets raised to <code>py-1.5</code> / <code>py-2</code>; RND field moved below icon buttons (full width); colour swatches grown to <code>w-6 h-6</code></li>
             </ul>
           </section>
 
@@ -1866,15 +1870,23 @@
             <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
             <div class="decision">
               <div class="decision-q">Why a speech bubble instead of standalone icon + separate RND label?</div>
-              <div class="decision-a">The original approach had a coloured shape (triangle/diamond/circle) for the icon and a separate coloured text label offset nearby. This was hard to read against the parchment and produced layout issues for outside positions (label ran off-card). The speech bubble unifies both into one visual unit: the player colour is unmistakable, the icon and label are always co-located, and the tail makes the positional intent clear.</div>
+              <div class="decision-a">Unifies colour, icon, and round label into one visual unit; tail makes positional intent clear; avoids off-card overflow for outside positions.</div>
             </div>
             <div class="decision">
-              <div class="decision-q">Why 33 positions instead of free-form placement?</div>
-              <div class="decision-a">Snap positions keep the form simple (a select, later a visual grid) and avoid coordinate-editor complexity. Expanding from 17 to 33 adds side-edge top/bottom slots and corners to cover cards that place icons close to the card margin — all positions still observed in real Warcry deployment cards.</div>
+              <div class="decision-q">Why move colour to the player level?</div>
+              <div class="decision-a">Each colour represents one player. Per-point colour pickers created accidental inconsistencies. Player-level colour makes the data model match the conceptual model and simplifies the form.</div>
             </div>
             <div class="decision">
-              <div class="decision-q">Outside position coordinates: why fixed values (34, 540, 63, 852) instead of derived?</div>
-              <div class="decision-a">The clamped values are computed from <code>BH/2 + margin</code> and <code>BW_FULL/2 + margin</code> — derived once from the bubble geometry constants and hardcoded for clarity. If bubble dimensions change, these need updating too.</div>
+              <div class="decision-q">Corner tail: atan2 vs hardcoded 45°?</div>
+              <div class="decision-a">The bubble centre for OUT-CNR-TL is (63, 34) and the battlefield corner is (100, 60) — atan2 gives ~35°, not 45°. The general <code>makeTailPoints</code> also detects when the exit point is in the rounded-corner zone (<code>|ex| > halfW − BRAD && |ey| > halfH − BRAD</code>) and switches to the two-edge base strategy, keeping the tail flush with the visible bubble surface.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Dynamic bubble width: character approximation vs DOM measurement?</div>
+              <div class="decision-a">DOM measurement (<code>getComputedTextLength</code>) requires a rendered element and is async. A <code>CHAR_W=9</code> per-character estimate for Germania One at 17px is close enough for a decorative label — easily tunable via one constant.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Outside position coordinates: why fixed values (34, 540, 63, 852)?</div>
+              <div class="decision-a">Derived once from <code>BH/2 + margin</code> and <code>BW_ICON/2 + margin</code>, hardcoded for clarity. Must be updated if bubble dimensions change.</div>
             </div>
           </section>
 
@@ -1900,9 +1912,10 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentPosition</code> expanded 17→33; <code>DeploymentColor</code> expanded to <code>'red' | 'blue' | 'green' | 'yellow'</code></td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Speech bubble rendering (rect + tail + icon + label); 33 position coordinates; diagonal tail geometry; 4 player colours</td></tr>
-                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Full point management UI: add/remove, position select (33 options, grouped), icon toggle, colour swatches, RND field</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>DeploymentPlayer</code>; removed <code>color</code> from <code>DeploymentPoint</code>; <code>DeploymentCardData.points[]</code> → <code>players[]</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Corner tail fix (<code>getTailAngle</code> + <code>makeTailPoints</code>); nested player/point loops; dynamic <code>bubbleWidth()</code>; dashed lines as 4 arms from centre</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Player-level structure; colour exclusion; position exclusion + smart defaulting; contrast-aware buttons; UX sizing lift</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Initial state updated to <code>players: []</code></td></tr>
               </tbody>
             </table>
           </section>

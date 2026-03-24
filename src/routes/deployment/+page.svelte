@@ -47,7 +47,7 @@
 
 	let data = $state<DeploymentCardData>({
 		name: '',
-		points: [],
+		players: [],
 	});
 
 	function makeSlug() {
