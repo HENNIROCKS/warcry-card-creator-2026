@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-24">
+              <span class="session-date">2026-03-24</span>
+              <span class="session-title">Deployment Layout, Text Caption &amp; SVG Normalisation</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-23">
               <span class="session-date">2026-03-23</span>
               <span class="session-title">Card Back Editor</span>
@@ -1875,6 +1881,320 @@
         <!-- ══════════════════════════════════════════
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
+        <!-- ══════════════════════════════════════════
+         2026-03-24 — Deployment Layout, Text Caption & SVG Normalisation
+    ══════════════════════════════════════════ -->
+        <div id="session-march-24" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-24</span>
+              <span class="badge badge-green">Deployment layout</span>
+              <span class="badge badge-green">Text card caption</span>
+              <span class="badge badge-green">SVG normalisation</span>
+            </div>
+            <h1>Deployment Layout, Text Caption &amp; SVG Normalisation</h1>
+            <p>
+              Two-part session. First: deployment card editor sidebar widened to
+              480 px, landscape preview made scrollable with a pinned export
+              button on mobile and vertically centred on desktop, all form
+              strings moved to <code>t()</code> with 13 new i18n keys. Second
+              (main branch): black colour swatch made visible in dark mode,
+              caption feature added to Text Card editor (matching Fighter Card
+              behaviour), issue templates updated for accuracy, and all 61
+              non-300 runemark SVGs normalised to 300×300.
+            </p>
+          </div>
+
+          <section id="march-24-built" data-nav="What Was Built">
+            <h2>
+              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
+              What Was Built
+            </h2>
+            <h3>Deployment Card — Layout &amp; i18n (<code>feature/deployment-cards</code>)</h3>
+            <ul>
+              <li>
+                <strong>Sidebar width 480 px</strong> — matches fighter, text,
+                and card-back editors; was 360 px
+              </li>
+              <li>
+                <strong>Desktop preview vertically centred</strong> —
+                <code>&lt;main&gt;</code> uses <code>overflow-y-auto</code> +
+                <code>lg:justify-center</code>; card scale constrained to
+                width only on desktop
+              </li>
+              <li>
+                <strong>Mobile horizontal scroll</strong> — landscape card
+                scales to viewport height; card area wrapped in
+                <code>overflow-x-auto</code> div; export button is a
+                <code>shrink-0</code> sibling above the scroll area so it
+                stays pinned
+              </li>
+              <li>
+                <strong>Full form i18n</strong> — all hardcoded strings in
+                <code>DeploymentForm.svelte</code> replaced with
+                <code>t()</code>: player/point labels, position group labels,
+                colour names, icon names
+              </li>
+              <li>
+                <strong>13 new locale keys</strong> — 4 colour keys after
+                <code>form-text-color</code>; 9 deployment form keys after
+                <code>form-placeholder-fighter</code>; added to both
+                <code>en.json</code> and <code>de.json</code>
+              </li>
+            </ul>
+            <h3>Card Back — Dark Mode Fix (main)</h3>
+            <ul>
+              <li>
+                <strong>Black swatch border</strong> —
+                <code>.swatch-black</code> gained
+                <code>border-color: rgba(255,255,255,0.3)</code> so it is
+                visible against a dark UI background; selected-state red
+                border overrides it via higher specificity
+              </li>
+            </ul>
+            <h3>Text Card — Caption Feature (main)</h3>
+            <ul>
+              <li>
+                <strong><code>TextCardData</code></strong> — added
+                <code>showCaption: boolean</code> and
+                <code>imageCaption: string</code> to
+                <code>src/lib/types.ts</code>
+              </li>
+              <li>
+                <strong>Card visual</strong> — caption rendered as
+                <code>position: absolute; bottom: 20px</code> inside
+                <code>.card</code> (same anchor as Fighter Card), not inside
+                <code>.image-section</code>; dark text, 50% opacity
+              </li>
+              <li>
+                <strong>Form order</strong> — Type select moved before Name
+                field; caption input appears directly below Name when Show
+                Caption is enabled (mirrors FighterForm layout)
+              </li>
+              <li>
+                <strong>Caption placeholders</strong> — Fighter Card:
+                <em>"e.g. Art by John Blanche"</em>; Text Card: <em>"e.g.
+                Source: Starter Set"</em>; both keyed as
+                <code>form-placeholder-caption-fighter</code> /
+                <code>form-placeholder-caption-text</code> in both locales
+              </li>
+            </ul>
+            <h3>Issue Templates (main)</h3>
+            <ul>
+              <li>
+                Stale "Ability card editor" → "Text card editor" in
+                <code>bug_report.md</code> and
+                <code>feature_request.md</code>; "Card back editor" option
+                added to both
+              </li>
+              <li>
+                HTML comment preamble (<code>&lt;!-- Fill in… --&gt;</code>)
+                added to all three templates
+              </li>
+            </ul>
+            <h3>SVG Normalisation (main)</h3>
+            <ul>
+              <li>
+                61 runemark SVG files had non-standard
+                <code>width</code>/<code>height</code> attributes: 34 ×
+                32 px, 16 × 512 px, 11 × 1024 px — all set to 300×300
+                via <code>sed</code>; <code>viewBox</code> unchanged
+              </li>
+              <li>
+                All 203 runemarks now share <code>width="300"
+                height="300"</code>; display size is controlled by CSS, so
+                rendering is unaffected
+              </li>
+            </ul>
+          </section>
+
+          <section id="march-24-decisions" data-nav="Key Decisions">
+            <h2>
+              <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
+              Key Decisions
+            </h2>
+            <div class="decision">
+              <div class="decision-q">
+                Why scale the landscape mobile card to viewport height rather
+                than width?
+              </div>
+              <div class="decision-a">
+                Scaling to width on a 390 px phone gives a factor of ~0.43×
+                — the 915 px card becomes unreadably small at 396 px tall.
+                Scaling to viewport height (~0.87×) produces a comfortably
+                large card; the 915 px width exceeds the screen, so
+                <code>overflow-x-auto</code> provides horizontal scrolling
+                for the overflow.
+              </div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">
+                Why is the export button a sibling of the scroll container
+                rather than inside it?
+              </div>
+              <div class="decision-a">
+                Placing the export button inside an
+                <code>overflow-x-auto</code> wrapper causes it to scroll
+                out of view with the card. Making it a
+                <code>shrink-0</code> flex sibling above the scroll area
+                keeps it pinned at the top of the preview pane regardless
+                of scroll position.
+              </div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">
+                Why is the Text Card caption anchored to <code>.card</code>
+                rather than <code>.image-section</code>?
+              </div>
+              <div class="decision-a">
+                The Fighter Card caption uses
+                <code>position: absolute; bottom: 20px</code> relative to
+                <code>.card</code>, placing it over the parchment near the
+                bottom of the full 915 px card. Placing the Text Card
+                caption inside <code>.image-section</code> (height 280 px)
+                would have anchored it to that section's bottom — a
+                completely different visual position. Moving it out of the
+                image section and into <code>.card</code> gives identical
+                positioning in both editors.
+              </div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">
+                Why normalise all runemark SVGs to 300×300 now?
+              </div>
+              <div class="decision-a">
+                The three disparate sizes (32, 512, 1024 px) gave no visual
+                benefit — display size is always set by CSS. Uniform
+                <code>width="300" height="300"</code> attributes make the
+                library consistent and predictable for any future tooling
+                or re-vectorisation. The <code>viewBox</code> is left
+                intact so path geometry is preserved exactly.
+              </div>
+            </div>
+          </section>
+
+          <section id="march-24-pending" data-nav="Still Pending">
+            <h2>
+              <span class="icon" style="background: rgba(251, 191, 36, 0.15)">⏳</span>
+              Still Pending
+            </h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Item</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Planned</span></td>
+                  <td>
+                    Deployment card — visual position picker (clickable grid
+                    replacing <code>&lt;select&gt;</code>)
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Planned</span></td>
+                  <td>
+                    Deployment card — measurement lines (direction, label,
+                    start/end cap, SVG rendering with distance label at
+                    midpoint)
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Planned</span></td>
+                  <td>
+                    SVG re-vectorisation — user will re-draw the 61 normalised
+                    files at native 300×300 resolution
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-24-files" data-nav="Files Changed">
+            <h2>
+              <span class="icon" style="background: rgba(212, 112, 112, 0.12)">📁</span>
+              Files Changed
+            </h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>src/routes/deployment/+page.svelte</code></td>
+                  <td>Sidebar 480 px; desktop vertical centre; mobile horizontal scroll; pinned export button</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/DeploymentForm.svelte</code></td>
+                  <td>All hardcoded strings replaced with <code>t()</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/types.ts</code></td>
+                  <td>Added <code>showCaption</code>, <code>imageCaption</code> to <code>TextCardData</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextCard.svelte</code></td>
+                  <td>Caption element + CSS; anchored to <code>.card</code> at <code>bottom: 20px</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/TextForm.svelte</code></td>
+                  <td>Type select moved before Name; caption input below Name; Show Caption toggle in Card Elements</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/FighterForm.svelte</code></td>
+                  <td>Caption input placeholder wired to <code>t('ui.form-placeholder-caption-fighter')</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/text/+page.svelte</code></td>
+                  <td>Initial state: <code>showCaption: false</code>, <code>imageCaption: ''</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/card-back/+page.svelte</code></td>
+                  <td><code>.swatch-black</code> border visible in dark mode</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/en.json</code></td>
+                  <td>13 deployment keys + 2 caption placeholder keys</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/i18n/locales/de.json</code></td>
+                  <td>Same 15 keys in German</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/runemarks/svg/</code> (61 files)</td>
+                  <td><code>width</code>/<code>height</code> normalised to 300 from 32, 512, or 1024</td>
+                </tr>
+                <tr>
+                  <td><code>.github/ISSUE_TEMPLATE/bug_report.md</code></td>
+                  <td>"Ability card editor" → "Text card editor"; Card back option added; preamble comment</td>
+                </tr>
+                <tr>
+                  <td><code>.github/ISSUE_TEMPLATE/feature_request.md</code></td>
+                  <td>Same fixes</td>
+                </tr>
+                <tr>
+                  <td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td>
+                  <td>Preamble comment added</td>
+                </tr>
+                <tr>
+                  <td><code>README.md</code></td>
+                  <td>Text card editor description updated to mention caption</td>
+                </tr>
+                <tr>
+                  <td><code>CLAUDE.md</code></td>
+                  <td><code>showCaption</code> added to <code>TextCardData</code> flags list</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-24 -->
+
         <!-- ══════════════════════════════════════════
          2026-03-23 — Card Back Editor
     ══════════════════════════════════════════ -->
@@ -7224,6 +7544,7 @@
 
     <script>
       const sessions = [
+        "march-24",
         "march-23",
         "march-22",
         "march-21",
