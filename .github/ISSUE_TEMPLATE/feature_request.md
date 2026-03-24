@@ -7,9 +7,12 @@ assignees: ''
 
 ---
 
+<!-- Describe what you'd like as clearly as you can. If you have a reference card or sketch, attach it. -->
+
 **Which part of the tool does this relate to?**
 - [ ] Fighter card editor
-- [ ] Ability card editor
+- [ ] Text card editor
+- [ ] Card back editor
 - [ ] Both / general
 
 **What would you like?**

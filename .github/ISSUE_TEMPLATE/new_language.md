@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- Fill in the details below. If you've already started a translation file, attach it or paste a link. -->
+
 **Language name (in its own language)**
 e.g. Français, Español, Polski
 

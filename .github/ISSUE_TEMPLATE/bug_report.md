@@ -7,9 +7,12 @@ assignees: ''
 
 ---
 
+<!-- Fill in as many sections as you can. The more detail you give, the easier it is to reproduce and fix. -->
+
 **Which part of the tool?**
 - [ ] Fighter card editor
-- [ ] Ability card editor
+- [ ] Text card editor
+- [ ] Card back editor
 - [ ] Both / landing page
 
 **Which feature area?**
