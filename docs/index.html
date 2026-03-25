@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-25">
               <span class="session-date">2026-03-25</span>
-              <span class="session-title">Printer-Friendly Export &amp; Frame Fix</span>
+              <span class="session-title">Deployment Card — Card-First UI Rebuild</span>
             </button>
           </li>
           <li>
@@ -1381,6 +1381,20 @@
                   </td>
                   <td>Mar 24</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-25-built" onclick="activateSession('march-25')"
+                      >Deployment card rebuilt card-first: sidebar removed; interactive position dots; popovers; 8-way direction picker on SVG; overlays pill toggle; pinch-zoom</a>
+                  </td>
+                  <td>Mar 25</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-25-decisions" onclick="activateSession('march-25')"
+                      ><code>overflow-x: auto</code> clips <code>position: absolute</code> dropdowns — fix: <code>position: fixed; top: 45px; right: 12px</code></a>
+                  </td>
+                  <td>Mar 25</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1936,18 +1950,19 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-25</span>
-              <span class="badge badge-green">Printer-friendly export</span>
-              <span class="badge badge-green">Form field styles</span>
-              <span class="badge badge-green">Export frame fix</span>
+              <span class="badge badge-green">Card-first UI &amp; position picker</span>
+              <span class="badge badge-green">Header toolbar &amp; i18n</span>
+              <span class="badge badge-green">Printer-friendly &amp; export fix</span>
             </div>
-            <h1>Deployment Card — Printer-Friendly Export &amp; Frame Fix</h1>
+            <h1>Deployment Card — Card-First UI Rebuild</h1>
             <p>
-              Added printer-friendly export mode (B&amp;W, white background, unicode player badges).
-              Migrated DeploymentForm to scoped <code>field-label</code>/<code>field-input</code>
-              classes matching other card forms. Added card name as a bottom caption. Tracked down
-              and fixed a persistent dark frame artifact in dom-to-image-more exports caused by
-              Tailwind v4 preflight's <code>border-style: solid</code> surviving the foreignObject
-              clone while <code>border-width: 0</code> gets silently dropped.
+              Two-part session. Morning: printer-friendly export mode, form style migration, dark
+              export frame fix (Tailwind v4 preflight + dom-to-image-more interaction). Afternoon:
+              sidebar replaced with a compact header toolbar; interactive position dots on the card
+              itself (tap to add/remove, popovers for editing); 8-way direction picker rendered
+              directly on the SVG after placing a measurement anchor; overlays toggle pill switch;
+              JSON save/load split button separate from Export PNG; 22 new i18n keys; locale files
+              reordered into 13 logical groups. <code>DeploymentForm.svelte</code> deleted.
             </p>
           </div>
 
@@ -1974,6 +1989,23 @@
             <ul>
               <li><strong>5 batches</strong>: all Chaos factions, Death factions, Destruction factions, Order factions, and fighters runemarks re-optimised (viewBox preserved, redundant attributes stripped, consistent <code>width="300" height="300"</code>); 229 total SVGs in library after this pass</li>
             </ul>
+            <h3>Card-First UI Rebuild</h3>
+            <ul>
+              <li><strong>Sidebar removed entirely</strong>: replaced with a compact single-row header toolbar; all editing now happens via popovers triggered from the card or header buttons</li>
+              <li><strong>Interactive position dots</strong>: <code>showPositionDots</code> prop renders white dots at all 25 positions; tap empty = popover to add a point for the active player; tap occupied = popover to edit/remove. Large <code>r=22</code> transparent hit target, visual dot <code>r=7</code>.</li>
+              <li><strong>Popovers</strong>: contextual panel at tap coordinates (clamped to viewport). Empty-dot popover: player selection, icon selector (dagger/hammer/shield), RND input, Add Point / Add Measurement buttons. Occupied-dot popover: reassign colour, change icon, edit RND, remove. Measurement popover: 3×3 direction grid, length and label inputs, remove.</li>
+              <li><strong>8-way direction picker on card</strong>: after placing a measurement anchor via snap grid, 8 arrow buttons radiate from the anchor point inside the SVG itself; click one to set direction and create the measurement. <code>MEAS_INSET=20</code> pulls line endpoints 20 px inward from anchor/terminus to avoid overlapping bubbles; midpoint handle stays at true geometric midpoint.</li>
+              <li><strong>Overlays toggle</strong>: pill switch (<code>role="switch"</code>, <code>aria-checked</code>) in header; gates both <code>showPositionDots</code> and <code>onMeasurementClick</code> — turning it off hides all interactive dots and measurement handles for a clean preview</li>
+              <li><strong>Pinch-to-zoom &amp; pan</strong>: two-finger pinch scales card 0.5×–4×, centroid delta pans; double-tap resets to fit; <code>touch-action: none</code> on <code>&lt;main&gt;</code></li>
+            </ul>
+            <h3>Header Toolbar &amp; i18n</h3>
+            <ul>
+              <li><strong>Header structure</strong>: ← Back | card name | player circles + ✕ | Overlays [pill] | + Add Measurement | Save JSON[▾] | Export PNG[▾]; all items <code>shrink-0</code> inside a single <code>overflow-x-auto</code> row</li>
+              <li><strong>JSON split button</strong>: "Save JSON" as primary action; dropdown exposes "Load JSON". Intentionally separate from the Export PNG split button — JSON is round-trip data, PNG is a deliverable.</li>
+              <li><strong>Fixed-position dropdowns</strong>: both dropdowns use <code>position: fixed; top: 45px; right: 12px</code> to escape <code>overflow-x: auto</code> clipping</li>
+              <li><strong>22 new i18n keys</strong> in <code>ui</code> namespace added to both <code>en.json</code> and <code>de.json</code>: back, overlays, overlays-on/off-title, save-json, load-json, more-json/export-options, player select/remove titles, measurement anchor hint, and all five popover strings</li>
+              <li><strong>Locale reorder</strong>: both JSON files restructured into 13 logical groups via Node.js script — 134 keys total. Groups: App/global → Navigation → Card types → Colors → Export &amp; file → Image adjust → Faction filter → Common helpers → Fighter &amp; text fields → Image/background → Card back → Deployment form → Deployment editor UI</li>
+            </ul>
           </section>
 
           <section id="march-25-decisions" data-nav="Key Decisions">
@@ -1998,6 +2030,26 @@
               <div class="decision-q">Why does <code>display: inline-block</code> on <code>.card</code> cause a bottom bar in export?</div>
               <div class="decision-a">Inline formatting contexts add a descender gap below the last inline element. dom-to-image captures this gap as a white strip at the card bottom. Using <code>display: block</code> (matching FighterCard) eliminates it.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why remove the sidebar entirely?</div>
+              <div class="decision-a">The card-first position picker made the sidebar largely redundant — the user now interacts directly with the card. Zones and measurements moved to popovers and the header. Having both the card and a 480 px sidebar competing for space on mobile made the layout untenable.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why are JSON and Export PNG separate split buttons?</div>
+              <div class="decision-a">JSON is save/load (non-destructive, round-trips the data model). Export PNG is a finalised render. Grouping them under one "Export" dropdown was confusing — "Export" implies a deliverable, not a save state. Two clearly labelled split buttons make intent obvious at a glance.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">How do dropdowns escape the <code>overflow-x: auto</code> clipping?</div>
+              <div class="decision-a">CSS spec: setting <code>overflow-x: auto</code> implicitly sets <code>overflow-y: auto</code>, creating a stacking context that clips <code>position: absolute</code> children. The only reliable escape is <code>position: fixed</code>. Hardcoded <code>top: 45px</code> = <code>py-2</code> (16 px) + <code>h-7</code> (28 px) + 1 px border; <code>right: 12px</code> matches <code>px-3</code> padding.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why does the Overlays toggle also gate measurement handles?</div>
+              <div class="decision-a">"Overlays" is the collective name for all interactive chrome on the card. Measurement midpoint handles are equally distracting when previewing. A single toggle that hides everything is simpler and more predictable than separate controls per overlay type. Implemented by passing <code>onMeasurementClick={undefined}</code> when off — the card component already renders handles conditionally on that prop.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why did the centre line gap get reverted?</div>
+              <div class="decision-a">Added <code>CENTRE_LINE_GAP=38</code> to stop dashed lines before the battlefield edge (to avoid visual overlap with outside bubbles). A screenshot showed the gap made lines look unfinished — as if they were broken rather than terminating cleanly. Reverted to lines reaching exact <code>BF_T/B/L/R</code> edges.</div>
+            </div>
           </section>
 
           <section id="march-25-pending" data-nav="Still Pending">
@@ -2006,8 +2058,16 @@
               <thead><tr><th>Status</th><th>Item</th></tr></thead>
               <tbody>
                 <tr>
-                  <td><span class="badge badge-amber">Next</span></td>
-                  <td>Visual position picker — replace <code>&lt;select&gt;</code> with clickable grid showing all 33 positions laid out like the battlefield</td>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>Zones UI — <code>addZone</code>/<code>removeZone</code> functions exist but have no header entry point yet</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>More snap positions — user may need more than 25; deferred pending feedback</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>Mobile visual testing — session ended before completing a full mobile test pass</td>
                 </tr>
               </tbody>
             </table>
@@ -2026,6 +2086,14 @@
                 <tr><td><code>src/lib/runemarks/svg/factions-destruction-*</code> (Destruction batch)</td><td>Re-optimised; same normalisation pass</td></tr>
                 <tr><td><code>src/lib/runemarks/svg/factions-order-*</code> (Order batch)</td><td>Re-optimised; same normalisation pass</td></tr>
                 <tr><td><code>src/lib/runemarks/svg/fighters-*</code> (fighters batch)</td><td>Re-optimised; same normalisation pass; library total now 229 files</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Position dots overlay; <code>ALL_POSITIONS</code>; direction picker on card; <code>MEAS_INSET=20</code>; caption left-aligned; <code>DeploymentDirection</code> import added; dead constants removed</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Sidebar removed; header toolbar; popovers; pinch-zoom; <code>showDots</code> toggle; JSON split button; fixed-position dropdowns; 22 i18n calls; dead <code>DIRECTIONS</code>/<code>CAP_TYPES</code>/<code>.field-label</code>/<code>.field-input</code> removed; <code>saveLayout</code> <code>showDropdown</code> bug fixed</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>22 new deployment editor UI keys; reordered into 13 logical groups (134 keys total)</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same 22 new keys; same reorder</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Deleted — unused after sidebar removal</td></tr>
+                <tr><td><code>README.md</code></td><td>Deployment card description updated to reflect card-first UI</td></tr>
+                <tr><td><code>.github/ISSUE_TEMPLATE/bug_report.md</code></td><td>Added "Deployment card editor" to editor checklist</td></tr>
+                <tr><td><code>.github/ISSUE_TEMPLATE/feature_request.md</code></td><td>Added "Deployment card editor" to editor checklist</td></tr>
               </tbody>
             </table>
           </section>
@@ -7339,39 +7407,23 @@
               >
               What Was Built
             </h2>
-            <div class="tree">
-              <span class="tree-dir">src/</span> ├──
-              <span class="tree-dir">lib/</span> │ ├──
-              <span class="tree-file">types.ts</span>
-              <span class="tree-note"
-                >— all TS interfaces (FighterCardData, TextCardData, Weapon,
-                …)</span
-              >
-              │ ├── <span class="tree-file">index.ts</span> │ └──
-              <span class="tree-dir">assets/</span> ├──
-              <span class="tree-dir">routes/</span> │ ├──
-              <span class="tree-file">+layout.svelte</span> │ ├──
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— landing page</span> │ ├──
-              <span class="tree-dir">fighter/</span> │ │ └──
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— stub</span> │ └──
-              <span class="tree-dir">ability/</span> │ └──
-              <span class="tree-file">+page.svelte</span>
-              <span class="tree-note">— stub</span> └──
-              <span class="tree-file">app.css</span>
-              <span class="tree-note"
-                >— Tailwind import + @font-face (rodchenkoctt)</span
-              >
-              <span class="tree-dir">static/</span>
-              └── <span class="tree-dir">fonts/</span>
-              <span class="tree-note">— empty, awaiting font files</span>
-              <span class="tree-file">Makefile</span>
-              <span class="tree-note"
-                >— make dev/build/preview (Herd Node v22)</span
-              >
-              <span class="tree-file">CLAUDE.md</span>
-            </div>
+            <div class="tree"><span class="tree-dir">src/</span>
+├── <span class="tree-dir">lib/</span>
+│   ├── <span class="tree-file">types.ts</span> <span class="tree-note">— all TS interfaces (FighterCardData, TextCardData, Weapon, …)</span>
+│   ├── <span class="tree-file">index.ts</span>
+│   └── <span class="tree-dir">assets/</span>
+├── <span class="tree-dir">routes/</span>
+│   ├── <span class="tree-file">+layout.svelte</span>
+│   ├── <span class="tree-file">+page.svelte</span> <span class="tree-note">— landing page</span>
+│   ├── <span class="tree-dir">fighter/</span>
+│   │   └── <span class="tree-file">+page.svelte</span> <span class="tree-note">— stub</span>
+│   └── <span class="tree-dir">ability/</span>
+│       └── <span class="tree-file">+page.svelte</span> <span class="tree-note">— stub</span>
+└── <span class="tree-file">app.css</span> <span class="tree-note">— Tailwind import + @font-face (rodchenkoctt)</span>
+<span class="tree-dir">static/</span>
+└── <span class="tree-dir">fonts/</span> <span class="tree-note">— empty, awaiting font files</span>
+<span class="tree-file">Makefile</span> <span class="tree-note">— make dev/build/preview (Herd Node v22)</span>
+<span class="tree-file">CLAUDE.md</span></div>
           </section>
 
           <section id="march-11-decisions" data-nav="Key Decisions">
