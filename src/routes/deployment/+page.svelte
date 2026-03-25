@@ -19,6 +19,7 @@
 	let exportedImageUrl = $state<string | null>(null);
 	let printerFriendly = $state(false);
 	let showDropdown = $state(false);
+	let snapGridActive = $state(false);
 	const isRealMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 	let activeTab = $state<'edit' | 'preview'>('edit');
 	let viewportHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
@@ -48,7 +49,27 @@
 	let data = $state<DeploymentCardData>({
 		name: '',
 		players: [],
+		measurements: [],
 	});
+
+	function handleAddMeasurement() {
+		snapGridActive = true;
+		if (isMobile) activeTab = 'preview';
+	}
+
+	function handleSnapPointClick(col: number, row: number) {
+		data.measurements = [...data.measurements, {
+			anchorCol: col,
+			anchorRow: row,
+			direction: 'right',
+			label: '',
+			length: 80,
+			startCap: 'dot',
+			endCap: 'arrow',
+		}];
+		snapGridActive = false;
+		if (isMobile) activeTab = 'edit';
+	}
 
 	function makeSlug() {
 		const name = data.name.toLowerCase().replace(/\s+/g, '-') || 'deployment-card';
@@ -74,7 +95,7 @@
 				}
 			} else {
 				const domtoimage = (await import('dom-to-image-more')).default;
-				dataUrl = await domtoimage.toPng(cardEl, { scale: 2 });
+				dataUrl = await domtoimage.toPng(cardEl, { width: CARD_W, height: CARD_H, scale: 2 });
 				const a = document.createElement('a');
 				a.href = dataUrl;
 				a.download = `${makeSlug()}${suffix}.png`;
@@ -99,7 +120,8 @@
 	}
 </script>
 
-<div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden lg:flex-row">
+<div class="relative flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden lg:flex-row">
+	<div class="wip-watermark" aria-hidden="true"></div>
 
 	<!-- Mobile tab bar -->
 	<nav class="lg:hidden flex shrink-0">
@@ -159,7 +181,7 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto p-5">
-			<DeploymentForm {data} />
+			<DeploymentForm {data} {snapGridActive} onAddMeasurement={handleAddMeasurement} />
 		</div>
 	</aside>
 
@@ -207,7 +229,7 @@
 			<div style="width: {CARD_W * cardScale}px; height: {CARD_H * cardScale}px; position: relative; flex-shrink: 0;">
 				<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
 					<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-						<DeploymentCard {data} {printerFriendly} />
+						<DeploymentCard {data} {printerFriendly} {snapGridActive} onSnapPointClick={handleSnapPointClick} />
 					</div>
 				</div>
 			</div>

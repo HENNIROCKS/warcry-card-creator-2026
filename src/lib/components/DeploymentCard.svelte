@@ -1,10 +1,20 @@
 <script lang="ts">
-	import type { DeploymentCardData, DeploymentColor, DeploymentPosition } from '$lib/types';
+	import type { DeploymentCardData, DeploymentColor, DeploymentPosition, ZonePreset } from '$lib/types';
 	import daggerRaw from '$lib/runemarks/svg/deployment-dagger.svg?raw';
 	import hammerRaw from '$lib/runemarks/svg/deployment-hammer.svg?raw';
 	import shieldRaw from '$lib/runemarks/svg/deployment-shield.svg?raw';
 
-	let { data, printerFriendly = false }: { data: DeploymentCardData; printerFriendly?: boolean } = $props();
+	let {
+		data,
+		printerFriendly = false,
+		snapGridActive = false,
+		onSnapPointClick = undefined,
+	}: {
+		data: DeploymentCardData;
+		printerFriendly?: boolean;
+		snapGridActive?: boolean;
+		onSnapPointClick?: (col: number, row: number) => void;
+	} = $props();
 
 	// Strip outer <svg> wrapper and force all fills to white
 	function innerContent(raw: string): string {
@@ -49,6 +59,57 @@
 	const BRAD      = 8;   // corner radius
 	const TAIL_LEN  = 10;  // tail triangle length
 	const TAIL_W    = 12;  // tail triangle base width
+
+	const PLAYER_BADGES = ['①', '②', '③', '④'];
+
+	// Snap grid: 4×4 = 25 points (cols 0–4, rows 0–4)
+	const SNAP_COLS = 4;
+	const SNAP_ROWS = 4;
+	const snapCols = Array.from({ length: SNAP_COLS + 1 }, (_, i) => i);
+	const snapRows = Array.from({ length: SNAP_ROWS + 1 }, (_, i) => i);
+	function snapX(col: number): number { return BF_L + col * (BF_W / SNAP_COLS); }
+	function snapY(row: number): number { return BF_T + row * (BF_H / SNAP_ROWS); }
+
+	// Direction unit vector (diagonals are normalised to length 1)
+	const D = 1 / Math.sqrt(2);
+	function dirVec(dir: string): [number, number] {
+		if (dir === 'up')         return [ 0, -1];
+		if (dir === 'down')       return [ 0,  1];
+		if (dir === 'left')       return [-1,  0];
+		if (dir === 'up-right')   return [ D, -D];
+		if (dir === 'up-left')    return [-D, -D];
+		if (dir === 'down-right') return [ D,  D];
+		if (dir === 'down-left')  return [-D,  D];
+		return [1, 0];
+	}
+
+	// Zone preset → SVG rect bounds
+	function zoneRect(preset: ZonePreset): { x: number; y: number; w: number; h: number } {
+		const hW = BF_W / 2, hH = BF_H / 2;
+		switch (preset) {
+			case 'top-half':    return { x: BF_L,  y: BF_T,  w: BF_W, h: hH };
+			case 'bottom-half': return { x: BF_L,  y: BF_CY, w: BF_W, h: hH };
+			case 'left-half':   return { x: BF_L,  y: BF_T,  w: hW,   h: BF_H };
+			case 'right-half':  return { x: BF_CX, y: BF_T,  w: hW,   h: BF_H };
+			case 'tl-quarter':  return { x: BF_L,  y: BF_T,  w: hW,   h: hH };
+			case 'tr-quarter':  return { x: BF_CX, y: BF_T,  w: hW,   h: hH };
+			case 'bl-quarter':  return { x: BF_L,  y: BF_CY, w: hW,   h: hH };
+			case 'br-quarter':  return { x: BF_CX, y: BF_CY, w: hW,   h: hH };
+		}
+	}
+
+	const ZONE_OPACITY = 0.38;
+	const PF_ZONE_OPACITIES = [0.08, 0.18, 0.28, 0.38];
+
+	const ARROW_LEN   = 14;
+	const DOT_R       = 5;
+	const LABEL_OFF   = 12;
+
+	// Return marker URL for a cap type (arrow and dot are rendered separately)
+	function capMarker(cap: string): string | undefined {
+		if (cap === 'tick') return 'url(#dep-tick)';
+		return undefined;
+	}
 
 	// Bubble width fitted to the actual RND text length.
 	function bubbleWidth(rnd: string): number {
@@ -170,34 +231,49 @@
 </script>
 
 <div class="card" class:is-printer-friendly={printerFriendly}>
-	<svg width="915" height="574" viewBox="0 0 915 574" xmlns="http://www.w3.org/2000/svg">
+	<svg width="915" height="574" viewBox="0 0 915 574" xmlns="http://www.w3.org/2000/svg" style="display:block;border:none;outline:none;" overflow="hidden">
 
-		<!-- Battlefield rectangle -->
-		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill="#d9b8a8"/>
+		<defs>
+			<!-- Tick — perpendicular stroke -->
+			<marker id="dep-tick" viewBox="0 0 2 14" refX="1" refY="7" markerWidth="5" markerHeight="14" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+				<path d="M1,0 L1,14" stroke="#222" stroke-width="2.5" fill="none"/>
+			</marker>
+		</defs>
 
-		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke="#333" stroke-width="2" stroke-dasharray="8 6"/>
-
-		<!-- Card name (faint watermark at centre) -->
-		{#if data.name}
-			<text
-				x={BF_CX} y={BF_CY + 6}
-				text-anchor="middle"
-				font-family="'Germania One', serif"
-				font-size="22"
-				fill="#333"
-				opacity="0.45"
-			>{data.name}</text>
+		<!-- Printer-friendly: fill entire SVG with white -->
+		{#if printerFriendly}
+			<rect x="0" y="0" width="915" height="574" fill="white"/>
 		{/if}
 
+		<!-- Battlefield rectangle -->
+		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill={printerFriendly ? 'white' : '#d9b8a8'} stroke={printerFriendly ? '#000' : 'none'} stroke-width="1"/>
+
+		<!-- Deployment zone fills (behind dashed lines) -->
+		{#each data.players as player, pi}
+			{#each (player.zones ?? []) as zone}
+				{@const r = zoneRect(zone.preset)}
+				<rect
+					x={r.x} y={r.y} width={r.w} height={r.h}
+					fill={printerFriendly ? '#000' : COLORS[player.color]}
+					fill-opacity={printerFriendly ? (PF_ZONE_OPACITIES[pi] ?? 0.08) : ZONE_OPACITY}
+					stroke={printerFriendly ? '#000' : 'none'}
+					stroke-width={printerFriendly ? '1' : '0'}
+					stroke-dasharray={printerFriendly ? '4 3' : ''}
+				/>
+			{/each}
+		{/each}
+
+		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+
 		<!-- Deployment point speech bubbles -->
-		{#each data.players as player}
+		{#each data.players as player, pi}
 		{#each player.points as point}
 			{@const [cx, cy] = getCoords(point.position)}
-			{@const color = printerFriendly ? '#333' : COLORS[player.color]}
+			{@const color = printerFriendly ? '#000' : COLORS[player.color]}
 			{@const tailAngle = getTailAngle(point.position)}
 			{@const hasRnd = !!point.rnd}
 			{@const BW = bubbleWidth(point.rnd)}
@@ -240,11 +316,93 @@
 					>{point.rnd}</text>
 				{/if}
 
+				<!-- Player badge (printer-friendly only) -->
+				{#if printerFriendly}
+					<text
+						x={BW / 2}
+						y={-5}
+						text-anchor="middle"
+						font-family="'Germania One', serif"
+						font-size="12"
+						fill="#000"
+						stroke="white"
+						stroke-width="4"
+						paint-order="stroke"
+					>{PLAYER_BADGES[pi]}</text>
+				{/if}
+
 			</g>
 		{/each}
 		{/each}
 
+		<!-- Measurement lines -->
+		{#each (data.measurements ?? []) as m}
+			{@const ax = snapX(m.anchorCol)}
+			{@const ay = snapY(m.anchorRow)}
+			{@const [dx, dy] = dirVec(m.direction)}
+			{@const ex = ax + dx * m.length}
+			{@const ey = ay + dy * m.length}
+			{@const mx = (ax + ex) / 2}
+			{@const my = (ay + ey) / 2}
+			{@const lx1 = m.startCap === 'arrow' ? ax + dx * ARROW_LEN : m.startCap === 'dot' ? ax + dx * DOT_R : ax}
+			{@const ly1 = m.startCap === 'arrow' ? ay + dy * ARROW_LEN : m.startCap === 'dot' ? ay + dy * DOT_R : ay}
+			{@const lx2 = m.endCap   === 'arrow' ? ex - dx * ARROW_LEN : m.endCap   === 'dot' ? ex - dx * DOT_R : ex}
+			{@const ly2 = m.endCap   === 'arrow' ? ey - dy * ARROW_LEN : m.endCap   === 'dot' ? ey - dy * DOT_R : ey}
+			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
+			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
+
+			<!-- Start cap -->
+			{#if m.startCap === 'dot'}
+				<circle cx={ax} cy={ay} r={DOT_R} fill="#222"/>
+			{:else if m.startCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({ax},{ay}) rotate({startAngle})"/>
+			{/if}
+
+			<line
+				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
+				stroke="#222" stroke-width="5"
+				marker-end={capMarker(m.endCap)}
+				marker-start={capMarker(m.startCap)}
+			/>
+
+			<!-- End cap -->
+			{#if m.endCap === 'dot'}
+				<circle cx={ex} cy={ey} r={DOT_R} fill="#222"/>
+			{:else if m.endCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({ex},{ey}) rotate({endAngle})"/>
+			{/if}
+
+			{#if m.label}
+				<text
+					x={mx - dy * LABEL_OFF}
+					y={my + dx * LABEL_OFF + 5}
+					font-family="'Germania One', serif"
+					font-size="16"
+					fill="#222"
+					text-anchor="middle"
+				>{m.label}</text>
+			{/if}
+		{/each}
+
+		<!-- Snap grid overlay — shown only when placing a measurement; never exported -->
+		{#if snapGridActive}
+			{#each snapCols as col}
+				{#each snapRows as row}
+					<circle
+						cx={snapX(col)} cy={snapY(row)} r="9"
+						class="snap-pt"
+						onclick={() => onSnapPointClick?.(col, row)}
+					/>
+				{/each}
+			{/each}
+		{/if}
+
 	</svg>
+	{#if data.name}
+		<div class="card-name">{data.name}</div>
+	{/if}
 </div>
 
 <style>
@@ -252,10 +410,45 @@
 		width: 915px;
 		height: 574px;
 		position: relative;
-		display: inline-block;
+		display: block;
 		line-height: 0;
-		background-image: url('/background.jpg');
-		background-size: cover;
-		background-position: center;
+		background: url('/background.jpg') center center / cover no-repeat;
+		border: 0;
+		outline: none;
+		overflow: hidden;
+	}
+
+	.card.is-printer-friendly {
+		background: white;
+	}
+
+	.card-name {
+		position: absolute;
+		bottom: 20px;
+		left: 0;
+		right: 0;
+		text-align: center;
+		font-family: 'Alegreya', serif;
+		font-size: 13px;
+		color: #000;
+		opacity: 0.5;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.card.is-printer-friendly .card-name {
+		opacity: 1;
+	}
+
+	.snap-pt {
+		fill: rgba(255, 255, 255, 0.75);
+		stroke: #000;
+		stroke-width: 1.5;
+		cursor: pointer;
+	}
+
+	.snap-pt:hover {
+		fill: rgba(192, 39, 45, 0.85);
 	}
 </style>
