@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DeploymentCardData, DeploymentColor, DeploymentPosition, ZonePreset } from '$lib/types';
+	import type { DeploymentCardData, DeploymentColor, DeploymentDirection, DeploymentPosition, ZonePreset } from '$lib/types';
 	import daggerRaw from '$lib/runemarks/svg/deployment-dagger.svg?raw';
 	import hammerRaw from '$lib/runemarks/svg/deployment-hammer.svg?raw';
 	import shieldRaw from '$lib/runemarks/svg/deployment-shield.svg?raw';
@@ -8,13 +8,55 @@
 		data,
 		printerFriendly = false,
 		snapGridActive = false,
+		showPositionDots = false,
+		measurementAnchor = undefined,
 		onSnapPointClick = undefined,
+		onPositionClick = undefined,
+		onMeasurementClick = undefined,
+		onDirectionSelect = undefined,
 	}: {
 		data: DeploymentCardData;
 		printerFriendly?: boolean;
 		snapGridActive?: boolean;
+		showPositionDots?: boolean;
+		measurementAnchor?: { col: number; row: number };
 		onSnapPointClick?: (col: number, row: number) => void;
+		onPositionClick?: (pos: DeploymentPosition, clientX: number, clientY: number) => void;
+		onMeasurementClick?: (mi: number, clientX: number, clientY: number) => void;
+		onDirectionSelect?: (dir: DeploymentDirection) => void;
 	} = $props();
+
+	// Direction arrows rendered after anchor is placed
+	const DIR_ARROWS: { dir: DeploymentDirection; angle: number; dx: number; dy: number }[] = [
+		{ dir: 'right',      angle: 0,    dx: 48,  dy: 0   },
+		{ dir: 'up-right',   angle: -45,  dx: 34,  dy: -34 },
+		{ dir: 'up',         angle: -90,  dx: 0,   dy: -48 },
+		{ dir: 'up-left',    angle: -135, dx: -34, dy: -34 },
+		{ dir: 'left',       angle: 180,  dx: -48, dy: 0   },
+		{ dir: 'down-left',  angle: 135,  dx: -34, dy: 34  },
+		{ dir: 'down',       angle: 90,   dx: 0,   dy: 48  },
+		{ dir: 'down-right', angle: 45,   dx: 34,  dy: 34  },
+	];
+
+	// Map of position → player colour for occupied positions
+	const occupancy = $derived.by(() => {
+		const map = new Map<DeploymentPosition, DeploymentColor>();
+		for (const player of data.players) {
+			for (const point of player.points) {
+				map.set(point.position, player.color);
+			}
+		}
+		return map;
+	});
+
+	const ALL_POSITIONS: DeploymentPosition[] = [
+		'TL', 'TC', 'TR', 'ML', 'CC', 'MR', 'BL', 'BC', 'BR',
+		'OUT-TL', 'OUT-TC', 'OUT-TR',
+		'OUT-LT', 'OUT-LC', 'OUT-LB',
+		'OUT-RT', 'OUT-RC', 'OUT-RB',
+		'OUT-BL', 'OUT-BC', 'OUT-BR',
+		'OUT-CNR-TL', 'OUT-CNR-TR', 'OUT-CNR-BL', 'OUT-CNR-BR',
+	];
 
 	// Strip outer <svg> wrapper and force all fills to white
 	function innerContent(raw: string): string {
@@ -35,8 +77,8 @@
 	// Icon viewBoxes differ between assets
 	const iconViewBox: Record<string, string> = {
 		dagger: '0 0 32 32',
-		hammer: '0 0 32 32',
-		shield: '0 0 1024 1024',
+		hammer: '0 0 300 300',
+		shield: '0 0 300 300',
 	};
 
 	// Battlefield rectangle (inside the 915×574 card)
@@ -101,9 +143,10 @@
 	const ZONE_OPACITY = 0.38;
 	const PF_ZONE_OPACITIES = [0.08, 0.18, 0.28, 0.38];
 
-	const ARROW_LEN   = 14;
-	const DOT_R       = 5;
-	const LABEL_OFF   = 12;
+	const ARROW_LEN       = 14;
+	const DOT_R           = 5;
+	const LABEL_OFF       = 12;
+	const MEAS_INSET = 20;  // px to pull each measurement endpoint away from the anchor/terminus
 
 	// Return marker URL for a cap type (arrow and dot are rendered separately)
 	function capMarker(cap: string): string | undefined {
@@ -336,14 +379,16 @@
 		{/each}
 
 		<!-- Measurement lines -->
-		{#each (data.measurements ?? []) as m}
-			{@const ax = snapX(m.anchorCol)}
-			{@const ay = snapY(m.anchorRow)}
+		{#each (data.measurements ?? []) as m, mi}
+			{@const ax0 = snapX(m.anchorCol)}
+			{@const ay0 = snapY(m.anchorRow)}
 			{@const [dx, dy] = dirVec(m.direction)}
-			{@const ex = ax + dx * m.length}
-			{@const ey = ay + dy * m.length}
-			{@const mx = (ax + ex) / 2}
-			{@const my = (ay + ey) / 2}
+			{@const ax = ax0 + dx * MEAS_INSET}
+			{@const ay = ay0 + dy * MEAS_INSET}
+			{@const ex = ax0 + dx * (m.length - MEAS_INSET)}
+			{@const ey = ay0 + dy * (m.length - MEAS_INSET)}
+			{@const mx = ax0 + dx * m.length / 2}
+			{@const my = ay0 + dy * m.length / 2}
 			{@const lx1 = m.startCap === 'arrow' ? ax + dx * ARROW_LEN : m.startCap === 'dot' ? ax + dx * DOT_R : ax}
 			{@const ly1 = m.startCap === 'arrow' ? ay + dy * ARROW_LEN : m.startCap === 'dot' ? ay + dy * DOT_R : ay}
 			{@const lx2 = m.endCap   === 'arrow' ? ex - dx * ARROW_LEN : m.endCap   === 'dot' ? ex - dx * DOT_R : ex}
@@ -384,7 +429,39 @@
 					text-anchor="middle"
 				>{m.label}</text>
 			{/if}
+
+			<!-- Midpoint tap handle -->
+			{#if onMeasurementClick}
+				<circle
+					cx={mx} cy={my} r="12"
+					class="meas-handle"
+					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
+				/>
+			{/if}
 		{/each}
+
+		<!-- Position dots overlay — shown in edit mode; never exported -->
+		{#if showPositionDots}
+			{#each ALL_POSITIONS as pos}
+				{@const [px, py] = getCoords(pos)}
+				{@const occupiedBy = occupancy.get(pos)}
+				<g
+					class="pos-group"
+					class:pos-group--interactive={!!onPositionClick}
+					onclick={(e) => onPositionClick?.(pos, e.clientX, e.clientY)}
+				>
+					<!-- Large tap target -->
+					<circle cx={px} cy={py} r="22" fill="transparent"/>
+					<!-- Visual dot -->
+					<circle
+						cx={px} cy={py} r="7"
+						class="pos-dot"
+						class:pos-dot--occupied={!!occupiedBy}
+						style={occupiedBy ? `fill: ${COLORS[occupiedBy]}; stroke: white;` : ''}
+					/>
+				</g>
+			{/each}
+		{/if}
 
 		<!-- Snap grid overlay — shown only when placing a measurement; never exported -->
 		{#if snapGridActive}
@@ -396,6 +473,31 @@
 						onclick={() => onSnapPointClick?.(col, row)}
 					/>
 				{/each}
+			{/each}
+		{/if}
+
+		<!-- Direction picker — shown after anchor is placed; never exported -->
+		{#if measurementAnchor}
+			{@const ax = snapX(measurementAnchor.col)}
+			{@const ay = snapY(measurementAnchor.row)}
+
+			<!-- Anchor indicator -->
+			<circle cx={ax} cy={ay} r="7" fill="#c0272d" stroke="white" stroke-width="2"/>
+
+			<!-- Direction buttons -->
+			{#each DIR_ARROWS as { dir, angle, dx, dy }}
+				<g
+					class="dir-btn"
+					transform="translate({ax + dx},{ay + dy})"
+					onclick={() => onDirectionSelect?.(dir)}
+				>
+					<circle r="14" class="dir-btn-bg"/>
+					<polygon
+						points="-6,-4 6,0 -6,4"
+						transform="rotate({angle})"
+						class="dir-btn-arrow"
+					/>
+				</g>
 			{/each}
 		{/if}
 
@@ -425,9 +527,9 @@
 	.card-name {
 		position: absolute;
 		bottom: 20px;
-		left: 0;
+		left: 20px;
 		right: 0;
-		text-align: center;
+		text-align: left;
 		font-family: 'Alegreya', serif;
 		font-size: 13px;
 		color: #000;
@@ -439,6 +541,61 @@
 
 	.card.is-printer-friendly .card-name {
 		opacity: 1;
+	}
+
+	.pos-dot {
+		fill: rgba(255, 255, 255, 0.6);
+		stroke: rgba(0, 0, 0, 0.5);
+		stroke-width: 1.5;
+		pointer-events: none;
+	}
+
+	.pos-group {
+		pointer-events: none;
+	}
+
+	.pos-group--interactive {
+		pointer-events: all;
+		cursor: pointer;
+	}
+
+	.pos-group--interactive:hover .pos-dot {
+		opacity: 0.7;
+	}
+
+	.meas-handle {
+		fill: rgba(255, 255, 255, 0.7);
+		stroke: rgba(0, 0, 0, 0.4);
+		stroke-width: 1.5;
+		cursor: pointer;
+	}
+
+	.meas-handle:hover {
+		fill: #c0272d;
+		stroke: white;
+	}
+
+	.dir-btn {
+		cursor: pointer;
+	}
+
+	.dir-btn-bg {
+		fill: rgba(255, 255, 255, 0.85);
+		stroke: rgba(0, 0, 0, 0.3);
+		stroke-width: 1.5;
+		transition: fill 0.1s;
+	}
+
+	.dir-btn:hover .dir-btn-bg {
+		fill: #c0272d;
+	}
+
+	.dir-btn-arrow {
+		fill: #222;
+	}
+
+	.dir-btn:hover .dir-btn-arrow {
+		fill: white;
 	}
 
 	.snap-pt {
