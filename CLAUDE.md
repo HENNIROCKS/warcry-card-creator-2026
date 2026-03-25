@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter cards, text cards, and card backs with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
+Browser-based tool for creating Warcry (Warhammer Age of Sigmar) fighter cards, text/ability cards, deployment cards, and card backs with custom image uploads and editable values. No backend, no persistent storage — everything runs client-side.
 
 ## Stack
 
 - **SvelteKit 2 + Vite** (Svelte 5 runes syntax)
 - **TypeScript**
 - **Tailwind CSS v4** (via `@tailwindcss/vite` plugin, no config file needed)
-- **dom-to-image-more** — PNG card export
+- **dom-to-image-more** — PNG export (desktop); **modern-screenshot** (`domToPng`) — PNG export (mobile)
+- **PWA** — installable via `static/site.webmanifest`; no service worker, no offline mode
 
 ## Commands
 
@@ -33,16 +34,29 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 
 ### Routes
 
-- `/` — landing page, links to all three card editors
+- `/` — landing page, links to all four card editors
 - `/fighter` — fighter card editor
-- `/text` — text card editor
+- `/text` — text/ability card editor
+- `/deployment` — deployment card editor
 - `/card-back` — card back editor
 
 ### Key files
 
-- `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `TextCardData`, `Weapon`, `Runemark`, etc.)
-- `src/app.css` — global styles, Tailwind import, custom font declarations
+- `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `TextCardData`, `DeploymentCardData`, `Weapon`, `Runemark`, etc.)
+- `src/lib/i18n/index.svelte.ts` — i18n store; exports `t(key)` function and `i18n` reactive object
+- `src/lib/i18n/locales/en.json` — source locale (en + de ship); all user-visible strings live here
+- `src/lib/theme.svelte.ts` — light/dark theme store; exports `toggleTheme()`
+- `src/app.css` — global styles, Tailwind import, custom font declarations, theme CSS vars
 - `static/fonts/` — self-hosted font files and license texts
+
+### Components
+
+- `FighterCard.svelte` / `FighterForm.svelte` — fighter card visual + form
+- `TextCard.svelte` / `TextForm.svelte` — text/ability card visual + form
+- `DeploymentCard.svelte` / `DeploymentForm.svelte` — deployment card visual (SVG-based) + form
+- `FactionSelect.svelte` — filterable grouped select for Grand Alliance / Faction / Subfaction (used on Fighter + Text editors)
+- `LangSwitch.svelte` — language switcher
+- `ThemeToggle.svelte` — light/dark theme toggle
 
 ### Card rendering approach
 
@@ -63,6 +77,17 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
 - Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable`, `showCaption` — collapsing both the card element and its form field
+
+**Deployment card** (portrait 574×915px, SVG-based rendering):
+
+- Full-bleed battlefield SVG at card centre; dashed centre lines from the midpoint
+- Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as coloured speech bubbles with a white icon (dagger/shield/hammer) + optional RND label
+- 33 snap positions: 9 inside (TL/TC/TR/ML/CC/MR/BL/BC/BR) + 24 outside along edges and corners
+- Measurement lines: configurable direction (8 directions), start/end caps (arrow/tick/dot/none), text label at midpoint
+- Zone overlays: shaded half/quarter presets over the battlefield
+- Printer-friendly mode: strictly B&W, unicode player badges (①②③④) above each bubble, white battlefield fill
+- Card name rendered as an Alegreya caption below the SVG
+- `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
 
 **Card back** (portrait, same 574×915px):
 
@@ -85,7 +110,15 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 
 ### Runemark library
 
-SVGs live in `src/lib/runemarks/svg/` (203 files). Library metadata in `src/lib/runemarks/index.ts`.
+SVGs live in `src/lib/runemarks/svg/` (229 files). Library metadata in `src/lib/runemarks/index.ts`.
+
+### i18n
+
+All user-visible strings use `t(key)` imported from `$lib/i18n/index.svelte`. The source locale is `src/lib/i18n/locales/en.json`; German (`de.json`) also ships. When adding new UI strings or card-rendered text, add a key to both locale files and call `t('namespace.key')` in the template — never hardcode English strings directly. See `src/lib/i18n/README.md` for namespace conventions.
+
+### Theme
+
+Light/dark theme uses CSS custom properties declared on `:root` (dark) and `[data-theme="light"]` in `src/app.css`. Theme state and persistence live in `src/lib/theme.svelte.ts`; `ThemeToggle.svelte` calls `toggleTheme()`. Default is the OS/browser preference; the user's choice persists in `localStorage`.
 
 ## Code style
 
