@@ -12,6 +12,7 @@ assignees: ''
 **Which part of the tool does this relate to?**
 - [ ] Fighter card editor
 - [ ] Text card editor
+- [ ] Deployment card editor
 - [ ] Card back editor
 - [ ] Both / general
 

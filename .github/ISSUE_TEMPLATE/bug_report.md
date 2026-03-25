@@ -12,6 +12,7 @@ assignees: ''
 **Which part of the tool?**
 - [ ] Fighter card editor
 - [ ] Text card editor
+- [ ] Deployment card editor
 - [ ] Card back editor
 - [ ] Both / landing page
 
