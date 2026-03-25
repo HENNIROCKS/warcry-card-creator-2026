@@ -12,9 +12,11 @@ Browser-based tool for creating custom Warcry cards. No backend, no login, every
 
 **Text card editor** — set card name, card type (Ability, Reaction, Heroic Trait, Battle Trait, Divine Blessing, Lesser/Greater Artefact, or a custom label), and use the Card Elements checkboxes to toggle which sections appear on the card: runemarks, activation cost (Double / Triple / Quad), flavour text, a points cost increases table (Regular/Elite rows), prerequisite text (framed box), body text with bold/italic markup, and an optional caption at the bottom of the card. Export as a print-ready PNG.
 
+**Deployment card editor** — build a deployment card with up to 4 player colours (red, blue, green, yellow). Place deployment points (dagger, shield, or hammer icons with an optional round label) at any of 33 snap positions inside or around the battlefield. Add measurement lines with configurable direction, start/end caps, and a distance label. Shade zone overlays over the battlefield. Export as a print-ready PNG; printer-friendly mode produces a strictly black-and-white card with numbered player badges.
+
 **Card back editor** — create a matching card back with optional name text, a large runemark chosen from the full library (with live search), a custom background image (pan and pinch-to-zoom on mobile), and configurable text/runemark colour. A "mirrored name" option repeats the name upside-down for a symmetrical playing-card style. Export as a print-ready PNG; printer-friendly mode forces black on white.
 
-All three editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens), and can be **installed as a PWA** from the browser.
+All four editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens), and can be **installed as a PWA** from the browser.
 
 ## Developing
 
