@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-25">
+              <span class="session-date">2026-03-25</span>
+              <span class="session-title">Printer-Friendly Export &amp; Frame Fix</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-24">
               <span class="session-date">2026-03-24</span>
               <span class="session-title">Deployment Card Form &amp; Bubbles</span>
@@ -1826,6 +1832,96 @@
         <!-- ══════════════════════════════════════════
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
+        <!-- ══════════════════════════════════════════
+         2026-03-25 — Printer-Friendly Export & Frame Fix
+    ══════════════════════════════════════════ -->
+        <div id="session-march-25" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-25</span>
+              <span class="badge badge-green">Printer-friendly export</span>
+              <span class="badge badge-green">Form field styles</span>
+              <span class="badge badge-green">Export frame fix</span>
+            </div>
+            <h1>Deployment Card — Printer-Friendly Export &amp; Frame Fix</h1>
+            <p>
+              Added printer-friendly export mode (B&amp;W, white background, unicode player badges).
+              Migrated DeploymentForm to scoped <code>field-label</code>/<code>field-input</code>
+              classes matching other card forms. Added card name as a bottom caption. Tracked down
+              and fixed a persistent dark frame artifact in dom-to-image-more exports caused by
+              Tailwind v4 preflight's <code>border-style: solid</code> surviving the foreignObject
+              clone while <code>border-width: 0</code> gets silently dropped.
+            </p>
+          </div>
+
+          <section id="march-25-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <ul>
+              <li><strong>Printer-friendly mode</strong>: <code>printerFriendly</code> prop on <code>DeploymentCard</code>; white card background (<code>.card.is-printer-friendly { background: white }</code>); all bubble colours forced to <code>#000</code>; battlefield fill changed to white with a black outline stroke; white <code>&lt;rect&gt;</code> as first SVG child covers any viewport-edge bleed</li>
+              <li><strong>Unicode player badges</strong>: ①②③④ rendered above each bubble when <code>printerFriendly</code> is true, using SVG <code>&lt;text&gt;</code> with <code>paint-order="stroke"</code> and a white <code>stroke-width="4"</code> halo for legibility over any background; stored as <code>PLAYER_BADGES</code> constant in script block (Svelte <code>{@const}</code> cannot appear at template top-level)</li>
+              <li><strong>Printer-friendly export flow</strong>: dropdown option sets <code>printerFriendly = true</code>, awaits RAF for re-render, calls <code>doExport('_print')</code>, then resets flag; avoids any flicker in the live preview</li>
+              <li><strong>Form field styles</strong>: <code>DeploymentForm.svelte</code> root wrapper changed from ad-hoc Tailwind classes to <code>space-y-10 text-sm</code> matching other forms; all labels migrated to scoped <code>.field-label</code>; all text/select inputs migrated to scoped <code>.field-input</code>; labels inside flex rows get <code>style="margin-bottom:0"</code></li>
+              <li><strong>Card name caption</strong>: <code>.card-name</code> div added below SVG — <code>position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-family: 'Alegreya'; font-size: 13px; color: #000; opacity: 0.5</code> — matching FighterCard caption style; <code>opacity: 1</code> in printer-friendly mode; form name label annotated "— renders like caption"</li>
+              <li><strong>Export frame root cause identified and fixed</strong>: Tailwind v4 preflight sets <code>border-style: solid; border-color: currentColor</code> on <code>*</code>, suppressed by <code>border-width: 0</code>. dom-to-image-more treats zero/default values as "skip" when serialising computed styles — so <code>border-width: 0</code> is absent in the cloned foreignObject, leaving <code>border-style: solid</code> active. Overlay elements with <code>color: #000</code>, <code>left: 0; right: 0</code>, and <code>opacity &lt; 1</code> (stacking context) produce a full-width black frame. Fix: explicit <code>border: 0; outline: none; background: transparent</code> on every transparent overlay element's own CSS rule</li>
+              <li><strong>Additional CSS fixes on <code>.card</code></strong>: changed <code>display: inline-block</code> → <code>display: block</code> (inline-block creates a descender gap → bottom bar in export); added <code>border: 0; outline: none</code> to <code>.card</code> itself; SVG given inline <code>style="display:block;border:none;outline:none;"</code> for reliable serialisation</li>
+              <li><strong>Code cleanup</strong>: removed stale <code>.card svg</code> CSS rule (redundant with inline SVG style and incorrect indentation); removed all <code>capturing</code> state scaffolding from both <code>DeploymentCard.svelte</code> and <code>+page.svelte</code>; added explicit <code>{ width, height, scale: 2 }</code> to <code>domtoimage.toPng()</code> call</li>
+            </ul>
+          </section>
+
+          <section id="march-25-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <div class="decision-q">Why B&amp;W only for printer-friendly? No grey shades?</div>
+              <div class="decision-a">User's explicit requirement: printer-friendly must be strictly black and white. No <code>#333</code> or other greys. All decoration (battlefield background, bubble colours) becomes either <code>#000</code> or <code>white</code>.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">How to differentiate players in printer-friendly without colour?</div>
+              <div class="decision-a">Unicode circled numbers ①②③④ rendered as SVG text above each bubble. Visible in B&amp;W print without any colour. White stroke halo (<code>paint-order="stroke"; stroke-width="4"</code>) ensures legibility over dark backgrounds. Only shown in printer-friendly mode — live preview stays clean.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Root cause of the dark export frame — what exactly went wrong?</div>
+              <div class="decision-a">Tailwind v4 preflight applies <code>border-style: solid; border-color: currentColor; border-width: 0</code> to every element. dom-to-image-more skips "zero/default" computed style values when building the cloned element's inline styles — so <code>border-width: 0</code> is never written. In the SVG foreignObject context, <code>border-style: solid</code> remains active with no width suppressor. Any element with <code>color: #000</code> (currentColor = black), spanning <code>left: 0; right: 0</code>, and with <code>opacity &lt; 1</code> (which creates a stacking context that dom-to-image composites in a separate pass — again losing <code>border-width: 0</code>) produces a full-card-width black border that looks like a frame. The trigger in this session was the <code>.card-name</code> caption div.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why not fix via the <code>.card *</code> universal selector reset?</div>
+              <div class="decision-a">dom-to-image-more copies computed styles per element. The <code>.card *</code> rule IS applied by the browser (computed value is correct), but dom-to-image still skips <code>border-width: 0</code> as a "default" value. The only reliable fix is <code>border: 0; outline: none; background: transparent</code> directly on each element's own CSS rule — not via wildcard inheritance.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why does <code>display: inline-block</code> on <code>.card</code> cause a bottom bar in export?</div>
+              <div class="decision-a">Inline formatting contexts add a descender gap below the last inline element. dom-to-image captures this gap as a white strip at the card bottom. Using <code>display: block</code> (matching FighterCard) eliminates it.</div>
+            </div>
+          </section>
+
+          <section id="march-25-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Visual position picker — replace <code>&lt;select&gt;</code> with clickable grid showing all 33 positions laid out like the battlefield</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Measurement lines — form fields (direction, label, start/end cap) + card SVG rendering (arrow/tick lines with distance label at midpoint)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-25-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Printer-friendly prop + mode; <code>.card-name</code> caption; <code>.card</code> CSS fixed (<code>display:block</code>, <code>border:0</code>); SVG inline style; <code>PLAYER_BADGES</code> constant; stale CSS removed</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Migrated to <code>field-label</code>/<code>field-input</code> scoped CSS; root wrapper to <code>space-y-10 text-sm</code>; name label hint added</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Explicit <code>{ width, height, scale: 2 }</code> in export call; <code>exportPrinterFriendly()</code> function; removed <code>capturing</code> state scaffolding</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+        </div>
         <!-- ══════════════════════════════════════════
          2026-03-24 — Deployment Card Form & Bubbles
     ══════════════════════════════════════════ -->
@@ -6311,6 +6407,7 @@
 
     <script>
       const sessions = [
+        "march-25",
         "march-24",
         "march-23",
         "march-22",
