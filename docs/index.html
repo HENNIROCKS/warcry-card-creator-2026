@@ -511,15 +511,21 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-25">
+              <span class="session-date">2026-03-25</span>
+              <span class="session-title">Printer-Friendly Export &amp; Frame Fix</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-24">
               <span class="session-date">2026-03-24</span>
-              <span class="session-title">Deployment Layout, Text Caption &amp; SVG Normalisation</span>
+              <span class="session-title">Deployment Form, Caption &amp; SVG Normalisation</span>
             </button>
           </li>
           <li>
             <button class="session-btn" data-session="march-23">
               <span class="session-date">2026-03-23</span>
-              <span class="session-title">Card Back Editor</span>
+              <span class="session-title">Card Back + Deployment Card</span>
             </button>
           </li>
           <li>
@@ -1340,6 +1346,41 @@
                   </td>
                   <td>Mar 23</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Deployment card: SVG-based (not CSS/HTML); landscape 915×574px; 17 snap positions (3×3 inside + 8 outside); dagger ▽ / hammer ◇ / shield ⊙ icons; 2-player red/blue</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-decisions" onclick="activateSession('march-23')"
+                      >Deployment icons: <code>deployment-*.svg</code> imported <code>?raw</code>; fill replaced with <code>fill="white"</code>; embedded in nested <code>&lt;svg&gt;</code> inside colored outer shape</a>
+                  </td>
+                  <td>Mar 23</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-built" onclick="activateSession('march-24')"
+                      >Deployment point form: add/remove points; position select (33 options); icon toggle; colour swatches; RND field</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-decisions" onclick="activateSession('march-24')"
+                      >Speech bubble replaces standalone icon + offset RND label — bubble unifies player colour, icon, and label into one visual unit with directional tail</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-24-built" onclick="activateSession('march-24')"
+                      >33 snap positions: OUT-LT/LB/RT/RB (side edges) + OUT-CNR-TL/TR/BL/BR (corners with diagonal tails); 4 player colours (red/blue/green/yellow)</a>
+                  </td>
+                  <td>Mar 24</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1442,6 +1483,13 @@
                     >
                   </td>
                   <td>Mar 15</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-23-built" onclick="activateSession('march-23')"
+                      >Deployment card: landscape 915×574px; battlefield rect 100px L/R / 60px T/B inset; parchment <code>#d9b8a8</code>; dashed centre lines 8/6</a>
+                  </td>
+                  <td>Mar 23</td>
                 </tr>
               </tbody>
             </table>
@@ -1882,129 +1930,140 @@
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
     ══════════════════════════════════════════ -->
         <!-- ══════════════════════════════════════════
-         2026-03-24 — Deployment Layout, Text Caption & SVG Normalisation
+         2026-03-25 — Printer-Friendly Export & Frame Fix
+    ══════════════════════════════════════════ -->
+        <div id="session-march-25" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-25</span>
+              <span class="badge badge-green">Printer-friendly export</span>
+              <span class="badge badge-green">Form field styles</span>
+              <span class="badge badge-green">Export frame fix</span>
+            </div>
+            <h1>Deployment Card — Printer-Friendly Export &amp; Frame Fix</h1>
+            <p>
+              Added printer-friendly export mode (B&amp;W, white background, unicode player badges).
+              Migrated DeploymentForm to scoped <code>field-label</code>/<code>field-input</code>
+              classes matching other card forms. Added card name as a bottom caption. Tracked down
+              and fixed a persistent dark frame artifact in dom-to-image-more exports caused by
+              Tailwind v4 preflight's <code>border-style: solid</code> surviving the foreignObject
+              clone while <code>border-width: 0</code> gets silently dropped.
+            </p>
+          </div>
+
+          <section id="march-25-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <ul>
+              <li><strong>Printer-friendly mode</strong>: <code>printerFriendly</code> prop on <code>DeploymentCard</code>; white card background (<code>.card.is-printer-friendly { background: white }</code>); all bubble colours forced to <code>#000</code>; battlefield fill changed to white with a black outline stroke; white <code>&lt;rect&gt;</code> as first SVG child covers any viewport-edge bleed</li>
+              <li><strong>Unicode player badges</strong>: ①②③④ rendered above each bubble when <code>printerFriendly</code> is true, using SVG <code>&lt;text&gt;</code> with <code>paint-order="stroke"</code> and a white <code>stroke-width="4"</code> halo for legibility over any background; stored as <code>PLAYER_BADGES</code> constant in script block (Svelte <code>{@const}</code> cannot appear at template top-level)</li>
+              <li><strong>Printer-friendly export flow</strong>: dropdown option sets <code>printerFriendly = true</code>, awaits RAF for re-render, calls <code>doExport('_print')</code>, then resets flag; avoids any flicker in the live preview</li>
+              <li><strong>Form field styles</strong>: <code>DeploymentForm.svelte</code> root wrapper changed from ad-hoc Tailwind classes to <code>space-y-10 text-sm</code> matching other forms; all labels migrated to scoped <code>.field-label</code>; all text/select inputs migrated to scoped <code>.field-input</code>; labels inside flex rows get <code>style="margin-bottom:0"</code></li>
+              <li><strong>Card name caption</strong>: <code>.card-name</code> div added below SVG — <code>position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-family: 'Alegreya'; font-size: 13px; color: #000; opacity: 0.5</code> — matching FighterCard caption style; <code>opacity: 1</code> in printer-friendly mode; form name label annotated "— renders like caption"</li>
+              <li><strong>Export frame root cause identified and fixed</strong>: Tailwind v4 preflight sets <code>border-style: solid; border-color: currentColor</code> on <code>*</code>, suppressed by <code>border-width: 0</code>. dom-to-image-more treats zero/default values as "skip" when serialising computed styles — so <code>border-width: 0</code> is absent in the cloned foreignObject, leaving <code>border-style: solid</code> active. Overlay elements with <code>color: #000</code>, <code>left: 0; right: 0</code>, and <code>opacity &lt; 1</code> (stacking context) produce a full-width black frame. Fix: explicit <code>border: 0; outline: none; background: transparent</code> on every transparent overlay element's own CSS rule</li>
+              <li><strong>Additional CSS fixes on <code>.card</code></strong>: changed <code>display: inline-block</code> → <code>display: block</code> (inline-block creates a descender gap → bottom bar in export); added <code>border: 0; outline: none</code> to <code>.card</code> itself; SVG given inline <code>style="display:block;border:none;outline:none;"</code> for reliable serialisation</li>
+              <li><strong>Code cleanup</strong>: removed stale <code>.card svg</code> CSS rule (redundant with inline SVG style and incorrect indentation); removed all <code>capturing</code> state scaffolding from both <code>DeploymentCard.svelte</code> and <code>+page.svelte</code>; added explicit <code>{ width, height, scale: 2 }</code> to <code>domtoimage.toPng()</code> call</li>
+            </ul>
+          </section>
+
+          <section id="march-25-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <div class="decision-q">Why B&amp;W only for printer-friendly? No grey shades?</div>
+              <div class="decision-a">User's explicit requirement: printer-friendly must be strictly black and white. No <code>#333</code> or other greys. All decoration (battlefield background, bubble colours) becomes either <code>#000</code> or <code>white</code>.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">How to differentiate players in printer-friendly without colour?</div>
+              <div class="decision-a">Unicode circled numbers ①②③④ rendered as SVG text above each bubble. Visible in B&amp;W print without any colour. White stroke halo (<code>paint-order="stroke"; stroke-width="4"</code>) ensures legibility over dark backgrounds. Only shown in printer-friendly mode — live preview stays clean.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Root cause of the dark export frame — what exactly went wrong?</div>
+              <div class="decision-a">Tailwind v4 preflight applies <code>border-style: solid; border-color: currentColor; border-width: 0</code> to every element. dom-to-image-more skips "zero/default" computed style values when building the cloned element's inline styles — so <code>border-width: 0</code> is never written. In the SVG foreignObject context, <code>border-style: solid</code> remains active with no width suppressor. Any element with <code>color: #000</code> (currentColor = black), spanning <code>left: 0; right: 0</code>, and with <code>opacity &lt; 1</code> (which creates a stacking context that dom-to-image composites in a separate pass — again losing <code>border-width: 0</code>) produces a full-card-width black border that looks like a frame. The trigger in this session was the <code>.card-name</code> caption div.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why not fix via the <code>.card *</code> universal selector reset?</div>
+              <div class="decision-a">dom-to-image-more copies computed styles per element. The <code>.card *</code> rule IS applied by the browser (computed value is correct), but dom-to-image still skips <code>border-width: 0</code> as a "default" value. The only reliable fix is <code>border: 0; outline: none; background: transparent</code> directly on each element's own CSS rule — not via wildcard inheritance.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why does <code>display: inline-block</code> on <code>.card</code> cause a bottom bar in export?</div>
+              <div class="decision-a">Inline formatting contexts add a descender gap below the last inline element. dom-to-image captures this gap as a white strip at the card bottom. Using <code>display: block</code> (matching FighterCard) eliminates it.</div>
+            </div>
+          </section>
+
+          <section id="march-25-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Visual position picker — replace <code>&lt;select&gt;</code> with clickable grid showing all 33 positions laid out like the battlefield</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Measurement lines — form fields (direction, label, start/end cap) + card SVG rendering (arrow/tick lines with distance label at midpoint)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-25-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Printer-friendly prop + mode; <code>.card-name</code> caption; <code>.card</code> CSS fixed (<code>display:block</code>, <code>border:0</code>); SVG inline style; <code>PLAYER_BADGES</code> constant; stale CSS removed</td></tr>
+                <tr><td><code>src/lib/components/DeploymentForm.svelte</code></td><td>Migrated to <code>field-label</code>/<code>field-input</code> scoped CSS; root wrapper to <code>space-y-10 text-sm</code>; name label hint added</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Explicit <code>{ width, height, scale: 2 }</code> in export call; <code>exportPrinterFriendly()</code> function; removed <code>capturing</code> state scaffolding</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+        </div>
+        <!-- ══════════════════════════════════════════
+         2026-03-24 — Deployment Form, Caption, Layout & SVG Normalisation
     ══════════════════════════════════════════ -->
         <div id="session-march-24" class="session-panel">
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-24</span>
-              <span class="badge badge-green">Deployment layout</span>
-              <span class="badge badge-green">Text card caption</span>
-              <span class="badge badge-green">SVG normalisation</span>
+              <span class="badge badge-green">Speech bubbles &amp; form</span>
+              <span class="badge badge-green">Caption &amp; SVG normalisation</span>
+              <span class="badge badge-green">Layout &amp; i18n</span>
             </div>
-            <h1>Deployment Layout, Text Caption &amp; SVG Normalisation</h1>
+            <h1>Deployment Form, Caption, Layout &amp; SVG Normalisation</h1>
             <p>
-              Two-part session. First: deployment card editor sidebar widened to
-              480 px, landscape preview made scrollable with a pinned export
-              button on mobile and vertically centred on desktop, all form
-              strings moved to <code>t()</code> with 13 new i18n keys. Second
-              (main branch): black colour swatch made visible in dark mode,
-              caption feature added to Text Card editor (matching Fighter Card
-              behaviour), issue templates updated for accuracy, and all 61
+              Multi-part session. Deployment point form built with player-level colour, per-player
+              point lists, speech bubbles, corner tail fix via <code>atan2</code>, dynamic bubble
+              width, unique position enforcement, and smart CC-first defaulting. Sidebar widened to
+              480 px; desktop preview made scrollable; mobile scales to viewport height with
+              horizontal scroll and pinned export button. All form strings moved to
+              <code>t()</code> with 13 new i18n keys. On main: caption feature added to Text Card
+              editor; black colour swatch made visible in dark mode; issue templates updated; all 61
               non-300 runemark SVGs normalised to 300×300.
             </p>
           </div>
 
           <section id="march-24-built" data-nav="What Was Built">
-            <h2>
-              <span class="icon" style="background: rgba(52, 211, 153, 0.15)">✓</span>
-              What Was Built
-            </h2>
-            <h3>Deployment Card — Layout &amp; i18n (<code>feature/deployment-cards</code>)</h3>
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Deployment Card — Form &amp; Bubbles</h3>
             <ul>
-              <li>
-                <strong>Sidebar width 480 px</strong> — matches fighter, text,
-                and card-back editors; was 360 px
-              </li>
-              <li>
-                <strong>Desktop preview vertically centred</strong> —
-                <code>&lt;main&gt;</code> uses <code>overflow-y-auto</code> +
-                <code>lg:justify-center</code>; card scale constrained to
-                width only on desktop
-              </li>
-              <li>
-                <strong>Mobile horizontal scroll</strong> — landscape card
-                scales to viewport height; card area wrapped in
-                <code>overflow-x-auto</code> div; export button is a
-                <code>shrink-0</code> sibling above the scroll area so it
-                stays pinned
-              </li>
-              <li>
-                <strong>Full form i18n</strong> — all hardcoded strings in
-                <code>DeploymentForm.svelte</code> replaced with
-                <code>t()</code>: player/point labels, position group labels,
-                colour names, icon names
-              </li>
-              <li>
-                <strong>13 new locale keys</strong> — 4 colour keys after
-                <code>form-text-color</code>; 9 deployment form keys after
-                <code>form-placeholder-fighter</code>; added to both
-                <code>en.json</code> and <code>de.json</code>
-              </li>
+              <li><strong>Speech bubble rendering</strong>: coloured rounded-rect bubble (BH=48px) with white icon (32px) and optional RND label; directional tail pointing toward battlefield; 33 snap positions</li>
+              <li><strong>Corner tail fix</strong>: replaced hardcoded 45° diagonal tail with <code>getTailAngle()</code> using exact <code>atan2</code> to the nearest battlefield corner (~35°); general <code>makeTailPoints(BW, BH, angle)</code> handles all directions and detects rounded-corner zone</li>
+              <li><strong>Dashed centre lines from centre</strong>: split into four arms originating at <code>(BF_CX, BF_CY)</code> so the first dash starts at the cross</li>
+              <li><strong>Player-level form structure</strong>: <code>DeploymentPlayer { color, points[] }</code>; colour exclusion, position exclusion, smart CC-first defaulting, dynamic bubble width, contrast-aware icon buttons</li>
+              <li><strong>Layout &amp; i18n</strong>: sidebar 360 → 480 px; desktop scroll; mobile horizontal scroll + pinned export; all strings moved to <code>t()</code> with 13 new locale keys</li>
             </ul>
-            <h3>Card Back — Dark Mode Fix (main)</h3>
+            <h3>Text Card — Caption Feature</h3>
             <ul>
-              <li>
-                <strong>Black swatch border</strong> —
-                <code>.swatch-black</code> gained
-                <code>border-color: rgba(255,255,255,0.3)</code> so it is
-                visible against a dark UI background; selected-state red
-                border overrides it via higher specificity
-              </li>
+              <li><strong><code>TextCardData</code></strong> — added <code>showCaption: boolean</code> and <code>imageCaption: string</code></li>
+              <li><strong>Card visual</strong> — caption at <code>position: absolute; bottom: 20px</code> inside <code>.card</code>, matching Fighter Card; dark text, 50% opacity</li>
+              <li><strong>Form order</strong> — Type select before Name; caption input below Name; keyed as <code>form-placeholder-caption-fighter</code> / <code>form-placeholder-caption-text</code></li>
             </ul>
-            <h3>Text Card — Caption Feature (main)</h3>
+            <h3>SVG Normalisation &amp; Misc</h3>
             <ul>
-              <li>
-                <strong><code>TextCardData</code></strong> — added
-                <code>showCaption: boolean</code> and
-                <code>imageCaption: string</code> to
-                <code>src/lib/types.ts</code>
-              </li>
-              <li>
-                <strong>Card visual</strong> — caption rendered as
-                <code>position: absolute; bottom: 20px</code> inside
-                <code>.card</code> (same anchor as Fighter Card), not inside
-                <code>.image-section</code>; dark text, 50% opacity
-              </li>
-              <li>
-                <strong>Form order</strong> — Type select moved before Name
-                field; caption input appears directly below Name when Show
-                Caption is enabled (mirrors FighterForm layout)
-              </li>
-              <li>
-                <strong>Caption placeholders</strong> — Fighter Card:
-                <em>"e.g. Art by John Blanche"</em>; Text Card: <em>"e.g.
-                Source: Starter Set"</em>; both keyed as
-                <code>form-placeholder-caption-fighter</code> /
-                <code>form-placeholder-caption-text</code> in both locales
-              </li>
-            </ul>
-            <h3>Issue Templates (main)</h3>
-            <ul>
-              <li>
-                Stale "Ability card editor" → "Text card editor" in
-                <code>bug_report.md</code> and
-                <code>feature_request.md</code>; "Card back editor" option
-                added to both
-              </li>
-              <li>
-                HTML comment preamble (<code>&lt;!-- Fill in… --&gt;</code>)
-                added to all three templates
-              </li>
-            </ul>
-            <h3>SVG Normalisation (main)</h3>
-            <ul>
-              <li>
-                61 runemark SVG files had non-standard
-                <code>width</code>/<code>height</code> attributes: 34 ×
-                32 px, 16 × 512 px, 11 × 1024 px — all set to 300×300
-                via <code>sed</code>; <code>viewBox</code> unchanged
-              </li>
-              <li>
-                All 203 runemarks now share <code>width="300"
-                height="300"</code>; display size is controlled by CSS, so
-                rendering is unaffected
-              </li>
+              <li><strong>61 runemark SVGs</strong> normalised: 34×32, 16×512, 11×1024 px all set to 300×300 via <code>sed</code>; <code>viewBox</code> unchanged; all 203 runemarks now share <code>width="300" height="300"</code></li>
+              <li><strong>Card Back dark mode</strong>: <code>.swatch-black</code> gained <code>border-color: rgba(255,255,255,0.3)</code></li>
+              <li><strong>Issue templates</strong>: "Ability card editor" → "Text card editor"; Card back option added; preamble comment added to all three templates</li>
             </ul>
           </section>
 
@@ -2013,6 +2072,26 @@
               <span class="icon" style="background: rgba(196, 144, 108, 0.15)">💡</span>
               Key Decisions
             </h2>
+            <div class="decision">
+              <div class="decision-q">Why a speech bubble instead of standalone icon + separate RND label?</div>
+              <div class="decision-a">Unifies colour, icon, and round label into one visual unit; tail makes positional intent clear; avoids off-card overflow for outside positions.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why move colour to the player level?</div>
+              <div class="decision-a">Each colour represents one player. Per-point colour pickers created accidental inconsistencies. Player-level colour makes the data model match the conceptual model and simplifies the form.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Corner tail: atan2 vs hardcoded 45°?</div>
+              <div class="decision-a">The bubble centre for OUT-CNR-TL is (63, 34) and the battlefield corner is (100, 60) — atan2 gives ~35°, not 45°. The general <code>makeTailPoints</code> also detects when the exit point is in the rounded-corner zone (<code>|ex| &gt; halfW − BRAD &amp;&amp; |ey| &gt; halfH − BRAD</code>) and switches to the two-edge base strategy, keeping the tail flush with the visible bubble surface.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Dynamic bubble width: character approximation vs DOM measurement?</div>
+              <div class="decision-a">DOM measurement (<code>getComputedTextLength</code>) requires a rendered element and is async. A <code>CHAR_W=9</code> per-character estimate for Germania One at 17px is close enough for a decorative label — easily tunable via one constant.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Outside position coordinates: why fixed values (34, 540, 63, 852)?</div>
+              <div class="decision-a">Derived once from <code>BH/2 + margin</code> and <code>BW_ICON/2 + margin</code>, hardcoded for clarity. Must be updated if bubble dimensions change.</div>
+            </div>
             <div class="decision">
               <div class="decision-q">
                 Why scale the landscape mobile card to viewport height rather
@@ -2126,16 +2205,20 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><code>src/routes/deployment/+page.svelte</code></td>
-                  <td>Sidebar 480 px; desktop vertical centre; mobile horizontal scroll; pinned export button</td>
+                  <td><code>src/lib/types.ts</code></td>
+                  <td>Added <code>DeploymentPlayer</code>; removed <code>color</code> from <code>DeploymentPoint</code>; <code>DeploymentCardData.points[]</code> → <code>players[]</code>; added <code>showCaption</code>, <code>imageCaption</code> to <code>TextCardData</code></td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/DeploymentCard.svelte</code></td>
+                  <td>Corner tail fix (<code>getTailAngle</code> + <code>makeTailPoints</code>); nested player/point loops; dynamic <code>bubbleWidth()</code>; dashed lines as 4 arms from centre</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/components/DeploymentForm.svelte</code></td>
-                  <td>All hardcoded strings replaced with <code>t()</code></td>
+                  <td>Player-level structure; colour exclusion; position exclusion + smart defaulting; contrast-aware buttons; UX sizing lift; all hardcoded strings replaced with <code>t()</code></td>
                 </tr>
                 <tr>
-                  <td><code>src/lib/types.ts</code></td>
-                  <td>Added <code>showCaption</code>, <code>imageCaption</code> to <code>TextCardData</code></td>
+                  <td><code>src/routes/deployment/+page.svelte</code></td>
+                  <td>Sidebar 360 → 480 px; desktop vertical centre; mobile horizontal scroll + viewport-height scale; pinned export button</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/components/TextCard.svelte</code></td>
@@ -2194,7 +2277,6 @@
           </section>
         </div>
         <!-- /session-march-24 -->
-
         <!-- ══════════════════════════════════════════
          2026-03-23 — Card Back Editor
     ══════════════════════════════════════════ -->
@@ -2203,23 +2285,24 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-23</span>
               <span class="badge badge-green">Card back editor</span>
-              <span class="badge badge-green">Runemark picker</span>
-              <span class="badge badge-green">Runemark library</span>
+              <span class="badge badge-green">Deployment card scaffold</span>
+              <span class="badge badge-green">Deployment icon rendering</span>
             </div>
-            <h1>Card Back Editor + Runemark Library</h1>
+            <h1>Card Back Editor + Deployment Card Foundation</h1>
             <p>
-              Full card back editor at <code>/card-back</code>: name (with pipe
-              line-break), mirrored-name toggle, text/runemark colour swatches,
-              a searchable runemark picker (replacing the native
-              <code>&lt;select&gt;</code> with the FactionSelect pattern), and a
-              background image with pan/zoom on desktop and touch drag +
-              pinch-to-zoom on mobile. Printer-friendly export forces black on
-              white. Runemark library expanded with 28 new SVGs across 5 new
-              categories (Card Decks, Deployment, Misc, Treasure, Twists) — card
-              back only; each category gets its own i18n namespace and grouped
-              section in the picker. SVG <code>fill="#000"</code> stripped from
-              two source files where hardcoded path attributes were overriding
-              the CSS colour variable.
+              Full card back editor at <code>/card-back</code>: name (with pipe line-break),
+              mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
+              (replacing the native <code>&lt;select&gt;</code> with the FactionSelect pattern),
+              and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
+              mobile. Printer-friendly export forces black on white. Runemark library expanded
+              with 28 new SVGs across 5 new categories (Card Decks, Deployment, Misc, Treasure,
+              Twists). In a second pass, the deployment card editor at <code>/deployment</code>
+              was scaffolded: landscape 915×574px layout, parchment-on-white battlefield rectangle
+              with dashed centre lines, a 17-position snap grid (9 inside 3×3 + 8 outer edge slots),
+              and three deployment icon types (dagger ▽, hammer ◇, shield ⊙) rendered via
+              <code>?raw</code> SVG imports with white inner content on a player-colour outer shape.
+              The data model (<code>DeploymentCardData</code>, <code>DeploymentPoint</code>,
+              measurement annotations) is fully typed and ready; the form UI is the next chunk.
             </p>
           </div>
 
@@ -2389,6 +2472,18 @@
                 new entries
               </li>
             </ul>
+            <h3>Deployment Card Editor — <code>/deployment</code></h3>
+            <ul>
+              <li><strong>Landscape layout</strong> — 915×574px card (portrait dimensions rotated); sidebar 360px; scale formula <code>min((viewportWidth − 360) / 915, (viewportHeight − 64) / 574, 1)</code> constrains both axes; mobile tab bar identical to other editors</li>
+              <li><strong>Battlefield rectangle</strong> — parchment-coloured (<code>#d9b8a8</code>) rect inset 100px left/right, 60px top/bottom; dashed centre lines (8px dash / 6px gap) divide it into 4 quadrants; card name renders faintly at centre of battlefield</li>
+              <li><strong>SVG-based card</strong> — <code>DeploymentCard.svelte</code> renders an inline <code>&lt;svg width="915" height="574"&gt;</code> directly; parchment texture via CSS <code>background-image</code> on the wrapper <code>.card</code> div (same as other cards)</li>
+              <li><strong>17 snap positions</strong> — 9 inside (3×3 grid: TL TC TR / ML CC MR / BL BC BR) + 8 outside (OUT-TL/TC/TR, OUT-LC, OUT-RC, OUT-BL/BC/BR); each maps to an (x, y) coordinate on the SVG canvas</li>
+              <li><strong>Deployment icon types</strong> — dagger (downward triangle ▽), hammer (diamond ◇), shield (circle ⊙); outer shapes drawn as SVG polygon/circle with <code>fill="currentColor"</code>; inner icon imported via <code>?raw</code> from <code>deployment-dagger.svg</code> / <code>deployment-hammer.svg</code> / <code>deployment-shield.svg</code> and embedded as white content in a nested <code>&lt;svg&gt;</code></li>
+              <li><strong>Player colours</strong> — 2-player for now: red <code>#c0272d</code>, blue <code>#1a3a6e</code>; set via <code>style="color: {color}"</code> on <code>&lt;use&gt;</code>, picked up by <code>fill="currentColor"</code> on outer shapes</li>
+              <li><strong>RND labels</strong> — positioned adjacent to icon in the "outward" direction from the rectangle (above for top positions, below for bottom, left/right for side); colour matches player colour (or black in printer-friendly mode)</li>
+              <li><strong>Data model fully typed</strong> — <code>DeploymentCardData</code>, <code>DeploymentPoint</code>, <code>DeploymentMeasurement</code>, <code>DeploymentPosition</code>, <code>DeploymentIconType</code>, <code>DeploymentColor</code>, <code>DeploymentCapType</code>, <code>DeploymentDirection</code> all in <code>src/lib/types.ts</code></li>
+              <li><strong>Measurement model defined</strong> — each point supports 0–2 <code>DeploymentMeasurement</code> entries: <code>direction</code> (up/down/left/right), <code>label</code> (e.g. <code>8"</code>), <code>startCap</code> + <code>endCap</code> (<code>'arrow' | 'tick' | 'none'</code>); rendering not yet implemented</li>
+            </ul>
           </section>
 
           <section id="march-23-decisions" data-nav="Key Decisions">
@@ -2493,6 +2588,22 @@
                 at source is simpler and correct in any rendering context.
               </div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why SVG (not CSS/HTML) for the deployment card?</div>
+              <div class="decision-a">The card content is fundamentally a 2D diagram: a rectangle, dashed lines, icons at arbitrary coordinates, and annotation lines with arrows. SVG is the right tool — coordinate-based placement is natural, and all elements (shapes, icons, text) compose cleanly without fighting CSS layout. The other card editors use CSS/HTML because their content is largely text-flow + image; deployment cards are diagram-first.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why 17 snap positions (3×3 inside + 8 outside) rather than free-form placement?</div>
+              <div class="decision-a">Analysing 13 example deployment cards, all icons landed at one of these 17 logical positions — quadrant centres, edge midpoints, centre, and outer-margin slots. Free-form placement would require drag-to-position UI which is complex and fiddly on desktop + mobile. Snap positions cover every real-world card in the examples and keep the form UI simple (a position picker, not a coordinate editor).</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why import deployment SVGs via <code>?raw</code> and embed as white inner content, rather than using the existing weapon SVGs or drawing from scratch?</div>
+              <div class="decision-a">Three deployment-specific SVGs already existed in the runemark library (<code>deployment-dagger.svg</code>, <code>deployment-hammer.svg</code>, <code>deployment-shield.svg</code>). Using them via <code>?raw</code>, stripping the outer <code>&lt;svg&gt;</code> wrapper, and replacing all <code>fill</code> attributes with <code>fill="white"</code> gives authentic Warcry icons inside the coloured shapes with zero path-drawing effort. A nested <code>&lt;svg&gt;</code> with its own <code>viewBox</code> handles scaling cleanly.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Measurement lines: arrows or tick marks at each end?</div>
+              <div class="decision-a">Both are needed — real Warcry deployment cards use both double-headed arrows (↔) and bracket-style tick marks at edges (|——|). The data model stores <code>startCap</code> and <code>endCap</code> independently (<code>'arrow' | 'tick' | 'none'</code>) so both styles are supported. Rendering is deferred to the next session.</div>
+            </div>
           </section>
 
           <section id="march-23-pending" data-nav="Still Pending">
@@ -2516,8 +2627,24 @@
                     Verify <code>color: var(--card-text-color)</code> and
                     <code>fill: var(--card-text-color)</code> resolve correctly
                     in dom-to-image-more PNG exports for all three colour
-                    options
+                    options (card back)
                   </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Deployment card form: snap position picker, icon type selector, player colour, RND field — add/remove points UI in <code>DeploymentForm.svelte</code></td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Next</span></td>
+                  <td>Measurement line rendering in <code>DeploymentCard.svelte</code>: arrow / tick-mark line from icon toward reference edge, with distance label at midpoint</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Later</span></td>
+                  <td>4-player support (yellow + green colours) — currently 2-player only</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Later</span></td>
+                  <td>Optional quadrant colour fills (some official cards shade player zones)</td>
                 </tr>
               </tbody>
             </table>
@@ -2540,105 +2667,71 @@
               <tbody>
                 <tr>
                   <td><code>src/lib/types.ts</code></td>
-                  <td>
-                    Added <code>CardBackData</code> interface; added 5 new
-                    fields to <code>LocaleData</code>
-                  </td>
+                  <td>Added <code>CardBackData</code> interface; added 5 new fields to <code>LocaleData</code>; added <code>DeploymentCardData</code>, <code>DeploymentPoint</code>, <code>DeploymentMeasurement</code> interfaces + deployment type aliases</td>
                 </tr>
                 <tr>
                   <td><code>src/routes/card-back/+page.svelte</code></td>
-                  <td>
-                    New file — full card back editor; 5 new runemark categories
-                    wired into picker and SVG map
-                  </td>
+                  <td>New file — full card back editor; 5 new runemark categories wired into picker and SVG map</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/runemarks/index.ts</code></td>
-                  <td>
-                    5 new import groups + exported Records for Card Decks,
-                    Deployment, Misc, Treasure, Twists
-                  </td>
+                  <td>5 new import groups + exported Records for Card Decks, Deployment, Misc, Treasure, Twists</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/runemarks/svg/</code></td>
-                  <td>
-                    28 new SVG files added; <code>fill="#000"</code> stripped
-                    from <code>card-decks-scales-of-talaxis.svg</code> and
-                    <code>deployment-shield.svg</code>
-                  </td>
+                  <td>28 new SVG files added; <code>fill="#000"</code> stripped from <code>card-decks-scales-of-talaxis.svg</code> and <code>deployment-shield.svg</code></td>
                 </tr>
                 <tr>
                   <td><code>src/lib/i18n/locales/en.json</code></td>
-                  <td>
-                    Card back keys added; 5 new namespaces + group labels in
-                    <code>ui</code>
-                  </td>
+                  <td>Card back keys added; 5 new namespaces + group labels in <code>ui</code></td>
                 </tr>
                 <tr>
                   <td><code>src/lib/i18n/locales/de.json</code></td>
-                  <td>
-                    Same; stray ASCII <code>"</code> inside typographic-quote
-                    string fixed
-                  </td>
+                  <td>Same; stray ASCII <code>"</code> inside typographic-quote string fixed</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/i18n/README.md</code></td>
-                  <td>
-                    Namespace table extended with 5 new card-back-only
-                    namespaces
-                  </td>
+                  <td>Namespace table extended with 5 new card-back-only namespaces</td>
                 </tr>
                 <tr>
                   <td><code>src/lib/components/FighterForm.svelte</code></td>
-                  <td>
-                    Hardcoded "Adjust image position…" →
-                    <code>t('ui.adjust-image-hint-mobile')</code>
-                  </td>
+                  <td>Hardcoded "Adjust image position…" → <code>t('ui.adjust-image-hint-mobile')</code></td>
                 </tr>
                 <tr>
                   <td><code>README.md</code></td>
-                  <td>
-                    Card back editor described; "Both editors" → "All three
-                    editors"
-                  </td>
+                  <td>Card back editor described; "Both editors" → "All three editors"</td>
                 </tr>
                 <tr>
                   <td><code>CLAUDE.md</code></td>
-                  <td>
-                    Routes, project description, and Card structure section
-                    updated for card back
-                  </td>
+                  <td>Routes, project description, and Card structure section updated for card back</td>
                 </tr>
                 <tr>
                   <td><code>.github/ISSUE_TEMPLATE/new_language.md</code></td>
-                  <td>
-                    Relative link → absolute GitHub URL (relative resolved
-                    without repo name on issue creation page)
-                  </td>
+                  <td>Relative link → absolute GitHub URL (relative resolved without repo name on issue creation page)</td>
                 </tr>
                 <tr>
                   <td><code>vite.config.ts</code></td>
-                  <td>
-                    Added <code>define: { __BUILD_DATE__ }</code> — injects
-                    build date at compile time
-                  </td>
+                  <td>Added <code>define: { __BUILD_DATE__ }</code> — injects build date at compile time</td>
                 </tr>
                 <tr>
                   <td><code>src/app.d.ts</code></td>
-                  <td>
-                    Added
-                    <code>declare const __BUILD_DATE__: string</code> ambient
-                    declaration
-                  </td>
+                  <td>Added <code>declare const __BUILD_DATE__: string</code> ambient declaration</td>
                 </tr>
                 <tr>
                   <td><code>src/routes/+page.svelte</code></td>
-                  <td>
-                    Replaced hardcoded <code>LAST_UPDATED</code> constant with
-                    <code>__BUILD_DATE__</code>; Card Back button restyled to
-                    secondary (zinc-700) to de-emphasise relative to primary red
-                    buttons
-                  </td>
+                  <td>Replaced hardcoded <code>LAST_UPDATED</code> constant with <code>__BUILD_DATE__</code>; Card Back button restyled to secondary (zinc-700); Deployment Card button added</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/DeploymentCard.svelte</code></td>
+                  <td>New file — 915×574px SVG card; battlefield rect + dashed centre lines; 17 snap-position coordinate map; dagger/hammer/shield symbols using <code>?raw</code> deployment SVG inner content</td>
+                </tr>
+                <tr>
+                  <td><code>src/lib/components/DeploymentForm.svelte</code></td>
+                  <td>New file — name field only (form UI for deployment points deferred to next session)</td>
+                </tr>
+                <tr>
+                  <td><code>src/routes/deployment/+page.svelte</code></td>
+                  <td>Replaced placeholder "Coming soon" with full editor page: 360px sidebar, landscape scale formula, export dropdown, mobile tab bar</td>
                 </tr>
               </tbody>
             </table>
@@ -7544,6 +7637,7 @@
 
     <script>
       const sessions = [
+        "march-25",
         "march-24",
         "march-23",
         "march-22",

@@ -55,6 +55,61 @@ export interface CardBackData {
 	showFlippedName: boolean;
 }
 
+export type DeploymentIconType = 'dagger' | 'shield' | 'hammer';
+export type DeploymentColor = 'red' | 'blue' | 'green' | 'yellow';
+export type DeploymentCapType = 'arrow' | 'tick' | 'dot' | 'none';
+export type DeploymentDirection = 'up' | 'down' | 'left' | 'right' | 'up-right' | 'up-left' | 'down-right' | 'down-left';
+export type ZonePreset =
+	| 'top-half' | 'bottom-half'
+	| 'left-half' | 'right-half'
+	| 'tl-quarter' | 'tr-quarter' | 'bl-quarter' | 'br-quarter';
+
+// Inside: TL TC TR ML CC MR BL BC BR
+// Outside top/bottom edge: OUT-TL OUT-TC OUT-TR / OUT-BL OUT-BC OUT-BR
+// Outside left/right edge: OUT-LT OUT-LC OUT-LB / OUT-RT OUT-RC OUT-RB
+// Outside corners: OUT-CNR-TL OUT-CNR-TR OUT-CNR-BL OUT-CNR-BR
+export type DeploymentPosition =
+	| 'TL' | 'TC' | 'TR'
+	| 'ML' | 'CC' | 'MR'
+	| 'BL' | 'BC' | 'BR'
+	| 'OUT-TL'  | 'OUT-TC'  | 'OUT-TR'
+	| 'OUT-LT'  | 'OUT-LC'  | 'OUT-LB'
+	| 'OUT-RT'  | 'OUT-RC'  | 'OUT-RB'
+	| 'OUT-BL'  | 'OUT-BC'  | 'OUT-BR'
+	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR';
+
+export interface DeploymentZone {
+	preset: ZonePreset;
+}
+
+export interface DeploymentMeasurement {
+	anchorCol: number;   // 0–4, snap grid column
+	anchorRow: number;   // 0–4, snap grid row
+	direction: DeploymentDirection;
+	label: string;       // e.g. '8"'
+	length: number;      // arm length in SVG units
+	startCap: DeploymentCapType;
+	endCap: DeploymentCapType;
+}
+
+export interface DeploymentPoint {
+	position: DeploymentPosition;
+	icon: DeploymentIconType;
+	rnd: string;         // e.g. 'RND2'
+}
+
+export interface DeploymentPlayer {
+	color: DeploymentColor;
+	zones: DeploymentZone[];
+	points: DeploymentPoint[];
+}
+
+export interface DeploymentCardData {
+	name: string;
+	players: DeploymentPlayer[];
+	measurements: DeploymentMeasurement[];
+}
+
 export type ActivationType = 'double' | 'triple' | 'quad' | null;
 
 export interface TextCardData {
