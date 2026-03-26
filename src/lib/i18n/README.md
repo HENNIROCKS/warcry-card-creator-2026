@@ -22,7 +22,7 @@
 | `factions` | Faction display names. |
 | `subfactions` | Subfaction / warband display names. |
 | `card-decks` | Card deck type names (Deployment, Terrain, Twist, Victory…). Card back only. |
-| `deployment` | Deployment marker names (Dagger, Hammer, Shield). Card back only. |
+| `deployment` | Deployment card UI — marker icon names (Dagger, Hammer, Shield), zone preset names, cap type names. |
 | `misc` | Miscellaneous icon names (Active, Circle, Wait). Card back only. |
 | `treasure` | Treasure token names (Creature, Orrery, Skull…). Card back only. |
 | `twists` | Twist card category names (Climate, Fate, Wild Creatures…). Card back only. |
