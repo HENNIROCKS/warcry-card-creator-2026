@@ -7,6 +7,7 @@
 	let {
 		data,
 		printerFriendly = false,
+		showRunemarks = true,
 		snapGridActive = false,
 		showPositionDots = false,
 		measurementAnchor = undefined,
@@ -17,6 +18,7 @@
 	}: {
 		data: DeploymentCardData;
 		printerFriendly?: boolean;
+		showRunemarks?: boolean;
 		snapGridActive?: boolean;
 		showPositionDots?: boolean;
 		measurementAnchor?: { col: number; row: number };
@@ -331,22 +333,33 @@
 				<!-- Bubble background -->
 				<rect x="0" y="0" width={BW} height={BH} rx={BRAD} fill={color}/>
 
-				<!-- Icon (white inner content only, no outer shape) -->
-				<svg
-					x={BPAD} y={(BH - ICON_SZ) / 2}
-					width={ICON_SZ} height={ICON_SZ}
-					viewBox={iconViewBox[point.icon]}
-					fill="white"
-					overflow="visible"
-				>
-					{#if point.icon === 'dagger'}
-						{@html daggerInner}
-					{:else if point.icon === 'hammer'}
-						{@html hammerInner}
-					{:else}
-						{@html shieldInner}
-					{/if}
-				</svg>
+				<!-- Icon: runemark SVG or fallback letter -->
+				{#if showRunemarks}
+					<svg
+						x={BPAD} y={(BH - ICON_SZ) / 2}
+						width={ICON_SZ} height={ICON_SZ}
+						viewBox={iconViewBox[point.icon]}
+						fill="white"
+						overflow="visible"
+					>
+						{#if point.icon === 'dagger'}
+							{@html daggerInner}
+						{:else if point.icon === 'hammer'}
+							{@html hammerInner}
+						{:else}
+							{@html shieldInner}
+						{/if}
+					</svg>
+				{:else}
+					<text
+						x={BPAD + ICON_SZ / 2}
+						y={BH / 2 + 8}
+						text-anchor="middle"
+						font-family="'Germania One', serif"
+						font-size="24"
+						fill="white"
+					>{point.icon.charAt(0).toUpperCase()}</text>
+				{/if}
 
 				<!-- RND label -->
 				{#if hasRnd}

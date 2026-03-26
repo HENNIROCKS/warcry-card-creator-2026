@@ -590,7 +590,7 @@
 			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 			<img
 				src={exportedImageUrl}
-				alt="Exported card"
+				alt={t('ui.exported-card-alt')}
 				class="w-full h-auto self-start rounded shadow-xl"
 				style="max-width: 400px;"
 				onclick={(e) => e.stopPropagation()}

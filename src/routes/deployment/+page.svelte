@@ -12,7 +12,6 @@
 		DeploymentDirection,
 		DeploymentIconType,
 		DeploymentPosition,
-		ZonePreset,
 	} from '$lib/types';
 
 	type PopoverMode =
@@ -30,14 +29,29 @@
 	let printerFriendly = $state(false);
 	let showDropdown = $state(false);
 	let showJsonDropdown = $state(false);
+	let jsonDropdownLeft = $state(0);
+	let jsonBtnEl: HTMLElement;
+	let showViewDropdown = $state(false);
+	let viewDropdownLeft = $state(0);
+	let viewBtnEl: HTMLElement;
 	let showDots = $state(true);
+	let showRunemarks = $state(true);
 	let snapGridActive = $state(false);
 	let activePlayerIndex = $state(0);
-	let activeIcon = $state<DeploymentIconType>('dagger');
 	let measurementAnchor = $state<{ col: number; row: number } | undefined>(undefined);
 	let popover = $state<{ mode: PopoverMode; x: number; y: number } | null>(null);
 	let popoverIcon = $state<DeploymentIconType>('dagger');
 	let popoverRnd = $state('');
+	let popoverEl = $state<HTMLElement | undefined>(undefined);
+
+	$effect(() => {
+		if (!popover || !popoverEl) return;
+		const rect = popoverEl.getBoundingClientRect();
+		const overflow = rect.bottom - (viewportHeight - 8);
+		if (overflow > 0) {
+			popoverEl.style.top = `${Math.max(8, popover.y - overflow)}px`;
+		}
+	});
 
 	// Pinch-zoom state
 	let userScale = $state(1);
@@ -103,8 +117,15 @@
 		return () => { clearTimeout(id); document.removeEventListener('click', close); };
 	});
 
-	// Header ~52px, 16px padding top + bottom
-	const HEADER_H = 52;
+	$effect(() => {
+		if (!showViewDropdown) return;
+		const close = () => { showViewDropdown = false; };
+		const id = setTimeout(() => document.addEventListener('click', close), 0);
+		return () => { clearTimeout(id); document.removeEventListener('click', close); };
+	});
+
+	// Header 61px: py-3 (12) + h-9 (36) + py-3 (12) + border-b (1)
+	const HEADER_H = 61;
 	const cardScale = $derived(
 		Math.min(
 			1,
@@ -127,10 +148,6 @@
 	};
 	const COLOR_ORDER: DeploymentColor[] = ['red', 'blue', 'green', 'yellow'];
 	const ICONS: DeploymentIconType[] = ['dagger', 'hammer', 'shield'];
-	const ZONE_PRESETS: ZonePreset[] = [
-		'top-half', 'bottom-half', 'left-half', 'right-half',
-		'tl-quarter', 'tr-quarter', 'bl-quarter', 'br-quarter',
-	];
 	function nextColor(): DeploymentColor {
 		const used = new Set(data.players.map(p => p.color));
 		return COLOR_ORDER.find(c => !used.has(c)) ?? 'red';
@@ -168,7 +185,7 @@
 		if (found) {
 			popover = { mode: { kind: 'occupied', pos, ...found }, x: clientX, y: clientY };
 		} else {
-			popoverIcon = activeIcon;
+			popoverIcon = 'dagger';
 			popoverRnd = '';
 			popover = { mode: { kind: 'empty', pos }, x: clientX, y: clientY };
 		}
@@ -334,7 +351,7 @@
 	let fileInput: HTMLInputElement;
 
 	function loadLayout() {
-		showDropdown = false;
+		showJsonDropdown = false;
 		fileInput.click();
 	}
 
@@ -356,21 +373,21 @@
 	<div class="wip-watermark" aria-hidden="true"></div>
 
 	<!-- Header toolbar — single scrollable row; dropdowns use position:fixed to escape overflow clipping -->
-	<header class="flex items-center gap-3 border-b border-zinc-800 shrink-0 overflow-x-auto px-3 py-2">
+	<header class="flex items-center gap-3 border-b border-zinc-800 shrink-0 overflow-x-auto px-4 py-3">
 
-		<a href="{base}/" class="flex items-center h-7 px-2 rounded text-xs font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition shrink-0">{t('ui.back')}</a>
+		<a href="{base}/" class="flex items-center h-9 px-3 rounded text-sm font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition shrink-0">{t('ui.back')}</a>
 
-		<div class="w-px h-5 bg-zinc-700 shrink-0"></div>
+		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
 		<!-- Card name (grows to fill available space) -->
 		<input
 			type="text"
 			bind:value={data.name}
 			placeholder={t('ui.form-placeholder-deployment')}
-			class="h-7 flex-1 min-w-32 rounded bg-zinc-800 border border-zinc-700 px-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-700"
+			class="h-9 flex-1 min-w-32 rounded bg-zinc-800 border border-zinc-700 px-3 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-700"
 		/>
 
-		<div class="w-px h-5 bg-zinc-700 shrink-0"></div>
+		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
 		<!-- Players: click circle to make active, button removes the active player -->
 		<div class="flex items-center gap-2 shrink-0">
@@ -379,97 +396,125 @@
 				<button
 					onclick={() => activePlayerIndex = pi}
 					style="background: {col}; outline-color: {pi === activePlayerIndex ? col : 'transparent'}"
-					class="w-7 h-7 rounded-full outline outline-2 outline-offset-1 transition-[outline-color]"
+					class="w-9 h-9 rounded-full outline outline-2 outline-offset-2 transition-[outline-color]"
 					title={t('ui.select-player-title', { color: t('ui.color-' + player.color) })}
 				></button>
 			{/each}
 			{#if data.players.length > 0}
 				<button
 					onclick={() => removePlayer(activePlayerIndex)}
-					class="h-7 rounded px-2 text-xs font-semibold text-zinc-300 bg-zinc-800 hover:bg-red-900 hover:text-red-300 transition"
+					class="h-9 rounded px-3 text-sm font-semibold text-zinc-300 bg-zinc-800 hover:bg-red-900 hover:text-red-300 transition"
 					title={t('ui.remove-player-title')}
 				>✕ {t('ui.color-' + data.players[activePlayerIndex]?.color)}</button>
 			{/if}
 		</div>
 
-		<div class="w-px h-5 bg-zinc-700 shrink-0"></div>
+		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
-		<!-- Overlays toggle (position dots + measurement handles) -->
-		<label class="flex items-center gap-2 cursor-pointer select-none shrink-0">
-			<span class="text-xs font-semibold text-zinc-300">{t('ui.overlays')}</span>
+		<!-- View dropdown — Overlays + Show Runemarks toggles -->
+		<div class="relative shrink-0" bind:this={viewBtnEl}>
 			<button
-				role="switch"
-				aria-checked={showDots}
-				onclick={() => showDots = !showDots}
-				class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors {showDots ? 'bg-red-700' : 'bg-zinc-600'}"
-				title={showDots ? t('ui.overlays-on-title') : t('ui.overlays-off-title')}
+				onclick={() => { showDropdown = false; showJsonDropdown = false; if (!showViewDropdown) viewDropdownLeft = viewBtnEl.getBoundingClientRect().left; showViewDropdown = !showViewDropdown; }}
+				class="flex items-center gap-1.5 h-9 px-3 rounded text-sm font-semibold text-zinc-300 bg-zinc-800 hover:bg-zinc-700 hover:text-white transition"
 			>
-				<span class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform {showDots ? 'translate-x-[18px]' : 'translate-x-[3px]'}"></span>
+				{t('ui.view')}
+				<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
 			</button>
-		</label>
+			{#if showViewDropdown}
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div
+					class="fixed z-30 rounded-md bg-zinc-800 border border-zinc-700 shadow-lg p-3 flex flex-col gap-3"
+					style="top: 52px; left: {viewDropdownLeft}px; min-width: 13rem;"
+					onclick={(e) => e.stopPropagation()}
+				>
+					<label class="flex items-center justify-between gap-6 cursor-pointer select-none">
+						<span class="text-sm font-semibold text-zinc-300">{t('ui.overlays')}</span>
+						<button
+							role="switch"
+							aria-checked={showDots}
+							onclick={() => showDots = !showDots}
+							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showDots ? 'bg-red-700' : 'bg-zinc-600'}"
+						>
+							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showDots ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
+						</button>
+					</label>
+					<label class="flex items-center justify-between gap-6 cursor-pointer select-none">
+						<span class="text-sm font-semibold text-zinc-300">{t('ui.form-show-runemarks')}</span>
+						<button
+							role="switch"
+							aria-checked={showRunemarks}
+							onclick={() => showRunemarks = !showRunemarks}
+							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showRunemarks ? 'bg-red-700' : 'bg-zinc-600'}"
+						>
+							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showRunemarks ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
+						</button>
+					</label>
+				</div>
+			{/if}
+		</div>
 
-		<div class="w-px h-5 bg-zinc-700 shrink-0"></div>
+		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
 		<!-- Add measurement -->
 		<button
 			onclick={() => snapGridActive = true}
-			class="h-7 rounded px-2 text-xs font-semibold text-zinc-300 bg-zinc-800 hover:bg-zinc-700 hover:text-white transition shrink-0"
+			class="h-9 rounded px-3 text-sm font-semibold text-zinc-300 bg-zinc-800 hover:bg-zinc-700 hover:text-white transition shrink-0"
 		>{t('ui.form-add-measurement')}</button>
 
-		<div class="w-px h-5 bg-zinc-700 shrink-0"></div>
+		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
 		<!-- Save / Load JSON — dropdown uses position:fixed to escape overflow-x-auto clipping -->
-		<div class="relative shrink-0">
-			<div class="flex h-7 rounded-md overflow-hidden">
+		<div class="relative shrink-0" bind:this={jsonBtnEl}>
+			<div class="flex h-9 rounded-md overflow-hidden">
 				<button
 					onclick={saveLayout}
-					class="flex items-center px-3 text-xs font-semibold bg-zinc-700 text-zinc-200 hover:bg-zinc-600 transition"
+					class="flex items-center px-3 text-sm font-semibold bg-zinc-700 text-zinc-200 hover:bg-zinc-600 transition"
 				>{t('ui.save-json')}</button>
 				<button
-					onclick={() => showJsonDropdown = !showJsonDropdown}
-					class="flex items-center px-1.5 bg-zinc-700 border-l border-zinc-600 text-zinc-200 hover:bg-zinc-600 transition"
+					onclick={() => { showDropdown = false; showViewDropdown = false; if (!showJsonDropdown) jsonDropdownLeft = jsonBtnEl.getBoundingClientRect().left; showJsonDropdown = !showJsonDropdown; }}
+					class="flex items-center px-2 bg-zinc-700 border-l border-zinc-600 text-zinc-200 hover:bg-zinc-600 transition"
 					aria-label={t('ui.more-json-options')}
 				>
-					<svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+					<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
 				</button>
 			</div>
 			{#if showJsonDropdown}
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div
-					class="fixed right-3 z-30 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg overflow-hidden"
-					style="top: 45px"
+					class="fixed z-30 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg overflow-hidden"
+					style="top: 52px; left: {jsonDropdownLeft}px"
 					onmouseleave={() => showJsonDropdown = false}
 				>
-					<button onclick={loadLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.load-json')}</button>
+					<button onclick={loadLayout} class="w-full text-left px-4 py-2.5 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.load-json')}</button>
 				</div>
 			{/if}
 		</div>
 
 		<!-- Export PNG — dropdown uses position:fixed to escape overflow-x-auto clipping -->
 		<div class="relative shrink-0">
-			<div class="flex h-7 rounded-md overflow-hidden">
+			<div class="flex h-9 rounded-md overflow-hidden">
 				<button
 					onclick={exportCard}
 					disabled={exporting}
-					class="flex items-center px-3 text-xs font-semibold bg-red-800 text-white hover:bg-red-700 disabled:opacity-50 transition"
+					class="flex items-center px-3 text-sm font-semibold bg-red-800 text-white hover:bg-red-700 disabled:opacity-50 transition"
 				>{exporting ? t('ui.exporting') : t('ui.export-png')}</button>
 				<button
-					onclick={() => showDropdown = !showDropdown}
+					onclick={() => { showJsonDropdown = false; showViewDropdown = false; showDropdown = !showDropdown; }}
 					disabled={exporting}
-					class="flex items-center px-1.5 bg-red-800 border-l border-red-900 text-white hover:bg-red-700 disabled:opacity-50 transition"
+					class="flex items-center px-2 bg-red-800 border-l border-red-900 text-white hover:bg-red-700 disabled:opacity-50 transition"
 					aria-label={t('ui.more-export-options')}
 				>
-					<svg class="w-3 h-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+					<svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
 				</button>
 			</div>
 			{#if showDropdown}
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div
-					class="fixed right-3 z-30 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg overflow-hidden"
-					style="top: 45px"
+					class="fixed right-4 z-30 min-w-max rounded-md bg-zinc-800 border border-zinc-700 shadow-lg overflow-hidden"
+					style="top: 52px"
 					onmouseleave={() => showDropdown = false}
 				>
-					<button onclick={exportPrinterFriendly} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.export-printer-friendly')}</button>
+					<button onclick={exportPrinterFriendly} class="w-full text-left px-4 py-2.5 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.export-printer-friendly')}</button>
 				</div>
 			{/if}
 		</div>
@@ -502,6 +547,7 @@
 					{data}
 					{printerFriendly}
 					{snapGridActive}
+					{showRunemarks}
 					showPositionDots={showDots && !exporting}
 					measurementAnchor={exporting ? undefined : measurementAnchor}
 					onSnapPointClick={handleSnapPointClick}
@@ -524,7 +570,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="fixed inset-0 z-40" onclick={closePopover}></div>
 
-	<div class="popover fixed z-50 w-56 rounded-xl bg-zinc-800 border border-zinc-700 shadow-2xl p-3 flex flex-col gap-3" style={clampedStyle(popover.x, popover.y)}>
+	<div bind:this={popoverEl} class="popover fixed z-50 w-56 rounded-xl bg-zinc-800 border border-zinc-700 shadow-2xl p-3 flex flex-col gap-3 overflow-y-auto" style="{clampedStyle(popover.x, popover.y)} max-height: calc(100dvh - 16px);">
 
 		<!-- Empty dot -->
 		{#if popover.mode.kind === 'empty'}
@@ -690,7 +736,7 @@
 			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 			<img
 				src={exportedImageUrl}
-				alt="Exported card"
+				alt={t('ui.exported-card-alt')}
 				class="w-full h-auto self-start rounded shadow-xl"
 				style="max-width: 600px;"
 				onclick={(e) => e.stopPropagation()}
@@ -721,11 +767,11 @@
 		width: 100%;
 		box-sizing: border-box;
 		appearance: none;
-		background: #27272a;
-		border: 1px solid #3f3f46;
+		background: var(--ui-surface);
+		border: 1px solid var(--ui-border);
 		border-radius: 6px;
 		padding: 5px 8px;
-		color: #fff;
+		color: var(--ui-text);
 		font-size: 0.85rem;
 		outline: none;
 	}
@@ -745,13 +791,13 @@
 		justify-content: center;
 		font-size: 1rem;
 		border-radius: 5px;
-		background: #3f3f46;
-		color: #d4d4d8;
+		background: var(--ui-surface-2);
+		color: var(--ui-text-dim);
 		cursor: pointer;
 		transition: background 0.1s;
 	}
 
-	.dir-cell:hover { background: #52525b; }
+	.dir-cell:hover { background: var(--ui-surface-hover); }
 
 	.dir-cell--active {
 		background: #991b1b;
