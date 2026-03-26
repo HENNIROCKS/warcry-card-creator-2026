@@ -124,6 +124,7 @@ import oCosThePhoesnicium    from './svg/factions-order-cities-of-sigmar-the-pho
 
 // ── Order factions ────────────────────────────────────────────────────────────
 import oCitiesOfSigmar            from './svg/factions-order-cities-of-sigmar.svg?raw';
+import oCitiesOfSigmarAlt         from './svg/factions-order-cities-of-sigmar-alternative.svg?raw';
 import oDaughtersOfKhaine         from './svg/factions-order-daughters-of-khaine.svg?raw';
 import oFyreslayers               from './svg/factions-order-fyreslayers.svg?raw';
 import oHuntersOfHuanchi          from './svg/factions-order-hunters-of-huanchi.svg?raw';
@@ -439,6 +440,7 @@ export const hierarchy: AllianceEntry[] = [
 					{ id: 'brethren-of-the-bolt', label: 'Brethren of the Bolt', svg: oBbBrethrenOfTheBolt },
 				],
 			},
+			{ id: 'cities-of-sigmar-alternative',        label: 'Cities of Sigmar (Alternative)',        svg: oCitiesOfSigmarAlt,    subfactions: [] },
 			{ id: 'cities-of-sigmar-anvilgard',          label: 'Cities of Sigmar: Anvilgard',          svg: oCosAnvilgard,         subfactions: [] },
 			{ id: 'cities-of-sigmar-castelite-hosts',    label: 'Cities of Sigmar: Castelite Hosts',    svg: oCosCasteliteHosts,    subfactions: [] },
 			{ id: 'cities-of-sigmar-darkling-covens',    label: 'Cities of Sigmar: Darkling Covens',    svg: oCosDarklingCovens,    subfactions: [] },
