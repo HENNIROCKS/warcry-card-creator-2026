@@ -1969,9 +1969,9 @@
               <span class="badge badge-blue">2026-03-26</span>
               <span class="badge badge-green">Two-point measurement lines</span>
               <span class="badge badge-green">5×5 snap position grid</span>
-              <span class="badge badge-green">View dropdown &amp; UX polish</span>
+              <span class="badge badge-green">Deployment point shapes</span>
             </div>
-            <h1>Deployment Card — Measurements, Snap Grid &amp; UX Polish</h1>
+            <h1>Deployment Card — Measurements, Snap Grid &amp; Shapes</h1>
             <p>
               Full two-point measurement line system: tap a position to start, tap another to place
               the line; start/end cap picker (dot/arrow/tick/none) and label field in popover; lines
@@ -1982,6 +1982,7 @@
               Separately: header enlarged; View dropdown added with Show Runemarks toggle; all three
               dropdowns made mutually exclusive; popovers clamped to viewport; i18n and CSS var
               cleanup; CSS variable column alignment normalised in <code>app.css</code>.
+              Later in the session: speech bubbles replaced with geometric shapes (triangle/diamond/circle), optical sizing tuned iteratively, fill inheritance refactored, yellow colour updated, printer-friendly badges repositioned.
             </p>
           </div>
 
@@ -2032,8 +2033,19 @@
               <li><strong>New grid</strong>: 25 inside (<code>R1C1–R5C5</code>) + 20 outside edges (<code>OUT-T/B/L/R 1–5</code>) + 4 corners = <strong>49 positions</strong>. <code>R3C3</code> = exact battlefield centre (crosshair). <code>R3</code> row lies on horizontal centre line; <code>C3</code> column on vertical centre line.</li>
               <li><strong>Unified CNR coordinate system</strong>: all positions (inside and outside) derived from corner constants <code>CNR_L=63, CNR_R=852, CNR_T=34, CNR_B=540</code>. Inside: <code>x = CNR_L + c*(CNR_R-CNR_L)/6</code>, <code>y = CNR_T + r*(CNR_B-CNR_T)/6</code>. Outside edge: same formula at the fixed edge coordinate. Corners: literal corner values. This ensures every column aligns vertically and every row aligns horizontally across inside and outside dots.</li>
               <li><strong>Even corner-to-corner distribution</strong>: the 5 outside edge positions per side span from corner to corner in 6 equal steps, so all 7 points per side (2 corners + 5 edge) are equally spaced.</li>
-              <li><strong>Regex-based helpers</strong>: <code>getCoords()</code> and <code>getTailAngle()</code> use <code>.match()</code> and <code>.test()</code> against the systematic naming — no switch statement needed. Tail angles: rows 1–2 → DOWN, rows 4–5 → UP, row 3 (centre) → null (no tail).</li>
+              <li><strong>Regex-based helpers</strong>: <code>getCoords()</code> uses <code>.match()</code> against the systematic naming — no switch statement needed.</li>
               <li><strong>Dead code removed</strong>: redundant <code>ax/ay/ex/ey</code> aliases in measurement rendering (leftover from <code>MEAS_INSET</code> removal) eliminated.</li>
+            </ul>
+            <h3>Deployment Point Shapes</h3>
+            <ul>
+              <li><strong>Speech bubbles replaced</strong> with geometric shapes: triangle (dagger), diamond (hammer), circle (shield). Shapes filled with player colour; white icon via SVG fill inheritance; black icon on yellow or in printer-friendly mode.</li>
+              <li><strong>Uniform vertical extent</strong>: all three shapes span <code>cy ± CIRCLE_R (22px)</code> from the snap point. Circle: <code>r=22</code>. Diamond: half-diagonal=22. Triangle: point-down equilateral with flat top at <code>cy−22</code>, tip at <code>cy+22</code>.</li>
+              <li><strong>Icon fill via inheritance</strong>: <code>innerContent()</code> strips all <code>fill</code> attributes; outer <code>&lt;svg&gt;</code> sets <code>fill={iconColor}</code>. Replaces fragile render-time <code>.replace()</code> approach.</li>
+              <li><strong>Per-icon sizing</strong>: dagger 29px (shifted up to triangle centroid: <code>cy − CIRCLE_R/3 + 2</code>); hammer 28px; shield 32px.</li>
+              <li><strong>Printer-friendly badges</strong> moved from above shape to left-of-shape, vertically centred: <code>x={cx − CIRCLE_R − 4}</code>, <code>text-anchor="end"</code>.</li>
+              <li><strong>RND label</strong> above shape at uniform anchor <code>cy − SHAPE_R − RND_OFF</code>; white with black stroke outline in colour mode, plain black in printer-friendly.</li>
+              <li><strong>Yellow</strong> updated from <code>#ca8a04</code> to <code>#f59e0b</code> (brighter amber); synced across <code>DeploymentCard.svelte</code> and <code>+page.svelte</code>.</li>
+              <li><strong>Removed</strong>: <code>makeTailPoints()</code>, <code>getTailAngle()</code>, <code>bubbleWidth()</code> and all tail/bubble constants (<code>BH</code>, <code>BPAD</code>, <code>BRAD</code>, <code>TAIL_LEN</code>, <code>TAIL_W</code>, <code>GAP</code>, <code>BW_ICON</code>, <code>CHAR_W</code>). Template indentation fixed.</li>
             </ul>
           </section>
 
@@ -2071,6 +2083,18 @@
               <div class="decision-q">Why 5×5 inside grid (not 4×4 or 3×3)?</div>
               <div class="decision-a">4×4 had no position at the battlefield centre — dots fell between rows/columns. 5×5 makes <code>R3C3</code> the exact centre, and puts dots directly on the dashed centre lines (all of row 3 and column 3). The extra granularity (49 positions vs 25) is necessary for precise deployment point placement in real Warcry scenarios.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why geometric shapes instead of speech bubbles?</div>
+              <div class="decision-a">The original Warcry card design uses triangle/diamond/circle as the visual vocabulary for deployment point types. Speech bubbles were a pragmatic first implementation. Shapes are more compact, visually faithful to the reference, and carry type meaning without needing a directional tail.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why equal vertical extent (cy ± CIRCLE_R) for all three shapes?</div>
+              <div class="decision-a">Equal circumradius makes the triangle tip hang much further below centre than the circle/diamond because the centroid splits height 1:2. Equal bounding-box height produces the same problem. Equal vertical extent — all shapes spanning the same top and bottom bounds — was the only approach that made all three look aligned on the card.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why strip fill attributes in innerContent() rather than replacing at render time?</div>
+              <div class="decision-a">The original approach called <code>.replace(/fill="white"/g, …)</code> in the <code>{@html}</code> expression. This silently breaks when an SVG path uses fill inheritance (no explicit attribute). Stripping fills in <code>innerContent()</code> and setting <code>fill={iconColor}</code> on the outer <code>&lt;svg&gt;</code> works via CSS inheritance for any SVG structure and keeps the template readable.</div>
+            </div>
           </section>
 
           <section id="march-26-pending" data-nav="Still Pending">
@@ -2099,8 +2123,8 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored; mutual exclusion; popover clamping; CSS vars; i18n; dead state removed; two-point measurement flow (<code>measurementMode</code>, <code>measurementStart</code>, hint bar); cap picker UI; <code>showDots</code> → <code>showMarkers</code></td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback; 5×5 inside grid; CNR constants; regex-based <code>getCoords</code>/<code>getTailAngle</code>; measurement rendering (two-point, caps, full-line tap target, layer order); dead <code>ax/ay/ex/ey</code> aliases removed</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored; mutual exclusion; popover clamping; CSS vars; i18n; dead state removed; two-point measurement flow (<code>measurementMode</code>, <code>measurementStart</code>, hint bar); cap picker UI; <code>showDots</code> → <code>showMarkers</code>; yellow colour updated to <code>#f59e0b</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback; 5×5 inside grid; CNR constants; regex-based <code>getCoords()</code>; measurement rendering (two-point, caps, full-line tap target, layer order); dead aliases removed. Later: speech bubbles → geometric shapes (triangle/diamond/circle); fill-inheritance icon approach; uniform vertical extent; per-icon sizing; printer-friendly badge repositioned; tail/bubble code removed; indentation fixed</td></tr>
                 <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted; <code>DeploymentDirection</code> removed; <code>DeploymentMeasurement</code> replaced <code>anchorCol/anchorRow/direction/length</code> with <code>startPos/endPos</code>; <code>DeploymentPosition</code> expanded from 25 to 49 positions with systematic naming</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>ui.view</code>, <code>ui.exported-card-alt</code>, <code>ui.measurement-pick-end</code>, <code>ui.measurement-cancel</code>; <code>ui.overlays</code> → "Show Markers"; removed stale measurement direction/length keys; removed 25 stale <code>deployment.pos-*</code> and <code>deployment.dir-*</code> keys (old position names and direction picker)</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same changes in German</td></tr>
