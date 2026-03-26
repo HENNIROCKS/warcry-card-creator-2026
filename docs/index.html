@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-26">
               <span class="session-date">2026-03-26</span>
-              <span class="session-title">Deployment Card — UX Polish &amp; Code Cleanup</span>
+              <span class="session-title">Deployment Card — Shapes, 7×9 Grid &amp; Cleanup</span>
             </button>
           </li>
           <li>
@@ -1967,11 +1967,11 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-26</span>
-              <span class="badge badge-green">Two-point measurement lines</span>
-              <span class="badge badge-green">5×5 snap position grid</span>
               <span class="badge badge-green">Deployment point shapes</span>
+              <span class="badge badge-green">7×9 snap grid (99 positions)</span>
+              <span class="badge badge-green">Template deduplicated</span>
             </div>
-            <h1>Deployment Card — Measurements, Snap Grid &amp; Shapes</h1>
+            <h1>Deployment Card — Shapes, 7×9 Grid &amp; Cleanup</h1>
             <p>
               Full two-point measurement line system: tap a position to start, tap another to place
               the line; start/end cap picker (dot/arrow/tick/none) and label field in popover; lines
@@ -1982,7 +1982,8 @@
               Separately: header enlarged; View dropdown added with Show Runemarks toggle; all three
               dropdowns made mutually exclusive; popovers clamped to viewport; i18n and CSS var
               cleanup; CSS variable column alignment normalised in <code>app.css</code>.
-              Later in the session: speech bubbles replaced with geometric shapes (triangle/diamond/circle), optical sizing tuned iteratively, fill inheritance refactored, yellow colour updated, printer-friendly badges repositioned.
+              Later in session one: speech bubbles replaced with geometric shapes (triangle/diamond/circle), optical sizing tuned iteratively, fill inheritance refactored, yellow colour updated, printer-friendly badges repositioned.
+              In session two: snap grid redesigned to 7×9 inside (63 magenta dots, outermost on BF boundary) + 36 blue outside dots = 99 total, matching the reference card exactly. Outer left/right columns moved 10 px inward. Template triplicate duplication removed (668 → 437 lines).
             </p>
           </div>
 
@@ -2027,7 +2028,7 @@
               <li><strong>Layer order fixed</strong>: measurements render between dashed centre lines and player bubbles in SVG source; position dots render last (on top of everything).</li>
               <li><strong>Wording unified</strong>: "Overlays" → "Show Markers" throughout; state <code>showDots</code> → <code>showMarkers</code>; remove buttons styled as <code>text-xs text-zinc-400 underline hover:text-white</code> to match app-wide pattern.</li>
             </ul>
-            <h3>5×5 Snap Position Grid</h3>
+            <h3>5×5 Snap Position Grid (session one)</h3>
             <ul>
               <li><strong>Old grid removed</strong>: 9 inside (<code>TL/TC/TR/ML/CC/MR/BL/BC/BR</code>) + 12 outside edges + 4 corners = 25 positions.</li>
               <li><strong>New grid</strong>: 25 inside (<code>R1C1–R5C5</code>) + 20 outside edges (<code>OUT-T/B/L/R 1–5</code>) + 4 corners = <strong>49 positions</strong>. <code>R3C3</code> = exact battlefield centre (crosshair). <code>R3</code> row lies on horizontal centre line; <code>C3</code> column on vertical centre line.</li>
@@ -2035,6 +2036,20 @@
               <li><strong>Even corner-to-corner distribution</strong>: the 5 outside edge positions per side span from corner to corner in 6 equal steps, so all 7 points per side (2 corners + 5 edge) are equally spaced.</li>
               <li><strong>Regex-based helpers</strong>: <code>getCoords()</code> uses <code>.match()</code> against the systematic naming — no switch statement needed.</li>
               <li><strong>Dead code removed</strong>: redundant <code>ax/ay/ex/ey</code> aliases in measurement rendering (leftover from <code>MEAS_INSET</code> removal) eliminated.</li>
+            </ul>
+            <h3>7×9 Snap Grid &amp; 99-Position Reference Match (session two)</h3>
+            <ul>
+              <li><strong>Grid redesigned</strong> to match the physical reference card: <strong>63 magenta inside dots</strong> (7 rows × 9 cols, outermost positioned exactly on the BF boundary lines) + <strong>36 blue outside dots</strong> = <strong>99 total</strong>. Previous 5×5 grid was incorrect.</li>
+              <li><strong>Inside formula</strong>: <code>x = BF_L + (c−1)·BF_W/8</code>, <code>y = BF_T + (r−1)·BF_H/6</code>. C1=BF_L, C9=BF_R, R1=BF_T, R7=BF_B. Centre R4C5 = (BF_CX, BF_CY) ✓</li>
+              <li><strong>Outside formula</strong>: T/B use same x as inside columns at CNR_T/CNR_B; L/R use same y as inside rows at CNR_L/CNR_R. 9 T + 9 B + 7 L + 7 R + 4 corners = 36.</li>
+              <li><strong>3 blue dots per corner</strong>: OUT-T1 (above R1C1) + OUT-L1 (left of R1C1) + OUT-CNR-TL (diagonal) form a tight cluster at each corner.</li>
+              <li><strong>Outer left/right columns</strong> moved 10 px inward: <code>CNR_L</code> 63→73, <code>CNR_R</code> 852→842. Brings outside dots visually closer to the battlefield edge.</li>
+              <li><strong>DeploymentPosition type</strong> in <code>types.ts</code> expanded accordingly: <code>R1C1–R7C9</code>, <code>OUT-T1–T9</code>, <code>OUT-B1–B9</code>, <code>OUT-L1–L7</code>, <code>OUT-R1–R7</code>.</li>
+            </ul>
+            <h3>Template Deduplication</h3>
+            <ul>
+              <li><strong>Three copies removed</strong>: dashed centre lines, measurement lines, and deployment shapes were each duplicated three times in the SVG template — a leftover from iterative Python-based editing. Each section now appears exactly once.</li>
+              <li><strong>File reduced</strong> from 668 to 437 lines (−231 lines of pure duplication). Indentation normalised throughout.</li>
             </ul>
             <h3>Deployment Point Shapes</h3>
             <ul>
@@ -2095,6 +2110,18 @@
               <div class="decision-q">Why strip fill attributes in innerContent() rather than replacing at render time?</div>
               <div class="decision-a">The original approach called <code>.replace(/fill="white"/g, …)</code> in the <code>{@html}</code> expression. This silently breaks when an SVG path uses fill inheritance (no explicit attribute). Stripping fills in <code>innerContent()</code> and setting <code>fill={iconColor}</code> on the outer <code>&lt;svg&gt;</code> works via CSS inheritance for any SVG structure and keeps the template readable.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why 7×9 (not 5×7 or 5×5) for the inside grid?</div>
+              <div class="decision-a">Counting dots in the reference card image gave exactly 99. The only structure that sums to 99 is 63 inside (7×9) + 36 outside (9+9+7+7+4). R4C5 lands at (BF_CX, BF_CY) confirming the centre alignment. Earlier analyses guessing 5×5 and 5×7 were both wrong.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why do inside dots use BF_ coordinates while outside dots use CNR_ coordinates?</div>
+              <div class="decision-a">The reference shows outermost inside dots sitting exactly on the battlefield boundary lines, with outside dots sitting just beyond them on a slightly wider rail. Using BF_L/BF_T as the inside grid origin (step BF_W/8, BF_H/6) achieves this. Outside T/B share the same x as inside columns (aligned) but sit at CNR_T/CNR_B — the fixed outer rail, which is 26 px above/below the battlefield edge.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why move CNR_L/CNR_R 10 px inward?</div>
+              <div class="decision-a">The outer left and right columns of dots appeared too far from the battlefield edge compared to the reference. The top/bottom outside rows use T/B CNR constants (unchanged) and looked correct. Moving CNR_L from 63→73 and CNR_R from 852→842 closed the gap on both sides symmetrically.</div>
+            </div>
           </section>
 
           <section id="march-26-pending" data-nav="Still Pending">
@@ -2124,8 +2151,8 @@
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
                 <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored; mutual exclusion; popover clamping; CSS vars; i18n; dead state removed; two-point measurement flow (<code>measurementMode</code>, <code>measurementStart</code>, hint bar); cap picker UI; <code>showDots</code> → <code>showMarkers</code>; yellow colour updated to <code>#f59e0b</code></td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback; 5×5 inside grid; CNR constants; regex-based <code>getCoords()</code>; measurement rendering (two-point, caps, full-line tap target, layer order); dead aliases removed. Later: speech bubbles → geometric shapes (triangle/diamond/circle); fill-inheritance icon approach; uniform vertical extent; per-icon sizing; printer-friendly badge repositioned; tail/bubble code removed; indentation fixed</td></tr>
-                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted; <code>DeploymentDirection</code> removed; <code>DeploymentMeasurement</code> replaced <code>anchorCol/anchorRow/direction/length</code> with <code>startPos/endPos</code>; <code>DeploymentPosition</code> expanded from 25 to 49 positions with systematic naming</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback; 5×5 → 7×9 inside grid; <code>getCoords()</code> rewritten (BF-origin inside, CNR-rail outside); <code>CNR_L</code> 63→73, <code>CNR_R</code> 852→842; measurement rendering (two-point, caps, full-line tap target, layer order); speech bubbles → geometric shapes (triangle/diamond/circle); fill-inheritance icon approach; uniform vertical extent; per-icon sizing; printer-friendly badge repositioned; tail/bubble code removed; triplicate template duplication removed (668→437 lines)</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted; <code>DeploymentDirection</code> removed; <code>DeploymentMeasurement</code> replaced <code>anchorCol/anchorRow/direction/length</code> with <code>startPos/endPos</code>; <code>DeploymentPosition</code> expanded from 25 → 49 → 99 positions; final: <code>R1C1–R7C9</code>, <code>OUT-T1–T9</code>, <code>OUT-B1–B9</code>, <code>OUT-L1–L7</code>, <code>OUT-R1–R7</code>, 4 corners</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>ui.view</code>, <code>ui.exported-card-alt</code>, <code>ui.measurement-pick-end</code>, <code>ui.measurement-cancel</code>; <code>ui.overlays</code> → "Show Markers"; removed stale measurement direction/length keys; removed 25 stale <code>deployment.pos-*</code> and <code>deployment.dir-*</code> keys (old position names and direction picker)</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same changes in German</td></tr>
                 <tr><td><code>README.md</code></td><td>Deployment card description updated: "Overlays switch" → "Show Markers"; 8-way arrow picker flow replaced with two-tap measurement description</td></tr>
