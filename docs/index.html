@@ -1967,20 +1967,21 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-26</span>
-              <span class="badge badge-green">View dropdown &amp; Show Runemarks</span>
-              <span class="badge badge-green">Dropdown fixes &amp; mutual exclusion</span>
-              <span class="badge badge-green">i18n &amp; CSS var cleanup</span>
+              <span class="badge badge-green">Two-point measurement lines</span>
+              <span class="badge badge-green">5×5 snap position grid</span>
+              <span class="badge badge-green">View dropdown &amp; UX polish</span>
             </div>
-            <h1>Deployment Card — UX Polish &amp; Code Cleanup</h1>
+            <h1>Deployment Card — Measurements, Snap Grid &amp; UX Polish</h1>
             <p>
-              Header enlarged for better touch targets; two display toggles collapsed into a View
-              dropdown; Show Runemarks toggle switches deployment bubbles between SVG icons and letter
-              fallback. Load JSON dropdown repositioned to anchor under its own button. All three
-              dropdowns made mutually exclusive. Popovers clamped to viewport with a post-render
-              <code>$effect</code>. Hardcoded strings replaced with <code>t()</code> calls across all
-              four editors; hardcoded colours in popover style block replaced with CSS custom
-              properties. CSS variable column alignment normalised in <code>app.css</code>. Dead
-              state, imports, and constants removed.
+              Full two-point measurement line system: tap a position to start, tap another to place
+              the line; start/end cap picker (dot/arrow/tick/none) and label field in popover; lines
+              render below bubbles and dots; full-line transparent tap target. Snap positions
+              expanded to a 5×5 inside grid + 5 per outside edge + 4 corners (49 total) with
+              systematic naming (<code>R1C1–R5C5</code>, <code>OUT-T1–OUT-R5</code>); all positions
+              share one unified CNR-based coordinate system ensuring perfect column/row alignment.
+              Separately: header enlarged; View dropdown added with Show Runemarks toggle; all three
+              dropdowns made mutually exclusive; popovers clamped to viewport; i18n and CSS var
+              cleanup; CSS variable column alignment normalised in <code>app.css</code>.
             </p>
           </div>
 
@@ -2016,6 +2017,24 @@
               <li><strong>Popover style block</strong>: all hardcoded hex colours (<code>#27272a</code>, <code>#3f3f46</code>, <code>#fff</code>, <code>#d4d4d8</code>, <code>#52525b</code>) replaced with <code>--ui-surface</code>, <code>--ui-border</code>, <code>--ui-text</code>, <code>--ui-surface-2</code>, <code>--ui-text-dim</code>, <code>--ui-surface-hover</code></li>
               <li><strong><code>app.css</code> alignment</strong>: <code>--ui-surface</code>, <code>--ui-surface-2</code>, <code>--ui-surface-hover</code>, and <code>--ui-border</code> had one extra space vs other vars; all 14 variables in both <code>:root</code> and <code>[data-theme="light"]</code> now align at the same column (<code>--ui-surface-hover</code> sets the width)</li>
             </ul>
+            <h3>Two-Point Measurement Lines</h3>
+            <ul>
+              <li><strong>Type changes</strong>: <code>DeploymentMeasurement</code> fields <code>anchorCol/anchorRow/direction/length</code> removed; replaced with <code>startPos: DeploymentPosition</code> and <code>endPos: DeploymentPosition</code>. <code>DeploymentDirection</code> type removed entirely.</li>
+              <li><strong>Interaction flow</strong>: tap any empty position dot → popover shows "Add Marker" + "Add Measurement" buttons. Tapping "Add Measurement" sets <code>measurementMode = true</code> + records <code>measurementStart</code>, closes popover. A hint bar appears at the top of the card area. Tapping a second position completes the line; tapping the same position or cancelling aborts.</li>
+              <li><strong>Measurement rendering</strong>: start/end coordinates from <code>getCoords()</code>; vector normalised; start cap rendered before the line, end cap after. Full-line transparent hit area (<code>stroke="transparent" stroke-width="24"</code>) opens the measurement popover anywhere along the line.</li>
+              <li><strong>Cap picker UI</strong>: 4-button grid (●  →  |  —) for both start cap and end cap; active cap highlighted red; stored as <code>DeploymentCapType</code> (<code>'dot' | 'arrow' | 'tick' | 'none'</code>).</li>
+              <li><strong>Layer order fixed</strong>: measurements render between dashed centre lines and player bubbles in SVG source; position dots render last (on top of everything).</li>
+              <li><strong>Wording unified</strong>: "Overlays" → "Show Markers" throughout; state <code>showDots</code> → <code>showMarkers</code>; remove buttons styled as <code>text-xs text-zinc-400 underline hover:text-white</code> to match app-wide pattern.</li>
+            </ul>
+            <h3>5×5 Snap Position Grid</h3>
+            <ul>
+              <li><strong>Old grid removed</strong>: 9 inside (<code>TL/TC/TR/ML/CC/MR/BL/BC/BR</code>) + 12 outside edges + 4 corners = 25 positions.</li>
+              <li><strong>New grid</strong>: 25 inside (<code>R1C1–R5C5</code>) + 20 outside edges (<code>OUT-T/B/L/R 1–5</code>) + 4 corners = <strong>49 positions</strong>. <code>R3C3</code> = exact battlefield centre (crosshair). <code>R3</code> row lies on horizontal centre line; <code>C3</code> column on vertical centre line.</li>
+              <li><strong>Unified CNR coordinate system</strong>: all positions (inside and outside) derived from corner constants <code>CNR_L=63, CNR_R=852, CNR_T=34, CNR_B=540</code>. Inside: <code>x = CNR_L + c*(CNR_R-CNR_L)/6</code>, <code>y = CNR_T + r*(CNR_B-CNR_T)/6</code>. Outside edge: same formula at the fixed edge coordinate. Corners: literal corner values. This ensures every column aligns vertically and every row aligns horizontally across inside and outside dots.</li>
+              <li><strong>Even corner-to-corner distribution</strong>: the 5 outside edge positions per side span from corner to corner in 6 equal steps, so all 7 points per side (2 corners + 5 edge) are equally spaced.</li>
+              <li><strong>Regex-based helpers</strong>: <code>getCoords()</code> and <code>getTailAngle()</code> use <code>.match()</code> and <code>.test()</code> against the systematic naming — no switch statement needed. Tail angles: rows 1–2 → DOWN, rows 4–5 → UP, row 3 (centre) → null (no tail).</li>
+              <li><strong>Dead code removed</strong>: redundant <code>ax/ay/ex/ey</code> aliases in measurement rendering (leftover from <code>MEAS_INSET</code> removal) eliminated.</li>
+            </ul>
           </section>
 
           <section id="march-26-decisions" data-nav="Key Decisions">
@@ -2040,6 +2059,18 @@
               <div class="decision-q">Why letter fallback (D/H/S) when runemarks are hidden?</div>
               <div class="decision-a">The deployment bubbles need something in the icon slot for legibility — a blank bubble is ambiguous. A single uppercase letter in Germania One is visually consistent with the rest of the card's typography and makes the bubble type instantly readable even in printer-friendly mode.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why two-point (startPos→endPos) instead of anchor+direction+length?</div>
+              <div class="decision-a">The old model required three separate interactions (tap snap grid → pick direction from 8-way radial → type length in popover). Two-point is tap-start, tap-end — the line length and angle are derived from <code>getCoords()</code> automatically. Caps and label are edited afterwards in the measurement popover. Simpler mental model, fewer steps.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why a unified CNR coordinate system for inside and outside positions?</div>
+              <div class="decision-a">When inside dots used <code>BF_L + c*BF_W/6</code> and outside dots used <code>CNR_L + n*(CNR_R-CNR_L)/6</code>, the step sizes differed (119 px vs 132 px), so columns only aligned at the centre (n=3). Switching inside to the same CNR formula makes every column and row line up perfectly, which is both visually correct and meaningful — a measurement from <code>OUT-L2</code> to <code>R2C2</code> is a true horizontal line.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why 5×5 inside grid (not 4×4 or 3×3)?</div>
+              <div class="decision-a">4×4 had no position at the battlefield centre — dots fell between rows/columns. 5×5 makes <code>R3C3</code> the exact centre, and puts dots directly on the dashed centre lines (all of row 3 and column 3). The extra granularity (49 positions vs 25) is necessary for precise deployment point placement in real Warcry scenarios.</div>
+            </div>
           </section>
 
           <section id="march-26-pending" data-nav="Still Pending">
@@ -2053,11 +2084,7 @@
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">Deferred</span></td>
-                  <td>More snap positions — user may need more than 33; deferred pending feedback</td>
-                </tr>
-                <tr>
-                  <td><span class="badge badge-amber">Deferred</span></td>
-                  <td>Mobile visual testing — full mobile test pass not completed</td>
+                  <td>Measurement line tap discoverability — midpoint handle attempted and reverted (too small); no solution yet</td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">Deferred</span></td>
@@ -2072,11 +2099,13 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored to button; mutual exclusion for all three dropdowns; dropdown top = 52 px; popover overflow clamping; CSS vars in style block; i18n; dead state/constants/imports removed; loadLayout bug fixed</td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback conditional rendering</td></tr>
-                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted to <code>'dagger' | 'shield' | 'hammer'</code> union (was briefly widened to <code>string</code>)</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>ui.view</code>, <code>ui.exported-card-alt</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same two keys in German</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored; mutual exclusion; popover clamping; CSS vars; i18n; dead state removed; two-point measurement flow (<code>measurementMode</code>, <code>measurementStart</code>, hint bar); cap picker UI; <code>showDots</code> → <code>showMarkers</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback; 5×5 inside grid; CNR constants; regex-based <code>getCoords</code>/<code>getTailAngle</code>; measurement rendering (two-point, caps, full-line tap target, layer order); dead <code>ax/ay/ex/ey</code> aliases removed</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted; <code>DeploymentDirection</code> removed; <code>DeploymentMeasurement</code> replaced <code>anchorCol/anchorRow/direction/length</code> with <code>startPos/endPos</code>; <code>DeploymentPosition</code> expanded from 25 to 49 positions with systematic naming</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>ui.view</code>, <code>ui.exported-card-alt</code>, <code>ui.measurement-pick-end</code>, <code>ui.measurement-cancel</code>; <code>ui.overlays</code> → "Show Markers"; removed stale measurement direction/length keys; removed 25 stale <code>deployment.pos-*</code> and <code>deployment.dir-*</code> keys (old position names and direction picker)</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same changes in German</td></tr>
+                <tr><td><code>README.md</code></td><td>Deployment card description updated: "Overlays switch" → "Show Markers"; 8-way arrow picker flow replaced with two-tap measurement description</td></tr>
+                <tr><td><code>src/lib/i18n/README.md</code></td><td><code>deployment</code> namespace description corrected from "Card back only" to "deployment card UI — marker icon names, zone preset names, cap type names"</td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td><code>alt="Exported card"</code> → <code>alt={t('ui.exported-card-alt')}</code></td></tr>
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Same alt text i18n</td></tr>
                 <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>Same alt text i18n</td></tr>
