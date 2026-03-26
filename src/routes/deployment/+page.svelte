@@ -9,7 +9,6 @@
 	import type {
 		DeploymentCardData,
 		DeploymentColor,
-		DeploymentDirection,
 		DeploymentIconType,
 		DeploymentPosition,
 	} from '$lib/types';
@@ -34,11 +33,11 @@
 	let showViewDropdown = $state(false);
 	let viewDropdownLeft = $state(0);
 	let viewBtnEl: HTMLElement;
-	let showDots = $state(true);
+	let showMarkers = $state(true);
 	let showRunemarks = $state(true);
-	let snapGridActive = $state(false);
+	let measurementMode = $state(false);
+	let measurementStart = $state<DeploymentPosition | undefined>(undefined);
 	let activePlayerIndex = $state(0);
-	let measurementAnchor = $state<{ col: number; row: number } | undefined>(undefined);
 	let popover = $state<{ mode: PopoverMode; x: number; y: number } | null>(null);
 	let popoverIcon = $state<DeploymentIconType>('dagger');
 	let popoverRnd = $state('');
@@ -181,6 +180,20 @@
 	function closePopover() { popover = null; }
 
 	function handlePositionClick(pos: DeploymentPosition, clientX: number, clientY: number) {
+		if (measurementMode) {
+			if (measurementStart && pos !== measurementStart) {
+				data.measurements = [...data.measurements, {
+					startPos: measurementStart,
+					endPos: pos,
+					label: '',
+					startCap: 'dot',
+					endCap: 'arrow',
+				}];
+			}
+			measurementMode = false;
+			measurementStart = undefined;
+			return;
+		}
 		const found = findPoint(pos);
 		if (found) {
 			popover = { mode: { kind: 'occupied', pos, ...found }, x: clientX, y: clientY };
@@ -209,7 +222,9 @@
 	}
 
 	function confirmAddMeasurement() {
-		snapGridActive = true;
+		if (!popover || popover.mode.kind !== 'empty') return;
+		measurementStart = popover.mode.pos;
+		measurementMode = true;
 		closePopover();
 	}
 
@@ -245,35 +260,10 @@
 		popover = { ...popover, mode: { kind: 'occupied', pos: popover.mode.pos, pi: newPi, pti: data.players[newPi].points.length - 1 } };
 	}
 
-	function setMeasurementDirection(dir: DeploymentDirection) {
-		if (!popover || popover.mode.kind !== 'measurement') return;
-		data.measurements[popover.mode.mi].direction = dir;
-		data.measurements = [...data.measurements];
-	}
-
 	function removeMeasurementFromPopover() {
 		if (!popover || popover.mode.kind !== 'measurement') return;
 		removeMeasurement(popover.mode.mi);
 		closePopover();
-	}
-
-	function handleSnapPointClick(col: number, row: number) {
-		measurementAnchor = { col, row };
-		snapGridActive = false;
-	}
-
-	function handleDirectionSelect(direction: DeploymentDirection) {
-		if (!measurementAnchor) return;
-		data.measurements = [...data.measurements, {
-			anchorCol: measurementAnchor.col,
-			anchorRow: measurementAnchor.row,
-			direction,
-			label: '',
-			length: 80,
-			startCap: 'dot',
-			endCap: 'arrow',
-		}];
-		measurementAnchor = undefined;
 	}
 
 	function removeMeasurement(mi: number) {
@@ -411,7 +401,7 @@
 
 		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
-		<!-- View dropdown — Overlays + Show Runemarks toggles -->
+		<!-- View dropdown — Show Markers + Show Runemarks toggles -->
 		<div class="relative shrink-0" bind:this={viewBtnEl}>
 			<button
 				onclick={() => { showDropdown = false; showJsonDropdown = false; if (!showViewDropdown) viewDropdownLeft = viewBtnEl.getBoundingClientRect().left; showViewDropdown = !showViewDropdown; }}
@@ -431,11 +421,11 @@
 						<span class="text-sm font-semibold text-zinc-300">{t('ui.overlays')}</span>
 						<button
 							role="switch"
-							aria-checked={showDots}
-							onclick={() => showDots = !showDots}
-							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showDots ? 'bg-red-700' : 'bg-zinc-600'}"
+							aria-checked={showMarkers}
+							onclick={() => showMarkers = !showMarkers}
+							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showMarkers ? 'bg-red-700' : 'bg-zinc-600'}"
 						>
-							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showDots ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
+							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showMarkers ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
 						</button>
 					</label>
 					<label class="flex items-center justify-between gap-6 cursor-pointer select-none">
@@ -452,14 +442,6 @@
 				</div>
 			{/if}
 		</div>
-
-		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
-
-		<!-- Add measurement -->
-		<button
-			onclick={() => snapGridActive = true}
-			class="h-9 rounded px-3 text-sm font-semibold text-zinc-300 bg-zinc-800 hover:bg-zinc-700 hover:text-white transition shrink-0"
-		>{t('ui.form-add-measurement')}</button>
 
 		<div class="w-px h-7 bg-zinc-700 shrink-0"></div>
 
@@ -521,14 +503,14 @@
 
 	</header>
 
-	<!-- Snap / direction hint bar -->
-	{#if snapGridActive}
-		<div class="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2 text-center text-xs text-zinc-400">
-			{t('ui.form-snap-hint')}
-		</div>
-	{:else if measurementAnchor}
-		<div class="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2 text-center text-xs text-zinc-400">
-			{t('ui.measurement-anchor-hint')}
+	<!-- Measurement hint bar -->
+	{#if measurementMode}
+		<div class="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2 flex items-center justify-between gap-4">
+			<span class="text-xs text-zinc-400">{t('ui.measurement-pick-end')}</span>
+			<button
+				onclick={() => { measurementMode = false; measurementStart = undefined; }}
+				class="text-xs text-zinc-400 hover:text-white transition"
+			>{t('ui.measurement-cancel')}</button>
 		</div>
 	{/if}
 
@@ -546,14 +528,11 @@
 				<DeploymentCard
 					{data}
 					{printerFriendly}
-					{snapGridActive}
 					{showRunemarks}
-					showPositionDots={showDots && !exporting}
-					measurementAnchor={exporting ? undefined : measurementAnchor}
-					onSnapPointClick={handleSnapPointClick}
+					showPositionDots={showMarkers && !exporting}
+					measurementStartPos={measurementMode ? measurementStart : undefined}
 					onPositionClick={exporting ? undefined : handlePositionClick}
-					onMeasurementClick={showDots && !exporting ? handleMeasurementClick : undefined}
-					onDirectionSelect={handleDirectionSelect}
+					onMeasurementClick={showMarkers && !exporting && !measurementMode ? handleMeasurementClick : undefined}
 				/>
 			</div>
 		</div>
@@ -664,7 +643,7 @@
 					/>
 				</div>
 
-				<button onclick={removeOccupiedPoint} class="rounded bg-zinc-700 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-900 hover:text-red-200 transition">{t('ui.popover-remove-point')}</button>
+				<button onclick={removeOccupiedPoint} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-point')}</button>
 			{/if}
 
 		<!-- Measurement -->
@@ -674,33 +653,30 @@
 			{#if m}
 				<div class="popover-title">{t('ui.popover-measurement-n', { n: String(mi + 1) })}</div>
 
-				<!-- Direction grid -->
+				<!-- Start cap -->
 				<div>
-					<div class="popover-label">{t('ui.form-measurement-direction')}</div>
-					<div class="dir-grid">
-						{#each [['up-left','↖'],['up','↑'],['up-right','↗'],['left','←'],['',''],['right','→'],['down-left','↙'],['down','↓'],['down-right','↘']] as [dir, arrow]}
-							{#if dir}
-								<button
-									onclick={() => setMeasurementDirection(dir as DeploymentDirection)}
-									class="dir-cell {m.direction === dir ? 'dir-cell--active' : ''}"
-								>{arrow}</button>
-							{:else}
-								<div class="dir-cell dir-cell--empty"></div>
-							{/if}
+					<div class="popover-label">{t('ui.form-measurement-start-cap')}</div>
+					<div class="cap-row">
+						{#each (['dot', 'arrow', 'tick', 'none'] as const) as cap}
+							<button
+								onclick={() => { data.measurements[mi] = { ...m, startCap: cap }; data.measurements = [...data.measurements]; }}
+								class="cap-cell {m.startCap === cap ? 'cap-cell--active' : ''}"
+							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '→' : cap === 'tick' ? '|' : '—' }</button>
 						{/each}
 					</div>
 				</div>
 
-				<!-- Length -->
+				<!-- End cap -->
 				<div>
-					<div class="popover-label">{t('ui.form-measurement-length')}</div>
-					<input
-						type="number"
-						value={m.length}
-						oninput={(e) => { data.measurements[mi] = { ...m, length: Number((e.target as HTMLInputElement).value) }; data.measurements = [...data.measurements]; }}
-						min="10" step="5"
-						class="popover-input"
-					/>
+					<div class="popover-label">{t('ui.form-measurement-end-cap')}</div>
+					<div class="cap-row">
+						{#each (['dot', 'arrow', 'tick', 'none'] as const) as cap}
+							<button
+								onclick={() => { data.measurements[mi] = { ...m, endCap: cap }; data.measurements = [...data.measurements]; }}
+								class="cap-cell {m.endCap === cap ? 'cap-cell--active' : ''}"
+							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '→' : cap === 'tick' ? '|' : '—' }</button>
+						{/each}
+					</div>
 				</div>
 
 				<!-- Label -->
@@ -715,7 +691,7 @@
 					/>
 				</div>
 
-				<button onclick={removeMeasurementFromPopover} class="rounded bg-zinc-700 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-900 hover:text-red-200 transition">{t('ui.form-remove')}</button>
+				<button onclick={removeMeasurementFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.form-remove')}</button>
 			{/if}
 		{/if}
 
@@ -778,13 +754,13 @@
 
 	.popover-input:focus { border-color: #7f1d1d; }
 
-	.dir-grid {
+	.cap-row {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		gap: 3px;
 	}
 
-	.dir-cell {
+	.cap-cell {
 		aspect-ratio: 1;
 		display: flex;
 		align-items: center;
@@ -797,16 +773,11 @@
 		transition: background 0.1s;
 	}
 
-	.dir-cell:hover { background: var(--ui-surface-hover); }
+	.cap-cell:hover { background: var(--ui-surface-hover); }
 
-	.dir-cell--active {
+	.cap-cell--active {
 		background: #991b1b;
 		color: #fff;
-	}
-
-	.dir-cell--empty {
-		background: transparent;
-		cursor: default;
 	}
 
 </style>

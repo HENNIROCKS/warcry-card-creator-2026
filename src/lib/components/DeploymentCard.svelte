@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DeploymentCardData, DeploymentColor, DeploymentDirection, DeploymentPosition, ZonePreset } from '$lib/types';
+	import type { DeploymentCardData, DeploymentColor, DeploymentPosition, ZonePreset } from '$lib/types';
 	import daggerRaw from '$lib/runemarks/svg/deployment-dagger.svg?raw';
 	import hammerRaw from '$lib/runemarks/svg/deployment-hammer.svg?raw';
 	import shieldRaw from '$lib/runemarks/svg/deployment-shield.svg?raw';
@@ -8,37 +8,19 @@
 		data,
 		printerFriendly = false,
 		showRunemarks = true,
-		snapGridActive = false,
 		showPositionDots = false,
-		measurementAnchor = undefined,
-		onSnapPointClick = undefined,
+		measurementStartPos = undefined,
 		onPositionClick = undefined,
 		onMeasurementClick = undefined,
-		onDirectionSelect = undefined,
 	}: {
 		data: DeploymentCardData;
 		printerFriendly?: boolean;
 		showRunemarks?: boolean;
-		snapGridActive?: boolean;
 		showPositionDots?: boolean;
-		measurementAnchor?: { col: number; row: number };
-		onSnapPointClick?: (col: number, row: number) => void;
+		measurementStartPos?: DeploymentPosition;
 		onPositionClick?: (pos: DeploymentPosition, clientX: number, clientY: number) => void;
 		onMeasurementClick?: (mi: number, clientX: number, clientY: number) => void;
-		onDirectionSelect?: (dir: DeploymentDirection) => void;
 	} = $props();
-
-	// Direction arrows rendered after anchor is placed
-	const DIR_ARROWS: { dir: DeploymentDirection; angle: number; dx: number; dy: number }[] = [
-		{ dir: 'right',      angle: 0,    dx: 48,  dy: 0   },
-		{ dir: 'up-right',   angle: -45,  dx: 34,  dy: -34 },
-		{ dir: 'up',         angle: -90,  dx: 0,   dy: -48 },
-		{ dir: 'up-left',    angle: -135, dx: -34, dy: -34 },
-		{ dir: 'left',       angle: 180,  dx: -48, dy: 0   },
-		{ dir: 'down-left',  angle: 135,  dx: -34, dy: 34  },
-		{ dir: 'down',       angle: 90,   dx: 0,   dy: 48  },
-		{ dir: 'down-right', angle: 45,   dx: 34,  dy: 34  },
-	];
 
 	// Map of position → player colour for occupied positions
 	const occupancy = $derived.by(() => {
@@ -52,11 +34,13 @@
 	});
 
 	const ALL_POSITIONS: DeploymentPosition[] = [
-		'TL', 'TC', 'TR', 'ML', 'CC', 'MR', 'BL', 'BC', 'BR',
-		'OUT-TL', 'OUT-TC', 'OUT-TR',
-		'OUT-LT', 'OUT-LC', 'OUT-LB',
-		'OUT-RT', 'OUT-RC', 'OUT-RB',
-		'OUT-BL', 'OUT-BC', 'OUT-BR',
+		...Array.from({length: 5}, (_, r) =>
+			Array.from({length: 5}, (_, c) => `R${r+1}C${c+1}` as DeploymentPosition)
+		).flat(),
+		'OUT-T1', 'OUT-T2', 'OUT-T3', 'OUT-T4', 'OUT-T5',
+		'OUT-B1', 'OUT-B2', 'OUT-B3', 'OUT-B4', 'OUT-B5',
+		'OUT-L1', 'OUT-L2', 'OUT-L3', 'OUT-L4', 'OUT-L5',
+		'OUT-R1', 'OUT-R2', 'OUT-R3', 'OUT-R4', 'OUT-R5',
 		'OUT-CNR-TL', 'OUT-CNR-TR', 'OUT-CNR-BL', 'OUT-CNR-BR',
 	];
 
@@ -93,6 +77,15 @@
 	const BF_CX = BF_L + BF_W / 2;
 	const BF_CY = BF_T  + BF_H / 2;
 
+	// Outer snap rail — corners of the zone just outside the battlefield.
+	// Outside edge positions (OUT-T/B/L/R 1–5) are distributed evenly between
+	// these corners, so all 7 points per side (corners + 5 edge dots) are
+	// equally spaced, giving an even visual distribution.
+	const CNR_L = 63;
+	const CNR_R = 852;
+	const CNR_T = 34;
+	const CNR_B = 540;
+
 	// Bubble geometry
 	const BH        = 48;  // bubble height
 	const BPAD      = 8;   // horizontal padding inside bubble
@@ -105,27 +98,6 @@
 	const TAIL_W    = 12;  // tail triangle base width
 
 	const PLAYER_BADGES = ['①', '②', '③', '④'];
-
-	// Snap grid: 4×4 = 25 points (cols 0–4, rows 0–4)
-	const SNAP_COLS = 4;
-	const SNAP_ROWS = 4;
-	const snapCols = Array.from({ length: SNAP_COLS + 1 }, (_, i) => i);
-	const snapRows = Array.from({ length: SNAP_ROWS + 1 }, (_, i) => i);
-	function snapX(col: number): number { return BF_L + col * (BF_W / SNAP_COLS); }
-	function snapY(row: number): number { return BF_T + row * (BF_H / SNAP_ROWS); }
-
-	// Direction unit vector (diagonals are normalised to length 1)
-	const D = 1 / Math.sqrt(2);
-	function dirVec(dir: string): [number, number] {
-		if (dir === 'up')         return [ 0, -1];
-		if (dir === 'down')       return [ 0,  1];
-		if (dir === 'left')       return [-1,  0];
-		if (dir === 'up-right')   return [ D, -D];
-		if (dir === 'up-left')    return [-D, -D];
-		if (dir === 'down-right') return [ D,  D];
-		if (dir === 'down-left')  return [-D,  D];
-		return [1, 0];
-	}
 
 	// Zone preset → SVG rect bounds
 	function zoneRect(preset: ZonePreset): { x: number; y: number; w: number; h: number } {
@@ -145,10 +117,9 @@
 	const ZONE_OPACITY = 0.38;
 	const PF_ZONE_OPACITIES = [0.08, 0.18, 0.28, 0.38];
 
-	const ARROW_LEN       = 14;
-	const DOT_R           = 5;
-	const LABEL_OFF       = 12;
-	const MEAS_INSET = 20;  // px to pull each measurement endpoint away from the anchor/terminus
+	const ARROW_LEN = 14;
+	const DOT_R     = 5;
+	const LABEL_OFF = 12;
 
 	// Return marker URL for a cap type (arrow and dot are rendered separately)
 	function capMarker(cap: string): string | undefined {
@@ -169,35 +140,23 @@
 	};
 
 	function getCoords(pos: DeploymentPosition): [number, number] {
-		const qx = BF_W / 4;
-		const qy = BF_H / 4;
-		switch (pos) {
-			case 'TL': return [BF_L + qx,           BF_T + qy          ];
-			case 'TC': return [BF_CX,                BF_T + qy          ];
-			case 'TR': return [BF_R - qx,            BF_T + qy          ];
-			case 'ML': return [BF_L + qx,            BF_CY              ];
-			case 'CC': return [BF_CX,                BF_CY              ];
-			case 'MR': return [BF_R - qx,            BF_CY              ];
-			case 'BL': return [BF_L + qx,            BF_B - qy          ];
-			case 'BC': return [BF_CX,                BF_B - qy          ];
-			case 'BR': return [BF_R - qx,            BF_B - qy          ];
-			case 'OUT-TL': return [BF_L + qx, 34 ];
-			case 'OUT-TC': return [BF_CX,     34 ];
-			case 'OUT-TR': return [BF_R - qx, 34 ];
-			case 'OUT-LT': return [63, BF_T + qy  ];
-			case 'OUT-LC': return [63, BF_CY      ];
-			case 'OUT-LB': return [63, BF_B - qy  ];
-			case 'OUT-RT': return [852, BF_T + qy  ];
-			case 'OUT-RC': return [852, BF_CY      ];
-			case 'OUT-RB': return [852, BF_B - qy  ];
-			case 'OUT-BL': return [BF_L + qx, 540];
-			case 'OUT-BC': return [BF_CX,     540];
-			case 'OUT-BR': return [BF_R - qx, 540];
-			case 'OUT-CNR-TL': return [63,  34 ];
-			case 'OUT-CNR-TR': return [852, 34 ];
-			case 'OUT-CNR-BL': return [63,  540];
-			case 'OUT-CNR-BR': return [852, 540];
-		}
+		const inside = pos.match(/^R(\d)C(\d)$/);
+		if (inside) return [
+			CNR_L + Number(inside[2]) * (CNR_R - CNR_L) / 6,
+			CNR_T + Number(inside[1]) * (CNR_B - CNR_T) / 6,
+		];
+		const outT = pos.match(/^OUT-T(\d)$/);
+		if (outT) return [CNR_L + Number(outT[1]) * (CNR_R - CNR_L) / 6, CNR_T];
+		const outB = pos.match(/^OUT-B(\d)$/);
+		if (outB) return [CNR_L + Number(outB[1]) * (CNR_R - CNR_L) / 6, CNR_B];
+		const outL = pos.match(/^OUT-L(\d)$/);
+		if (outL) return [CNR_L, CNR_T + Number(outL[1]) * (CNR_B - CNR_T) / 6];
+		const outR = pos.match(/^OUT-R(\d)$/);
+		if (outR) return [CNR_R, CNR_T + Number(outR[1]) * (CNR_B - CNR_T) / 6];
+		if (pos === 'OUT-CNR-TR') return [CNR_R, CNR_T];
+		if (pos === 'OUT-CNR-BL') return [CNR_L, CNR_B];
+		if (pos === 'OUT-CNR-BR') return [CNR_R, CNR_B];
+		return [CNR_L, CNR_T]; // OUT-CNR-TL
 	}
 
 	// Returns the angle (radians) the tail should point toward, or null for no tail.
@@ -207,19 +166,16 @@
 		const UP    = -Math.PI / 2;
 		const RIGHT =  0;
 		const LEFT  =  Math.PI;
-		switch (pos) {
-			case 'TL': case 'TC': case 'TR':
-			case 'OUT-TL': case 'OUT-TC': case 'OUT-TR':           return DOWN;
-			case 'BL': case 'BC': case 'BR':
-			case 'OUT-BL': case 'OUT-BC': case 'OUT-BR':           return UP;
-			case 'ML': case 'OUT-LT': case 'OUT-LC': case 'OUT-LB': return RIGHT;
-			case 'MR': case 'OUT-RT': case 'OUT-RC': case 'OUT-RB': return LEFT;
-			case 'OUT-CNR-TL': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_T - cy, BF_L - cx); }
-			case 'OUT-CNR-TR': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_T - cy, BF_R - cx); }
-			case 'OUT-CNR-BL': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_B - cy, BF_L - cx); }
-			case 'OUT-CNR-BR': { const [cx,cy] = getCoords(pos); return Math.atan2(BF_B - cy, BF_R - cx); }
-			default: return null;
-		}
+		if (/^R[12]C/.test(pos) || /^OUT-T/.test(pos)) return DOWN;
+		if (/^R[45]C/.test(pos) || /^OUT-B/.test(pos)) return UP;
+		if (/^OUT-L/.test(pos)) return RIGHT;
+		if (/^OUT-R/.test(pos)) return LEFT;
+		const [cx, cy] = getCoords(pos);
+		if (pos === 'OUT-CNR-TL') return Math.atan2(BF_T - cy, BF_L - cx);
+		if (pos === 'OUT-CNR-TR') return Math.atan2(BF_T - cy, BF_R - cx);
+		if (pos === 'OUT-CNR-BL') return Math.atan2(BF_B - cy, BF_L - cx);
+		if (pos === 'OUT-CNR-BR') return Math.atan2(BF_B - cy, BF_R - cx);
+		return null;
 	}
 
 	// Computes tail polygon points in bubble-local coordinates for any angle.
@@ -314,6 +270,69 @@
 		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
 		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
 
+		<!-- Measurement lines — rendered below bubbles and dots -->
+		{#each (data.measurements ?? []) as m, mi}
+			{@const [sx, sy] = getCoords(m.startPos)}
+			{@const [ex0, ey0] = getCoords(m.endPos)}
+			{@const rawDx = ex0 - sx}
+			{@const rawDy = ey0 - sy}
+			{@const len = Math.hypot(rawDx, rawDy)}
+			{@const dx = len > 0 ? rawDx / len : 1}
+			{@const dy = len > 0 ? rawDy / len : 0}
+			{@const mx = (sx + ex0) / 2}
+			{@const my = (sy + ey0) / 2}
+			{@const lx1 = m.startCap === 'arrow' ? sx + dx * ARROW_LEN : m.startCap === 'dot' ? sx + dx * DOT_R : sx}
+			{@const ly1 = m.startCap === 'arrow' ? sy + dy * ARROW_LEN : m.startCap === 'dot' ? sy + dy * DOT_R : sy}
+			{@const lx2 = m.endCap   === 'arrow' ? ex0 - dx * ARROW_LEN : m.endCap   === 'dot' ? ex0 - dx * DOT_R : ex0}
+			{@const ly2 = m.endCap   === 'arrow' ? ey0 - dy * ARROW_LEN : m.endCap   === 'dot' ? ey0 - dy * DOT_R : ey0}
+			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
+			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
+
+			<!-- Start cap -->
+			{#if m.startCap === 'dot'}
+				<circle cx={sx} cy={sy} r={DOT_R} fill="#222"/>
+			{:else if m.startCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({sx},{sy}) rotate({startAngle})"/>
+			{/if}
+
+			<line
+				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
+				stroke="#222" stroke-width="5"
+				marker-end={capMarker(m.endCap)}
+				marker-start={capMarker(m.startCap)}
+			/>
+
+			<!-- End cap -->
+			{#if m.endCap === 'dot'}
+				<circle cx={ex0} cy={ey0} r={DOT_R} fill="#222"/>
+			{:else if m.endCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({ex0},{ey0}) rotate({endAngle})"/>
+			{/if}
+
+			{#if m.label}
+				<text
+					x={mx - dy * LABEL_OFF}
+					y={my + dx * LABEL_OFF + 5}
+					font-family="'Germania One', serif"
+					font-size="16"
+					fill="#222"
+					text-anchor="middle"
+				>{m.label}</text>
+			{/if}
+
+			<!-- Full-line tap target -->
+			{#if onMeasurementClick}
+				<line
+					x1={sx} y1={sy} x2={ex0} y2={ey0}
+					stroke="transparent" stroke-width="24"
+					style="cursor: pointer;"
+					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
+				/>
+			{/if}
+		{/each}
+
 		<!-- Deployment point speech bubbles -->
 		{#each data.players as player, pi}
 		{#each player.points as point}
@@ -391,73 +410,12 @@
 		{/each}
 		{/each}
 
-		<!-- Measurement lines -->
-		{#each (data.measurements ?? []) as m, mi}
-			{@const ax0 = snapX(m.anchorCol)}
-			{@const ay0 = snapY(m.anchorRow)}
-			{@const [dx, dy] = dirVec(m.direction)}
-			{@const ax = ax0 + dx * MEAS_INSET}
-			{@const ay = ay0 + dy * MEAS_INSET}
-			{@const ex = ax0 + dx * (m.length - MEAS_INSET)}
-			{@const ey = ay0 + dy * (m.length - MEAS_INSET)}
-			{@const mx = ax0 + dx * m.length / 2}
-			{@const my = ay0 + dy * m.length / 2}
-			{@const lx1 = m.startCap === 'arrow' ? ax + dx * ARROW_LEN : m.startCap === 'dot' ? ax + dx * DOT_R : ax}
-			{@const ly1 = m.startCap === 'arrow' ? ay + dy * ARROW_LEN : m.startCap === 'dot' ? ay + dy * DOT_R : ay}
-			{@const lx2 = m.endCap   === 'arrow' ? ex - dx * ARROW_LEN : m.endCap   === 'dot' ? ex - dx * DOT_R : ex}
-			{@const ly2 = m.endCap   === 'arrow' ? ey - dy * ARROW_LEN : m.endCap   === 'dot' ? ey - dy * DOT_R : ey}
-			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
-			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
-
-			<!-- Start cap -->
-			{#if m.startCap === 'dot'}
-				<circle cx={ax} cy={ay} r={DOT_R} fill="#222"/>
-			{:else if m.startCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({ax},{ay}) rotate({startAngle})"/>
-			{/if}
-
-			<line
-				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
-				stroke="#222" stroke-width="5"
-				marker-end={capMarker(m.endCap)}
-				marker-start={capMarker(m.startCap)}
-			/>
-
-			<!-- End cap -->
-			{#if m.endCap === 'dot'}
-				<circle cx={ex} cy={ey} r={DOT_R} fill="#222"/>
-			{:else if m.endCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({ex},{ey}) rotate({endAngle})"/>
-			{/if}
-
-			{#if m.label}
-				<text
-					x={mx - dy * LABEL_OFF}
-					y={my + dx * LABEL_OFF + 5}
-					font-family="'Germania One', serif"
-					font-size="16"
-					fill="#222"
-					text-anchor="middle"
-				>{m.label}</text>
-			{/if}
-
-			<!-- Midpoint tap handle -->
-			{#if onMeasurementClick}
-				<circle
-					cx={mx} cy={my} r="12"
-					class="meas-handle"
-					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
-				/>
-			{/if}
-		{/each}
-
-		<!-- Position dots overlay — shown in edit mode; never exported -->
+		<!-- Position dots overlay — rendered on top of measurement lines and bubbles -->
 		{#if showPositionDots}
 			{#each ALL_POSITIONS as pos}
 				{@const [px, py] = getCoords(pos)}
 				{@const occupiedBy = occupancy.get(pos)}
+				{@const isStart = pos === measurementStartPos}
 				<g
 					class="pos-group"
 					class:pos-group--interactive={!!onPositionClick}
@@ -465,50 +423,16 @@
 				>
 					<!-- Large tap target -->
 					<circle cx={px} cy={py} r="22" fill="transparent"/>
+					<!-- Measurement start highlight ring -->
+					{#if isStart}
+						<circle cx={px} cy={py} r="11" fill="none" stroke="#c0272d" stroke-width="3"/>
+					{/if}
 					<!-- Visual dot -->
 					<circle
 						cx={px} cy={py} r="7"
 						class="pos-dot"
 						class:pos-dot--occupied={!!occupiedBy}
 						style={occupiedBy ? `fill: ${COLORS[occupiedBy]}; stroke: white;` : ''}
-					/>
-				</g>
-			{/each}
-		{/if}
-
-		<!-- Snap grid overlay — shown only when placing a measurement; never exported -->
-		{#if snapGridActive}
-			{#each snapCols as col}
-				{#each snapRows as row}
-					<circle
-						cx={snapX(col)} cy={snapY(row)} r="9"
-						class="snap-pt"
-						onclick={() => onSnapPointClick?.(col, row)}
-					/>
-				{/each}
-			{/each}
-		{/if}
-
-		<!-- Direction picker — shown after anchor is placed; never exported -->
-		{#if measurementAnchor}
-			{@const ax = snapX(measurementAnchor.col)}
-			{@const ay = snapY(measurementAnchor.row)}
-
-			<!-- Anchor indicator -->
-			<circle cx={ax} cy={ay} r="7" fill="#c0272d" stroke="white" stroke-width="2"/>
-
-			<!-- Direction buttons -->
-			{#each DIR_ARROWS as { dir, angle, dx, dy }}
-				<g
-					class="dir-btn"
-					transform="translate({ax + dx},{ay + dy})"
-					onclick={() => onDirectionSelect?.(dir)}
-				>
-					<circle r="14" class="dir-btn-bg"/>
-					<polygon
-						points="-6,-4 6,0 -6,4"
-						transform="rotate({angle})"
-						class="dir-btn-arrow"
 					/>
 				</g>
 			{/each}
@@ -576,49 +500,7 @@
 		opacity: 0.7;
 	}
 
-	.meas-handle {
-		fill: rgba(255, 255, 255, 0.7);
-		stroke: rgba(0, 0, 0, 0.4);
-		stroke-width: 1.5;
-		cursor: pointer;
-	}
 
-	.meas-handle:hover {
-		fill: #c0272d;
-		stroke: white;
-	}
 
-	.dir-btn {
-		cursor: pointer;
-	}
 
-	.dir-btn-bg {
-		fill: rgba(255, 255, 255, 0.85);
-		stroke: rgba(0, 0, 0, 0.3);
-		stroke-width: 1.5;
-		transition: fill 0.1s;
-	}
-
-	.dir-btn:hover .dir-btn-bg {
-		fill: #c0272d;
-	}
-
-	.dir-btn-arrow {
-		fill: #222;
-	}
-
-	.dir-btn:hover .dir-btn-arrow {
-		fill: white;
-	}
-
-	.snap-pt {
-		fill: rgba(255, 255, 255, 0.75);
-		stroke: #000;
-		stroke-width: 1.5;
-		cursor: pointer;
-	}
-
-	.snap-pt:hover {
-		fill: rgba(192, 39, 45, 0.85);
-	}
 </style>
