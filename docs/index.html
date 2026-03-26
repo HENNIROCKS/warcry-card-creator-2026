@@ -1415,6 +1415,13 @@
                   </td>
                   <td>Mar 26</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-26-built" onclick="activateSession('march-26')"
+                      >Deployment card: objective marker (black circle + label); three-action popover restructure (Place marker / Add measurement / Objective section); rAF overflow fix</a>
+                  </td>
+                  <td>Mar 26</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1984,6 +1991,8 @@
               cleanup; CSS variable column alignment normalised in <code>app.css</code>.
               Later in session one: speech bubbles replaced with geometric shapes (triangle/diamond/circle), optical sizing tuned iteratively, fill inheritance refactored, yellow colour updated, printer-friendly badges repositioned.
               In session two: snap grid redesigned to 7×9 inside (63 magenta dots, outermost on BF boundary) + 36 blue outside dots = 99 total, matching the reference card exactly. Outer left/right columns moved 10 px inward. Template triplicate duplication removed (668 → 437 lines).
+              In session three: Orientation and Matched Play corner runemarks added; RND label redesigned as an HTML div (beige background, auto-width); player badge circular white background rendered last; dagger letter re-centred; measurement cap buttons differentiated by direction; new Cities of Sigmar (Alternative) faction runemark added.
+              In session four: objective marker added as a third placement type (black circle + auto-width HTML label below); empty popover restructured into three explicit action sections (Place Marker / Add Measurement / Objective) with the label field grouped under its section; popover overflow rewritten with <code>requestAnimationFrame</code> measuring both bottom and right edges after layout.
             </p>
           </div>
 
@@ -2062,6 +2071,66 @@
               <li><strong>Yellow</strong> updated from <code>#ca8a04</code> to <code>#f59e0b</code> (brighter amber); synced across <code>DeploymentCard.svelte</code> and <code>+page.svelte</code>.</li>
               <li><strong>Removed</strong>: <code>makeTailPoints()</code>, <code>getTailAngle()</code>, <code>bubbleWidth()</code> and all tail/bubble constants (<code>BH</code>, <code>BPAD</code>, <code>BRAD</code>, <code>TAIL_LEN</code>, <code>TAIL_W</code>, <code>GAP</code>, <code>BW_ICON</code>, <code>CHAR_W</code>). Template indentation fixed.</li>
             </ul>
+            <h3>Corner Runemarks — Orientation &amp; Matched Play</h3>
+            <ul>
+              <li><strong>Two new fixed runemarks</strong> rendered in the card's top-left and top-right corners, 20 px inset from every edge (matching the caption's <code>bottom/left: 20px</code> spacing): <code>twists-orientation.svg</code> (top-left) and <code>card-decks-symmetrical.svg</code> (top-right, Matched Play).</li>
+              <li><strong>Text fallbacks</strong>: when <code>showRunemarks</code> is off the SVGs are replaced with <code>↑</code> (Orientation) and <code>MP</code> (Matched Play) in Germania One, same dark-maroon fill <code>#5a0a14</code>; printer-friendly uses <code>#000</code>.</li>
+              <li><strong>Individual View toggles</strong>: <code>showOrientation</code> and <code>showMatchedPlay</code> booleans added to <code>+page.svelte</code> and passed as props; two new pill-switch rows added to the View dropdown. New i18n keys: <code>ui.form-show-orientation</code>, <code>ui.form-show-matched-play</code> (en + de).</li>
+            </ul>
+            <h3>RND Label Redesign</h3>
+            <ul>
+              <li><strong>Problem</strong>: the SVG <code>&lt;rect&gt;</code> approach used a fixed 54 px width — too wide for "2", too narrow for "Hello, world". A stroke-on-white text approach produced staircase artefacts via <code>feMorphology</code>.</li>
+              <li><strong>Solution</strong>: RND labels are now rendered as <strong>HTML <code>&lt;div&gt;</code> elements</strong> positioned absolutely over the card (<code>position: absolute; transform: translate(-50%,-50%)</code>). Background <code>#faf6f3</code>, <code>border-radius: 4px</code>, <code>padding: 2px 6px</code>, <code>white-space: nowrap</code> — the browser sizes the box to fit any text automatically. Printer-friendly: white background. All export-breaking properties (<code>border: none; outline: none; box-shadow: none</code>) explicitly reset.</li>
+              <li><strong>Layer order</strong>: divs are rendered after <code>&lt;/svg&gt;</code> in DOM order and so naturally sit above the SVG content.</li>
+            </ul>
+            <h3>Player Badge — Circular White Background</h3>
+            <ul>
+              <li><strong>Moved out of the shapes loop</strong>: previously rendered inside the per-player/per-point loop (causing z-order issues with measurement lines). Now rendered in a separate final <code>{#each}</code> block after position dots — guaranteed on top of all SVG content.</li>
+              <li><strong>Circular background</strong>: <code>&lt;circle cx={cx−CIRCLE_R−10} cy={cy} r="9" fill="white"/&gt;</code> — centred on the circled-numeral glyph (right edge at <code>cx−CIRCLE_R−4</code>, glyph ~12 px wide so centre at <code>cx−CIRCLE_R−10</code>), radius 9 gives ≈1–2 px clearance.</li>
+            </ul>
+            <h3>Dagger Letter Vertical Centring</h3>
+            <ul>
+              <li><strong>Previous</strong>: <code>y={cy + 8}</code> (baseline) ≈ visual centre at <code>cy</code> — too low.</li>
+              <li><strong>First fix</strong>: <code>y={cy − CIRCLE_R/3}</code> (triangle centroid, ≈<code>cy−7.3</code>) — too high.</li>
+              <li><strong>Final</strong>: <code>y={cy − CIRCLE_R/6}</code> (≈<code>cy−3.7</code>) with <code>dominant-baseline="central"</code> — splits the difference between centroid and mid-height, visually balanced. Circle and diamond shapes remain at <code>cy</code>.</li>
+            </ul>
+            <h3>Measurement Cap Button Differentiation</h3>
+            <ul>
+              <li><strong>Start cap picker</strong>: arrow symbol changed to <code>←</code>, tick symbol changed to <code>⊤</code>.</li>
+              <li><strong>End cap picker</strong>: arrow symbol stays <code>→</code>, tick symbol stays <code>⊥</code>.</li>
+              <li>Gives each button a distinct directional character so start and end pickers read differently at a glance.</li>
+            </ul>
+            <h3>New Faction Runemark — Cities of Sigmar (Alternative)</h3>
+            <ul>
+              <li><strong>SVG</strong>: <code>factions-order-cities-of-sigmar-alternative.svg</code> copied from <code>_work/</code> to <code>src/lib/runemarks/svg/</code>.</li>
+              <li><strong>Hierarchy</strong>: imported as <code>oCitiesOfSigmarAlt</code> in <code>hierarchy.ts</code>; entry <code>{ id: 'cities-of-sigmar-alternative', label: 'Cities of Sigmar (Alternative)', … }</code> inserted immediately after the base <code>cities-of-sigmar</code> entry.</li>
+              <li><strong>i18n</strong>: <code>factions.cities-of-sigmar-alternative</code> added to <code>en.json</code> ("Cities of Sigmar (Alternative)") and <code>de.json</code> ("Städte Sigmars (Alternativ)").</li>
+            </ul>
+            <h3>Objective Markers (session four)</h3>
+            <ul>
+              <li><strong>New type</strong>: <code>DeploymentObjective { position, label }</code> added to <code>types.ts</code>; <code>objectives?: DeploymentObjective[]</code> added to <code>DeploymentCardData</code>.</li>
+              <li><strong>SVG rendering</strong>: black circle <code>r=16</code> (half of <code>CIRCLE_R</code> × 1.5; smaller than deployment shapes) rendered below deployment point shapes in the SVG painter order. No stroke, fully opaque black.</li>
+              <li><strong>HTML label</strong>: same div-over-SVG pattern as RND labels. <code>transform: translate(-50%, 0)</code>, positioned at <code>top: cy + OBJECTIVE_R + 4px</code> so it sits just below the circle. Black background, <code>#faf6f3</code> text, <code>white-space: nowrap</code>.</li>
+              <li><strong>Position dot coloring</strong>: <code>objectivePositions</code> derived set; dot gets <code>pos-dot--objective</code> class (black fill, <code>#faf6f3</code> stroke) when an objective occupies that position.</li>
+              <li><strong>Click priority</strong>: <code>handlePositionClick</code> checks objectives first (before deployment points), then empty — prevents a stacked objective + point on the same position opening the wrong popover.</li>
+              <li><strong>Popover — new mode</strong>: <code>{ kind: 'objective'; oi: number }</code> branch added to <code>PopoverMode</code>; shows title, label input, and remove link.</li>
+              <li><strong>i18n</strong>: <code>deployment.objective</code> ("Objective" / "Ziel"); <code>ui.form-objective-label</code>, <code>ui.popover-add-objective</code>, <code>ui.popover-remove-objective</code> (en + de).</li>
+            </ul>
+            <h3>Empty Popover Restructure &amp; Wording (session four)</h3>
+            <ul>
+              <li><strong>"Add point" → "Place marker"</strong>: the old label implied a scoring point. "Place marker" correctly describes placing a dagger/shield/hammer marker at a position.</li>
+              <li><strong>"Measurement" → "Add measurement"</strong>: consistent "Add X" verb across all three actions.</li>
+              <li><strong>Three stacked full-width buttons</strong>: "Place marker" (red) and "Add measurement" (zinc) are now separate full-width buttons, replacing the side-by-side layout that forced small text.</li>
+              <li><strong>Objective section</strong>: a <code>border-t border-zinc-700</code> divider with a <code>popover-label</code> "OBJECTIVE" header separates the label input + Add objective button from the marker/measurement actions. Makes it immediately clear the label field belongs to the objective action only.</li>
+              <li><strong><code>popoverObjectiveLabel</code></strong> state resets to <code>''</code> each time an empty popover opens.</li>
+            </ul>
+            <h3>Popover Overflow Fix (session four)</h3>
+            <ul>
+              <li><strong>Problem</strong>: the existing <code>$effect</code> measured <code>getBoundingClientRect()</code> synchronously — before browser layout was complete, the element height could be 0 or stale, so the adjustment was a no-op.</li>
+              <li><strong>Fix</strong>: wrapped measurement in <code>requestAnimationFrame()</code> so it fires after paint. Element and popover values captured as local constants before the callback to avoid stale reactive reads.</li>
+              <li><strong>Right-edge clamping added</strong>: the effect now also checks <code>rect.right</code> vs <code>viewportWidth - 8</code> and shifts <code>el.style.left</code> leftward if needed.</li>
+              <li><strong>Initial position guard</strong>: <code>clampedStyle</code> bottom clamp increased from <code>viewportHeight - 320</code> to <code>viewportHeight - 500</code>; prevents a visible flash on the frame before rAF fires.</li>
+            </ul>
           </section>
 
           <section id="march-26-decisions" data-nav="Key Decisions">
@@ -2122,6 +2191,38 @@
               <div class="decision-q">Why move CNR_L/CNR_R 10 px inward?</div>
               <div class="decision-a">The outer left and right columns of dots appeared too far from the battlefield edge compared to the reference. The top/bottom outside rows use T/B CNR constants (unchanged) and looked correct. Moving CNR_L from 63→73 and CNR_R from 852→842 closed the gap on both sides symmetrically.</div>
             </div>
+            <div class="decision">
+              <div class="decision-q">Why HTML div for the RND label background instead of an SVG rect or filter?</div>
+              <div class="decision-a">A fixed-width SVG <code>&lt;rect&gt;</code> is either too wide for short labels or too narrow for long ones. An <code>feMorphology dilate</code> filter produces a staircase artefact because it operates on the rasterised pixel grid, not on geometry. A JS <code>getBBox()</code> action was implemented then reverted (uncertainty about timing with dom-to-image-more). An HTML <code>&lt;div&gt;</code> positioned absolutely over the card lets the browser's own text-layout engine size the background — exactly the same as a CSS-backed label, zero extra logic, captured correctly by both dom-to-image-more and modern-screenshot.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why individual toggles for Orientation and Matched Play rather than just relying on Show Runemarks?</div>
+              <div class="decision-a">Show Runemarks controls the visual mode (SVG icon vs text fallback); it doesn't remove the element. A card creator may want to publish a layout without either corner badge, or with only one. Independent boolean props and pill switches in the View dropdown give full control without coupling visibility to the icon-style preference.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why cy − CIRCLE_R/6 for the dagger letter, not the mathematical centroid (CIRCLE_R/3)?</div>
+              <div class="decision-a">The centroid of the downward triangle is 2/3 of the height from the top — visually this reads as sitting in the upper third, confirmed by screenshot. The perceptual centre for text inside a wide-top shape is lower than the centroid, roughly midway between centroid and geometric mid-height. CIRCLE_R/6 (≈3.7 px above centre) landed correctly on device.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why ← / ⊤ for start cap and → / ⊥ for end cap?</div>
+              <div class="decision-a">The original | and — symbols were both horizontal/vertical dashes that looked near-identical at small button size. Making the start cap buttons mirror the end cap buttons (← vs →, ⊤ vs ⊥) encodes directionality: you immediately read "this picker is for the left/start side of the line". The perpendicular-ground symbol ⊥ and its upside-down counterpart ⊤ are visually distinct at a glance.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why is the objective a plain black circle with no border or colour?</div>
+              <div class="decision-a">Objectives are scenario-specific landmarks, not player-owned. A neutral black distinguishes them from the four player colours (red/blue/green/yellow) while remaining legible on the parchment battlefield. A border added visual noise; the circle alone reads cleanly at the 16 px radius chosen.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why a divider section for the objective label rather than just showing a third button alongside Point and Measurement?</div>
+              <div class="decision-a">The objective action has a unique input (the label text) that the other two don't share. If the label field appeared in the general section with no visual grouping, users couldn't tell which action it belonged to. A thin divider + "OBJECTIVE" micro-label groups input and button unambiguously — the same pattern used for measurement caps in the measurement popover.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why "Place marker" instead of "Add point"?</div>
+              <div class="decision-a">"Add point" is ambiguous — "point" in game language often means a scoring point, not a physical deployment marker. "Place marker" describes the action precisely: you are placing one of three icon markers (dagger/shield/hammer) at a grid position on the card.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why requestAnimationFrame for the popover overflow correction?</div>
+              <div class="decision-a">Svelte's <code>$effect</code> runs synchronously after the reactive graph is flushed, but browser layout (reflow) happens asynchronously. <code>getBoundingClientRect()</code> called in the effect body may see a height of 0 if the browser hasn't painted the element yet. Wrapping in <code>requestAnimationFrame</code> defers the measurement until after the next paint, guaranteeing a real bounding box. The visual difference is imperceptible (one frame ≈16 ms).</div>
+            </div>
           </section>
 
           <section id="march-26-pending" data-nav="Still Pending">
@@ -2138,8 +2239,8 @@
                   <td>Measurement line tap discoverability — midpoint handle attempted and reverted (too small); no solution yet</td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">Deferred</span></td>
-                  <td>RND label editing in popovers — input field exists but UX not validated on device</td>
+                  <td><span class="badge badge-amber">Low priority</span></td>
+                  <td>iOS virtual keyboard may obscure deployment popover inputs (RND + objective label) — fix: <code>input.scrollIntoView</code> on focus; defer until confirmed on device</td>
                 </tr>
               </tbody>
             </table>
@@ -2161,6 +2262,18 @@
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Same alt text i18n</td></tr>
                 <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>Same alt text i18n</td></tr>
                 <tr><td><code>src/app.css</code></td><td>CSS variable column alignment normalised across all 14 vars in <code>:root</code> and <code>[data-theme="light"]</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code> (session 3)</td><td>Orientation + Matched Play corner runemarks (<code>showOrientation</code>/<code>showMatchedPlay</code> props, SVG + text fallback); RND labels moved to HTML <code>&lt;div&gt;</code> with <code>#faf6f3</code> background; player badges extracted to final SVG block with circular white <code>&lt;circle&gt;</code> behind each glyph; dagger letter y adjusted to <code>cy−CIRCLE_R/6</code> with <code>dominant-baseline="central"</code>; <code>sizeRndRect</code> action added then removed; filter approach added then removed</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code> (session 3)</td><td><code>showOrientation</code>/<code>showMatchedPlay</code> state + View dropdown toggles; measurement start cap symbols <code>←</code>/<code>⊤</code>, end cap <code>→</code>/<code>⊥</code>; new props passed to <code>DeploymentCard</code></td></tr>
+                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td><code>oCitiesOfSigmarAlt</code> import; <code>cities-of-sigmar-alternative</code> entry after base <code>cities-of-sigmar</code></td></tr>
+                <tr><td><code>src/lib/runemarks/svg/factions-order-cities-of-sigmar-alternative.svg</code></td><td>New file — copied from <code>_work/</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code> (session 3)</td><td><code>ui.form-show-orientation</code>, <code>ui.form-show-matched-play</code>, <code>factions.cities-of-sigmar-alternative</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code> (session 3)</td><td>Same keys in German</td></tr>
+                <tr><td><code>src/lib/types.ts</code> (session 4)</td><td><code>DeploymentObjective</code> interface; <code>objectives?: DeploymentObjective[]</code> added to <code>DeploymentCardData</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code> (session 4)</td><td><code>OBJECTIVE_R=16</code>; objective circles in SVG; <code>objectivePositions</code> derived set; <code>pos-dot--objective</code> class; HTML objective label divs; <code>.objective-label</code> CSS</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code> (session 4)</td><td>Objective <code>PopoverMode</code> kind; <code>popoverObjectiveLabel</code> state; <code>confirmAddObjective</code> / <code>removeObjectiveFromPopover</code> functions; click priority (objectives before points); empty popover restructured (Place marker / Add measurement / Objective section with divider); rAF-based overflow fix (bottom + right); <code>clampedStyle</code> bottom guard 320→500</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code> (session 4)</td><td><code>deployment.objective</code>, <code>ui.form-objective-label</code>, <code>ui.popover-add-objective</code>, <code>ui.popover-remove-objective</code>; <code>ui.popover-add-point</code> → "Place marker"; <code>ui.popover-measurement</code> → "Add measurement"</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code> (session 4)</td><td>Same keys in German</td></tr>
+                <tr><td><code>README.md</code> (session 4)</td><td>Deployment card description updated to mention objective markers and the three-action popover</td></tr>
               </tbody>
             </table>
           </section>
