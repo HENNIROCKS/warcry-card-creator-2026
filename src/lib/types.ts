@@ -105,10 +105,16 @@ export interface DeploymentPlayer {
 	points: DeploymentPoint[];
 }
 
+export interface DeploymentObjective {
+	position: DeploymentPosition;
+	label: string;
+}
+
 export interface DeploymentCardData {
 	name: string;
 	players: DeploymentPlayer[];
 	measurements: DeploymentMeasurement[];
+	objectives?: DeploymentObjective[];
 }
 
 export type ActivationType = 'double' | 'triple' | 'quad' | null;

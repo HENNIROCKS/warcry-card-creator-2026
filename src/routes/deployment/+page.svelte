@@ -10,13 +10,15 @@
 		DeploymentCardData,
 		DeploymentColor,
 		DeploymentIconType,
+		DeploymentObjective,
 		DeploymentPosition,
 	} from '$lib/types';
 
 	type PopoverMode =
 		| { kind: 'empty'; pos: DeploymentPosition }
 		| { kind: 'occupied'; pos: DeploymentPosition; pi: number; pti: number }
-		| { kind: 'measurement'; mi: number };
+		| { kind: 'measurement'; mi: number }
+		| { kind: 'objective'; oi: number };
 
 	// Card dimensions (landscape)
 	const CARD_W = 915;
@@ -34,22 +36,33 @@
 	let viewDropdownLeft = $state(0);
 	let viewBtnEl: HTMLElement;
 	let showMarkers = $state(true);
+	let showMatchedPlay = $state(true);
+	let showOrientation = $state(true);
 	let showRunemarks = $state(true);
 	let measurementMode = $state(false);
 	let measurementStart = $state<DeploymentPosition | undefined>(undefined);
 	let activePlayerIndex = $state(0);
 	let popover = $state<{ mode: PopoverMode; x: number; y: number } | null>(null);
 	let popoverIcon = $state<DeploymentIconType>('dagger');
+	let popoverObjectiveLabel = $state('');
 	let popoverRnd = $state('');
 	let popoverEl = $state<HTMLElement | undefined>(undefined);
 
 	$effect(() => {
 		if (!popover || !popoverEl) return;
-		const rect = popoverEl.getBoundingClientRect();
-		const overflow = rect.bottom - (viewportHeight - 8);
-		if (overflow > 0) {
-			popoverEl.style.top = `${Math.max(8, popover.y - overflow)}px`;
-		}
+		const el = popoverEl;
+		const pv = popover;
+		requestAnimationFrame(() => {
+			const rect = el.getBoundingClientRect();
+			const overflowBottom = rect.bottom - (viewportHeight - 8);
+			if (overflowBottom > 0) {
+				el.style.top = `${Math.max(8, pv.y - overflowBottom)}px`;
+			}
+			const overflowRight = rect.right - (viewportWidth - 8);
+			if (overflowRight > 0) {
+				el.style.left = `${Math.max(8, pv.x - overflowRight)}px`;
+			}
+		});
 	});
 
 	// Pinch-zoom state
@@ -137,6 +150,7 @@
 		name: '',
 		players: [],
 		measurements: [],
+		objectives: [],
 	});
 
 	const COLORS: Record<DeploymentColor, string> = {
@@ -172,8 +186,8 @@
 	}
 
 	function clampedStyle(x: number, y: number): string {
-		const cx = Math.max(8, Math.min(x, viewportWidth - 256));
-		const cy = Math.max(8, Math.min(y, viewportHeight - 320));
+		const cx = Math.max(8, Math.min(x, viewportWidth - 240));
+		const cy = Math.max(8, Math.min(y, viewportHeight - 500));
 		return `left:${cx}px; top:${cy}px;`;
 	}
 
@@ -194,11 +208,17 @@
 			measurementStart = undefined;
 			return;
 		}
+		const oi = (data.objectives ?? []).findIndex((o: DeploymentObjective) => o.position === pos);
+		if (oi !== -1) {
+			popover = { mode: { kind: 'objective', oi }, x: clientX, y: clientY };
+			return;
+		}
 		const found = findPoint(pos);
 		if (found) {
 			popover = { mode: { kind: 'occupied', pos, ...found }, x: clientX, y: clientY };
 		} else {
 			popoverIcon = 'dagger';
+			popoverObjectiveLabel = '';
 			popoverRnd = '';
 			popover = { mode: { kind: 'empty', pos }, x: clientX, y: clientY };
 		}
@@ -225,6 +245,19 @@
 		if (!popover || popover.mode.kind !== 'empty') return;
 		measurementStart = popover.mode.pos;
 		measurementMode = true;
+		closePopover();
+	}
+
+	function confirmAddObjective() {
+		if (!popover || popover.mode.kind !== 'empty') return;
+		data.objectives = [...(data.objectives ?? []), { position: popover.mode.pos, label: popoverObjectiveLabel }];
+		closePopover();
+	}
+
+	function removeObjectiveFromPopover() {
+		if (!popover || popover.mode.kind !== 'objective') return;
+		const { oi } = popover.mode;
+		data.objectives = (data.objectives ?? []).filter((_, i) => i !== oi);
 		closePopover();
 	}
 
@@ -439,6 +472,28 @@
 							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showRunemarks ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
 						</button>
 					</label>
+					<label class="flex items-center justify-between gap-6 cursor-pointer select-none">
+						<span class="text-sm font-semibold text-zinc-300">{t('ui.form-show-orientation')}</span>
+						<button
+							role="switch"
+							aria-checked={showOrientation}
+							onclick={() => showOrientation = !showOrientation}
+							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showOrientation ? 'bg-red-700' : 'bg-zinc-600'}"
+						>
+							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showOrientation ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
+						</button>
+					</label>
+					<label class="flex items-center justify-between gap-6 cursor-pointer select-none">
+						<span class="text-sm font-semibold text-zinc-300">{t('ui.form-show-matched-play')}</span>
+						<button
+							role="switch"
+							aria-checked={showMatchedPlay}
+							onclick={() => showMatchedPlay = !showMatchedPlay}
+							class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors {showMatchedPlay ? 'bg-red-700' : 'bg-zinc-600'}"
+						>
+							<span class="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform {showMatchedPlay ? 'translate-x-[22px]' : 'translate-x-[3px]'}"></span>
+						</button>
+					</label>
 				</div>
 			{/if}
 		</div>
@@ -528,6 +583,8 @@
 				<DeploymentCard
 					{data}
 					{printerFriendly}
+					{showMatchedPlay}
+					{showOrientation}
 					{showRunemarks}
 					showPositionDots={showMarkers && !exporting}
 					measurementStartPos={measurementMode ? measurementStart : undefined}
@@ -588,10 +645,15 @@
 			<!-- RND -->
 			<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" />
 
-			<!-- Actions -->
-			<div class="flex gap-2">
-				<button onclick={confirmAddPoint} class="flex-1 rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>
-				<button onclick={confirmAddMeasurement} class="flex-1 rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-measurement')}</button>
+			<!-- Point + measurement actions -->
+			<button onclick={confirmAddPoint} class="w-full rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>
+			<button onclick={confirmAddMeasurement} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-measurement')}</button>
+
+			<!-- Objective section -->
+			<div class="border-t border-zinc-700 pt-3 flex flex-col gap-2">
+				<div class="popover-label">{t('deployment.objective')}</div>
+				<input type="text" bind:value={popoverObjectiveLabel} placeholder={t('ui.form-objective-label')} class="popover-input" />
+				<button onclick={confirmAddObjective} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-add-objective')}</button>
 			</div>
 
 		<!-- Occupied dot -->
@@ -661,7 +723,7 @@
 							<button
 								onclick={() => { data.measurements[mi] = { ...m, startCap: cap }; data.measurements = [...data.measurements]; }}
 								class="cap-cell {m.startCap === cap ? 'cap-cell--active' : ''}"
-							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '→' : cap === 'tick' ? '|' : '—' }</button>
+							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '←' : cap === 'tick' ? '⊤' : '—' }</button>
 						{/each}
 					</div>
 				</div>
@@ -674,7 +736,7 @@
 							<button
 								onclick={() => { data.measurements[mi] = { ...m, endCap: cap }; data.measurements = [...data.measurements]; }}
 								class="cap-cell {m.endCap === cap ? 'cap-cell--active' : ''}"
-							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '→' : cap === 'tick' ? '|' : '—' }</button>
+							>{ cap === 'dot' ? '●' : cap === 'arrow' ? '→' : cap === 'tick' ? '⊥' : '—' }</button>
 						{/each}
 					</div>
 				</div>
@@ -692,6 +754,27 @@
 				</div>
 
 				<button onclick={removeMeasurementFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.form-remove')}</button>
+			{/if}
+
+		<!-- Objective -->
+		{:else if popover.mode.kind === 'objective'}
+			{@const obj = (data.objectives ?? [])[popover.mode.oi]}
+			{@const oi = popover.mode.oi}
+			{#if obj}
+				<div class="popover-title">{t('deployment.objective')}</div>
+
+				<div>
+					<div class="popover-label">{t('ui.form-objective-label')}</div>
+					<input
+						type="text"
+						value={obj.label}
+						oninput={(e) => { const arr = [...(data.objectives ?? [])]; arr[oi] = { ...obj, label: (e.target as HTMLInputElement).value }; data.objectives = arr; }}
+						placeholder={t('ui.form-objective-label')}
+						class="popover-input"
+					/>
+				</div>
+
+				<button onclick={removeObjectiveFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-objective')}</button>
 			{/if}
 		{/if}
 

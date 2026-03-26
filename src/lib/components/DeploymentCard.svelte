@@ -1,13 +1,17 @@
 <script lang="ts">
-	import type { DeploymentCardData, DeploymentColor, DeploymentPosition, ZonePreset } from '$lib/types';
-	import daggerRaw from '$lib/runemarks/svg/deployment-dagger.svg?raw';
-	import hammerRaw from '$lib/runemarks/svg/deployment-hammer.svg?raw';
-	import shieldRaw from '$lib/runemarks/svg/deployment-shield.svg?raw';
+	import type { DeploymentCardData, DeploymentColor, DeploymentObjective, DeploymentPosition, ZonePreset } from '$lib/types';
+	import daggerRaw      from '$lib/runemarks/svg/deployment-dagger.svg?raw';
+	import hammerRaw      from '$lib/runemarks/svg/deployment-hammer.svg?raw';
+	import matchedPlayRaw from '$lib/runemarks/svg/card-decks-symmetrical.svg?raw';
+	import orientationRaw from '$lib/runemarks/svg/twists-orientation.svg?raw';
+	import shieldRaw      from '$lib/runemarks/svg/deployment-shield.svg?raw';
 
 	let {
 		data,
 		printerFriendly = false,
 		showRunemarks = true,
+		showOrientation = true,
+		showMatchedPlay = true,
 		showPositionDots = false,
 		measurementStartPos = undefined,
 		onPositionClick = undefined,
@@ -16,6 +20,8 @@
 		data: DeploymentCardData;
 		printerFriendly?: boolean;
 		showRunemarks?: boolean;
+		showOrientation?: boolean;
+		showMatchedPlay?: boolean;
 		showPositionDots?: boolean;
 		measurementStartPos?: DeploymentPosition;
 		onPositionClick?: (pos: DeploymentPosition, clientX: number, clientY: number) => void;
@@ -32,6 +38,11 @@
 		}
 		return map;
 	});
+
+	// Set of positions occupied by objectives
+	const objectivePositions = $derived(
+		new Set((data.objectives ?? []).map((o: DeploymentObjective) => o.position))
+	);
 
 	const ALL_POSITIONS: DeploymentPosition[] = [
 		...Array.from({length: 7}, (_, r) =>
@@ -57,9 +68,11 @@
 			.trim();
 	}
 
-	const daggerInner = innerContent(daggerRaw);
-	const hammerInner = innerContent(hammerRaw);
-	const shieldInner = innerContent(shieldRaw);
+	const daggerInner     = innerContent(daggerRaw);
+	const hammerInner     = innerContent(hammerRaw);
+	const matchedPlayInner = innerContent(matchedPlayRaw);
+	const orientationInner = innerContent(orientationRaw);
+	const shieldInner     = innerContent(shieldRaw);
 
 	// Icon viewBoxes differ between assets
 	const iconViewBox: Record<string, string> = {
@@ -87,6 +100,7 @@
 	const CNR_B = 540;
 
 	// Shape geometry
+	const OBJECTIVE_R    = 16;  // objective circle radius
 	const SHAPE_R        = 26;  // RND label anchor — uniform vertical position across all shapes
 	const CIRCLE_R       = 22;  // circle radius — smaller than diamond for optical balance
 	const ICON_SZ_DAGGER = 29;  // dagger icon
@@ -181,6 +195,30 @@
 		<!-- Battlefield rectangle -->
 		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill={printerFriendly ? 'white' : '#d9b8a8'} stroke={printerFriendly ? '#000' : 'none'} stroke-width="1"/>
 
+		<!-- Orientation runemark — top-left corner, 20px inset matching caption spacing -->
+		{#if showOrientation}
+			{@const rmFill = printerFriendly ? '#000' : '#5a0a14'}
+			{#if showRunemarks}
+				<svg x="20" y="20" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
+					{@html orientationInner}
+				</svg>
+			{:else}
+				<text x="36" y="36" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="22" fill={rmFill}>↑</text>
+			{/if}
+		{/if}
+
+		<!-- Matched Play runemark — top-right corner, 20px inset matching caption spacing -->
+		{#if showMatchedPlay}
+			{@const rmFill = printerFriendly ? '#000' : '#5a0a14'}
+			{#if showRunemarks}
+				<svg x="863" y="20" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
+					{@html matchedPlayInner}
+				</svg>
+			{:else}
+				<text x="879" y="36" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="14" fill={rmFill}>MP</text>
+			{/if}
+		{/if}
+
 		<!-- Deployment zone fills (behind dashed lines) -->
 		{#each data.players as player, pi}
 			{#each (player.zones ?? []) as zone}
@@ -265,7 +303,13 @@
 			{/if}
 		{/each}
 
-		<!-- Deployment point shapes -->
+		<!-- Objective markers — rendered below deployment point shapes -->
+	{#each (data.objectives ?? []) as obj}
+		{@const [cx, cy] = getCoords(obj.position)}
+		<circle cx={cx} cy={cy} r={OBJECTIVE_R} fill="#000"/>
+	{/each}
+
+	<!-- Deployment point shapes -->
 		{#each data.players as player, pi}
 			{#each player.points as point}
 				{@const [cx, cy] = getCoords(point.position)}
@@ -273,21 +317,7 @@
 				{@const strokeColor = printerFriendly ? '#000' : 'none'}
 				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
 
-				<!-- RND label above shape -->
-				{#if point.rnd}
-					<text
-						x={cx}
-						y={cy - SHAPE_R - RND_OFF}
-						text-anchor="middle"
-						font-family="'Germania One', serif"
-						font-size="15"
-						fill={printerFriendly ? '#000' : 'white'}
-						stroke={printerFriendly ? 'none' : '#000'}
-						stroke-width="3"
-						paint-order="stroke"
-					>{point.rnd}</text>
-				{/if}
-
+	
 				<!-- Shape -->
 				{#if point.icon === 'shield'}
 					<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
@@ -322,24 +352,14 @@
 					</svg>
 				{:else}
 					<text
-						x={cx} y={cy + 8}
+						x={cx}
+						y={point.icon === 'dagger' ? cy - CIRCLE_R / 6 : cy}
 						text-anchor="middle"
+						dominant-baseline="central"
 						font-family="'Germania One', serif"
 						font-size="24"
 						fill={iconColor}
 					>{point.icon.charAt(0).toUpperCase()}</text>
-				{/if}
-
-				<!-- Player badge (printer-friendly only) — left of shape, vertically centred -->
-				{#if printerFriendly}
-					<text
-						x={cx - CIRCLE_R - 4}
-						y={cy + 5}
-						text-anchor="end"
-						font-family="'Germania One', serif"
-						font-size="14"
-						fill="#000"
-					>{PLAYER_BADGES[pi]}</text>
 				{/if}
 
 			{/each}
@@ -350,6 +370,7 @@
 			{#each ALL_POSITIONS as pos}
 				{@const [px, py] = getCoords(pos)}
 				{@const occupiedBy = occupancy.get(pos)}
+				{@const isObjective = objectivePositions.has(pos)}
 				{@const isStart = pos === measurementStartPos}
 				<g
 					class="pos-group"
@@ -367,13 +388,52 @@
 						cx={px} cy={py} r="7"
 						class="pos-dot"
 						class:pos-dot--occupied={!!occupiedBy}
+						class:pos-dot--objective={isObjective}
 						style={occupiedBy ? `fill: ${COLORS[occupiedBy]}; stroke: white;` : ''}
 					/>
 				</g>
 			{/each}
 		{/if}
 
+	<!-- Player badges — printer-friendly, rendered last to sit above all shapes and lines -->
+	{#if printerFriendly}
+		{#each data.players as player, pi}
+			{#each player.points as point}
+				{@const [cx, cy] = getCoords(point.position)}
+				<circle cx={cx - CIRCLE_R - 10} cy={cy} r="9" fill="white"/>
+				<text
+					x={cx - CIRCLE_R - 4}
+					y={cy}
+					text-anchor="end"
+					dominant-baseline="central"
+					font-family="'Germania One', serif"
+					font-size="14"
+					fill="#000"
+				>{PLAYER_BADGES[pi]}</text>
+			{/each}
+		{/each}
+	{/if}
+
 	</svg>
+
+	<!-- RND labels — HTML divs so background is a clean rectangle -->
+	{#each data.players as player}
+		{#each player.points as point}
+			{#if point.rnd}
+				{@const [cx, cy] = getCoords(point.position)}
+				<div class="rnd-label" class:rnd-label--pf={printerFriendly} style="left:{cx}px; top:{cy - SHAPE_R - RND_OFF - 4}px">{point.rnd}</div>
+			{/if}
+		{/each}
+	{/each}
+
+	<!-- Objective labels — HTML divs so background sizes to text width -->
+	{#each (data.objectives ?? []) as obj}
+		{#if obj.label}
+			{@const [cx, cy] = getCoords(obj.position)}
+			<div class="objective-label" class:objective-label--pf={printerFriendly} style="left:{cx}px; top:{cy + OBJECTIVE_R + 4}px">{obj.label}</div>
+		{/if}
+	{/each}
+
 	{#if data.name}
 		<div class="card-name">{data.name}</div>
 	{/if}
@@ -412,6 +472,49 @@
 
 	.card.is-printer-friendly .card-name {
 		opacity: 1;
+	}
+
+	.rnd-label {
+		position: absolute;
+		transform: translate(-50%, -50%);
+		background: #faf6f3;
+		border: none;
+		outline: none;
+		box-shadow: none;
+		border-radius: 4px;
+		padding: 2px 6px;
+		font-family: 'Germania One', serif;
+		font-size: 14px;
+		color: #000;
+		white-space: nowrap;
+		line-height: 1.2;
+		pointer-events: none;
+	}
+
+	.rnd-label--pf {
+		background: white;
+	}
+
+	.objective-label {
+		position: absolute;
+		transform: translate(-50%, 0);
+		background: #000;
+		border: none;
+		outline: none;
+		box-shadow: none;
+		border-radius: 4px;
+		padding: 2px 6px;
+		font-family: 'Germania One', serif;
+		font-size: 13px;
+		color: #faf6f3;
+		white-space: nowrap;
+		line-height: 1.2;
+		pointer-events: none;
+	}
+
+	.pos-dot--objective {
+		fill: #000;
+		stroke: #faf6f3;
 	}
 
 	.pos-dot {
