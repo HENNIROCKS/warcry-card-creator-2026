@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-26">
+              <span class="session-date">2026-03-26</span>
+              <span class="session-title">Deployment Card — UX Polish &amp; Code Cleanup</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-25">
               <span class="session-date">2026-03-25</span>
               <span class="session-title">Deployment Card — Card-First UI Rebuild</span>
@@ -1395,6 +1401,20 @@
                   </td>
                   <td>Mar 25</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-26-built" onclick="activateSession('march-26')"
+                      >Deployment card: View dropdown collapses display toggles; Show Runemarks toggle switches SVG icons ↔ letter fallback; dropdown anchored to its button via <code>getBoundingClientRect()</code></a>
+                  </td>
+                  <td>Mar 26</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-26-decisions" onclick="activateSession('march-26')"
+                      >Popover overflow clamping: <code>bind:this</code> + <code>$effect</code> measures rendered height post-DOM-update, shifts up if it overflows viewport</a>
+                  </td>
+                  <td>Mar 26</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1939,6 +1959,134 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-03-26 — Deployment Card UX Polish & Code Cleanup
+    ══════════════════════════════════════════ -->
+        <div id="session-march-26" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-26</span>
+              <span class="badge badge-green">View dropdown &amp; Show Runemarks</span>
+              <span class="badge badge-green">Dropdown fixes &amp; mutual exclusion</span>
+              <span class="badge badge-green">i18n &amp; CSS var cleanup</span>
+            </div>
+            <h1>Deployment Card — UX Polish &amp; Code Cleanup</h1>
+            <p>
+              Header enlarged for better touch targets; two display toggles collapsed into a View
+              dropdown; Show Runemarks toggle switches deployment bubbles between SVG icons and letter
+              fallback. Load JSON dropdown repositioned to anchor under its own button. All three
+              dropdowns made mutually exclusive. Popovers clamped to viewport with a post-render
+              <code>$effect</code>. Hardcoded strings replaced with <code>t()</code> calls across all
+              four editors; hardcoded colours in popover style block replaced with CSS custom
+              properties. CSS variable column alignment normalised in <code>app.css</code>. Dead
+              state, imports, and constants removed.
+            </p>
+          </div>
+
+          <section id="march-26-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Header Resize &amp; View Dropdown</h3>
+            <ul>
+              <li><strong>Header enlarged</strong>: padding <code>px-3 py-2</code> → <code>px-4 py-3</code>; all buttons <code>h-7</code> → <code>h-9</code>; player colour circles <code>w-7 h-7</code> → <code>w-9 h-9</code>; separators <code>h-5</code> → <code>h-7</code>; text <code>text-xs</code> → <code>text-sm</code>. <code>HEADER_H</code> updated to 61 (py-3=12 + h-9=36 + py-3=12 + border=1).</li>
+              <li><strong>View dropdown</strong>: new split-style button added after the Overlays pill; dropdown contains "Show Runemarks" checkbox toggle. Opening it closes the other two dropdowns. Anchored via <code>getBoundingClientRect().left</code> captured at open time.</li>
+              <li><strong>Show Runemarks toggle</strong>: <code>showRunemarks = $state(true)</code> in <code>+page.svelte</code>, passed as prop to <code>DeploymentCard</code>. When on: SVG icon (<code>dagger</code>/<code>hammer</code>/<code>shield</code>) rendered inline in bubble. When off: letter fallback (<code>D</code>/<code>H</code>/<code>S</code>) rendered as <code>&lt;text&gt;</code> in Germania One.</li>
+            </ul>
+            <h3>Dropdown Fixes</h3>
+            <ul>
+              <li><strong>Load JSON anchored correctly</strong>: previously used hardcoded <code>right: 12px</code> so it appeared under the Export PNG button. Now captures <code>jsonBtnEl.getBoundingClientRect().left</code> at open time and uses <code>left: {jsonDropdownLeft}px</code> as the fixed-position anchor.</li>
+              <li><strong>Mutual exclusion</strong>: each dropdown's open handler closes the other two first. Eliminates multiple open dropdowns overlapping each other.</li>
+              <li><strong>Dropdown top position</strong>: changed from header-bottom (61 px) to button-bottom (52 px = py-3 12 px + h-9 36 px + 4 px gap) so dropdowns sit immediately below their trigger button.</li>
+            </ul>
+            <h3>Popover Overflow Clamping</h3>
+            <ul>
+              <li><strong>Post-render clamping</strong>: <code>bind:this={popoverEl}</code> + <code>$effect</code> — after each render, measures <code>popoverEl.getBoundingClientRect().bottom</code> against <code>viewportHeight - 8</code>; shifts <code>popoverEl.style.top</code> up by the overflow amount if needed. Safety net: <code>max-height: calc(100dvh - 16px); overflow-y: auto</code> on popover container.</li>
+            </ul>
+            <h3>Code Cleanup</h3>
+            <ul>
+              <li><strong>Dead state removed</strong>: <code>activeIcon</code> (was always <code>'dagger'</code>, never updated), <code>ZONE_PRESETS</code> (declared but unused in template)</li>
+              <li><strong>Bug fixed</strong>: <code>loadLayout()</code> was closing <code>showDropdown</code> instead of <code>showJsonDropdown</code> — layout loaded but dropdown stayed open</li>
+              <li><strong><code>ZonePreset</code> import removed</strong> from types destructure (unused after ZONE_PRESETS removal)</li>
+              <li><strong>Stale runemark category imports removed</strong> from an earlier misimplementation (cardDecksRunemarks, fighterRunemarks, etc.)</li>
+            </ul>
+            <h3>i18n &amp; CSS Variables</h3>
+            <ul>
+              <li><strong>New i18n keys</strong>: <code>ui.view</code> (en: "View", de: "Ansicht"), <code>ui.exported-card-alt</code> (en: "Exported card", de: "Exportierte Karte")</li>
+              <li><strong>All four editors</strong>: <code>alt="Exported card"</code> → <code>alt={t('ui.exported-card-alt')}</code> in <code>fighter/+page.svelte</code>, <code>text/+page.svelte</code>, <code>card-back/+page.svelte</code>, <code>deployment/+page.svelte</code></li>
+              <li><strong>Popover style block</strong>: all hardcoded hex colours (<code>#27272a</code>, <code>#3f3f46</code>, <code>#fff</code>, <code>#d4d4d8</code>, <code>#52525b</code>) replaced with <code>--ui-surface</code>, <code>--ui-border</code>, <code>--ui-text</code>, <code>--ui-surface-2</code>, <code>--ui-text-dim</code>, <code>--ui-surface-hover</code></li>
+              <li><strong><code>app.css</code> alignment</strong>: <code>--ui-surface</code>, <code>--ui-surface-2</code>, <code>--ui-surface-hover</code>, and <code>--ui-border</code> had one extra space vs other vars; all 14 variables in both <code>:root</code> and <code>[data-theme="light"]</code> now align at the same column (<code>--ui-surface-hover</code> sets the width)</li>
+            </ul>
+          </section>
+
+          <section id="march-26-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <div class="decision-q">Why a View dropdown instead of individual header toggles?</div>
+              <div class="decision-a">The header was getting cluttered. Grouping display-only toggles (Show Runemarks, and future options) under a single View button keeps the toolbar scannable while leaving room to add more without another refactor.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why anchor dropdowns to their button (52 px) instead of the header bottom (61 px)?</div>
+              <div class="decision-a">Conventional dropdown UX: the menu should appear immediately below the button that opened it. The 9 px difference was noticeable as a gap. Using button-bottom (h-9 = 36 px, plus py-3 = 12 px top padding + 4 px gap = 52 px) feels tight and natural.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why mutual exclusion for all three dropdowns?</div>
+              <div class="decision-a">Opening a second dropdown left the first one layered underneath it. No use case requires two dropdowns open simultaneously. Each open handler now closes the other two before potentially opening itself.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why CSS custom properties in the popover style block instead of Tailwind classes?</div>
+              <div class="decision-a">The popover is a scoped <code>&lt;style&gt;</code> block — Tailwind utility classes don't apply there. Hardcoded dark hex values were visually wrong in light mode. Switching to <code>--ui-surface</code>, <code>--ui-border</code>, etc. gets correct colours in both themes automatically, matching every other themed element in the app.</div>
+            </div>
+            <div class="decision">
+              <div class="decision-q">Why letter fallback (D/H/S) when runemarks are hidden?</div>
+              <div class="decision-a">The deployment bubbles need something in the icon slot for legibility — a blank bubble is ambiguous. A single uppercase letter in Germania One is visually consistent with the rest of the card's typography and makes the bubble type instantly readable even in printer-friendly mode.</div>
+            </div>
+          </section>
+
+          <section id="march-26-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>Zones UI — <code>addZone</code>/<code>removeZone</code> functions exist but have no header entry point yet</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>More snap positions — user may need more than 33; deferred pending feedback</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>Mobile visual testing — full mobile test pass not completed</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Deferred</span></td>
+                  <td>RND label editing in popovers — input field exists but UX not validated on device</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-26-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Header resize; View dropdown + showRunemarks toggle; Load JSON dropdown anchored to button; mutual exclusion for all three dropdowns; dropdown top = 52 px; popover overflow clamping; CSS vars in style block; i18n; dead state/constants/imports removed; loadLayout bug fixed</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td><code>showRunemarks</code> prop; SVG icon vs letter fallback conditional rendering</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>DeploymentIconType</code> reverted to <code>'dagger' | 'shield' | 'hammer'</code> union (was briefly widened to <code>string</code>)</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>ui.view</code>, <code>ui.exported-card-alt</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same two keys in German</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td><code>alt="Exported card"</code> → <code>alt={t('ui.exported-card-alt')}</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Same alt text i18n</td></tr>
+                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>Same alt text i18n</td></tr>
+                <tr><td><code>src/app.css</code></td><td>CSS variable column alignment normalised across all 14 vars in <code>:root</code> and <code>[data-theme="light"]</code></td></tr>
+              </tbody>
+            </table>
+          </section>
+
+        </div>
+        <!-- /session-march-26 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-22 — Card Elements, Fighter Parity & Text Card Polish
@@ -7734,6 +7882,7 @@
 
     <script>
       const sessions = [
+        "march-26",
         "march-25",
         "march-24",
         "march-23",
