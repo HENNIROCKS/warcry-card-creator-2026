@@ -44,7 +44,8 @@
 		'OUT-CNR-TL', 'OUT-CNR-TR', 'OUT-CNR-BL', 'OUT-CNR-BR',
 	];
 
-	// Strip outer <svg> wrapper and force all fills to white
+	// Strip outer <svg> wrapper and remove all fill attributes so paths
+	// inherit the fill set on the outer <svg> element at render time.
 	function innerContent(raw: string): string {
 		return raw
 			.replace(/<!--[\s\S]*?-->/g, '')
@@ -52,7 +53,7 @@
 			.replace(/<svg[^>]*>/g, '')
 			.replace(/<\/svg>/g, '')
 			.replace(/<title>[^<]*<\/title>/g, '')
-			.replace(/fill="[^"]*"/g, 'fill="white"')
+			.replace(/\s*fill="[^"]*"/g, '')
 			.trim();
 	}
 
@@ -86,16 +87,13 @@
 	const CNR_T = 34;
 	const CNR_B = 540;
 
-	// Bubble geometry
-	const BH        = 48;  // bubble height
-	const BPAD      = 8;   // horizontal padding inside bubble
-	const ICON_SZ   = 32;  // icon size inside bubble
-	const GAP       = 6;   // gap between icon and RND text
-	const CHAR_W    = 9;   // approximate char width for Germania One at 17px
-	const BW_ICON   = BPAD + ICON_SZ + BPAD; // bubble width, icon only (48)
-	const BRAD      = 8;   // corner radius
-	const TAIL_LEN  = 10;  // tail triangle length
-	const TAIL_W    = 12;  // tail triangle base width
+	// Shape geometry
+	const SHAPE_R        = 26;  // RND label anchor — uniform vertical position across all shapes
+	const CIRCLE_R       = 22;  // circle radius — smaller than diamond for optical balance
+	const ICON_SZ_DAGGER = 29;  // dagger icon
+	const ICON_SZ_HAMMER = 28;  // hammer icon
+	const ICON_SZ_SHIELD = 32;  // shield icon
+	const RND_OFF        = 8;   // gap between shape top and RND label baseline
 
 	const PLAYER_BADGES = ['①', '②', '③', '④'];
 
@@ -127,16 +125,18 @@
 		return undefined;
 	}
 
-	// Bubble width fitted to the actual RND text length.
-	function bubbleWidth(rnd: string): number {
-		return rnd ? BPAD + ICON_SZ + GAP + Math.ceil(rnd.length * CHAR_W) + BPAD : BW_ICON;
-	}
+	// Equilateral triangle, point-down, spanning cy - CIRCLE_R to cy + CIRCLE_R.
+	// Same top and bottom extent as circle and diamond.
+	// Height H = 2 * CIRCLE_R → half base-width = H / √3 = 2 * CIRCLE_R / √3
+	const TRI_HW = 2 * CIRCLE_R / Math.sqrt(3);
+	const triPoints = (cx: number, cy: number) =>
+		`${cx - TRI_HW},${cy - CIRCLE_R} ${cx + TRI_HW},${cy - CIRCLE_R} ${cx},${cy + CIRCLE_R}`;
 
 	const COLORS: Record<DeploymentColor, string> = {
 		red:    '#c0272d',
 		blue:   '#2563eb',
 		green:  '#16a34a',
-		yellow: '#ca8a04',
+		yellow: '#f59e0b',
 	};
 
 	function getCoords(pos: DeploymentPosition): [number, number] {
@@ -157,77 +157,6 @@
 		if (pos === 'OUT-CNR-BL') return [CNR_L, CNR_B];
 		if (pos === 'OUT-CNR-BR') return [CNR_R, CNR_B];
 		return [CNR_L, CNR_T]; // OUT-CNR-TL
-	}
-
-	// Returns the angle (radians) the tail should point toward, or null for no tail.
-	// Corner positions use the exact angle to the nearest battlefield corner.
-	function getTailAngle(pos: DeploymentPosition): number | null {
-		const DOWN  =  Math.PI / 2;
-		const UP    = -Math.PI / 2;
-		const RIGHT =  0;
-		const LEFT  =  Math.PI;
-		if (/^R[12]C/.test(pos) || /^OUT-T/.test(pos)) return DOWN;
-		if (/^R[45]C/.test(pos) || /^OUT-B/.test(pos)) return UP;
-		if (/^OUT-L/.test(pos)) return RIGHT;
-		if (/^OUT-R/.test(pos)) return LEFT;
-		const [cx, cy] = getCoords(pos);
-		if (pos === 'OUT-CNR-TL') return Math.atan2(BF_T - cy, BF_L - cx);
-		if (pos === 'OUT-CNR-TR') return Math.atan2(BF_T - cy, BF_R - cx);
-		if (pos === 'OUT-CNR-BL') return Math.atan2(BF_B - cy, BF_L - cx);
-		if (pos === 'OUT-CNR-BR') return Math.atan2(BF_B - cy, BF_R - cx);
-		return null;
-	}
-
-	// Computes tail polygon points in bubble-local coordinates for any angle.
-	// When the exit point lands in the rounded-corner zone the tail base is split
-	// across the two adjacent straight edges (one point on each), keeping the
-	// base flush with the visible rounded rect. The tip always points in the
-	// correct direction.
-	function makeTailPoints(BW: number, BH: number, angle: number): string {
-		const halfW = BW / 2;
-		const halfH = BH / 2;
-		const cos   = Math.cos(angle);
-		const sin   = Math.sin(angle);
-
-		// Exit point relative to bubble centre
-		let ex: number, ey: number;
-		if (Math.abs(cos) * halfH >= Math.abs(sin) * halfW) {
-			ex = cos > 0 ? halfW : -halfW;
-			ey = Math.abs(cos) > 1e-10 ? (sin / cos) * ex : 0;
-		} else {
-			ey = sin > 0 ? halfH : -halfH;
-			ex = Math.abs(sin) > 1e-10 ? (cos / sin) * ey : 0;
-		}
-
-		const fmt = (n: number) => n.toFixed(1);
-
-		// If exit point falls in the rounded-corner zone, anchor the base on the
-		// two straight edges that meet at that corner instead.
-		if (Math.abs(ex) > halfW - BRAD && Math.abs(ey) > halfH - BRAD) {
-			// Bounding-box corner in local coords
-			const lcx = ex + halfW;  // 0 or BW
-			const lcy = ey + halfH;  // 0 or BH
-
-			// One base point on the horizontal edge, one on the vertical edge
-			const b1x = lcx - Math.sign(cos) * TAIL_W;
-			const b2y = lcy - Math.sign(sin) * TAIL_W;
-
-			// Tip: extend from bounding-box corner in the tail direction
-			const tx = lcx + cos * TAIL_LEN;
-			const ty = lcy + sin * TAIL_LEN;
-
-			return `${fmt(b1x)},${fmt(lcy)} ${fmt(lcx)},${fmt(b2y)} ${fmt(tx)},${fmt(ty)}`;
-		}
-
-		// Regular case: base centred on the exit edge, perpendicular offset.
-		const lx = ex + halfW;
-		const ly = ey + halfH;
-		const tx = lx + cos * TAIL_LEN;
-		const ty = ly + sin * TAIL_LEN;
-		const px = -sin * (TAIL_W / 2);
-		const py =  cos * (TAIL_W / 2);
-
-		return `${fmt(lx+px)},${fmt(ly+py)} ${fmt(lx-px)},${fmt(ly-py)} ${fmt(tx)},${fmt(ty)}`;
 	}
 </script>
 
@@ -333,32 +262,131 @@
 			{/if}
 		{/each}
 
-		<!-- Deployment point speech bubbles -->
+		<!-- Deployment point shapes -->
 		{#each data.players as player, pi}
-		{#each player.points as point}
-			{@const [cx, cy] = getCoords(point.position)}
-			{@const color = printerFriendly ? '#000' : COLORS[player.color]}
-			{@const tailAngle = getTailAngle(point.position)}
-			{@const hasRnd = !!point.rnd}
-			{@const BW = bubbleWidth(point.rnd)}
+			{#each player.points as point}
+				{@const [cx, cy] = getCoords(point.position)}
+				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
+				{@const strokeColor = printerFriendly ? '#000' : 'none'}
+				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
 
-			<g transform="translate({cx - BW / 2}, {cy - BH / 2})">
+			{/each}
+		{/each}
 
-				<!-- Tail triangle -->
-				{#if tailAngle !== null}
-					<polygon points={makeTailPoints(BW, BH, tailAngle)} fill={color}/>
+		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+
+		<!-- Measurement lines — rendered below bubbles and dots -->
+		{#each (data.measurements ?? []) as m, mi}
+			{@const [sx, sy] = getCoords(m.startPos)}
+			{@const [ex0, ey0] = getCoords(m.endPos)}
+			{@const rawDx = ex0 - sx}
+			{@const rawDy = ey0 - sy}
+			{@const len = Math.hypot(rawDx, rawDy)}
+			{@const dx = len > 0 ? rawDx / len : 1}
+			{@const dy = len > 0 ? rawDy / len : 0}
+			{@const mx = (sx + ex0) / 2}
+			{@const my = (sy + ey0) / 2}
+			{@const lx1 = m.startCap === 'arrow' ? sx + dx * ARROW_LEN : m.startCap === 'dot' ? sx + dx * DOT_R : sx}
+			{@const ly1 = m.startCap === 'arrow' ? sy + dy * ARROW_LEN : m.startCap === 'dot' ? sy + dy * DOT_R : sy}
+			{@const lx2 = m.endCap   === 'arrow' ? ex0 - dx * ARROW_LEN : m.endCap   === 'dot' ? ex0 - dx * DOT_R : ex0}
+			{@const ly2 = m.endCap   === 'arrow' ? ey0 - dy * ARROW_LEN : m.endCap   === 'dot' ? ey0 - dy * DOT_R : ey0}
+			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
+			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
+
+			<!-- Start cap -->
+			{#if m.startCap === 'dot'}
+				<circle cx={sx} cy={sy} r={DOT_R} fill="#222"/>
+			{:else if m.startCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({sx},{sy}) rotate({startAngle})"/>
+			{/if}
+
+			<line
+				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
+				stroke="#222" stroke-width="5"
+				marker-end={capMarker(m.endCap)}
+				marker-start={capMarker(m.startCap)}
+			/>
+
+			<!-- End cap -->
+			{#if m.endCap === 'dot'}
+				<circle cx={ex0} cy={ey0} r={DOT_R} fill="#222"/>
+			{:else if m.endCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({ex0},{ey0}) rotate({endAngle})"/>
+			{/if}
+
+			{#if m.label}
+				<text
+					x={mx - dy * LABEL_OFF}
+					y={my + dx * LABEL_OFF + 5}
+					font-family="'Germania One', serif"
+					font-size="16"
+					fill="#222"
+					text-anchor="middle"
+				>{m.label}</text>
+			{/if}
+
+			<!-- Full-line tap target -->
+			{#if onMeasurementClick}
+				<line
+					x1={sx} y1={sy} x2={ex0} y2={ey0}
+					stroke="transparent" stroke-width="24"
+					style="cursor: pointer;"
+					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
+				/>
+			{/if}
+		{/each}
+
+		<!-- Deployment point shapes -->
+		{#each data.players as player, pi}
+			{#each player.points as point}
+				{@const [cx, cy] = getCoords(point.position)}
+				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
+				{@const strokeColor = printerFriendly ? '#000' : 'none'}
+				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
+
+				<!-- RND label above shape -->
+				{#if point.rnd}
+					<text
+						x={cx}
+						y={cy - SHAPE_R - RND_OFF}
+						text-anchor="middle"
+						font-family="'Germania One', serif"
+						font-size="15"
+						fill={printerFriendly ? '#000' : 'white'}
+						stroke={printerFriendly ? 'none' : '#000'}
+						stroke-width="3"
+						paint-order="stroke"
+					>{point.rnd}</text>
 				{/if}
 
-				<!-- Bubble background -->
-				<rect x="0" y="0" width={BW} height={BH} rx={BRAD} fill={color}/>
+				<!-- Shape -->
+				{#if point.icon === 'shield'}
+					<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+				{:else if point.icon === 'hammer'}
+					<polygon
+						points="{cx},{cy - CIRCLE_R} {cx + CIRCLE_R},{cy} {cx},{cy + CIRCLE_R} {cx - CIRCLE_R},{cy}"
+						fill={fillColor} stroke={strokeColor} stroke-width="1.5"
+					/>
+				{:else}
+					<!-- dagger = triangle, point down -->
+					<polygon points={triPoints(cx, cy)} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+				{/if}
 
-				<!-- Icon: runemark SVG or fallback letter -->
+				<!-- Icon centered inside shape -->
 				{#if showRunemarks}
+					{@const sz = point.icon === 'shield' ? ICON_SZ_SHIELD : point.icon === 'dagger' ? ICON_SZ_DAGGER : ICON_SZ_HAMMER}
+					{@const iconCy = point.icon === 'dagger' ? cy - CIRCLE_R / 3 + 2 : cy}
 					<svg
-						x={BPAD} y={(BH - ICON_SZ) / 2}
-						width={ICON_SZ} height={ICON_SZ}
+						x={cx - sz / 2} y={iconCy - sz / 2}
+						width={sz} height={sz}
 						viewBox={iconViewBox[point.icon]}
-						fill="white"
+						fill={iconColor}
 						overflow="visible"
 					>
 						{#if point.icon === 'dagger'}
@@ -371,43 +399,176 @@
 					</svg>
 				{:else}
 					<text
-						x={BPAD + ICON_SZ / 2}
-						y={BH / 2 + 8}
+						x={cx} y={cy + 8}
 						text-anchor="middle"
 						font-family="'Germania One', serif"
 						font-size="24"
-						fill="white"
+						fill={iconColor}
 					>{point.icon.charAt(0).toUpperCase()}</text>
 				{/if}
 
-				<!-- RND label -->
-				{#if hasRnd}
-					<text
-						x={BPAD + ICON_SZ + GAP}
-						y={BH / 2 + 6}
-						font-family="'Germania One', serif"
-						font-size="17"
-						fill="white"
-					>{point.rnd}</text>
-				{/if}
-
-				<!-- Player badge (printer-friendly only) -->
+				<!-- Player badge (printer-friendly only) — left of shape, vertically centred -->
 				{#if printerFriendly}
 					<text
-						x={BW / 2}
-						y={-5}
-						text-anchor="middle"
+						x={cx - CIRCLE_R - 4}
+						y={cy + 5}
+						text-anchor="end"
 						font-family="'Germania One', serif"
-						font-size="12"
+						font-size="14"
 						fill="#000"
-						stroke="white"
-						stroke-width="4"
-						paint-order="stroke"
 					>{PLAYER_BADGES[pi]}</text>
 				{/if}
 
-			</g>
+			{/each}
 		{/each}
+
+		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
+
+		<!-- Measurement lines — rendered below bubbles and dots -->
+		{#each (data.measurements ?? []) as m, mi}
+			{@const [sx, sy] = getCoords(m.startPos)}
+			{@const [ex0, ey0] = getCoords(m.endPos)}
+			{@const rawDx = ex0 - sx}
+			{@const rawDy = ey0 - sy}
+			{@const len = Math.hypot(rawDx, rawDy)}
+			{@const dx = len > 0 ? rawDx / len : 1}
+			{@const dy = len > 0 ? rawDy / len : 0}
+			{@const mx = (sx + ex0) / 2}
+			{@const my = (sy + ey0) / 2}
+			{@const lx1 = m.startCap === 'arrow' ? sx + dx * ARROW_LEN : m.startCap === 'dot' ? sx + dx * DOT_R : sx}
+			{@const ly1 = m.startCap === 'arrow' ? sy + dy * ARROW_LEN : m.startCap === 'dot' ? sy + dy * DOT_R : sy}
+			{@const lx2 = m.endCap   === 'arrow' ? ex0 - dx * ARROW_LEN : m.endCap   === 'dot' ? ex0 - dx * DOT_R : ex0}
+			{@const ly2 = m.endCap   === 'arrow' ? ey0 - dy * ARROW_LEN : m.endCap   === 'dot' ? ey0 - dy * DOT_R : ey0}
+			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
+			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
+
+			<!-- Start cap -->
+			{#if m.startCap === 'dot'}
+				<circle cx={sx} cy={sy} r={DOT_R} fill="#222"/>
+			{:else if m.startCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({sx},{sy}) rotate({startAngle})"/>
+			{/if}
+
+			<line
+				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
+				stroke="#222" stroke-width="5"
+				marker-end={capMarker(m.endCap)}
+				marker-start={capMarker(m.startCap)}
+			/>
+
+			<!-- End cap -->
+			{#if m.endCap === 'dot'}
+				<circle cx={ex0} cy={ey0} r={DOT_R} fill="#222"/>
+			{:else if m.endCap === 'arrow'}
+				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
+					transform="translate({ex0},{ey0}) rotate({endAngle})"/>
+			{/if}
+
+			{#if m.label}
+				<text
+					x={mx - dy * LABEL_OFF}
+					y={my + dx * LABEL_OFF + 5}
+					font-family="'Germania One', serif"
+					font-size="16"
+					fill="#222"
+					text-anchor="middle"
+				>{m.label}</text>
+			{/if}
+
+			<!-- Full-line tap target -->
+			{#if onMeasurementClick}
+				<line
+					x1={sx} y1={sy} x2={ex0} y2={ey0}
+					stroke="transparent" stroke-width="24"
+					style="cursor: pointer;"
+					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
+				/>
+			{/if}
+		{/each}
+
+		<!-- Deployment point shapes -->
+		{#each data.players as player, pi}
+			{#each player.points as point}
+				{@const [cx, cy] = getCoords(point.position)}
+				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
+				{@const strokeColor = printerFriendly ? '#000' : 'none'}
+				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
+
+			<!-- RND label above shape -->
+			{#if point.rnd}
+				<text
+					x={cx}
+					y={cy - SHAPE_R - RND_OFF}
+					text-anchor="middle"
+					font-family="'Germania One', serif"
+					font-size="15"
+					fill={printerFriendly ? '#000' : 'white'}
+					stroke={printerFriendly ? 'none' : '#000'}
+					stroke-width="3"
+					paint-order="stroke"
+				>{point.rnd}</text>
+			{/if}
+
+			<!-- Shape -->
+			{#if point.icon === 'shield'}
+				<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+			{:else if point.icon === 'hammer'}
+				<polygon
+					points="{cx},{cy - CIRCLE_R} {cx + CIRCLE_R},{cy} {cx},{cy + CIRCLE_R} {cx - CIRCLE_R},{cy}"
+					fill={fillColor} stroke={strokeColor} stroke-width="1.5"
+				/>
+			{:else}
+				<!-- dagger = triangle, point down -->
+				<polygon points={triPoints(cx, cy)} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+			{/if}
+
+			<!-- Icon centered inside shape -->
+			{#if showRunemarks}
+				{@const sz = point.icon === 'shield' ? ICON_SZ_SHIELD : point.icon === 'dagger' ? ICON_SZ_DAGGER : ICON_SZ_HAMMER}
+				{@const iconCy = point.icon === 'dagger' ? cy - CIRCLE_R / 3 + 2 : cy}
+				<svg
+					x={cx - sz / 2} y={iconCy - sz / 2}
+					width={sz} height={sz}
+					viewBox={iconViewBox[point.icon]}
+					fill={iconColor}
+					overflow="visible"
+				>
+					{#if point.icon === 'dagger'}
+						{@html daggerInner}
+					{:else if point.icon === 'hammer'}
+						{@html hammerInner}
+					{:else}
+						{@html shieldInner}
+					{/if}
+				</svg>
+			{:else}
+				<text
+					x={cx} y={cy + 8}
+					text-anchor="middle"
+					font-family="'Germania One', serif"
+					font-size="24"
+					fill={iconColor}
+				>{point.icon.charAt(0).toUpperCase()}</text>
+			{/if}
+
+			<!-- Player badge (printer-friendly only) — left of shape, vertically centred -->
+			{#if printerFriendly}
+				<text
+					x={cx - CIRCLE_R - 4}
+					y={cy + 5}
+					text-anchor="end"
+					font-family="'Germania One', serif"
+					font-size="14"
+					fill="#000"
+				>{PLAYER_BADGES[pi]}</text>
+			{/if}
+
+			{/each}
 		{/each}
 
 		<!-- Position dots overlay — rendered on top of measurement lines and bubbles -->
@@ -499,8 +660,5 @@
 	.pos-group--interactive:hover .pos-dot {
 		opacity: 0.7;
 	}
-
-
-
 
 </style>

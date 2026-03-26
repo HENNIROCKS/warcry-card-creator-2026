@@ -143,7 +143,7 @@
 		red:    '#c0272d',
 		blue:   '#2563eb',
 		green:  '#16a34a',
-		yellow: '#ca8a04',
+		yellow: '#f59e0b',
 	};
 	const COLOR_ORDER: DeploymentColor[] = ['red', 'blue', 'green', 'yellow'];
 	const ICONS: DeploymentIconType[] = ['dagger', 'hammer', 'shield'];
