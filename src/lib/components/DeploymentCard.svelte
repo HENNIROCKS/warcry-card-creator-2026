@@ -34,13 +34,13 @@
 	});
 
 	const ALL_POSITIONS: DeploymentPosition[] = [
-		...Array.from({length: 5}, (_, r) =>
-			Array.from({length: 5}, (_, c) => `R${r+1}C${c+1}` as DeploymentPosition)
+		...Array.from({length: 7}, (_, r) =>
+			Array.from({length: 9}, (_, c) => `R${r+1}C${c+1}` as DeploymentPosition)
 		).flat(),
-		'OUT-T1', 'OUT-T2', 'OUT-T3', 'OUT-T4', 'OUT-T5',
-		'OUT-B1', 'OUT-B2', 'OUT-B3', 'OUT-B4', 'OUT-B5',
-		'OUT-L1', 'OUT-L2', 'OUT-L3', 'OUT-L4', 'OUT-L5',
-		'OUT-R1', 'OUT-R2', 'OUT-R3', 'OUT-R4', 'OUT-R5',
+		'OUT-T1', 'OUT-T2', 'OUT-T3', 'OUT-T4', 'OUT-T5', 'OUT-T6', 'OUT-T7', 'OUT-T8', 'OUT-T9',
+		'OUT-B1', 'OUT-B2', 'OUT-B3', 'OUT-B4', 'OUT-B5', 'OUT-B6', 'OUT-B7', 'OUT-B8', 'OUT-B9',
+		'OUT-L1', 'OUT-L2', 'OUT-L3', 'OUT-L4', 'OUT-L5', 'OUT-L6', 'OUT-L7',
+		'OUT-R1', 'OUT-R2', 'OUT-R3', 'OUT-R4', 'OUT-R5', 'OUT-R6', 'OUT-R7',
 		'OUT-CNR-TL', 'OUT-CNR-TR', 'OUT-CNR-BL', 'OUT-CNR-BR',
 	];
 
@@ -79,11 +79,10 @@
 	const BF_CY = BF_T  + BF_H / 2;
 
 	// Outer snap rail — corners of the zone just outside the battlefield.
-	// Outside edge positions (OUT-T/B/L/R 1–5) are distributed evenly between
-	// these corners, so all 7 points per side (corners + 5 edge dots) are
-	// equally spaced, giving an even visual distribution.
-	const CNR_L = 63;
-	const CNR_R = 852;
+	// Outside top/bottom have 9 edge dots (matching 9 inside columns); left/right
+	// have 7 edge dots (matching 7 inside rows). Corners bridge the gaps evenly.
+	const CNR_L = 73;
+	const CNR_R = 842;
 	const CNR_T = 34;
 	const CNR_B = 540;
 
@@ -140,19 +139,23 @@
 	};
 
 	function getCoords(pos: DeploymentPosition): [number, number] {
+		// Inside 7×9 grid — outermost positions land exactly on BF boundary.
+		// C1=BF_L, C9=BF_R (step = BF_W/8); R1=BF_T, R7=BF_B (step = BF_H/6).
 		const inside = pos.match(/^R(\d)C(\d)$/);
 		if (inside) return [
-			CNR_L + Number(inside[2]) * (CNR_R - CNR_L) / 6,
-			CNR_T + Number(inside[1]) * (CNR_B - CNR_T) / 6,
+			BF_L + (Number(inside[2]) - 1) * BF_W / 8,
+			BF_T + (Number(inside[1]) - 1) * BF_H / 6,
 		];
+		// Outside T/B — same x as inside columns, sitting at the CNR rail y
 		const outT = pos.match(/^OUT-T(\d)$/);
-		if (outT) return [CNR_L + Number(outT[1]) * (CNR_R - CNR_L) / 6, CNR_T];
+		if (outT) return [BF_L + (Number(outT[1]) - 1) * BF_W / 8, CNR_T];
 		const outB = pos.match(/^OUT-B(\d)$/);
-		if (outB) return [CNR_L + Number(outB[1]) * (CNR_R - CNR_L) / 6, CNR_B];
+		if (outB) return [BF_L + (Number(outB[1]) - 1) * BF_W / 8, CNR_B];
+		// Outside L/R — same y as inside rows, sitting at the CNR rail x
 		const outL = pos.match(/^OUT-L(\d)$/);
-		if (outL) return [CNR_L, CNR_T + Number(outL[1]) * (CNR_B - CNR_T) / 6];
+		if (outL) return [CNR_L, BF_T + (Number(outL[1]) - 1) * BF_H / 6];
 		const outR = pos.match(/^OUT-R(\d)$/);
-		if (outR) return [CNR_R, CNR_T + Number(outR[1]) * (CNR_B - CNR_T) / 6];
+		if (outR) return [CNR_R, BF_T + (Number(outR[1]) - 1) * BF_H / 6];
 		if (pos === 'OUT-CNR-TR') return [CNR_R, CNR_T];
 		if (pos === 'OUT-CNR-BL') return [CNR_L, CNR_B];
 		if (pos === 'OUT-CNR-BR') return [CNR_R, CNR_B];
@@ -199,87 +202,7 @@
 		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
 		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
 
-		<!-- Measurement lines — rendered below bubbles and dots -->
-		{#each (data.measurements ?? []) as m, mi}
-			{@const [sx, sy] = getCoords(m.startPos)}
-			{@const [ex0, ey0] = getCoords(m.endPos)}
-			{@const rawDx = ex0 - sx}
-			{@const rawDy = ey0 - sy}
-			{@const len = Math.hypot(rawDx, rawDy)}
-			{@const dx = len > 0 ? rawDx / len : 1}
-			{@const dy = len > 0 ? rawDy / len : 0}
-			{@const mx = (sx + ex0) / 2}
-			{@const my = (sy + ey0) / 2}
-			{@const lx1 = m.startCap === 'arrow' ? sx + dx * ARROW_LEN : m.startCap === 'dot' ? sx + dx * DOT_R : sx}
-			{@const ly1 = m.startCap === 'arrow' ? sy + dy * ARROW_LEN : m.startCap === 'dot' ? sy + dy * DOT_R : sy}
-			{@const lx2 = m.endCap   === 'arrow' ? ex0 - dx * ARROW_LEN : m.endCap   === 'dot' ? ex0 - dx * DOT_R : ex0}
-			{@const ly2 = m.endCap   === 'arrow' ? ey0 - dy * ARROW_LEN : m.endCap   === 'dot' ? ey0 - dy * DOT_R : ey0}
-			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
-			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
-
-			<!-- Start cap -->
-			{#if m.startCap === 'dot'}
-				<circle cx={sx} cy={sy} r={DOT_R} fill="#222"/>
-			{:else if m.startCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({sx},{sy}) rotate({startAngle})"/>
-			{/if}
-
-			<line
-				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
-				stroke="#222" stroke-width="5"
-				marker-end={capMarker(m.endCap)}
-				marker-start={capMarker(m.startCap)}
-			/>
-
-			<!-- End cap -->
-			{#if m.endCap === 'dot'}
-				<circle cx={ex0} cy={ey0} r={DOT_R} fill="#222"/>
-			{:else if m.endCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({ex0},{ey0}) rotate({endAngle})"/>
-			{/if}
-
-			{#if m.label}
-				<text
-					x={mx - dy * LABEL_OFF}
-					y={my + dx * LABEL_OFF + 5}
-					font-family="'Germania One', serif"
-					font-size="16"
-					fill="#222"
-					text-anchor="middle"
-				>{m.label}</text>
-			{/if}
-
-			<!-- Full-line tap target -->
-			{#if onMeasurementClick}
-				<line
-					x1={sx} y1={sy} x2={ex0} y2={ey0}
-					stroke="transparent" stroke-width="24"
-					style="cursor: pointer;"
-					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
-				/>
-			{/if}
-		{/each}
-
-		<!-- Deployment point shapes -->
-		{#each data.players as player, pi}
-			{#each player.points as point}
-				{@const [cx, cy] = getCoords(point.position)}
-				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
-				{@const strokeColor = printerFriendly ? '#000' : 'none'}
-				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
-
-			{/each}
-		{/each}
-
-		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-
-		<!-- Measurement lines — rendered below bubbles and dots -->
+		<!-- Measurement lines — rendered below deployment shapes -->
 		{#each (data.measurements ?? []) as m, mi}
 			{@const [sx, sy] = getCoords(m.startPos)}
 			{@const [ex0, ey0] = getCoords(m.endPos)}
@@ -422,156 +345,7 @@
 			{/each}
 		{/each}
 
-		<!-- Dashed centre lines — four arms radiating from centre so dashes originate at the cross -->
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_T} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_CX} y2={BF_B} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_L} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-		<line x1={BF_CX} y1={BF_CY} x2={BF_R} y2={BF_CY} stroke={printerFriendly ? '#000' : '#333'} stroke-width="2" stroke-dasharray="8 6"/>
-
-		<!-- Measurement lines — rendered below bubbles and dots -->
-		{#each (data.measurements ?? []) as m, mi}
-			{@const [sx, sy] = getCoords(m.startPos)}
-			{@const [ex0, ey0] = getCoords(m.endPos)}
-			{@const rawDx = ex0 - sx}
-			{@const rawDy = ey0 - sy}
-			{@const len = Math.hypot(rawDx, rawDy)}
-			{@const dx = len > 0 ? rawDx / len : 1}
-			{@const dy = len > 0 ? rawDy / len : 0}
-			{@const mx = (sx + ex0) / 2}
-			{@const my = (sy + ey0) / 2}
-			{@const lx1 = m.startCap === 'arrow' ? sx + dx * ARROW_LEN : m.startCap === 'dot' ? sx + dx * DOT_R : sx}
-			{@const ly1 = m.startCap === 'arrow' ? sy + dy * ARROW_LEN : m.startCap === 'dot' ? sy + dy * DOT_R : sy}
-			{@const lx2 = m.endCap   === 'arrow' ? ex0 - dx * ARROW_LEN : m.endCap   === 'dot' ? ex0 - dx * DOT_R : ex0}
-			{@const ly2 = m.endCap   === 'arrow' ? ey0 - dy * ARROW_LEN : m.endCap   === 'dot' ? ey0 - dy * DOT_R : ey0}
-			{@const endAngle   = Math.atan2(dy,  dx)  * 180 / Math.PI}
-			{@const startAngle = Math.atan2(-dy, -dx) * 180 / Math.PI}
-
-			<!-- Start cap -->
-			{#if m.startCap === 'dot'}
-				<circle cx={sx} cy={sy} r={DOT_R} fill="#222"/>
-			{:else if m.startCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({sx},{sy}) rotate({startAngle})"/>
-			{/if}
-
-			<line
-				x1={lx1} y1={ly1} x2={lx2} y2={ly2}
-				stroke="#222" stroke-width="5"
-				marker-end={capMarker(m.endCap)}
-				marker-start={capMarker(m.startCap)}
-			/>
-
-			<!-- End cap -->
-			{#if m.endCap === 'dot'}
-				<circle cx={ex0} cy={ey0} r={DOT_R} fill="#222"/>
-			{:else if m.endCap === 'arrow'}
-				<polygon points="-{ARROW_LEN},-5 0,0 -{ARROW_LEN},5" fill="#222"
-					transform="translate({ex0},{ey0}) rotate({endAngle})"/>
-			{/if}
-
-			{#if m.label}
-				<text
-					x={mx - dy * LABEL_OFF}
-					y={my + dx * LABEL_OFF + 5}
-					font-family="'Germania One', serif"
-					font-size="16"
-					fill="#222"
-					text-anchor="middle"
-				>{m.label}</text>
-			{/if}
-
-			<!-- Full-line tap target -->
-			{#if onMeasurementClick}
-				<line
-					x1={sx} y1={sy} x2={ex0} y2={ey0}
-					stroke="transparent" stroke-width="24"
-					style="cursor: pointer;"
-					onclick={(e) => { e.stopPropagation(); onMeasurementClick(mi, e.clientX, e.clientY); }}
-				/>
-			{/if}
-		{/each}
-
-		<!-- Deployment point shapes -->
-		{#each data.players as player, pi}
-			{#each player.points as point}
-				{@const [cx, cy] = getCoords(point.position)}
-				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
-				{@const strokeColor = printerFriendly ? '#000' : 'none'}
-				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
-
-			<!-- RND label above shape -->
-			{#if point.rnd}
-				<text
-					x={cx}
-					y={cy - SHAPE_R - RND_OFF}
-					text-anchor="middle"
-					font-family="'Germania One', serif"
-					font-size="15"
-					fill={printerFriendly ? '#000' : 'white'}
-					stroke={printerFriendly ? 'none' : '#000'}
-					stroke-width="3"
-					paint-order="stroke"
-				>{point.rnd}</text>
-			{/if}
-
-			<!-- Shape -->
-			{#if point.icon === 'shield'}
-				<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
-			{:else if point.icon === 'hammer'}
-				<polygon
-					points="{cx},{cy - CIRCLE_R} {cx + CIRCLE_R},{cy} {cx},{cy + CIRCLE_R} {cx - CIRCLE_R},{cy}"
-					fill={fillColor} stroke={strokeColor} stroke-width="1.5"
-				/>
-			{:else}
-				<!-- dagger = triangle, point down -->
-				<polygon points={triPoints(cx, cy)} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
-			{/if}
-
-			<!-- Icon centered inside shape -->
-			{#if showRunemarks}
-				{@const sz = point.icon === 'shield' ? ICON_SZ_SHIELD : point.icon === 'dagger' ? ICON_SZ_DAGGER : ICON_SZ_HAMMER}
-				{@const iconCy = point.icon === 'dagger' ? cy - CIRCLE_R / 3 + 2 : cy}
-				<svg
-					x={cx - sz / 2} y={iconCy - sz / 2}
-					width={sz} height={sz}
-					viewBox={iconViewBox[point.icon]}
-					fill={iconColor}
-					overflow="visible"
-				>
-					{#if point.icon === 'dagger'}
-						{@html daggerInner}
-					{:else if point.icon === 'hammer'}
-						{@html hammerInner}
-					{:else}
-						{@html shieldInner}
-					{/if}
-				</svg>
-			{:else}
-				<text
-					x={cx} y={cy + 8}
-					text-anchor="middle"
-					font-family="'Germania One', serif"
-					font-size="24"
-					fill={iconColor}
-				>{point.icon.charAt(0).toUpperCase()}</text>
-			{/if}
-
-			<!-- Player badge (printer-friendly only) — left of shape, vertically centred -->
-			{#if printerFriendly}
-				<text
-					x={cx - CIRCLE_R - 4}
-					y={cy + 5}
-					text-anchor="end"
-					font-family="'Germania One', serif"
-					font-size="14"
-					fill="#000"
-				>{PLAYER_BADGES[pi]}</text>
-			{/if}
-
-			{/each}
-		{/each}
-
-		<!-- Position dots overlay — rendered on top of measurement lines and bubbles -->
+		<!-- Position dots overlay — rendered on top of measurement lines and shapes -->
 		{#if showPositionDots}
 			{#each ALL_POSITIONS as pos}
 				{@const [px, py] = getCoords(pos)}
@@ -604,7 +378,6 @@
 		<div class="card-name">{data.name}</div>
 	{/if}
 </div>
-
 <style>
 	.card {
 		width: 915px;

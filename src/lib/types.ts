@@ -63,20 +63,22 @@ export type ZonePreset =
 	| 'left-half' | 'right-half'
 	| 'tl-quarter' | 'tr-quarter' | 'bl-quarter' | 'br-quarter';
 
-// Inside 5×5 grid: R{row}C{col}, rows 1–5 top→bottom, cols 1–5 left→right
-// R3C3 = exact battlefield centre (crosshair); R3 row and C3 col lie on the dashed centre lines
-// Outside edges: OUT-T{1–5}, OUT-B{1–5}, OUT-L{1–5}, OUT-R{1–5}
+// Inside 7×9 grid: R{row}C{col}, rows 1–7 top→bottom, cols 1–9 left→right
+// R4C5 = exact battlefield centre (crosshair); R4 row and C5 col lie on the dashed centre lines
+// Outside edges: OUT-T{1–9}, OUT-B{1–9} (9, matching cols), OUT-L{1–7}, OUT-R{1–7} (7, matching rows)
 // Outside corners: OUT-CNR-TL/TR/BL/BR
 export type DeploymentPosition =
-	| 'R1C1' | 'R1C2' | 'R1C3' | 'R1C4' | 'R1C5'
-	| 'R2C1' | 'R2C2' | 'R2C3' | 'R2C4' | 'R2C5'
-	| 'R3C1' | 'R3C2' | 'R3C3' | 'R3C4' | 'R3C5'
-	| 'R4C1' | 'R4C2' | 'R4C3' | 'R4C4' | 'R4C5'
-	| 'R5C1' | 'R5C2' | 'R5C3' | 'R5C4' | 'R5C5'
-	| 'OUT-T1' | 'OUT-T2' | 'OUT-T3' | 'OUT-T4' | 'OUT-T5'
-	| 'OUT-B1' | 'OUT-B2' | 'OUT-B3' | 'OUT-B4' | 'OUT-B5'
-	| 'OUT-L1' | 'OUT-L2' | 'OUT-L3' | 'OUT-L4' | 'OUT-L5'
-	| 'OUT-R1' | 'OUT-R2' | 'OUT-R3' | 'OUT-R4' | 'OUT-R5'
+	| 'R1C1' | 'R1C2' | 'R1C3' | 'R1C4' | 'R1C5' | 'R1C6' | 'R1C7' | 'R1C8' | 'R1C9'
+	| 'R2C1' | 'R2C2' | 'R2C3' | 'R2C4' | 'R2C5' | 'R2C6' | 'R2C7' | 'R2C8' | 'R2C9'
+	| 'R3C1' | 'R3C2' | 'R3C3' | 'R3C4' | 'R3C5' | 'R3C6' | 'R3C7' | 'R3C8' | 'R3C9'
+	| 'R4C1' | 'R4C2' | 'R4C3' | 'R4C4' | 'R4C5' | 'R4C6' | 'R4C7' | 'R4C8' | 'R4C9'
+	| 'R5C1' | 'R5C2' | 'R5C3' | 'R5C4' | 'R5C5' | 'R5C6' | 'R5C7' | 'R5C8' | 'R5C9'
+	| 'R6C1' | 'R6C2' | 'R6C3' | 'R6C4' | 'R6C5' | 'R6C6' | 'R6C7' | 'R6C8' | 'R6C9'
+	| 'R7C1' | 'R7C2' | 'R7C3' | 'R7C4' | 'R7C5' | 'R7C6' | 'R7C7' | 'R7C8' | 'R7C9'
+	| 'OUT-T1' | 'OUT-T2' | 'OUT-T3' | 'OUT-T4' | 'OUT-T5' | 'OUT-T6' | 'OUT-T7' | 'OUT-T8' | 'OUT-T9'
+	| 'OUT-B1' | 'OUT-B2' | 'OUT-B3' | 'OUT-B4' | 'OUT-B5' | 'OUT-B6' | 'OUT-B7' | 'OUT-B8' | 'OUT-B9'
+	| 'OUT-L1' | 'OUT-L2' | 'OUT-L3' | 'OUT-L4' | 'OUT-L5' | 'OUT-L6' | 'OUT-L7'
+	| 'OUT-R1' | 'OUT-R2' | 'OUT-R3' | 'OUT-R4' | 'OUT-R5' | 'OUT-R6' | 'OUT-R7'
 	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR';
 
 export interface DeploymentZone {
