@@ -74,9 +74,12 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 **Text card** (portrait, same ratio):
 
 - Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (preset slugs: ability, reaction, heroic-trait, battle-trait, lesser-artefact, greater-artefact, divine-blessing — or custom text)
+- `layoutVariant?: 'standard' | 'banderole'` — banderole mode replaces the standard label with a full-width maroon torn-edge ribbon (`<div class="banderole">`) that overhangs the card edges; runemarks invert to black-on-cream; printer-friendly renders a stroke outline SVG instead of the filled shape
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
 - Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable`, `showCaption` — collapsing both the card element and its form field
+- `smallBodyText: boolean` — when true, reduces body text 20→16 px, flavor text 18→15 px, prerequisite text 18→14 px via `.small-body` class on `.parchment`
+- Inline runemark markup: `[slug]` in body/prerequisite text renders the matching SVG inline as `(<span class="inline-rm">…</span>)`; slugs cover all runemark groups + full faction hierarchy. Markup toolbar has B / I / A↓ / [⊕] buttons (bold, italic, font-size toggle, runemark picker)
 
 **Deployment card** (portrait 574×915px, SVG-based rendering):
 
@@ -110,7 +113,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 
 ### Runemark library
 
-SVGs live in `src/lib/runemarks/svg/` (229 files). Library metadata in `src/lib/runemarks/index.ts`.
+SVGs live in `src/lib/runemarks/svg/` (234 files). Library metadata in `src/lib/runemarks/index.ts`.
 
 ### i18n
 
