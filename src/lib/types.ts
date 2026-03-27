@@ -137,6 +137,7 @@ export interface TextCardData {
 	bodyText: string;
 	showCaption: boolean;
 	imageCaption: string;
+	smallBodyText: boolean;
 	layoutVariant?: 'standard' | 'banderole';
 	regularPointsValue?: string; // points cost increases table (independent of card type)
 	elitePointsValue?: string;   // points cost increases table (independent of card type)

@@ -1,6 +1,11 @@
 <script lang="ts">
 	import type { TextCardData } from '$lib/types';
-	import { getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import {
+		getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG, hierarchy,
+		fighterRunemarks, weaponRunemarks, characteristicRunemarks,
+		cardDecksRunemarks, deploymentRunemarks, miscRunemarks,
+		treasureRunemarks, twistsRunemarks,
+	} from '$lib/runemarks/index';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
@@ -18,10 +23,42 @@
 		return presetSlugs.has(label) ? t('card.label-' + label) : label;
 	}
 
+	function slugify(k: string): string {
+		return k.toLowerCase().replace(/\s+/g, '-');
+	}
+
+	const inlineRmMap: Record<string, string> = (() => {
+		const m: Record<string, string> = {};
+		for (const [k, v] of Object.entries(fighterRunemarks)) m[slugify(k)] = v;
+		for (const [k, v] of Object.entries(weaponRunemarks)) m[slugify(k)] = v;
+		for (const [k, v] of Object.entries(characteristicRunemarks as Record<string, string>)) m[k] = v;
+		for (const [k, v] of Object.entries(cardDecksRunemarks)) m[k] = v;
+		for (const [k, v] of Object.entries(deploymentRunemarks)) m[k] = v;
+		for (const [k, v] of Object.entries(miscRunemarks)) m[k] = v;
+		for (const [k, v] of Object.entries(treasureRunemarks)) m[k] = v;
+		for (const [k, v] of Object.entries(twistsRunemarks)) m[k] = v;
+		for (const alliance of hierarchy) {
+			if (alliance.svg) m[alliance.id] = alliance.svg;
+			for (const faction of alliance.factions) {
+				if (faction.svg) m[faction.id] = faction.svg;
+				for (const sub of faction.subfactions) {
+					if (sub.svg) m[sub.id] = sub.svg;
+				}
+			}
+		}
+		return m;
+	})();
+
 	function parseMarkup(text: string): string {
 		return text
 			.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-			.replace(/\*(.+?)\*/g, '<em>$1</em>');
+			.replace(/\*(.+?)\*/g, '<em>$1</em>')
+			.replace(/\[([a-z0-9][a-z0-9 -]*)\]/gi, (match, key) => {
+				const svg = inlineRmMap[slugify(key.trim())];
+				if (!svg) return match;
+				const styledSvg = svg.replace(/(<svg\b)/, '$1 style="display:block;border:none;outline:none;"');
+				return `(<span class="inline-rm">${styledSvg}</span>)`;
+			});
 	}
 
 </script>
@@ -123,7 +160,7 @@
 	{/if}
 
 	<!-- PARCHMENT -->
-	<div class="parchment">
+	<div class="parchment" class:small-body={data.smallBodyText}>
 		<h1 class="card-name">{#each (data.name || t('card.card-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</h1>
 		{#if data.showFlavorText && data.flavorText}
 			<p class="flavor-text">{data.flavorText}</p>
@@ -397,6 +434,36 @@
 		border: 0;
 		outline: none;
 		background: transparent;
+	}
+
+	.body-text :global(.inline-rm) {
+		display: inline-block;
+		width: 1.1em;
+		height: 1.1em;
+		vertical-align: -0.15em;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.body-text :global(.inline-rm) :global(svg) {
+		width: 100%;
+		height: 100%;
+		fill: currentColor;
+	}
+
+	/* ── SMALL BODY TEXT ────────────────────────── */
+
+	.small-body .body-text {
+		font-size: 16px;
+	}
+
+	.small-body .flavor-text {
+		font-size: 15px;
+	}
+
+	.small-body .prerequisite-box .body-text {
+		font-size: 14px;
 	}
 
 	/* ── PREREQUISITE ───────────────────────────── */

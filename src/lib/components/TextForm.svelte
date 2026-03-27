@@ -1,6 +1,10 @@
 <script lang="ts">
 	import type { TextCardData } from '$lib/types';
-	import { fighterRunemarks } from '$lib/runemarks/index';
+	import {
+		fighterRunemarks, weaponRunemarks, characteristicRunemarks, hierarchy,
+		cardDecksRunemarks, deploymentRunemarks, miscRunemarks,
+		treasureRunemarks, twistsRunemarks,
+	} from '$lib/runemarks/index';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
@@ -22,6 +26,95 @@
 	$effect(() => {
 		data.cardLabel = selectValue === '__custom__' ? customText : selectValue;
 	});
+
+	let rmPickerFor = $state<'bodyText' | 'prerequisiteText' | null>(null);
+	let rmPickerSearch = $state('');
+	let rmPickerSearchEl: HTMLInputElement;
+
+	function slugify(k: string): string {
+		return k.toLowerCase().replace(/\s+/g, '-');
+	}
+
+	type InlineOpt = { slug: string; label: string; group: string };
+
+	const allInlineOpts = $derived((() => {
+		const loc = i18n.code;
+		const opts: InlineOpt[] = [];
+		Object.keys(fighterRunemarks)
+			.map(k => ({ slug: slugify(k), label: t('runemarks.' + k), group: t('ui.form-runemarks') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(weaponRunemarks)
+			.map(k => ({ slug: slugify(k), label: t('weapons.' + k), group: t('ui.weapons-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(characteristicRunemarks)
+			.map(k => ({ slug: k, label: t('card.col-' + k).replace(/\|/g, ' '), group: t('ui.form-characteristics') }))
+			.forEach(o => opts.push(o));
+		Object.keys(cardDecksRunemarks)
+			.map(k => ({ slug: k, label: t('card-decks.' + k), group: t('ui.card-decks-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(deploymentRunemarks)
+			.map(k => ({ slug: k, label: t('deployment.' + k), group: t('ui.deployment-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(miscRunemarks)
+			.map(k => ({ slug: k, label: t('misc.' + k), group: t('ui.misc-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(treasureRunemarks)
+			.map(k => ({ slug: k, label: t('treasure.' + k), group: t('ui.treasure-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		Object.keys(twistsRunemarks)
+			.map(k => ({ slug: k, label: t('twists.' + k), group: t('ui.twists-group') }))
+			.sort((a, b) => a.label.localeCompare(b.label, loc))
+			.forEach(o => opts.push(o));
+		for (const alliance of hierarchy) {
+			const groupLabel = t('alliances.' + alliance.id);
+			if (alliance.svg) opts.push({ slug: alliance.id, label: groupLabel, group: groupLabel });
+			for (const faction of alliance.factions) {
+				if (faction.svg) opts.push({ slug: faction.id, label: t('factions.' + faction.id), group: groupLabel });
+				for (const sub of faction.subfactions) {
+					if (sub.svg) opts.push({ slug: sub.id, label: t('subfactions.' + sub.id), group: groupLabel });
+				}
+			}
+		}
+		return opts;
+	})());
+
+	const filteredInlineGroups = $derived((() => {
+		const lc = rmPickerSearch.trim().toLowerCase();
+		const filtered = lc
+			? allInlineOpts.filter(o => o.label.toLowerCase().includes(lc) || o.group.toLowerCase().includes(lc))
+			: allInlineOpts;
+		const groups: { label: string; items: InlineOpt[] }[] = [];
+		for (const opt of filtered) {
+			let g = groups.find(g => g.label === opt.group);
+			if (!g) { g = { label: opt.group, items: [] }; groups.push(g); }
+			g.items.push(opt);
+		}
+		return groups;
+	})());
+
+	$effect(() => {
+		if (rmPickerFor) requestAnimationFrame(() => rmPickerSearchEl?.focus());
+	});
+
+	function insertRunemark(slug: string, field: 'bodyText' | 'prerequisiteText') {
+		const el = field === 'bodyText' ? bodyTextEl : prerequisiteTextEl;
+		const start = el.selectionStart;
+		const end = el.selectionEnd;
+		const insert = `[${slug}]`;
+		data[field] = data[field].slice(0, start) + insert + data[field].slice(end);
+		requestAnimationFrame(() => {
+			el.focus();
+			el.setSelectionRange(start + insert.length, start + insert.length);
+		});
+		rmPickerFor = null;
+		rmPickerSearch = '';
+	}
 
 	function wrapSelection(el: HTMLTextAreaElement, marker: string, field: 'bodyText' | 'prerequisiteText') {
 		const start = el.selectionStart;
@@ -196,7 +289,27 @@
 			<div class="markup-toolbar">
 				<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(prerequisiteTextEl, '**', 'prerequisiteText')}>B</button>
 				<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(prerequisiteTextEl, '*', 'prerequisiteText')}>I</button>
+				<button type="button" class="markup-btn" class:active={data.smallBodyText} title={t('ui.form-small-text')} onclick={() => data.smallBodyText = !data.smallBodyText}>A↓</button>
+				<button type="button" class="markup-btn" title={t('ui.form-insert-runemark')} onclick={() => { rmPickerFor = rmPickerFor === 'prerequisiteText' ? null : 'prerequisiteText'; rmPickerSearch = ''; }}>[⊕]</button>
 			</div>
+			{#if rmPickerFor === 'prerequisiteText'}
+				<div class="rm-picker">
+					<input class="rm-picker-search" type="text" placeholder={t('ui.form-filter-runemarks')} bind:value={rmPickerSearch} bind:this={rmPickerSearchEl} />
+					<div class="rm-picker-list">
+						{#each filteredInlineGroups as group}
+							<div class="rm-picker-group">{group.label}</div>
+							{#each group.items as opt}
+								<button type="button" class="rm-picker-item" onclick={() => insertRunemark(opt.slug, 'prerequisiteText')}>
+									<span class="rm-picker-slug">[{opt.slug}]</span>{opt.label}
+								</button>
+							{/each}
+						{/each}
+						{#if filteredInlineGroups.length === 0}
+							<p class="rm-picker-empty">{t('ui.no-matches', { query: rmPickerSearch })}</p>
+						{/if}
+					</div>
+				</div>
+			{/if}
 			<textarea
 				id="prerequisite-text"
 				class="field-input resize-none"
@@ -212,7 +325,27 @@
 		<div class="markup-toolbar">
 			<button type="button" class="markup-btn" title={t('ui.form-bold')} onclick={() => wrapSelection(bodyTextEl, '**', 'bodyText')}>B</button>
 			<button type="button" class="markup-btn italic" title={t('ui.form-italic')} onclick={() => wrapSelection(bodyTextEl, '*', 'bodyText')}>I</button>
+			<button type="button" class="markup-btn" class:active={data.smallBodyText} title={t('ui.form-small-text')} onclick={() => data.smallBodyText = !data.smallBodyText}>A↓</button>
+			<button type="button" class="markup-btn" title={t('ui.form-insert-runemark')} onclick={() => { rmPickerFor = rmPickerFor === 'bodyText' ? null : 'bodyText'; rmPickerSearch = ''; }}>[⊕]</button>
 		</div>
+		{#if rmPickerFor === 'bodyText'}
+			<div class="rm-picker">
+				<input class="rm-picker-search" type="text" placeholder={t('ui.form-filter-runemarks')} bind:value={rmPickerSearch} bind:this={rmPickerSearchEl} />
+				<div class="rm-picker-list">
+					{#each filteredInlineGroups as group}
+						<div class="rm-picker-group">{group.label}</div>
+						{#each group.items as opt}
+							<button type="button" class="rm-picker-item" onclick={() => insertRunemark(opt.slug, 'bodyText')}>
+								<span class="rm-picker-slug">[{opt.slug}]</span>{opt.label}
+							</button>
+						{/each}
+					{/each}
+					{#if filteredInlineGroups.length === 0}
+						<p class="rm-picker-empty">{t('ui.no-matches', { query: rmPickerSearch })}</p>
+					{/if}
+				</div>
+			</div>
+		{/if}
 		<textarea
 			id="body-text"
 			class="field-input resize-none"
@@ -286,8 +419,78 @@
 		font-style: italic;
 	}
 
+	.markup-btn.active {
+		background: #7f1d1d;
+		border-color: #7f1d1d;
+		color: #fff;
+	}
+
 	.markup-btn:hover {
 		border-color: #7f1d1d;
+	}
+
+	.rm-picker {
+		margin-bottom: 4px;
+		border: 1px solid var(--ui-border);
+		border-radius: 6px;
+		overflow: hidden;
+		background: var(--ui-surface);
+	}
+
+	.rm-picker-search {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 6px 10px;
+		border: 0;
+		border-bottom: 1px solid var(--ui-border);
+		background: var(--ui-surface);
+		color: var(--ui-text);
+		font-size: 0.875rem;
+		outline: none;
+	}
+
+	.rm-picker-list {
+		max-height: 180px;
+		overflow-y: auto;
+	}
+
+	.rm-picker-group {
+		padding: 4px 10px 2px;
+		font-size: 0.7rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--ui-text-dim);
+		background: var(--ui-surface-2);
+	}
+
+	.rm-picker-item {
+		display: block;
+		width: 100%;
+		text-align: left;
+		padding: 5px 10px;
+		font-size: 0.8rem;
+		color: var(--ui-text);
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+	}
+
+	.rm-picker-item:hover {
+		background: var(--ui-surface-2);
+	}
+
+	.rm-picker-slug {
+		font-family: monospace;
+		font-size: 0.75rem;
+		color: var(--ui-text-dim);
+		margin-right: 4px;
+	}
+
+	.rm-picker-empty {
+		padding: 8px 10px;
+		font-size: 0.8rem;
+		color: var(--ui-text-dim);
 	}
 
 	.field-input {
