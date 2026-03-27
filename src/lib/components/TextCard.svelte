@@ -202,7 +202,7 @@
 
 	.pills-row {
 		position: absolute;
-		top: 20px;
+		top: 52px;
 		left: 0;
 		right: 0;
 		display: flex;
@@ -232,7 +232,7 @@
 
 	.runemarks-row {
 		position: absolute;
-		top: 20px;
+		top: 52px;
 		left: 0;
 		right: 0;
 		display: flex;
