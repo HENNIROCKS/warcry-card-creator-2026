@@ -1988,31 +1988,64 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-27</span>
               <span class="badge badge-green">Banderole layout variant</span>
-              <span class="badge badge-green">Printer-friendly support</span>
-              <span class="badge badge-green">Form two-column layout</span>
+              <span class="badge badge-green">Inline runemark markup</span>
+              <span class="badge badge-green">Small body text toggle</span>
             </div>
-            <h1>Text Card — Banderole Type Label</h1>
+            <h1>Text Card — Banderole, Inline Runemarks &amp; UX Polish</h1>
             <p>
-              Alternative layout for the Text Card type label: a full-width maroon ribbon
-              (banderole) with torn-edge top and bottom, spanning slightly beyond the card edges.
-              The background uses the same <code>image-mask.svg</code> mask as the standard dark
-              header, applied to a narrow <code>.banderole-bg</code> div that extends 35 px above
-              and below the text area to make the ragged edges visible. In printer-friendly mode the
-              fill is removed and only the stroke outline renders, matching the standard mode's torn-edge
-              treatment. The form's Card Elements section was split into two columns — Card Elements
-              (left) and Card Design (right) — stacking to a single column on mobile.
+              Banderole layout variant for the Text Card type label — a full-width maroon torn-edge
+              ribbon that overhangs the card edges slightly, with runemark inversion and a
+              printer-friendly stroke outline mode.
+            </p>
+            <p>
+              Inline runemark markup: <code>[beast]</code> syntax in body/prerequisite text renders
+              the matching SVG icon inline, wrapped in parentheses. A searchable <code>[⊕]</code>
+              picker in both markup toolbars covers the full runemark library including factions.
+            </p>
+            <p>
+              UX polish: shared <code>A↓</code> font size toggle reduces body/flavor/prerequisite
+              text for denser cards. Back button hover effect unified across all four editors.
             </p>
           </div>
 
           <section id="march-27-built" data-nav="What Was Built">
             <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Banderole Layout Variant</h3>
             <ul>
-              <li><strong>Banderole layout variant</strong>: <code>layoutVariant?: 'standard' | 'banderole'</code> added to <code>TextCardData</code>. When <code>'banderole'</code>: <code>.image-inner</code> is not rendered (top section shows card texture); the type label is wrapped in <code>.banderole</code> containing a masked <code>.banderole-bg</code> div for the maroon shape and a <code>.card-label-text</code> on top via z-index.</li>
+              <li><strong>New layout variant</strong>: <code>layoutVariant?: 'standard' | 'banderole'</code> added to <code>TextCardData</code>. When <code>'banderole'</code>: <code>.image-inner</code> is not rendered (top section shows card texture); the type label is wrapped in <code>.banderole</code> containing a masked <code>.banderole-bg</code> div for the maroon shape and a <code>.card-label-text</code> on top via z-index.</li>
               <li><strong>Shape and position</strong>: <code>.banderole</code> is <code>position: absolute; left: -15px; right: -15px; bottom: 56px; padding: 4px 50px</code> — overhangs the card edges slightly. <code>.banderole-bg</code> uses <code>inset: -35px 0</code> to extend 35 px above and below, rendering the mask at ~150 px height so the SVG's ragged edge detail resolves to ~10 px of visible deviation. Text bottom aligns with standard mode at <code>56 + 4 = 60 px</code>.</li>
               <li><strong>Runemark inversion</strong>: in banderole mode the runemarks switch from white-on-maroon to black-on-cream (<code>.runemark-border</code> → maroon, <code>.runemark-badge</code> → <code>#FAF6F3</code>, SVG fill → <code>#000</code>). Pills invert to maroon text on transparent.</li>
               <li><strong>Printer-friendly banderole</strong>: <code>.banderole-bg</code> set to <code>background: transparent</code>; a <code>.banderole-outline</code> SVG with the same path stroked in black renders only when <code>printerFriendly</code>. The full torn-edge overlay is suppressed in banderole mode (<code>printerFriendly &amp;&amp; !isBanderole</code>). Outline SVG must have explicit <code>width: 100%; height: calc(100% + 70px)</code> — relying on <code>inset</code> alone does not size SVG elements correctly.</li>
-              <li><strong>Form two-column layout</strong>: Card Elements checkboxes (left) and a new Card Design column (right, banderole toggle) rendered as a CSS grid <code>1fr 1fr</code>; on mobile (&lt;1024 px) collapses to single column with <code>row-gap: 28px</code>.</li>
+            </ul>
+            <h3>Form &amp; i18n</h3>
+            <ul>
+              <li><strong>Two-column layout</strong>: Card Elements checkboxes (left) and a new Card Design column (right, banderole toggle) rendered as a CSS grid <code>1fr 1fr</code>; on mobile (&lt;1024 px) collapses to single column with <code>row-gap: 28px</code>.</li>
               <li><strong>i18n</strong>: new keys <code>ui.form-card-design</code> ("Card Design" / "Kartendesign") and <code>ui.form-layout-banderole</code> ("Banderole type" / "Banderole") in both locales.</li>
+            </ul>
+            <h3>Runemark Additions</h3>
+            <ul>
+              <li><strong>Thyrielle's Zephyrites</strong> (<code>factions-order-bladeborn-thyrielles-zephyrites.svg</code>) — added to <code>hierarchy.ts</code> under Order › Bladeborn; i18n key <code>thyrielles-zephyrites</code> in both locales.</li>
+              <li><strong>Warhammer Underworld</strong> (<code>misc-whu.svg</code>) — added to <code>miscRunemarks</code> in <code>index.ts</code>; i18n key <code>misc.whu</code> in both locales. SVG subsequently cropped.</li>
+              <li><strong>Warcry</strong> (<code>misc-warcry.svg</code>) — added to <code>miscRunemarks</code> in <code>index.ts</code>; i18n key <code>misc.warcry</code> in both locales.</li>
+            </ul>
+            <h3>Inline Runemark Markup</h3>
+            <ul>
+              <li><strong>Syntax</strong>: <code>[slug]</code> in body text or prerequisite text renders as <code>(<span class="inline-rm">SVG</span>)</code>. Unrecognised keys are left as literal text. Fighter/weapon keys are slugified at map-build time (<code>Beast</code>→<code>beast</code>, <code>Icon Bearer</code>→<code>icon-bearer</code>); faction/subfaction IDs are used directly.</li>
+              <li><strong><code>slugify()</code> + <code>inlineRmMap</code></strong>: module-level IIFE in <code>TextCard.svelte</code> merges all runemark groups (fighters, weapons, characteristics, card-decks, deployment, misc, treasure, twists) plus the full hierarchy (alliances, factions, subfactions) into a single <code>slug → svg</code> lookup. <code>parseMarkup()</code> extended with a third regex pass.</li>
+              <li><strong>CSS</strong>: <code>.body-text :global(.inline-rm)</code> — <code>inline-block</code>, <code>1.1em × 1.1em</code>, <code>vertical-align: -0.15em</code>; inner SVG inherits <code>fill: currentColor</code>.</li>
+              <li><strong>Picker</strong>: <code>[⊕]</code> button added to both markup toolbars (body text and prerequisite). Clicking opens an inline panel with a search input (auto-focused) and a grouped, scrollable list. Clicking an entry inserts <code>[slug]</code> at the current cursor position and closes the picker. Opening one picker closes the other.</li>
+              <li><strong>Picker options</strong>: all groups present — Runemarks (fighters), Weapons, Characteristics, Card Decks, Deployment, Misc, Treasure, Twists, plus one group per grand alliance (Chaos/Death/Destruction/Order) containing factions and subfactions. Each entry shows <code>[slug]</code> in monospace and the localised label.</li>
+              <li><strong>i18n</strong>: new keys <code>ui.weapons-group</code> ("Weapons" / "Waffen") and <code>ui.form-insert-runemark</code> ("Insert runemark" / "Runemark einfügen") in both locales.</li>
+            </ul>
+            <h3>Small Body Text Toggle</h3>
+            <ul>
+              <li><strong><code>smallBodyText: boolean</code></strong> added to <code>TextCardData</code>; defaults to <code>false</code>. When active, <code>.small-body</code> class on <code>.parchment</code> reduces body text 20→16 px, flavor text 18→15 px, prerequisite text 18→14 px.</li>
+              <li><strong><code>A↓</code> button</strong> added to both markup toolbars (between italic and <code>[⊕]</code>). Shared toggle — one flag affects all text areas. Active state renders with maroon fill.</li>
+              <li><strong>i18n</strong>: new key <code>ui.form-small-text</code> ("Reduce text size" / "Textgröße reduzieren") in both locales.</li>
+            </ul>
+            <h3>Back Button Hover Effect</h3>
+            <ul>
+              <li>Fighter, text, and card-back editors' back buttons updated from <code>text-zinc-500 hover:text-white</code> to <code>text-zinc-300 rounded px-2 py-1 hover:text-white hover:bg-zinc-800</code> — matching the deployment editor.</li>
             </ul>
           </section>
 
@@ -2037,13 +2070,21 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>layoutVariant?: 'standard' | 'banderole'</code> to <code>TextCardData</code></td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Default <code>layoutVariant: 'standard'</code> in initial state</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Banderole template branch, <code>.banderole</code>/<code>.banderole-bg</code>/<code>.banderole-outline</code> CSS, printer-friendly overrides, runemark inversion styles</td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Two-column Card Elements / Card Design layout with responsive stack</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code></td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code></td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>layoutVariant?: 'standard' | 'banderole'</code> and <code>smallBodyText: boolean</code> to <code>TextCardData</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Default <code>layoutVariant: 'standard'</code> and <code>smallBodyText: false</code> in initial state</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Banderole template branch, <code>.banderole</code>/<code>.banderole-bg</code>/<code>.banderole-outline</code> CSS, printer-friendly overrides, runemark inversion styles; <code>inlineRmMap</code>, extended <code>parseMarkup()</code>, <code>.inline-rm</code> CSS; <code>.small-body</code> CSS for reduced font sizes</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Two-column Card Elements / Card Design layout with responsive stack; <code>[⊕]</code> toolbar buttons, runemark picker UI + CSS, <code>insertRunemark()</code>, <code>allInlineOpts</code>/<code>filteredInlineGroups</code> derived state; <code>A↓</code> small text toggle button with active state</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code>, <code>misc.warcry</code>, <code>misc.whu</code>, <code>thyrielles-zephyrites</code>, <code>weapons-group</code>, <code>form-insert-runemark</code>, <code>form-small-text</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code>, <code>misc.warcry</code>, <code>misc.whu</code>, <code>thyrielles-zephyrites</code>, <code>weapons-group</code>, <code>form-insert-runemark</code>, <code>form-small-text</code></td></tr>
                 <tr><td><code>README.md</code></td><td>Mentioned banderole option in Text Card editor description</td></tr>
+                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added Thyrielle's Zephyrites under Order › Bladeborn</td></tr>
+                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Added <code>misc-warcry</code> and <code>misc-whu</code> to <code>miscRunemarks</code></td></tr>
+                <tr><td><code>src/lib/runemarks/svg/factions-order-bladeborn-thyrielles-zephyrites.svg</code></td><td>New runemark</td></tr>
+                <tr><td><code>src/lib/runemarks/svg/misc-warcry.svg</code></td><td>New runemark</td></tr>
+                <tr><td><code>src/lib/runemarks/svg/misc-whu.svg</code></td><td>New runemark (subsequently cropped)</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Back button hover effect</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Back button hover effect</td></tr>
+                <tr><td><code>src/routes/card-back/+page.svelte</code></td><td>Back button hover effect</td></tr>
               </tbody>
             </table>
           </section>
@@ -2060,19 +2101,20 @@
             </div>
             <h1>Deployment Card — Shapes, 7×9 Grid &amp; Cleanup</h1>
             <p>
-              Full two-point measurement line system: tap a position to start, tap another to place
-              the line; start/end cap picker (dot/arrow/tick/none) and label field in popover; lines
-              render below bubbles and dots; full-line transparent tap target. Snap positions
-              expanded to a 5×5 inside grid + 5 per outside edge + 4 corners (49 total) with
-              systematic naming (<code>R1C1–R5C5</code>, <code>OUT-T1–OUT-R5</code>); all positions
-              share one unified CNR-based coordinate system ensuring perfect column/row alignment.
-              Separately: header enlarged; View dropdown added with Show Runemarks toggle; all three
-              dropdowns made mutually exclusive; popovers clamped to viewport; i18n and CSS var
-              cleanup; CSS variable column alignment normalised in <code>app.css</code>.
-              Later in session one: speech bubbles replaced with geometric shapes (triangle/diamond/circle), optical sizing tuned iteratively, fill inheritance refactored, yellow colour updated, printer-friendly badges repositioned.
-              In session two: snap grid redesigned to 7×9 inside (63 magenta dots, outermost on BF boundary) + 36 blue outside dots = 99 total, matching the reference card exactly. Outer left/right columns moved 10 px inward. Template triplicate duplication removed (668 → 437 lines).
-              In session three: Orientation and Matched Play corner runemarks added; RND label redesigned as an HTML div (beige background, auto-width); player badge circular white background rendered last; dagger letter re-centred; measurement cap buttons differentiated by direction; new Cities of Sigmar (Alternative) faction runemark added.
-              In session four: objective marker added as a third placement type (black circle + auto-width HTML label below); empty popover restructured into three explicit action sections (Place Marker / Add Measurement / Objective) with the label field grouped under its section; popover overflow rewritten with <code>requestAnimationFrame</code> measuring both bottom and right edges after layout.
+              Deployment point markers replaced with geometric shapes — triangle (dagger), diamond
+              (hammer), circle (shield) — with icon fill via SVG inheritance and per-shape optical
+              sizing. Objective marker added as a third placement type: black circle with an
+              auto-width HTML label.
+            </p>
+            <p>
+              Snap grid redesigned to match the reference card: 7×9 inside (63 magenta dots,
+              outermost on battlefield boundary) + 36 blue outside dots = 99 total. Template
+              triplicate duplication removed (668 → 437 lines).
+            </p>
+            <p>
+              Two-point measurement lines with start/end cap picker and label. Header enlarged;
+              View dropdown with Show Runemarks toggle; corner runemarks (Orientation &amp; Matched
+              Play); RND label redesigned; popover overflow clamping; i18n and CSS var cleanup.
             </p>
           </div>
 
@@ -2377,12 +2419,13 @@
             </div>
             <h1>Deployment Card — Card-First UI Rebuild</h1>
             <p>
-              Two-part session. Morning: printer-friendly export mode, form style migration, dark
-              export frame fix (Tailwind v4 preflight + dom-to-image-more interaction). Afternoon:
-              sidebar replaced with a compact header toolbar; interactive position dots on the card
-              itself (tap to add/remove, popovers for editing); 8-way direction picker rendered
-              directly on the SVG after placing a measurement anchor; overlays toggle pill switch;
-              JSON save/load split button separate from Export PNG; 22 new i18n keys; locale files
+              Morning: printer-friendly export mode, form style migration, dark export frame fix
+              (Tailwind v4 preflight + dom-to-image-more interaction).
+            </p>
+            <p>
+              Afternoon: sidebar replaced with a compact header toolbar; interactive position dots
+              on the card itself with popovers for editing; 8-way direction picker on the SVG;
+              overlays toggle; JSON save/load split button; 22 new i18n keys; locale files
               reordered into 13 logical groups. <code>DeploymentForm.svelte</code> deleted.
             </p>
           </div>
@@ -2533,14 +2576,14 @@
             </div>
             <h1>Deployment Form, Caption, Layout &amp; SVG Normalisation</h1>
             <p>
-              Multi-part session. Deployment point form built with player-level colour, per-player
-              point lists, speech bubbles, corner tail fix via <code>atan2</code>, dynamic bubble
-              width, unique position enforcement, and smart CC-first defaulting. Sidebar widened to
-              480 px; desktop preview made scrollable; mobile scales to viewport height with
-              horizontal scroll and pinned export button. All form strings moved to
-              <code>t()</code> with 13 new i18n keys. On main: caption feature added to Text Card
-              editor; black colour swatch made visible in dark mode; issue templates updated; all 61
-              non-300 runemark SVGs normalised to 300×300.
+              Deployment point form: player colour, per-player point lists, speech bubbles with
+              <code>atan2</code> tail fix, dynamic bubble width, unique position enforcement, and
+              CC-first defaulting. Sidebar widened; desktop preview scrollable; mobile scales to
+              viewport with pinned export button. 13 new i18n keys.
+            </p>
+            <p>
+              On main: caption feature added to Text Card editor; black colour swatch fixed in dark
+              mode; issue templates updated; all 61 non-300 runemark SVGs normalised to 300×300.
             </p>
           </div>
 
@@ -2791,19 +2834,17 @@
             </div>
             <h1>Card Back Editor + Deployment Card Foundation</h1>
             <p>
-              Full card back editor at <code>/card-back</code>: name (with pipe line-break),
-              mirrored-name toggle, text/runemark colour swatches, a searchable runemark picker
-              (replacing the native <code>&lt;select&gt;</code> with the FactionSelect pattern),
-              and a background image with pan/zoom on desktop and touch drag + pinch-to-zoom on
-              mobile. Printer-friendly export forces black on white. Runemark library expanded
-              with 28 new SVGs across 5 new categories (Card Decks, Deployment, Misc, Treasure,
-              Twists). In a second pass, the deployment card editor at <code>/deployment</code>
-              was scaffolded: landscape 915×574px layout, parchment-on-white battlefield rectangle
-              with dashed centre lines, a 17-position snap grid (9 inside 3×3 + 8 outer edge slots),
-              and three deployment icon types (dagger ▽, hammer ◇, shield ⊙) rendered via
-              <code>?raw</code> SVG imports with white inner content on a player-colour outer shape.
-              The data model (<code>DeploymentCardData</code>, <code>DeploymentPoint</code>,
-              measurement annotations) is fully typed and ready; the form UI is the next chunk.
+              Full card back editor at <code>/card-back</code>: name with pipe line-break, mirrored
+              name toggle, text/runemark colour swatches, searchable runemark picker, background
+              image with pan/zoom on desktop and touch drag + pinch-to-zoom on mobile.
+              Printer-friendly forces black on white. Runemark library expanded with 28 new SVGs
+              across 5 new categories (Card Decks, Deployment, Misc, Treasure, Twists).
+            </p>
+            <p>
+              Deployment card editor scaffolded at <code>/deployment</code>: 915×574 px layout,
+              battlefield rectangle with dashed centre lines, 17-position snap grid, and three
+              icon types (dagger, hammer, shield) via <code>?raw</code> SVG imports. Data model
+              fully typed; form UI deferred to the next session.
             </p>
           </div>
 
@@ -3251,23 +3292,9 @@
               <span class="badge badge-green">Points table restyle</span>
             </div>
             <h1>Card Elements, Fighter Parity &amp; Table Visual Polish</h1>
-            <p>
-              Two conversations. First: added an independent "Card Elements"
-              checkbox system to both editors, prerequisite field, fighter
-              subtitle/caption toggles, and fully renamed the editor from
-              Ability Card to Text Card. Second: visual polish pass —
-              semi-transparent white backgrounds on all data rows, alternating
-              maroon row tints, damage table row heights and spacing, points
-              table restyled to match damage table (Alegreya 17px, shadow
-              borders, no dark header), German label corrections, and minor
-              landing page spacing. Third: landing page LangSwitch rewritten as
-              a custom <code>&lt;details&gt;</code>
-              dropdown — fixes "Add a language..." not working on mobile (was
-              blocked as a popup by iOS Safari). Fourth: export PNG filename now
-              prefixes grand alliance, faction, and bladeborn before the card
-              name; Hero/Monster/Thrall runemarks made mutually exclusive, with
-              Thrall sorting to the top in the preview.
-            </p>
+            <p>Added an independent "Card Elements" checkbox system to both editors, prerequisite field, fighter subtitle/caption toggles, and fully renamed the editor from Ability Card to Text Card.</p>
+            <p>Visual polish pass — semi-transparent white backgrounds on all data rows, alternating maroon row tints, damage table row heights and spacing, points table restyled to match damage table (Alegreya 17px, shadow borders, no dark header), German label corrections, minor landing page spacing.</p>
+            <p>Landing page LangSwitch rewritten as a custom <code>&lt;details&gt;</code> dropdown — fixes "Add a language…" not working on mobile (blocked as a popup by iOS Safari). Export PNG filename now prefixes grand alliance, faction, and bladeborn; Hero/Monster/Thrall runemarks made mutually exclusive, Thrall sorting to top.</p>
           </div>
 
           <section id="march-22-built" data-nav="What Was Built">
@@ -3734,24 +3761,18 @@
             </div>
             <h1>Divine Blessing Card Type &amp; Locale-Aware Sorting</h1>
             <p>
-              Added "Divine Blessing" as a new ability card type with German
-              translation, two conditional points-value fields (Regular / Elite)
-              shown on the card as a horizontal table with reddish border.
-              Locale-aware sorting implemented for factions, subfactions, weapon
-              types, and fighter runemarks — all re-sort reactively on locale
-              change. Code quality pass fixed a structural typing bug in
-              <code>FactionSelect</code>, a redundant code path in
-              <code>computeFiltered</code>, and stale comments in CLAUDE.md and
-              types.ts. Follow-up: the points table was restructured with a
-              proper header row ("Fighter Wounds" / "Points Cost Increase"),
-              threshold qualifiers on the row labels (≤ 22 / ≥ 23), and restyled
-              to match the fighter card table pattern — dark maroon header,
-              <code>border: 1px solid</code>, inner border-radius on the header
-              row. A second follow-up fixed empty-state behaviour: fields now
-              pre-fill with <code>15</code> / <code>20</code>, show
-              <code>—</code> with an <code>is-empty</code> class when cleared
-              (matching the fighter weapon stat pattern), and row height is
-              locked via an absolute <code>line-height: 25px</code>.
+              Added "Divine Blessing" card type with German translation and two conditional
+              points-value fields (Regular / Elite) shown as a horizontal table. Locale-aware
+              sorting for factions, subfactions, weapon types, and fighter runemarks — all
+              re-sort reactively on locale change. Code quality pass: structural typing bug in
+              <code>FactionSelect</code>, redundant code path in <code>computeFiltered</code>,
+              stale comments cleaned up.
+            </p>
+            <p>
+              Follow-up: points table restructured with proper header row, threshold qualifiers
+              on row labels (≤ 22 / ≥ 23), restyled to match fighter card pattern. Empty-state
+              behaviour fixed — fields pre-fill, show <code>—</code> when cleared, row height
+              locked.
             </p>
           </div>
 
