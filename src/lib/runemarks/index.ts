@@ -129,11 +129,13 @@ export const deploymentRunemarks: Record<string, string> = {
 import miscActive from './svg/misc-active.svg?raw';
 import miscCircle from './svg/misc-circle.svg?raw';
 import miscWait   from './svg/misc-wait.svg?raw';
+import miscWhu    from './svg/misc-whu.svg?raw';
 
 export const miscRunemarks: Record<string, string> = {
 	active: miscActive,
 	circle: miscCircle,
 	wait:   miscWait,
+	whu:    miscWhu,
 };
 
 // ── Treasure runemarks ────────────────────────────────────────────────────────
