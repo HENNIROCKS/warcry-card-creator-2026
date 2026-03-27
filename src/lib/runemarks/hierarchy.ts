@@ -171,6 +171,7 @@ import oBbTheFarstriders          from './svg/factions-order-bladeborn-the-farst
 import oBbTheShadeborn            from './svg/factions-order-bladeborn-the-shadeborn.svg?raw';
 import oBbTheStarbloodStalkers    from './svg/factions-order-bladeborn-the-starblood-stalkers.svg?raw';
 import oBbThundriksProfileers     from './svg/factions-order-bladeborn-thundriks-profiteers.svg?raw';
+import oBbThyriellesZephyrites    from './svg/factions-order-bladeborn-thyrielles-zephyrites.svg?raw';
 import oBbXandiressTruthseekers   from './svg/factions-order-bladeborn-xandires-truthseekers.svg?raw';
 import oBbYlthariGuardians        from './svg/factions-order-bladeborn-yltharis-guardians.svg?raw';
 
@@ -500,7 +501,8 @@ export const hierarchy: AllianceEntry[] = [
 				id: 'lumineth-realm-lords',
 				label: 'Lumineth Realm-lords', svg: oLuminethRealmlords,
 				subfactions: [
-					{ id: 'myaris-purifiers', label: "Myari's Purifiers", svg: oBbMyarisPurifiers },
+					{ id: 'myaris-purifiers',      label: "Myari's Purifiers", svg: oBbMyarisPurifiers },
+					{ id: 'thyrielles-zephyrites', label: "Thyrielle's Zephyrites", svg: oBbThyriellesZephyrites },					
 				],
 			},
 			{ id: 'lumineth-realm-lords-ydrilan-riverblades', label: 'Lumineth Realm-lords: Ydrilan Riverblades', svg: oYdrilanRiverblades, subfactions: [] },
