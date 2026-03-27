@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-27">
+              <span class="session-date">2026-03-27</span>
+              <span class="session-title">Text Card — Banderole Type Label</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-26">
               <span class="session-date">2026-03-26</span>
               <span class="session-title">Deployment Card — Shapes, 7×9 Grid &amp; Cleanup</span>
@@ -1532,6 +1538,13 @@
                   </td>
                   <td>Mar 23</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a href="#march-27-built" onclick="activateSession('march-27')"
+                      >Text card banderole variant: <code>layoutVariant: 'standard' | 'banderole'</code>; masked <code>.banderole-bg</code> extends ±35 px; SVG outline needs explicit <code>width/height</code> not just <code>inset</code></a>
+                  </td>
+                  <td>Mar 27</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -1970,6 +1983,73 @@
         <!-- ══════════════════════════════════════════
          2026-03-26 — Deployment Card UX Polish & Code Cleanup
     ══════════════════════════════════════════ -->
+        <div id="session-march-27" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-27</span>
+              <span class="badge badge-green">Banderole layout variant</span>
+              <span class="badge badge-green">Printer-friendly support</span>
+              <span class="badge badge-green">Form two-column layout</span>
+            </div>
+            <h1>Text Card — Banderole Type Label</h1>
+            <p>
+              Alternative layout for the Text Card type label: a full-width maroon ribbon
+              (banderole) with torn-edge top and bottom, spanning slightly beyond the card edges.
+              The background uses the same <code>image-mask.svg</code> mask as the standard dark
+              header, applied to a narrow <code>.banderole-bg</code> div that extends 35 px above
+              and below the text area to make the ragged edges visible. In printer-friendly mode the
+              fill is removed and only the stroke outline renders, matching the standard mode's torn-edge
+              treatment. The form's Card Elements section was split into two columns — Card Elements
+              (left) and Card Design (right) — stacking to a single column on mobile.
+            </p>
+          </div>
+
+          <section id="march-27-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <ul>
+              <li><strong>Banderole layout variant</strong>: <code>layoutVariant?: 'standard' | 'banderole'</code> added to <code>TextCardData</code>. When <code>'banderole'</code>: <code>.image-inner</code> is not rendered (top section shows card texture); the type label is wrapped in <code>.banderole</code> containing a masked <code>.banderole-bg</code> div for the maroon shape and a <code>.card-label-text</code> on top via z-index.</li>
+              <li><strong>Shape and position</strong>: <code>.banderole</code> is <code>position: absolute; left: -15px; right: -15px; bottom: 56px; padding: 4px 50px</code> — overhangs the card edges slightly. <code>.banderole-bg</code> uses <code>inset: -35px 0</code> to extend 35 px above and below, rendering the mask at ~150 px height so the SVG's ragged edge detail resolves to ~10 px of visible deviation. Text bottom aligns with standard mode at <code>56 + 4 = 60 px</code>.</li>
+              <li><strong>Runemark inversion</strong>: in banderole mode the runemarks switch from white-on-maroon to black-on-cream (<code>.runemark-border</code> → maroon, <code>.runemark-badge</code> → <code>#FAF6F3</code>, SVG fill → <code>#000</code>). Pills invert to maroon text on transparent.</li>
+              <li><strong>Printer-friendly banderole</strong>: <code>.banderole-bg</code> set to <code>background: transparent</code>; a <code>.banderole-outline</code> SVG with the same path stroked in black renders only when <code>printerFriendly</code>. The full torn-edge overlay is suppressed in banderole mode (<code>printerFriendly &amp;&amp; !isBanderole</code>). Outline SVG must have explicit <code>width: 100%; height: calc(100% + 70px)</code> — relying on <code>inset</code> alone does not size SVG elements correctly.</li>
+              <li><strong>Form two-column layout</strong>: Card Elements checkboxes (left) and a new Card Design column (right, banderole toggle) rendered as a CSS grid <code>1fr 1fr</code>; on mobile (&lt;1024 px) collapses to single column with <code>row-gap: 28px</code>.</li>
+              <li><strong>i18n</strong>: new keys <code>ui.form-card-design</code> ("Card Design" / "Kartendesign") and <code>ui.form-layout-banderole</code> ("Banderole type" / "Banderole") in both locales.</li>
+            </ul>
+          </section>
+
+          <section id="march-27-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why use a child <code>.banderole-bg</code> div with mask rather than mask on the banderole itself?</p>
+              <p class="decision-a">Masking the container would also clip the text child. A separate absolutely-positioned background div allows the mask to apply only to the fill layer; the label text sits above it via <code>z-index: 1</code>.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why does the outline SVG need explicit <code>width/height</code> in addition to <code>inset</code>?</p>
+              <p class="decision-a">SVG elements are replaced content and do not compute their dimensions from CSS <code>inset</code> the way block elements do — without explicit <code>width</code> and <code>height</code> the browser uses the SVG's intrinsic aspect ratio, rendering only the top sliver of the stroke. Adding <code>width: 100%; height: calc(100% + 70px)</code> (same pattern as <code>.torn-edge-overlay</code>) forces the correct size.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why extend <code>.banderole-bg</code> by ±35 px rather than just padding the div?</p>
+              <p class="decision-a">The SVG shape's ragged edge detail is proportional to the rendered height. At the text-only height (~36 px) the edge deviation is &lt;2 px and invisible. At ~150 px the same deviation resolves to ~10 px — clearly visible. Extending via negative inset keeps the text area compact while giving the mask enough height to show its texture.</p>
+            </div>
+          </section>
+
+          <section id="march-27-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>layoutVariant?: 'standard' | 'banderole'</code> to <code>TextCardData</code></td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Default <code>layoutVariant: 'standard'</code> in initial state</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Banderole template branch, <code>.banderole</code>/<code>.banderole-bg</code>/<code>.banderole-outline</code> CSS, printer-friendly overrides, runemark inversion styles</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Two-column Card Elements / Card Design layout with responsive stack</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-card-design</code>, <code>form-layout-banderole</code></td></tr>
+                <tr><td><code>README.md</code></td><td>Mentioned banderole option in Text Card editor description</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-27 -->
+
         <div id="session-march-26" class="session-panel">
           <div class="hero">
             <div class="meta">
@@ -8075,6 +8155,7 @@
 
     <script>
       const sessions = [
+        "march-27",
         "march-26",
         "march-25",
         "march-24",

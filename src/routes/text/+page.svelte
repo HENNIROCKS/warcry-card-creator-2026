@@ -53,6 +53,7 @@
 		showPointsTable: false,
 		showCaption: false,
 		imageCaption: '',
+		layoutVariant: 'standard',
 		flavorText: '',
 		prerequisiteText: '',
 		bodyText: '',

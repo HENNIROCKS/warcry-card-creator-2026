@@ -80,34 +80,50 @@
 		{/if}
 	</section>
 
-	<!-- Card Elements -->
+	<!-- Card Elements / Card Design -->
 	<section>
-		<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
-		<div class="flex flex-col gap-3">
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showActivation} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-activation')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showFlavorText} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-flavor-text')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showPointsTable} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-points-table')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showPrerequisite} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-prerequisite')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
-			</label>
+		<div class="two-col">
+			<div>
+				<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
+				<div class="flex flex-col gap-3">
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showActivation} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-activation')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showFlavorText} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-flavor-text')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showPointsTable} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-points-table')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showPrerequisite} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-prerequisite')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
+					</label>
+				</div>
+			</div>
+			<div>
+				<p class="field-label mb-2">{t('ui.form-card-design')}</p>
+				<div class="flex flex-col gap-3">
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" class="h-4 w-4 rounded accent-red-800"
+							checked={data.layoutVariant === 'banderole'}
+							onchange={(e) => { data.layoutVariant = (e.target as HTMLInputElement).checked ? 'banderole' : 'standard'; }}
+						/>
+						<span class="text-zinc-200">{t('ui.form-layout-banderole')}</span>
+					</label>
+				</div>
+			</div>
 		</div>
 	</section>
 
@@ -209,6 +225,19 @@
 </div>
 
 <style>
+	.two-col {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+
+	@media (max-width: 1023px) {
+		.two-col {
+			grid-template-columns: 1fr;
+			row-gap: 28px;
+		}
+	}
+
 	.field-label {
 		display: block;
 		font-size: 0.7rem;
