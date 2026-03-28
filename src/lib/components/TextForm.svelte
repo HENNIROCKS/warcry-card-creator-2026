@@ -8,9 +8,7 @@
 	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
-	let { data }: { data: TextCardData } = $props();
-
-	let rmKeys = $state(['', '']);
+	let { data, rmKeys = $bindable(['', '']) }: { data: TextCardData; rmKeys: string[] } = $props();
 	let bodyTextEl: HTMLTextAreaElement;
 	let prerequisiteTextEl: HTMLTextAreaElement;
 

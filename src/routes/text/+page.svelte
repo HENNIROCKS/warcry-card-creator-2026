@@ -5,11 +5,13 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { TextCardData } from '$lib/types';
+	import { fighterRunemarks } from '$lib/runemarks/index';
 	import { t } from '$lib/i18n/index.svelte';
 	import TextCard from '$lib/components/TextCard.svelte';
 	import TextForm from '$lib/components/TextForm.svelte';
 
 	let cardEl: HTMLElement;
+	let rmKeys = $state(['', '']);
 	let exporting = $state(false);
 	let exportedImageUrl = $state<string | null>(null);
 	let printerFriendly = $state(false);
@@ -114,6 +116,49 @@
 		await doExport('_print');
 		printerFriendly = false;
 	}
+
+	let fileInput: HTMLInputElement;
+
+	function saveLayout() {
+		showDropdown = false;
+		const payload = {
+			...data,
+			fighterRunemarks: data.fighterRunemarks.map(({ id, label }) => ({ id, label }))
+		};
+		const json = JSON.stringify(payload, null, 2);
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+		a.download = `${makeSlug()}.json`;
+		a.click();
+		URL.revokeObjectURL(a.href);
+	}
+
+	function loadLayout() {
+		showDropdown = false;
+		fileInput.click();
+	}
+
+	function handleFileLoad(e: Event) {
+		const file = (e.target as HTMLInputElement).files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = (ev) => {
+			try {
+				const parsed = JSON.parse(ev.target?.result as string);
+				if (parsed.fighterRunemarks) {
+					rmKeys = [...parsed.fighterRunemarks.map((r: { id: string }) => r.id), '', ''].slice(0, 2);
+					parsed.fighterRunemarks = parsed.fighterRunemarks.map(
+						({ id, label }: { id: string; label: string }) => ({
+							id, label, svg: fighterRunemarks[id] ?? ''
+						})
+					);
+				}
+				data = parsed;
+			} catch { /* ignore malformed JSON */ }
+		};
+		reader.readAsText(file);
+		(e.target as HTMLInputElement).value = '';
+	}
 </script>
 
 <div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden lg:flex-row">
@@ -170,13 +215,16 @@
 						>
 							{t('ui.export-printer-friendly')}
 						</button>
+						<hr class="border-zinc-700 my-1">
+						<button onclick={saveLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.save-json')}</button>
+						<button onclick={loadLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md">{t('ui.load-json')}</button>
 					</div>
 				{/if}
 			</div>
 		</div>
 
 		<div class="flex-1 overflow-y-auto p-5">
-			<TextForm {data} />
+			<TextForm {data} bind:rmKeys />
 		</div>
 	</aside>
 
@@ -213,6 +261,9 @@
 						>
 							{t('ui.export-printer-friendly')}
 						</button>
+						<hr class="border-zinc-700 my-1">
+						<button onclick={saveLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.save-json')}</button>
+						<button onclick={loadLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md">{t('ui.load-json')}</button>
 					</div>
 				{/if}
 			</div>
@@ -229,6 +280,9 @@
 	</main>
 
 </div>
+
+<!-- Hidden file input for JSON load -->
+<input bind:this={fileInput} type="file" accept=".json,application/json" class="hidden" onchange={handleFileLoad} />
 
 {#if exportedImageUrl}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->

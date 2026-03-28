@@ -4,9 +4,7 @@
 	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
-	let { data }: { data: FighterCardData } = $props();
-
-	let rmKeys = $state(['', '', '']);
+	let { data, rmKeys = $bindable(['', '', '']) }: { data: FighterCardData; rmKeys: string[] } = $props();
 
 	const weaponKeys = $derived(
 		['Axe','Bident','Blast','Claws','Club','Dagger','Fangs','Hammer','Hook','Mace','Pistol','Ranged Weapon','Reach Weapon','Scythe','Spear','Sword','Unarmed']
