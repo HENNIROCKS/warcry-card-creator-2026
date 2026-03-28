@@ -30,6 +30,8 @@ jobs:
         env:
           NODE_ENV: production
 
+      - run: cp -r docs build/docs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build
