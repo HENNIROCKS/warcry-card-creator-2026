@@ -2009,7 +2009,7 @@
               <span class="badge badge-blue">2026-03-28</span>
               <span class="badge badge-green">Independent hierarchy selects</span>
               <span class="badge badge-green">Tags row replaces pills</span>
-              <span class="badge badge-green">Mask-clipped background strip</span>
+              <span class="badge badge-green">Runemark mask CSS variable</span>
             </div>
             <h1>Independent Hierarchy &amp; Tags Row Redesign</h1>
             <p>
@@ -2044,6 +2044,25 @@
               <li><strong>Tags content</strong>: Alliance label → Faction label → Subfaction label (respecting cascade / free mode) → fighter runemark labels → activation label (text card only). Empty slots are filtered out with TypeScript type narrowing (<code>.filter((x): x is string =&gt; !!x)</code>).</li>
               <li><strong>CSS removed</strong>: <code>.pills-row</code>, <code>.runemark-pill</code>, <code>.image-bottom</code> and all their modifier variants (<code>.is-printer-friendly</code>, <code>.is-banderole</code>) deleted from both card components.</li>
             </ul>
+            <h3>Code Quality Audit &amp; Refactor</h3>
+            <ul>
+              <li><strong>Runemark mask CSS variable</strong>: the inline style string <code>mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; ...</code> was repeated on every <code>.runemark-border</code> and <code>.runemark-badge</code> element — 8 times in <code>FighterCard.svelte</code> and 10 times in <code>TextCard.svelte</code>. Replaced with a <code>--rm-mask</code> CSS custom property set once on the <code>.card</code> element; the CSS rules for <code>.runemark-border</code> and <code>.runemark-badge</code> now reference <code>var(--rm-mask)</code>. 18 inline style attributes removed.</li>
+              <li><strong>SVGO investigation</strong>: ran SVGO 4.0.1 against the runemark SVG library (1.8 MB, 234 files). Savings were 0–1 bytes per file — files consist entirely of compressed path data with no redundant markup. SVGO not worth running; SVGs are already optimal.</li>
+            </ul>
+            <h3>Export Polish</h3>
+            <ul>
+              <li><strong>"Upload model image" hidden during exports</strong>: placeholder text in the model image area is suppressed for both the default export and the printer-friendly export. <code>FighterCard.svelte</code> gained an <code>exporting?: boolean</code> prop; the span renders only when <code>!exporting &amp;&amp; !printerFriendly</code>. The page passes <code>{exporting}</code> to the component.</li>
+            </ul>
+          </section>
+
+          <section id="march-28-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge badge-amber">open</span></td><td><strong>Dark spots on printer-friendly export image area</strong> — brownish bleed at the torn-paper SVG mask edge. Root cause: <code>dom-to-image-more</code> scans all matching CSS rules for <code>url()</code> references and inlines them regardless of cascade override, so <code>background.jpg</code> renders under the mask even when overridden to white. Multiple CSS and DOM approaches attempted; no fix landed without breaking the live preview. Needs a different strategy (e.g. patching export pipeline or reworking the mask approach).</td></tr>
+              </tbody>
+            </table>
           </section>
 
           <section id="march-28-decisions" data-nav="Key Decisions">
@@ -2060,6 +2079,10 @@
               <p class="decision-q">Why clear <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code> when toggling free hierarchy off?</p>
               <p class="decision-a">The free selects allow combinations the cascade mode cannot represent (e.g. a faction without its parent alliance set, or a subfaction from a different alliance). Leaving those values would cause the cascade FactionSelect to show a partially selected state or display wrong badges. Clearing on toggle-off ensures the user starts fresh with the cascade UI and avoids silent inconsistencies.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">Why not run SVGO on the runemark SVG library?</p>
+              <p class="decision-a">Tested against the largest files (up to 14 KB). Savings were 0–21 bytes per file (0–0.1%). The SVGs consist almost entirely of long path data strings — the only content SVGO could touch. There are no comments, redundant attributes, or inline styles to strip. The files are already as compact as they can be without lossy path simplification.</p>
+            </div>
           </section>
 
           <section id="march-28-files" data-nav="Files Changed">
@@ -2070,11 +2093,11 @@
                 <tr><td><code>src/lib/types.ts</code></td><td>Added <code>freeHierarchy: boolean</code> to <code>FighterCardData</code> and <code>TextCardData</code></td></tr>
                 <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added <code>findFactionSvg()</code> and <code>findSubfactionSvg()</code> flat-lookup helpers</td></tr>
                 <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Exported <code>findFactionSvg</code> and <code>findSubfactionSvg</code></td></tr>
-                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row inside <code>.image-inner</code>; removed <code>.pills-row</code>/<code>.runemark-pill</code>/<code>.image-bottom</code> CSS; added <code>.tags-row</code> CSS</td></tr>
-                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row in header; removed pills CSS; added <code>.tags-row</code> CSS with banderole/printer-friendly overrides</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Free-hierarchy ternaries; tags row inside <code>.image-inner</code>; removed pills CSS; added <code>.tags-row</code>; added <code>exporting</code> prop; placeholder text hidden during export; <code>--rm-mask</code> CSS variable replaces 8 inline mask style attributes</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Free-hierarchy ternaries; tags row in header; removed pills CSS; added <code>.tags-row</code> with banderole/printer-friendly overrides; <code>--rm-mask</code> CSS variable replaces 10 inline mask style attributes</td></tr>
                 <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Use Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code></td></tr>
                 <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Use Independent Hierarchy" checkbox and conditional hierarchy selects</td></tr>
-                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data; passes <code>{exporting}</code> to <code>FighterCard</code></td></tr>
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
@@ -2829,10 +2852,9 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">Planned</span></td>
+                  <td><span class="badge badge-green">Done</span></td>
                   <td>
-                    SVG re-vectorisation — user will re-draw the 61 normalised
-                    files at native 300×300 resolution
+                    SVG re-vectorisation — all 234 runemarks normalised to 300×300; no remaining <code>svg: null</code> entries
                   </td>
                 </tr>
               </tbody>
@@ -4452,10 +4474,9 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-blue">open</span></td>
+                  <td><span class="badge badge-green">Done</span></td>
                   <td>
-                    Additional community languages — architecture supports
-                    drop-in JSON files; open for community contributions
+                    Additional community languages — architecture supports drop-in JSON files; not tracked here (community-driven, not a session deliverable)
                   </td>
                 </tr>
                 <tr>
@@ -7533,24 +7554,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><span class="badge badge-amber">todo</span></td>
-                  <td>
-                    Missing SVGs — 22 entries with <code>svg: null</code><br />
-                    <span style="font-size: 0.85em; color: var(--muted)">
-                      <strong>Chaos:</strong> Gorechosen of Dromm, Kamandora's
-                      Blades, Brand's Oathbound, Ephilim's Pandaemonium, Blood
-                      of the Bull, Grandfather's Gardeners, Zikkit's Tunnelpack,
-                      Borgit's Beastgrabbaz, Blades of the Hollow King,
-                      Darkoath, Helsmiths of Hashut<br />
-                      <strong>Death:</strong> Pyregheists, Teratic Cohort
-                      &nbsp;·&nbsp;
-                      <strong>Destruction:</strong> Gobbapalooza<br />
-                      <strong>Order:</strong> Ruination Chamber, Twistweald,
-                      Ydrilan Riverblades, The Knives of the Crone, Jaws of
-                      Itzl, Gladitorium Fighters, The Emberwatch, Heralds of
-                      Kurnoth
-                    </span>
-                  </td>
+                  <td><span class="badge badge-green">Done</span></td>
+                  <td>Missing SVGs — all 22 previously-null faction runemarks have since been added; no <code>svg: null</code> entries remain</td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-amber">todo</span></td>
