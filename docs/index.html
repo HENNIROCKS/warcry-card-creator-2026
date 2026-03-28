@@ -511,6 +511,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-28">
+              <span class="session-date">2026-03-28</span>
+              <span class="session-title">Independent Hierarchy &amp; Tags Row</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-27">
               <span class="session-date">2026-03-27</span>
               <span class="session-title">Text Card — Banderole Type Label</span>
@@ -1409,6 +1415,20 @@
                 </tr>
                 <tr>
                   <td>
+                    <a href="#march-28-built" onclick="activateSession('march-28')"
+                      ><code>freeHierarchy</code> toggle: 3 independent flat selects replace cascade; <code>findFactionSvg</code>/<code>findSubfactionSvg</code> helpers for parent-free SVG lookup</a>
+                  </td>
+                  <td>Mar 28</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="#march-28-built" onclick="activateSession('march-28')"
+                      >Pills row replaced with plain Alegreya uppercase tags joined by <code> • </code>; fighter card tags inside <code>.image-inner</code> so SVG mask clips background strip</a>
+                  </td>
+                  <td>Mar 28</td>
+                </tr>
+                <tr>
+                  <td>
                     <a href="#march-26-built" onclick="activateSession('march-26')"
                       >Deployment card: View dropdown collapses display toggles; Show Runemarks toggle switches SVG icons ↔ letter fallback; dropdown anchored to its button via <code>getBoundingClientRect()</code></a>
                   </td>
@@ -1979,6 +1999,90 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-03-28 — Independent Hierarchy & Tags Row
+    ══════════════════════════════════════════ -->
+        <div id="session-march-28" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-28</span>
+              <span class="badge badge-green">Independent hierarchy selects</span>
+              <span class="badge badge-green">Tags row replaces pills</span>
+              <span class="badge badge-green">Mask-clipped background strip</span>
+            </div>
+            <h1>Independent Hierarchy &amp; Tags Row Redesign</h1>
+            <p>
+              New "Show Independent Hierarchy" checkbox on both fighter and text card editors.
+              When enabled, three flat selects replace the cascading <code>FactionSelect</code>
+              component — Grand Alliance, Faction, and Subfaction are chosen freely without
+              cascade dependency. Toggling off clears the three fields.
+            </p>
+            <p>
+              Pill-style runemark badges (shown when "Show Runemarks" is unchecked) replaced
+              with a plain text tags row: Alegreya uppercase, items joined by <code> • </code>.
+              On the fighter card the background strip sits inside <code>.image-inner</code> so
+              the SVG mask naturally clips its bottom edge to the torn-paper contour.
+            </p>
+          </div>
+
+          <section id="march-28-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Independent Hierarchy Toggle</h3>
+            <ul>
+              <li><strong><code>freeHierarchy: boolean</code></strong> added to both <code>FighterCardData</code> and <code>TextCardData</code> in <code>types.ts</code>; defaults to <code>false</code>.</li>
+              <li><strong>Form UI</strong>: "Show Independent Hierarchy" checkbox in Card Elements section of both <code>FighterForm.svelte</code> and <code>TextForm.svelte</code>. Uses <code>onchange</code> (not <code>bind:checked</code>) to clear <code>grandAlliance</code>, <code>faction</code>, and <code>bladeborn</code> when toggling off. When on: 3 sublabeled <code>&lt;select&gt;</code> elements (Grand Alliance / Faction / Subfaction) with alphabetically sorted options. When off: existing <code>FactionSelect</code> component unchanged.</li>
+              <li><strong>Card rendering</strong>: faction and subfaction runemark badges use ternary conditions — <code>freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)</code> — so the correct SVG is shown regardless of mode. Tags row applies the same cascade conditions so it stays consistent with the badge display.</li>
+              <li><strong><code>findFactionSvg</code> / <code>findSubfactionSvg</code></strong>: two flat-lookup helpers added to <code>hierarchy.ts</code> and exported from <code>index.ts</code>. They search all alliances without needing a parent ID — required because free mode sets <code>faction</code> without necessarily setting a matching <code>grandAlliance</code>.</li>
+              <li><strong>i18n</strong>: new keys <code>ui.form-free-hierarchy</code>, <code>ui.form-grand-alliance</code>, <code>ui.form-faction</code>, <code>ui.form-subfaction</code> in both <code>en.json</code> and <code>de.json</code>.</li>
+            </ul>
+            <h3>Tags Row (Pills → Text)</h3>
+            <ul>
+              <li><strong>Design</strong>: Alegreya uppercase, 14 px, <code>letter-spacing: 0.04em</code>, items joined by <code> • </code> (U+2022 bullet). Replaces pill badges (maroon background, border-radius, border) across both card types.</li>
+              <li><strong>Fighter card</strong>: tags row placed inside <code>.image-inner</code> (which carries the SVG <code>mask-image</code>). This means the background strip (<code>rgba(0,0,0,0.35)</code>) is naturally clipped at the torn-paper edge — the strip cannot bleed past the mask boundary. Previous placement outside <code>.image-inner</code> caused the rectangular strip to overlap the shape mask.</li>
+              <li><strong>Text card</strong>: tags row sits directly in the dark header section; no background needed. Banderole mode overrides text colour to <code>#5a0a14</code>; printer-friendly to <code>#000</code>.</li>
+              <li><strong>Tags content</strong>: Alliance label → Faction label → Subfaction label (respecting cascade / free mode) → fighter runemark labels → activation label (text card only). Empty slots are filtered out with TypeScript type narrowing (<code>.filter((x): x is string =&gt; !!x)</code>).</li>
+              <li><strong>CSS removed</strong>: <code>.pills-row</code>, <code>.runemark-pill</code>, <code>.image-bottom</code> and all their modifier variants (<code>.is-printer-friendly</code>, <code>.is-banderole</code>) deleted from both card components.</li>
+            </ul>
+          </section>
+
+          <section id="march-28-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why move the tags row inside <code>.image-inner</code> on the fighter card?</p>
+              <p class="decision-a">The SVG <code>mask-image</code> is applied to <code>.image-inner</code>, not <code>.image-section</code>. A child positioned <em>inside</em> <code>.image-inner</code> is clipped by that mask; a sibling positioned <em>alongside</em> it is not. Moving the tags row (including its semi-transparent background rectangle) inside <code>.image-inner</code> means the mask naturally trims the strip's bottom edge to the torn-paper contour — no extra CSS needed.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why add <code>findFactionSvg</code> / <code>findSubfactionSvg</code> rather than reusing <code>getFactionSvg</code>?</p>
+              <p class="decision-a"><code>getFactionSvg(allianceId, factionId)</code> requires both IDs to traverse the hierarchy. In free mode the user sets <code>faction</code> without necessarily selecting the matching <code>grandAlliance</code> first — or may set a mismatched pair. The flat helpers iterate all alliances and return the first match, making them safe for any combination. They are also simpler callers — one argument instead of two.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why clear <code>grandAlliance</code>, <code>faction</code>, <code>bladeborn</code> when toggling free hierarchy off?</p>
+              <p class="decision-a">The free selects allow combinations the cascade mode cannot represent (e.g. a faction without its parent alliance set, or a subfaction from a different alliance). Leaving those values would cause the cascade FactionSelect to show a partially selected state or display wrong badges. Clearing on toggle-off ensures the user starts fresh with the cascade UI and avoids silent inconsistencies.</p>
+            </div>
+          </section>
+
+          <section id="march-28-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Added <code>freeHierarchy: boolean</code> to <code>FighterCardData</code> and <code>TextCardData</code></td></tr>
+                <tr><td><code>src/lib/runemarks/hierarchy.ts</code></td><td>Added <code>findFactionSvg()</code> and <code>findSubfactionSvg()</code> flat-lookup helpers</td></tr>
+                <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Exported <code>findFactionSvg</code> and <code>findSubfactionSvg</code></td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row inside <code>.image-inner</code>; removed <code>.pills-row</code>/<code>.runemark-pill</code>/<code>.image-bottom</code> CSS; added <code>.tags-row</code> CSS</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row in header; removed pills CSS; added <code>.tags-row</code> CSS with banderole/printer-friendly overrides</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Show Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code></td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Show Independent Hierarchy" checkbox and conditional hierarchy selects</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-28 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-26 — Deployment Card UX Polish & Code Cleanup
@@ -8176,6 +8280,7 @@
 
     <script>
       const sessions = [
+        "march-28",
         "march-27",
         "march-26",
         "march-25",
