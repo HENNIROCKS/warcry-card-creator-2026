@@ -141,6 +141,7 @@ Light/dark theme uses CSS custom properties declared on `:root` (dark) and `[dat
 - At session start, consult `docs/index.html` for prior decisions.
 - When asked to "document the session", append a new session panel to `docs/index.html`. Do NOT create separate session files.
 - At session end, offer to update/append to `docs/index.html`.
+- Documenting a session always means checking and updating **all** of: `docs/index.html`, `README.md`, `CLAUDE.md`, `src/lib/i18n/README.md`, `.github/ISSUE_TEMPLATE/*.md`, and memory files. Not just the session log.
 - **Never** run `git commit` or `git push` (any variant). User manages all git operations.
 - When redundant files are identified (stale build output, `.DS_Store`, empty placeholders, orphaned assets), delete them without asking.
 
