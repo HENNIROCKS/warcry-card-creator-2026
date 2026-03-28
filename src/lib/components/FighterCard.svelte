@@ -8,7 +8,7 @@
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
 
-	let { data, printerFriendly = false }: { data: FighterCardData; printerFriendly?: boolean } = $props();
+	let { data, printerFriendly = false, exporting = false }: { data: FighterCardData; printerFriendly?: boolean; exporting?: boolean } = $props();
 
 	function fittext(node: HTMLElement, _value?: unknown) {
 		function fit() {
@@ -27,7 +27,7 @@
 	}
 </script>
 
-<div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly}>
+<div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--rm-mask: {runemarkMaskUrl}">
 	<!-- IMAGE SECTION -->
 	<div class="image-section">
 		<div class="image-inner" style="mask-image: {maskUrl}; -webkit-mask-image: {maskUrl};">
@@ -35,7 +35,7 @@
 				<img class="model-img" src={data.modelImage} alt="Fighter" style="object-position: {data.imageOffsetX}% {data.imageOffsetY}%; transform: scale({data.imageZoom}); transform-origin: {data.imageOffsetX}% {data.imageOffsetY}%" />
 			{:else}
 				<div class="model-placeholder">
-					<span>{t('card.upload-model-image')}</span>
+					{#if !exporting && !printerFriendly}<span>{t('card.upload-model-image')}</span>{/if}
 				</div>
 			{/if}
 			{#if !data.showRunemarks}
@@ -56,19 +56,19 @@
 	{#if data.showRunemarks}
 		<div class="runemarks runemarks-left">
 			{#if data.grandAlliance}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 			{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 			{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 		</div>
 
 		<div class="runemarks runemarks-right">
 			{#each data.rightRunemarks as rm}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html rm.svg}</div></div>
+				<div class="runemark-border"><div class="runemark-badge">{@html rm.svg}</div></div>
 			{/each}
 		</div>
 	{/if}
@@ -283,6 +283,12 @@
 		justify-content: center;
 		border: 0;
 		outline: none;
+		mask-image: var(--rm-mask);
+		-webkit-mask-image: var(--rm-mask);
+		mask-size: 100% 100%;
+		-webkit-mask-size: 100% 100%;
+		mask-repeat: no-repeat;
+		-webkit-mask-repeat: no-repeat;
 	}
 
 	.runemark-badge {
@@ -294,6 +300,12 @@
 		justify-content: center;
 		border: 0;
 		outline: none;
+		mask-image: var(--rm-mask);
+		-webkit-mask-image: var(--rm-mask);
+		mask-size: 100% 100%;
+		-webkit-mask-size: 100% 100%;
+		mask-repeat: no-repeat;
+		-webkit-mask-repeat: no-repeat;
 	}
 
 

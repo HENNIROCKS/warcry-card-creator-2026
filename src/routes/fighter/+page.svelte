@@ -295,7 +295,7 @@
 		<div style="width: {574 * cardScale}px; height: {915 * cardScale}px; position: relative; flex-shrink: 0;">
 			<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
 				<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
-					<FighterCard {data} {printerFriendly} />
+					<FighterCard {data} {printerFriendly} {exporting} />
 				</div>
 			</div>
 
