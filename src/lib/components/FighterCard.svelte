@@ -38,20 +38,18 @@
 					<span>{t('card.upload-model-image')}</span>
 				</div>
 			{/if}
+			{#if !data.showRunemarks}
+				{@const tags = [
+					data.grandAlliance && t(`alliances.${data.grandAlliance}`),
+					(data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)) && t(`factions.${data.faction}`),
+					(data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)) && t(`subfactions.${data.bladeborn}`),
+					...data.rightRunemarks.map(rm => rm.label),
+				].filter((x): x is string => !!x)}
+				{#if tags.length > 0}
+					<div class="tags-row">{tags.join(' • ')}</div>
+				{/if}
+			{/if}
 		</div>
-
-	<div class="image-bottom">
-		{#if !data.showRunemarks}
-			<div class="pills-row">
-				{#if data.grandAlliance}<div class="runemark-pill">{t(`alliances.${data.grandAlliance}`)}</div>{/if}
-				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
-				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
-				{#each data.rightRunemarks as rm}
-					<div class="runemark-pill">{rm.label}</div>
-				{/each}
-			</div>
-		{/if}
-	</div>
 	</div>
 
 	<!-- RUNEMARKS (card-level so they never get clipped) -->
@@ -225,28 +223,22 @@
 		font-size: 28px;
 	}
 
-	.image-bottom {
+	.tags-row {
 		position: absolute;
 		bottom: 24px;
 		left: 0;
 		right: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 8px;
+		text-align: center;
+		padding: 6px 20px;
+		font-family: 'Alegreya', serif;
+		font-size: 14px;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		line-height: 1.5;
+		color: #FAF6F3;
+		background: rgba(0, 0, 0, 0.35);
 		border: 0;
 		outline: none;
-		background: transparent;
-	}
-
-	.pills-row {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 6px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.image-caption {
@@ -304,21 +296,6 @@
 		outline: none;
 	}
 
-	.runemark-pill {
-		background: #5a0a14;
-		border: 1px solid #FAF6F3;
-		border-radius: 20px;
-		padding: 7px 13px;
-		color: #FAF6F3;
-		font-family: 'Alegreya', serif;
-		font-weight: 400;
-		font-size: 15px;
-
-		text-transform: uppercase;
-		text-align: center;
-		line-height: 1.3;
-		outline: none;
-	}
 
 	.runemark-badge :global(svg),
 	.runemark-badge :global(svg *) {
@@ -727,10 +704,9 @@
 		fill: #000 !important;
 	}
 
-	.is-printer-friendly .runemark-pill {
-		background: #fff;
-		border-color: #000;
+	.is-printer-friendly .tags-row {
 		color: #000;
+		background: rgba(255, 255, 255, 0.6);
 	}
 
 	.is-printer-friendly .weapons-box,

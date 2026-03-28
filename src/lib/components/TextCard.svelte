@@ -112,17 +112,16 @@
 		{/if}
 
 		{#if !data.showRunemarks}
-			<div class="pills-row">
-				{#if data.grandAlliance}<div class="runemark-pill">{t(`alliances.${data.grandAlliance}`)}</div>{/if}
-				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
-				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
-				{#each data.fighterRunemarks as rm}
-					<div class="runemark-pill">{rm.label}</div>
-				{/each}
-				{#if data.showActivation && data.activationType}
-					<div class="runemark-pill">{t(`card.activation-${data.activationType}`).replace('|', '')}</div>
-				{/if}
-			</div>
+			{@const tags = [
+				data.grandAlliance && t(`alliances.${data.grandAlliance}`),
+				(data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)) && t(`factions.${data.faction}`),
+				(data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)) && t(`subfactions.${data.bladeborn}`),
+				...data.fighterRunemarks.map(rm => rm.label),
+				data.showActivation && data.activationType && t(`card.activation-${data.activationType}`).replace('|', ''),
+			].filter((x): x is string => !!x)}
+			{#if tags.length > 0}
+				<div class="tags-row">{tags.join(' • ')}</div>
+			{/if}
 		{/if}
 
 		{#if isBanderole}
@@ -237,34 +236,22 @@
 		outline: none;
 	}
 
-	.pills-row {
+	.tags-row {
 		position: absolute;
 		top: 52px;
 		left: 0;
 		right: 0;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 6px;
+		text-align: center;
+		padding: 4px 20px;
+		font-family: 'Alegreya', serif;
+		font-size: 14px;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		line-height: 1.5;
+		color: #FAF6F3;
 		border: 0;
 		outline: none;
 		background: transparent;
-	}
-
-	.runemark-pill {
-		background: #5a0a14;
-		border: 1px solid #FAF6F3;
-		border-radius: 20px;
-		padding: 7px 13px;
-		color: #FAF6F3;
-		font-family: 'Alegreya', serif;
-		font-weight: 400;
-		font-size: 15px;
-
-		text-transform: uppercase;
-		text-align: center;
-		line-height: 1.3;
-		outline: none;
 	}
 
 	.runemarks-row {
@@ -621,9 +608,7 @@
 		fill: #000;
 	}
 
-	.is-banderole .runemark-pill {
-		background: transparent;
-		border-color: #5a0a14;
+	.is-banderole .tags-row {
 		color: #5a0a14;
 	}
 
@@ -657,9 +642,7 @@
 		fill: #000 !important;
 	}
 
-	.is-printer-friendly .runemark-pill {
-		background: #fff;
-		border-color: #000;
+	.is-printer-friendly .tags-row {
 		color: #000;
 	}
 
