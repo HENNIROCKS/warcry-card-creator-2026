@@ -2013,7 +2013,7 @@
             </div>
             <h1>Independent Hierarchy &amp; Tags Row Redesign</h1>
             <p>
-              New "Show Independent Hierarchy" checkbox on both fighter and text card editors.
+              New "Use Independent Hierarchy" checkbox on both fighter and text card editors.
               When enabled, three flat selects replace the cascading <code>FactionSelect</code>
               component — Grand Alliance, Faction, and Subfaction are chosen freely without
               cascade dependency. Toggling off clears the three fields.
@@ -2031,7 +2031,7 @@
             <h3>Independent Hierarchy Toggle</h3>
             <ul>
               <li><strong><code>freeHierarchy: boolean</code></strong> added to both <code>FighterCardData</code> and <code>TextCardData</code> in <code>types.ts</code>; defaults to <code>false</code>.</li>
-              <li><strong>Form UI</strong>: "Show Independent Hierarchy" checkbox in Card Elements section of both <code>FighterForm.svelte</code> and <code>TextForm.svelte</code>. Uses <code>onchange</code> (not <code>bind:checked</code>) to clear <code>grandAlliance</code>, <code>faction</code>, and <code>bladeborn</code> when toggling off. When on: 3 sublabeled <code>&lt;select&gt;</code> elements (Grand Alliance / Faction / Subfaction) with alphabetically sorted options. When off: existing <code>FactionSelect</code> component unchanged.</li>
+              <li><strong>Form UI</strong>: "Use Independent Hierarchy" checkbox in Card Elements section of both <code>FighterForm.svelte</code> and <code>TextForm.svelte</code>. Uses <code>onchange</code> (not <code>bind:checked</code>) to clear <code>grandAlliance</code>, <code>faction</code>, and <code>bladeborn</code> when toggling off. When on: 3 sublabeled <code>&lt;select&gt;</code> elements (Grand Alliance / Faction / Subfaction) with alphabetically sorted options. When off: existing <code>FactionSelect</code> component unchanged.</li>
               <li><strong>Card rendering</strong>: faction and subfaction runemark badges use ternary conditions — <code>freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)</code> — so the correct SVG is shown regardless of mode. Tags row applies the same cascade conditions so it stays consistent with the badge display.</li>
               <li><strong><code>findFactionSvg</code> / <code>findSubfactionSvg</code></strong>: two flat-lookup helpers added to <code>hierarchy.ts</code> and exported from <code>index.ts</code>. They search all alliances without needing a parent ID — required because free mode sets <code>faction</code> without necessarily setting a matching <code>grandAlliance</code>.</li>
               <li><strong>i18n</strong>: new keys <code>ui.form-free-hierarchy</code>, <code>ui.form-grand-alliance</code>, <code>ui.form-faction</code>, <code>ui.form-subfaction</code> in both <code>en.json</code> and <code>de.json</code>.</li>
@@ -2072,8 +2072,8 @@
                 <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Exported <code>findFactionSvg</code> and <code>findSubfactionSvg</code></td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row inside <code>.image-inner</code>; removed <code>.pills-row</code>/<code>.runemark-pill</code>/<code>.image-bottom</code> CSS; added <code>.tags-row</code> CSS</td></tr>
                 <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Free-hierarchy ternaries on faction/subfaction badges; tags row in header; removed pills CSS; added <code>.tags-row</code> CSS with banderole/printer-friendly overrides</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Show Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code></td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Show Independent Hierarchy" checkbox and conditional hierarchy selects</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Use Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code></td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Use Independent Hierarchy" checkbox and conditional hierarchy selects</td></tr>
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
                 <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
