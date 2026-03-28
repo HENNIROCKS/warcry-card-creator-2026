@@ -47,6 +47,7 @@
 		bladeborn: '',
 		fighterRunemarks: [],
 		showRunemarks: true,
+		freeHierarchy: false,
 		showActivation: true,
 		showFlavorText: true,
 		showPrerequisite: false,

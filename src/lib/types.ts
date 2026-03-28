@@ -39,6 +39,7 @@ export interface FighterCardData {
 	isNamedCharacter: boolean;
 	isMonster: boolean;
 	showRunemarks: boolean;
+	freeHierarchy: boolean;
 	showSubtitle: boolean;
 	showCaption: boolean;
 	damageBrackets: DamageBracket[]; // typically 5 rows
@@ -128,6 +129,7 @@ export interface TextCardData {
 	bladeborn: string;
 	fighterRunemarks: Runemark[];
 	showRunemarks: boolean;
+	freeHierarchy: boolean;
 	showActivation: boolean;
 	showFlavorText: boolean;
 	showPrerequisite: boolean;

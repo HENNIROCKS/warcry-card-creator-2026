@@ -108,6 +108,7 @@
 		isNamedCharacter: false,
 		isMonster: false,
 		showRunemarks: true,
+		freeHierarchy: false,
 		showSubtitle: false,
 		showCaption: false,
 		damageBrackets: [

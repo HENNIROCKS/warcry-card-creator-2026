@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
-	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { fighterRunemarks, hierarchy } from '$lib/runemarks/index';
 	import { t, i18n } from '$lib/i18n/index.svelte';
 	import FactionSelect from './FactionSelect.svelte';
 
@@ -82,6 +82,14 @@
 				<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
 			</label>
 			<label class="flex cursor-pointer items-center gap-3">
+				<input type="checkbox" checked={data.freeHierarchy} class="h-4 w-4 rounded accent-red-800"
+					onchange={(e) => {
+						data.freeHierarchy = (e.target as HTMLInputElement).checked;
+						if (!data.freeHierarchy) { data.grandAlliance = ''; data.faction = ''; data.bladeborn = ''; }
+					}} />
+				<span class="text-zinc-200">{t('ui.form-free-hierarchy')}</span>
+			</label>
+			<label class="flex cursor-pointer items-center gap-3">
 				<input type="checkbox" bind:checked={data.showSubtitle} class="h-4 w-4 rounded accent-red-800" />
 				<span class="text-zinc-200">{t('ui.form-show-subtitle')}</span>
 			</label>
@@ -136,7 +144,39 @@
 	<!-- Runemarks -->
 	<section>
 		<p class="field-label mb-2">{t('ui.form-runemarks')}</p>
-		<FactionSelect {data} />
+		{#if data.freeHierarchy}
+			<div class="flex flex-col gap-2">
+				<div>
+					<p class="sublabel mb-1">{t('ui.form-grand-alliance')}</p>
+					<select class="field-input" bind:value={data.grandAlliance}>
+						<option value="">—</option>
+						{#each [...hierarchy].sort((a, b) => t(`alliances.${a.id}`).localeCompare(t(`alliances.${b.id}`), i18n.code)) as alliance}
+							<option value={alliance.id}>{t(`alliances.${alliance.id}`)}</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<p class="sublabel mb-1">{t('ui.form-faction')}</p>
+					<select class="field-input" bind:value={data.faction}>
+						<option value="">—</option>
+						{#each hierarchy.flatMap(a => a.factions).sort((a, b) => t(`factions.${a.id}`).localeCompare(t(`factions.${b.id}`), i18n.code)) as faction}
+							<option value={faction.id}>{t(`factions.${faction.id}`)}</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<p class="sublabel mb-1">{t('ui.form-subfaction')}</p>
+					<select class="field-input" bind:value={data.bladeborn}>
+						<option value="">—</option>
+						{#each hierarchy.flatMap(a => a.factions.flatMap(f => f.subfactions)).sort((a, b) => t(`subfactions.${a.id}`).localeCompare(t(`subfactions.${b.id}`), i18n.code)) as sub}
+							<option value={sub.id}>{t(`subfactions.${sub.id}`)}</option>
+						{/each}
+					</select>
+				</div>
+			</div>
+		{:else}
+			<FactionSelect {data} />
+		{/if}
 		<div class="mt-3">
 			<p class="sublabel mb-1">{t('ui.form-fighter-runemarks')}</p>
 			<div class="flex flex-col gap-2">

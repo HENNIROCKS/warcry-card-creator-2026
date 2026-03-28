@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
-	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, findFactionSvg, findSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
@@ -44,8 +44,8 @@
 		{#if !data.showRunemarks}
 			<div class="pills-row">
 				{#if data.grandAlliance}<div class="runemark-pill">{t(`alliances.${data.grandAlliance}`)}</div>{/if}
-				{#if data.faction}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
-				{#if data.bladeborn}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
+				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}<div class="runemark-pill">{t(`factions.${data.faction}`)}</div>{/if}
+				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}<div class="runemark-pill">{t(`subfactions.${data.bladeborn}`)}</div>{/if}
 				{#each data.rightRunemarks as rm}
 					<div class="runemark-pill">{rm.label}</div>
 				{/each}
@@ -60,11 +60,11 @@
 			{#if data.grandAlliance}
 				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
-			{#if data.grandAlliance && data.faction}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getFactionSvg(data.grandAlliance, data.faction) ?? PLACEHOLDER_SVG}</div></div>
+			{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
-			{#if data.grandAlliance && data.faction && data.bladeborn}
-				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn) ?? PLACEHOLDER_SVG}</div></div>
+			{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
+				<div class="runemark-border" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"><div class="runemark-badge" style="mask-image: {runemarkMaskUrl}; -webkit-mask-image: {runemarkMaskUrl}; mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
 			{/if}
 		</div>
 

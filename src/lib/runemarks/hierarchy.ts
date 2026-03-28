@@ -589,3 +589,22 @@ export function getSubfactions(allianceId: string, factionId: string): Subfactio
 	return hierarchy.find(a => a.id === allianceId)
 		?.factions.find(f => f.id === factionId)?.subfactions ?? [];
 }
+
+// Flat lookups for free-hierarchy mode (no alliance/faction context required)
+export function findFactionSvg(factionId: string): string | null {
+	for (const alliance of hierarchy) {
+		const faction = alliance.factions.find(f => f.id === factionId);
+		if (faction) return faction.svg;
+	}
+	return null;
+}
+
+export function findSubfactionSvg(subfactionId: string): string | null {
+	for (const alliance of hierarchy) {
+		for (const faction of alliance.factions) {
+			const sub = faction.subfactions.find(s => s.id === subfactionId);
+			if (sub) return sub.svg;
+		}
+	}
+	return null;
+}

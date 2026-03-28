@@ -1,5 +1,5 @@
 // Alliance / faction / subfaction data — see hierarchy.ts
-export { hierarchy, PLACEHOLDER_SVG, getAllianceSvg, getFactionSvg, getSubfactionSvg, getFactions, getSubfactions } from './hierarchy';
+export { hierarchy, PLACEHOLDER_SVG, getAllianceSvg, getFactionSvg, getSubfactionSvg, getFactions, getSubfactions, findFactionSvg, findSubfactionSvg } from './hierarchy';
 
 // ── Weapon runemarks ─────────────────────────────────────────────────────────
 import axe          from './svg/weapons-axe.svg?raw';
