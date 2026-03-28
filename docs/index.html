@@ -513,7 +513,7 @@
           <li>
             <button class="session-btn" data-session="march-28">
               <span class="session-date">2026-03-28</span>
-              <span class="session-title">Independent Hierarchy &amp; Tags Row</span>
+              <span class="session-title">Hierarchy, Tags Row &amp; JSON Save/Load</span>
             </button>
           </li>
           <li>
@@ -2009,9 +2009,9 @@
               <span class="badge badge-blue">2026-03-28</span>
               <span class="badge badge-green">Independent hierarchy selects</span>
               <span class="badge badge-green">Tags row replaces pills</span>
-              <span class="badge badge-green">Runemark mask CSS variable</span>
+              <span class="badge badge-green">JSON save / load — fighter + text</span>
             </div>
-            <h1>Independent Hierarchy &amp; Tags Row Redesign</h1>
+            <h1>Independent Hierarchy, Tags Row &amp; JSON Save / Load</h1>
             <p>
               New "Use Independent Hierarchy" checkbox on both fighter and text card editors.
               When enabled, three flat selects replace the cascading <code>FactionSelect</code>
@@ -2053,6 +2053,13 @@
             <ul>
               <li><strong>"Upload model image" hidden during exports</strong>: placeholder text in the model image area is suppressed for both the default export and the printer-friendly export. <code>FighterCard.svelte</code> gained an <code>exporting?: boolean</code> prop; the span renders only when <code>!exporting &amp;&amp; !printerFriendly</code>. The page passes <code>{exporting}</code> to the component.</li>
             </ul>
+            <h3>JSON Save / Load — Fighter &amp; Text Cards</h3>
+            <ul>
+              <li><strong>UI</strong>: "Save JSON" and "Load JSON" added to the existing export dropdown (below a <code>&lt;hr&gt;</code> divider) on both <code>/fighter</code> and <code>/text</code> pages, desktop and mobile. Reuses the same split-button chevron already present — no new toolbar space needed.</li>
+              <li><strong>Save</strong>: <code>saveLayout()</code> serialises <code>data</code> to a pretty-printed <code>.json</code> file using <code>makeSlug()</code> for the filename. Fighter strips <code>modelImage</code> (blob URL, not serialisable). Both pages strip <code>svg</code> from runemark objects — only <code>{ id, label }</code> is saved, keeping files compact.</li>
+              <li><strong>Load</strong>: <code>handleFileLoad()</code> reads the file via <code>FileReader</code>, parses JSON, re-hydrates runemark SVGs from the bundled <code>fighterRunemarks</code> record by <code>id</code>, then replaces <code>data</code>. Malformed JSON is silently ignored.</li>
+              <li><strong>Runemark state sync fix</strong>: <code>rmKeys</code> (the internal string array driving the runemark selects) was local <code>$state</code> in <code>FighterForm</code> / <code>TextForm</code>. On JSON load, setting <code>data</code> externally caused the form's <code>$effect</code> to immediately overwrite <code>data.rightRunemarks</code> / <code>data.fighterRunemarks</code> with the stale empty keys. Fix: <code>rmKeys</code> lifted to the parent page as <code>$state</code>, passed to the form as a <code>$bindable</code> prop. <code>handleFileLoad</code> sets <code>rmKeys</code> from loaded ids before replacing <code>data</code>.</li>
+            </ul>
           </section>
 
           <section id="march-28-pending" data-nav="Still Pending">
@@ -2083,6 +2090,14 @@
               <p class="decision-q">Why not run SVGO on the runemark SVG library?</p>
               <p class="decision-a">Tested against the largest files (up to 14 KB). Savings were 0–21 bytes per file (0–0.1%). The SVGs consist almost entirely of long path data strings — the only content SVGO could touch. There are no comments, redundant attributes, or inline styles to strip. The files are already as compact as they can be without lossy path simplification.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">Why add JSON save/load to the existing export dropdown rather than a separate button?</p>
+              <p class="decision-a">Fighter and text header toolbars use a fixed <code>justify-between</code> layout — no room for a second split-button without cramping. The export dropdown already has a chevron; adding a divider and two items keeps the surface clean. JSON save/load is treated as a power-user feature: discoverable by exploring, not prominently signposted.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why lift <code>rmKeys</code> to the parent page rather than syncing inside the form component?</p>
+              <p class="decision-a">The form's <code>$effect</code> writes <code>data.rightRunemarks = rmKeys.filter(...).map(...)</code> — it runs whenever <code>rmKeys</code> changes. Setting <code>data</code> externally does not update <code>rmKeys</code>, so the effect immediately overwrites the loaded runemarks with the stale empty array. Lifting <code>rmKeys</code> to the parent and passing it as <code>$bindable</code> lets <code>handleFileLoad</code> set both <code>rmKeys</code> and <code>data</code> in the correct order — runemarks survive the load.</p>
+            </div>
           </section>
 
           <section id="march-28-files" data-nav="Files Changed">
@@ -2095,10 +2110,10 @@
                 <tr><td><code>src/lib/runemarks/index.ts</code></td><td>Exported <code>findFactionSvg</code> and <code>findSubfactionSvg</code></td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Free-hierarchy ternaries; tags row inside <code>.image-inner</code>; removed pills CSS; added <code>.tags-row</code>; added <code>exporting</code> prop; placeholder text hidden during export; <code>--rm-mask</code> CSS variable replaces 8 inline mask style attributes</td></tr>
                 <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Free-hierarchy ternaries; tags row in header; removed pills CSS; added <code>.tags-row</code> with banderole/printer-friendly overrides; <code>--rm-mask</code> CSS variable replaces 10 inline mask style attributes</td></tr>
-                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Use Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code></td></tr>
-                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Use Independent Hierarchy" checkbox and conditional hierarchy selects</td></tr>
-                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data; passes <code>{exporting}</code> to <code>FighterCard</code></td></tr>
-                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data</td></tr>
+                <tr><td><code>src/lib/components/FighterForm.svelte</code></td><td>Added <code>hierarchy</code> import; "Use Independent Hierarchy" checkbox with clear-on-toggle-off; conditional flat selects vs <code>FactionSelect</code>; <code>rmKeys</code> changed from local <code>$state</code> to <code>$bindable</code> prop</td></tr>
+                <tr><td><code>src/lib/components/TextForm.svelte</code></td><td>Same as FighterForm — "Use Independent Hierarchy" checkbox and conditional hierarchy selects; <code>rmKeys</code> changed from local <code>$state</code> to <code>$bindable</code> prop</td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data; passes <code>{exporting}</code> to <code>FighterCard</code>; <code>rmKeys</code> lifted to page state; <code>saveLayout</code> / <code>loadLayout</code> / <code>handleFileLoad</code>; JSON items in export dropdown; hidden file input</td></tr>
+                <tr><td><code>src/routes/text/+page.svelte</code></td><td>Added <code>freeHierarchy: false</code> to initial data; same JSON save/load additions as fighter page</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Added <code>form-free-hierarchy</code>, <code>form-grand-alliance</code>, <code>form-faction</code>, <code>form-subfaction</code></td></tr>
               </tbody>
