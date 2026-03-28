@@ -67,6 +67,8 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 **Fighter card** (portrait ~600×940px preview):
 
 - Top ~55%: model image area with runemarks overlaid at left/right columns (up to 3 each side)
+- When `showRunemarks` is false: a tags row inside `.image-inner` (Alegreya uppercase, ` • ` separator) shows alliance/faction/subfaction names + fighter runemark labels; semi-transparent background strip is clipped by the SVG mask
+- `freeHierarchy: boolean` — when true, alliance/faction/subfaction are each set via independent flat selects (no cascade); `findFactionSvg`/`findSubfactionSvg` helpers used for SVG lookup
 - Torn paper edge divider (SVG mask)
 - Bottom ~45%: parchment area — fighter name, characteristics table, weapons table
 - If `isMonster: true`: damage bracket table appended below weapons
@@ -77,6 +79,8 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - `layoutVariant?: 'standard' | 'banderole'` — banderole mode replaces the standard label with a full-width maroon torn-edge ribbon (`<div class="banderole">`) that overhangs the card edges; runemarks invert to black-on-cream; printer-friendly renders a stroke outline SVG instead of the filled shape
 - Torn paper edge divider
 - Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
+- When `showRunemarks` is false: a tags row (Alegreya uppercase, ` • ` separator) shows alliance/faction/subfaction names + fighter runemark labels + activation label; no background needed (dark header behind)
+- `freeHierarchy: boolean` — same independent hierarchy behaviour as fighter card
 - Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable`, `showCaption` — collapsing both the card element and its form field
 - `smallBodyText: boolean` — when true, reduces body text 20→16 px, flavor text 18→15 px, prerequisite text 18→14 px via `.small-body` class on `.parchment`
 - Inline runemark markup: `[slug]` in body/prerequisite text renders the matching SVG inline as `(<span class="inline-rm">…</span>)`; slugs cover all runemark groups + full faction hierarchy. Markup toolbar has B / I / A↓ / [⊕] buttons (bold, italic, font-size toggle, runemark picker)
@@ -84,11 +88,13 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 **Deployment card** (portrait 574×915px, SVG-based rendering):
 
 - Full-bleed battlefield SVG at card centre; dashed centre lines from the midpoint
-- Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as coloured speech bubbles with a white icon (dagger/shield/hammer) + optional RND label
-- 33 snap positions: 9 inside (TL/TC/TR/ML/CC/MR/BL/BC/BR) + 24 outside along edges and corners
-- Measurement lines: configurable direction (8 directions), start/end caps (arrow/tick/dot/none), text label at midpoint
-- Zone overlays: shaded half/quarter presets over the battlefield
-- Printer-friendly mode: strictly B&W, unicode player badges (①②③④) above each bubble, white battlefield fill
+- Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as geometric shapes — triangle (dagger), diamond (hammer), circle (shield) — filled with player colour, white icon via SVG fill inheritance; optional RND label above shape
+- 99 snap positions: 63 inside (7×9 grid, R1C1–R7C9, outermost row/col sits exactly on the battlefield boundary) + 36 outside (9 top + 9 bottom + 7 left + 7 right + 4 corners)
+- Two-point measurement lines: tap start position → tap end position; start/end cap picker (arrow/tick/dot/none); text label at midpoint
+- Objective markers: black circle with text label
+- Corner runemarks: Orientation SVG (top-left) and Matched Play SVG (top-right); fall back to `↑` / `MP` text when Show Runemarks is off
+- Zone overlays: shaded half/quarter presets over the battlefield (UI not yet wired)
+- Printer-friendly mode: strictly B&W, player badges left of each shape, white battlefield fill
 - Card name rendered as an Alegreya caption below the SVG
 - `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
 
