@@ -112,7 +112,6 @@ import desBbZarbagsGitz            from './svg/factions-destruction-bladeborn-za
 
 // ── Cities of Sigmar subfactions ──────────────────────────────────────────────
 import oCosAnvilgard         from './svg/factions-order-cities-of-sigmar-anvilgard.svg?raw';
-import oCosCadwallon         from './svg/factions-order-cities-of-sigmar-cadwallon.svg?raw';
 import oCosCasteliteHosts    from './svg/factions-order-cities-of-sigmar-castelite-hosts.svg?raw';
 import oCosDarklingCovens    from './svg/factions-order-cities-of-sigmar-darkling-covens.svg?raw';
 import oCosDispossessed      from './svg/factions-order-cities-of-sigmar-dispossessed.svg?raw';
@@ -444,7 +443,6 @@ export const hierarchy: AllianceEntry[] = [
 			},
 			{ id: 'cities-of-sigmar-alternative',        label: 'Cities of Sigmar (Alternative)',        svg: oCitiesOfSigmarAlt,    subfactions: [] },
 			{ id: 'cities-of-sigmar-anvilgard',          label: 'Cities of Sigmar: Anvilgard',          svg: oCosAnvilgard,         subfactions: [] },
-			{ id: 'cities-of-sigmar-cadwallon',          label: 'Cities of Sigmar: Cadwallon',          svg: oCosCadwallon,         subfactions: [] },
 			{ id: 'cities-of-sigmar-castelite-hosts',    label: 'Cities of Sigmar: Castelite Hosts',    svg: oCosCasteliteHosts,    subfactions: [] },
 			{ id: 'cities-of-sigmar-darkling-covens',    label: 'Cities of Sigmar: Darkling Covens',    svg: oCosDarklingCovens,    subfactions: [] },
 			{ id: 'cities-of-sigmar-dispossessed',       label: 'Cities of Sigmar: Dispossessed',       svg: oCosDispossessed,      subfactions: [] },
