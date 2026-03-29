@@ -603,6 +603,12 @@
         <div class="section-label">Sessions</div>
         <ul id="session-list">
           <li>
+            <button class="session-btn" data-session="intro">
+              <span class="session-date">Intro</span>
+              <span class="session-title">About This Log</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="index">
               <span class="session-date">Index</span>
               <span class="session-title">Topic Reference</span>
@@ -611,7 +617,7 @@
           <li>
             <button class="session-btn" data-session="march-29">
               <span class="session-date">2026-03-29</span>
-              <span class="session-title">Deployment Zones — Grid-Based Drawing</span>
+              <span class="session-title">Deployment Polish — PF Hatching, Perimeter Snaps &amp; Mobile</span>
             </button>
           </li>
           <li>
@@ -749,6 +755,66 @@
 
       <main>
         <button id="menu-toggle">☰ Sessions</button>
+        <!-- ══════════════════════════════════════════
+         INTRO — About This Log
+    ══════════════════════════════════════════ -->
+        <div id="session-intro" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">Mar 11 – Mar 29, 2026</span>
+              <span class="badge badge-purple">19 sessions</span>
+            </div>
+            <h1>About This Log</h1>
+            <p>
+              Warcry Card Creator 2026 is a browser-based fan tool for building custom Warcry
+              cards — fighter cards, text/ability cards, deployment cards, and card backs.
+              No backend, no login; everything runs client-side and exports as a print-ready PNG.
+            </p>
+            <p>
+              It was built over 19 sessions in March 2026 by the project owner with Claude Code
+              as the coding partner. These logs document what was built each day, the reasoning
+              behind key decisions, and what remains open.
+            </p>
+          </div>
+
+          <section id="intro-arc" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">→</span> What Was Built</h2>
+            <table>
+              <thead><tr><th>Period</th><th>What</th></tr></thead>
+              <tbody>
+                <tr><td>Mar 11–15</td><td><strong>Fighter card</strong> — layout, characteristics, weapons, damage bracket, runemarks, faction hierarchy, model image pan/zoom</td></tr>
+                <tr><td>Mar 16–17</td><td><strong>Text card</strong> — activation badge, body/flavour/prerequisite text, points table, label types</td></tr>
+                <tr><td>Mar 18–22</td><td><strong>Export & polish</strong> — dom-to-image-more quirks, mobile support, PWA, i18n (EN + DE), printer-friendly modes</td></tr>
+                <tr><td>Mar 23</td><td><strong>Card back</strong> — background image, centred name + runemark, text colour, mirrored name</td></tr>
+                <tr><td>Mar 23–29</td><td><strong>Deployment card</strong> — SVG card, 99 snap positions, markers, measurements, zones, mask circles, perimeter snaps, PF hatch patterns; rebuilt once from form-based to card-first tap UI</td></tr>
+                <tr><td>Mar 27–29</td><td><strong>Cross-editor</strong> — inline runemark markup, independent faction selects, tags row, JSON save/load, banderole label</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="intro-collab" data-nav="How We Worked">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">⇄</span> How We Worked</h2>
+            <p>
+              The owner directed with short messages — often a single sentence or a screenshot of
+              a visual problem. Claude planned the approach first and waited for a go-ahead before
+              writing any code. Changes stayed as working-tree edits; the owner reviewed and
+              committed everything themselves.
+            </p>
+            <p>
+              What worked: the plan-first loop caught wrong assumptions early. Screenshots replaced
+              long descriptions — "the yellow shape is invisible on the yellow zone" plus an image
+              led straight to the right fix. Doing one thing at a time kept mistakes small.
+            </p>
+            <p>
+              What was hard: the dom-to-image-more iOS restriction and the brownish bleed on
+              printer-friendly exports were genuinely unsolved — documented and left open rather
+              than papered over. The deployment card was the most complex piece: rebuilt once,
+              then extended across five sessions, one clearly scoped addition at a time.
+            </p>
+          </section>
+        </div>
+        <!-- /session-intro -->
+
         <!-- ══════════════════════════════════════════
          INDEX — Topic Reference
     ══════════════════════════════════════════ -->
@@ -2106,26 +2172,38 @@
         <!-- /session-index -->
 
         <!-- ══════════════════════════════════════════
-         2026-03-29 — Deployment Zones
+         2026-03-29 — Deployment Zones & Polish
     ══════════════════════════════════════════ -->
         <div id="session-march-29" class="session-panel">
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-29</span>
-              <span class="badge badge-green">Grid-based zone drawing</span>
-              <span class="badge badge-green">Click-to-edit zones</span>
-              <span class="badge badge-green">Mask circle cutouts</span>
+              <span class="badge badge-green">Zone drawing &amp; mask cutouts</span>
+              <span class="badge badge-green">PF hatching &amp; perimeter snaps</span>
+              <span class="badge badge-green">Mobile UX &amp; code quality</span>
             </div>
-            <h1>Deployment Zones — Grid Drawing &amp; Mask Circles</h1>
+            <h1>Deployment Zones, PF Hatching &amp; Perimeter Snaps</h1>
             <p>
-              Deployment card zones are now drawn interactively on the snap grid — the same
-              grid used for measurement lines and deployment points. Click a position and
-              choose "Zone from here", then click a second corner; the bounding rectangle
-              becomes the zone. Clicking an existing zone opens a popover to reassign its
-              player colour, redraw it, or remove it. Zones can also be drawn as circular
-              mask cutouts ("Mask circle here") — rendered in the battlefield background
-              colour to visually carve out an exclusion area through any coloured zones beneath.
-              The preset-based system (half/quarter/third/strip) was removed entirely.
+              A full day on the deployment card editor. In the morning, zones became interactive:
+              click a snap position, choose "Zone from here", click a second corner to commit the
+              bounding rectangle. Zones are click-to-edit (colour, redraw, remove). Mask circles
+              carve circular exclusion areas through coloured zones beneath with a single tap.
+            </p>
+            <p>
+              In the afternoon, printer-friendly mode gained per-player SVG hatch patterns
+              (forward-diagonal, back-diagonal, crosshatch, horizontal) replacing ambiguous grey
+              fills, plus circled player numbers inside each zone. Mask circle edges now expose
+              8 perimeter snap points at cardinal/intercardinal angles — usable as measurement
+              endpoints. Measurement lines longer than 60 SVG units get a midpoint dot for
+              mobile tap discoverability. Shape stroke was reduced to 1 px semi-transparent white
+              so yellow shapes remain visible on yellow zones. RND labels are clamped inside the
+              card boundary and flip below the shape when they would be clipped at the top edge.
+            </p>
+            <p>
+              Mobile UX: the JSON dropdown now closes on outside click; all popover inputs call
+              <code>scrollIntoView</code> on focus so the iOS keyboard doesn't obscure them; the
+              WIP watermark was removed. Code quality: ~100 redundant CSS resets removed from
+              FighterCard, and the <code>app.d.ts</code> boilerplate stubs cleaned up.
             </p>
           </div>
 
@@ -2148,25 +2226,55 @@
               <li><strong>Zone popover</strong>: shows player colour title, position coordinates (<code>R1C1 → R4C6</code>), colour picker row (all 4 colours, active highlighted), "Redraw" button (removes + re-enters zone mode for that player), and "Remove zone" link.</li>
               <li><strong><code>reassignZoneToColor</code></strong>: moves a zone from one player to another, auto-creating the target player if needed. Updates the popover mode to point at the new player/zone indices.</li>
             </ul>
-            <h3>Example JSON</h3>
-            <ul>
-              <li><strong><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></strong>: approximation of the "Agents of Be'lakor: Battlefield Edge" deployment card. Red zone <code>R1C4 → R4C6</code> (top-centre area); blue zone <code>R6C1 → R7C9</code> (bottom row). Three "Ritual Point" objectives at <code>R2C5</code>, <code>R4C3</code>, <code>R4C7</code>. Two 8" measurements radiating vertically from centre <code>R4C5</code>.</li>
-            </ul>
-            <h3>i18n &amp; Cleanup</h3>
-            <ul>
-              <li>Added: <code>ui.popover-zone</code>, <code>ui.popover-zone-redraw</code>, <code>ui.popover-remove-zone</code>, <code>ui.zone-pick-start</code>, <code>ui.zone-pick-end</code> in both locales.</li>
-              <li>Removed: all <code>deployment.zone-*</code> preset label keys (14 keys) and <code>ui.form-zones</code>, <code>ui.form-add-zone</code> from both locales — no longer referenced.</li>
-              <li>Zones dropdown removed from the header toolbar entirely.</li>
-              <li>Example JSON: <code>_work/deployments/agents-of-belakor-battlefield-edge.json</code> — approximation of the Be'lakor: Battlefield Edge deployment card.</li>
-            </ul>
             <h3>Mask Zone Cutouts</h3>
             <ul>
               <li><strong>Data model extended</strong>: <code>DeploymentZone</code> gains <code>mask?: boolean</code> and <code>radius?: number</code> (SVG units, defaults to 89). When <code>mask: true</code>, <code>startPos</code> is the circle centre; <code>endPos</code> is unused.</li>
               <li><strong>Rendering</strong>: zone rendering split into two passes — regular zone rects first, then mask circles on top (before dashed centre lines). Mask circles are filled with the battlefield background colour (<code>#d9b8a8</code> / white in printer-friendly), fully opaque, visually punching a hole through any coloured zones beneath. No SVG clip-paths needed.</li>
-              <li><strong>"Mask circle here"</strong> button added to the empty-position popover (below "Zone from here"). Single-tap creation — no second click needed; circle is placed immediately centred on the tapped position with the default radius.</li>
-              <li><strong>Mask zone popover</strong>: shows S / M size buttons (89 / 179 SVG units — 1 and 2 horizontal grid steps) and a Remove link. No colour picker (mask is always battlefield background). Regular zone popover (colour picker, Redraw, Remove) unchanged.</li>
-              <li><strong>Snap-only radius</strong>: radius is constrained to discrete grid-step multiples. S = 89 px (one horizontal grid step = <code>BF_W / 8</code>), M = 179 px (two steps). Fluid slider rejected in favour of discrete buttons.</li>
-              <li>Added i18n keys: <code>ui.popover-mask</code>, <code>ui.popover-mask-title</code>, <code>ui.popover-mask-radius</code> in both locales.</li>
+              <li><strong>"Mask circle here"</strong> button in the empty-position popover. Single-tap creation — circle placed immediately with default radius.</li>
+              <li><strong>Mask zone popover</strong>: S / M size buttons (89 / 179 SVG units = 1 and 2 horizontal grid steps); Remove link. No colour picker.</li>
+            </ul>
+            <h3>Printer-Friendly Hatch Patterns</h3>
+            <ul>
+              <li><strong>SVG <code>&lt;pattern&gt;</code> defs</strong>: four distinct hatch patterns defined inside <code>&lt;defs&gt;</code> — forward-diagonal (<code>/</code>), back-diagonal (<code>\</code>), crosshatch (<code>×</code>), and horizontal lines. Each maps to one player index 0–3.</li>
+              <li><strong>Zone rects</strong>: fill switches to <code>url(#hatch-N)</code> with <code>fill-opacity=1</code> in PF mode (was flat grey at varying opacity). Dotted zone borders removed entirely (<code>stroke="none"</code>).</li>
+              <li><strong>Player number badges</strong>: white filled circle (r=13) + player number text centred inside each zone in PF mode — unambiguous per-player attribution even when hatches overlap.</li>
+              <li><strong>Mask circles</strong>: <code>stroke="none"</code> (dotted border removed in all modes).</li>
+            </ul>
+            <h3>Perimeter Snap Points</h3>
+            <ul>
+              <li><strong><code>DeploymentPosition</code> union extended</strong> with <code>`PRM-${string}`</code> template literal in <code>types.ts</code>. Coords are encoded in the ID string itself (<code>PRM-{x}-{y}</code>), parsed by a regex branch in <code>getCoords()</code> — zero coupling, survives JSON serialisation.</li>
+              <li><strong>8 snap points per mask circle</strong>: cardinal and intercardinal angles (0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°) computed as a <code>$derived.by()</code> reactive over all mask zones. Rendered as dashed semi-transparent dots when position dots are visible.</li>
+              <li><strong>PRM guard</strong>: in <code>handlePositionClick</code>, perimeter positions are silently ignored unless <code>measurementMode</code> is active — they only serve as measurement endpoints.</li>
+            </ul>
+            <h3>Measurement Line UX</h3>
+            <ul>
+              <li><strong>Midpoint dot</strong>: a small filled circle (r=4) rendered at the midpoint of each measurement line when the Euclidean length exceeds 60 SVG units. Guard prevents the dot overlapping the cap icons on very short lines.</li>
+            </ul>
+            <h3>Shape &amp; Layout Fixes</h3>
+            <ul>
+              <li><strong>Shape stroke</strong>: colour changed from <code>white</code> to <code>rgba(255,255,255,0.6)</code>, width reduced to 1px. Prevents the yellow shape (on yellow zone) from becoming invisible while keeping the stroke subtle everywhere else.</li>
+              <li><strong>RND label clamping</strong>: label position flips below the shape when it would be clipped at the top card edge (<code>labelAbove &lt; 24</code>); also clamped horizontally to stay inside card bounds (<code>Math.max(50, Math.min(865, cx))</code>).</li>
+              <li><strong><code>.objective-label--pf</code> CSS rule</strong>: added missing rule (<code>background: white; color: #000</code>) so objective labels render correctly in printer-friendly mode.</li>
+            </ul>
+            <h3>Mobile &amp; Editor UX</h3>
+            <ul>
+              <li><strong>JSON dropdown click-outside</strong>: <code>$effect</code> handler added to close the JSON dropdown on outside click — matching the existing View and Export dropdown behaviour.</li>
+              <li><strong><code>scrollIntoView</code> on popover inputs</strong>: all 5 popover text inputs call <code>scrollIntoView({ block: 'nearest', behavior: 'smooth' })</code> on focus so the iOS virtual keyboard does not obscure the input.</li>
+              <li><strong>WIP watermark removed</strong>: <code>&lt;div class="wip-watermark"&gt;</code> removed from the deployment page body.</li>
+            </ul>
+            <h3>Code Quality</h3>
+            <ul>
+              <li><strong>FighterCard CSS resets</strong>: removed ~100 redundant <code>border: 0; outline: none; background: transparent</code> declarations from individual CSS rules — all covered by the existing <code>.card *</code> reset rule.</li>
+              <li><strong><code>src/app.d.ts</code> cleanup</strong>: removed all SvelteKit boilerplate comments and commented-out interface stubs. File retains only the active <code>__BUILD_DATE__</code> declaration.</li>
+            </ul>
+            <h3>Example JSON</h3>
+            <ul>
+              <li><strong><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></strong>: approximation of the "Agents of Be'lakor: Battlefield Edge" deployment card. Red zone <code>R1C4 → R4C6</code>; blue zone <code>R6C1 → R7C9</code>. Three "Ritual Point" objectives; two 8" measurement lines from centre.</li>
+            </ul>
+            <h3>i18n &amp; Cleanup</h3>
+            <ul>
+              <li>Added: <code>ui.popover-zone</code>, <code>ui.popover-zone-redraw</code>, <code>ui.popover-remove-zone</code>, <code>ui.zone-pick-start</code>, <code>ui.zone-pick-end</code>, <code>ui.popover-mask</code>, <code>ui.popover-mask-title</code>, <code>ui.popover-mask-radius</code> in both locales.</li>
+              <li>Removed: all <code>deployment.zone-*</code> preset label keys (14 keys) and <code>ui.form-zones</code>, <code>ui.form-add-zone</code> from both locales — no longer referenced.</li>
             </ul>
           </section>
 
@@ -2181,20 +2289,20 @@
               <p class="decision-a">The original header "Zones" dropdown was unintuitive — users expected to interact with the card directly. Moving zone creation into the position popover ("Zone from here") is consistent with how measurements and objectives are added: click a position, pick an action, then click the end point. The first click becomes the start corner, eliminating the need for a separate "pick start" step.</p>
             </div>
             <div class="decision">
-              <p class="decision-q">Why show position dots automatically during zone mode even when "Show Markers" is off?</p>
-              <p class="decision-a">Without visible snap targets the user has no way to know where to click for the end corner. Forcing dots during zone mode (and measurement mode) gives the necessary visual feedback while keeping the toggle preference intact for normal card viewing.</p>
-            </div>
-            <div class="decision">
-              <p class="decision-q">Why store mask zones inside <code>player.zones[]</code> rather than as a separate top-level array on the card data?</p>
-              <p class="decision-a">Mask zones are an extension of the zone concept ("a zone option") as the user described. Storing them on the existing player array reuses all zone infrastructure — <code>onZoneClick</code>, <code>removeZone</code>, <code>reassignZoneToColor</code> — without new popover mode kinds or card data fields. The player colour is irrelevant for rendering but harmless to store.</p>
-            </div>
-            <div class="decision">
               <p class="decision-q">Why paint the mask circle with the battlefield background colour instead of using SVG clip-paths?</p>
               <p class="decision-a">Clip-paths require wrapping the entire zone layer in a <code>&lt;clipPath&gt;</code> definition that excludes each mask circle, which is complex and fragile with dynamic content. Painting an opaque circle on top achieves the identical visual result with a single <code>&lt;circle&gt;</code> element and no SVG structural changes. The battlefield background is a flat colour, so overpaint is indistinguishable from a true cutout.</p>
             </div>
             <div class="decision">
-              <p class="decision-q">Why snap the mask radius to discrete grid steps rather than allowing a fluid slider?</p>
-              <p class="decision-a">A fluid radius produces arbitrary pixel values that have no meaningful relationship to the deployment grid. Snapping to multiples of one horizontal grid step (89 px = <code>BF_W / 8</code>) keeps the mask aligned to the same coordinate system as all other card elements. Two sizes (S and M) cover the practical range for standard Warcry exclusion circles.</p>
+              <p class="decision-q">Why use SVG hatch patterns instead of grey fills for printer-friendly zone distinction?</p>
+              <p class="decision-a">Grey opacity levels were ambiguous — overlapping zones compound unpredictably and even non-overlapping zones are hard to distinguish in print. SVG <code>&lt;pattern&gt;</code> elements give each player a unique texture (diagonal, cross-diagonal, crosshatch, horizontal) that is unambiguous at any printer output. Player number badges inside each zone provide a final belt-and-suspenders identifier.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why encode perimeter snap coordinates in the ID string rather than looking them up at runtime?</p>
+              <p class="decision-a"><code>getCoords()</code> has no access to card data — it takes only a position string. Encoding the coords as <code>PRM-{x}-{y}</code> keeps the function pure and stateless, lets positions survive JSON serialisation unchanged, and avoids threading card data through every call site. The position string is the data.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why guard the midpoint dot behind a length threshold (len &gt; 60)?</p>
+              <p class="decision-a">On short lines the midpoint falls within the cap icon radius. Rendering the dot there adds visual noise and overlaps the icon. The 60-unit threshold corresponds roughly to the minimum line length where the midpoint is visually distinct from both caps and the tapping target is meaningful.</p>
             </div>
           </section>
 
@@ -2204,9 +2312,6 @@
               <thead><tr><th>Status</th><th>Item</th></tr></thead>
               <tbody>
                 <tr><td><span class="badge badge-amber">open</span></td><td><strong>Dark spots on printer-friendly export image area</strong> — brownish bleed at the torn-paper SVG mask edge; <code>dom-to-image-more</code> inlines all <code>url()</code> CSS refs regardless of cascade override. Needs a non-CSS strategy.</td></tr>
-                <tr><td><span class="badge badge-amber">low</span></td><td>Deployment: measurement line tap discoverability — no visual affordance on measurement lines.</td></tr>
-                <tr><td><span class="badge badge-amber">low</span></td><td>Deployment: iOS virtual keyboard may obscure popover inputs — fix: <code>scrollIntoView</code> on focus.</td></tr>
-                <tr><td><span class="badge badge-amber">low</span></td><td>Verify card back <code>color/fill: var(--card-text-color)</code> resolves correctly in dom-to-image-more export for all 3 colour options.</td></tr>
               </tbody>
             </table>
           </section>
@@ -2216,10 +2321,12 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code> type; <code>DeploymentZone</code> changed to <code>{ startPos, endPos: DeploymentPosition }</code>; added <code>mask?: boolean</code> and <code>radius?: number</code></td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Replaced <code>zoneRect(preset)</code> with position-based computation; added <code>zoneStartPos</code> and <code>onZoneClick</code> props; zone rendering split into two passes — regular rects then mask circles (filled with BF background colour, fully opaque)</td></tr>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Added <code>zoneMode</code>, <code>zoneStart</code>, <code>zoneModePlayerIndex</code> state; <code>confirmAddZone</code>, <code>confirmAddMask</code>, <code>setZoneRadius</code>, <code>handleZoneClick</code>, <code>removeZoneFromPopover</code>, <code>redrawZoneFromPopover</code>, <code>reassignZoneToColor</code>; zone/mask popovers; zone hint bar; removed Zones dropdown</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added 5 zone UI keys + 3 mask UI keys; removed 16 stale zone preset + dropdown keys</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code>; <code>DeploymentZone</code> → <code>{ startPos, endPos, mask?, radius? }</code>; added <code>`PRM-${string}`</code> to <code>DeploymentPosition</code> union</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Position-based zone rects; mask circle rendering; SVG hatch <code>&lt;pattern&gt;</code> defs; player number badges; perimeter snap dots; midpoint dot; shape stroke; RND label clamping; <code>.objective-label--pf</code> rule; indent fixes</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Zone/mask drawing flow; zone click-to-edit; JSON dropdown click-outside; <code>scrollIntoView</code> on all popover inputs; PRM guard in <code>handlePositionClick</code>; WIP watermark removed</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Removed ~100 redundant <code>border/outline/background</code> resets from individual CSS rules (all covered by <code>.card *</code>)</td></tr>
+                <tr><td><code>src/app.d.ts</code></td><td>Removed SvelteKit boilerplate comments and commented-out interface stubs</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added 8 zone/mask UI keys; removed 16 stale zone preset + dropdown keys</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
                 <tr><td><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></td><td>New example JSON for the Be'lakor Battlefield Edge deployment layout</td></tr>
               </tbody>
@@ -3533,12 +3640,12 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><span class="badge badge-amber">Test</span></td>
+                  <td><span class="badge badge-green">done</span></td>
                   <td>
                     Verify <code>color: var(--card-text-color)</code> and
                     <code>fill: var(--card-text-color)</code> resolve correctly
                     in dom-to-image-more PNG exports for all three colour
-                    options (card back)
+                    options (card back) — confirmed working 2026-03-29
                   </td>
                 </tr>
                 <tr>
@@ -8548,6 +8655,7 @@
         "march-12",
         "march-11",
         "index",
+        "intro",
       ];
 
       function activateSession(id) {
