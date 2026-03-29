@@ -59,10 +59,6 @@ export interface CardBackData {
 export type DeploymentIconType = 'dagger' | 'shield' | 'hammer';
 export type DeploymentColor = 'red' | 'blue' | 'green' | 'yellow';
 export type DeploymentCapType = 'arrow' | 'tick' | 'dot' | 'none';
-export type ZonePreset =
-	| 'top-half' | 'bottom-half'
-	| 'left-half' | 'right-half'
-	| 'tl-quarter' | 'tr-quarter' | 'bl-quarter' | 'br-quarter';
 
 // Inside 7×9 grid: R{row}C{col}, rows 1–7 top→bottom, cols 1–9 left→right
 // R4C5 = exact battlefield centre (crosshair); R4 row and C5 col lie on the dashed centre lines
@@ -83,7 +79,8 @@ export type DeploymentPosition =
 	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR';
 
 export interface DeploymentZone {
-	preset: ZonePreset;
+	startPos: DeploymentPosition;
+	endPos: DeploymentPosition;
 }
 
 export interface DeploymentMeasurement {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DeploymentCardData, DeploymentColor, DeploymentObjective, DeploymentPosition, ZonePreset } from '$lib/types';
+	import type { DeploymentCardData, DeploymentColor, DeploymentObjective, DeploymentPosition, DeploymentZone } from '$lib/types';
 	import daggerRaw      from '$lib/runemarks/svg/deployment-dagger.svg?raw';
 	import hammerRaw      from '$lib/runemarks/svg/deployment-hammer.svg?raw';
 	import matchedPlayRaw from '$lib/runemarks/svg/card-decks-symmetrical.svg?raw';
@@ -14,8 +14,10 @@
 		showMatchedPlay = true,
 		showPositionDots = false,
 		measurementStartPos = undefined,
+		zoneStartPos = undefined,
 		onPositionClick = undefined,
 		onMeasurementClick = undefined,
+		onZoneClick = undefined,
 	}: {
 		data: DeploymentCardData;
 		printerFriendly?: boolean;
@@ -24,8 +26,10 @@
 		showMatchedPlay?: boolean;
 		showPositionDots?: boolean;
 		measurementStartPos?: DeploymentPosition;
+		zoneStartPos?: DeploymentPosition;
 		onPositionClick?: (pos: DeploymentPosition, clientX: number, clientY: number) => void;
 		onMeasurementClick?: (mi: number, clientX: number, clientY: number) => void;
+		onZoneClick?: (pi: number, zi: number, clientX: number, clientY: number) => void;
 	} = $props();
 
 	// Map of position → player colour for occupied positions
@@ -110,19 +114,16 @@
 
 	const PLAYER_BADGES = ['①', '②', '③', '④'];
 
-	// Zone preset → SVG rect bounds
-	function zoneRect(preset: ZonePreset): { x: number; y: number; w: number; h: number } {
-		const hW = BF_W / 2, hH = BF_H / 2;
-		switch (preset) {
-			case 'top-half':    return { x: BF_L,  y: BF_T,  w: BF_W, h: hH };
-			case 'bottom-half': return { x: BF_L,  y: BF_CY, w: BF_W, h: hH };
-			case 'left-half':   return { x: BF_L,  y: BF_T,  w: hW,   h: BF_H };
-			case 'right-half':  return { x: BF_CX, y: BF_T,  w: hW,   h: BF_H };
-			case 'tl-quarter':  return { x: BF_L,  y: BF_T,  w: hW,   h: hH };
-			case 'tr-quarter':  return { x: BF_CX, y: BF_T,  w: hW,   h: hH };
-			case 'bl-quarter':  return { x: BF_L,  y: BF_CY, w: hW,   h: hH };
-			case 'br-quarter':  return { x: BF_CX, y: BF_CY, w: hW,   h: hH };
-		}
+	// Zone → SVG rect bounds, derived from two grid positions
+	function zoneRect(zone: DeploymentZone): { x: number; y: number; w: number; h: number } {
+		const [x1, y1] = getCoords(zone.startPos);
+		const [x2, y2] = getCoords(zone.endPos);
+		return {
+			x: Math.min(x1, x2),
+			y: Math.min(y1, y2),
+			w: Math.abs(x2 - x1),
+			h: Math.abs(y2 - y1),
+		};
 	}
 
 	const ZONE_OPACITY = 0.38;
@@ -221,8 +222,8 @@
 
 		<!-- Deployment zone fills (behind dashed lines) -->
 		{#each data.players as player, pi}
-			{#each (player.zones ?? []) as zone}
-				{@const r = zoneRect(zone.preset)}
+			{#each (player.zones ?? []) as zone, zi}
+				{@const r = zoneRect(zone)}
 				<rect
 					x={r.x} y={r.y} width={r.w} height={r.h}
 					fill={printerFriendly ? '#000' : COLORS[player.color]}
@@ -230,6 +231,8 @@
 					stroke={printerFriendly ? '#000' : 'none'}
 					stroke-width={printerFriendly ? '1' : '0'}
 					stroke-dasharray={printerFriendly ? '4 3' : ''}
+					style={onZoneClick ? 'cursor: pointer;' : ''}
+					onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
 				/>
 			{/each}
 		{/each}
@@ -371,7 +374,7 @@
 				{@const [px, py] = getCoords(pos)}
 				{@const occupiedBy = occupancy.get(pos)}
 				{@const isObjective = objectivePositions.has(pos)}
-				{@const isStart = pos === measurementStartPos}
+				{@const isStart = pos === measurementStartPos || pos === zoneStartPos}
 				<g
 					class="pos-group"
 					class:pos-group--interactive={!!onPositionClick}

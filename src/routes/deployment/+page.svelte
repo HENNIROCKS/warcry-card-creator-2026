@@ -18,7 +18,8 @@
 		| { kind: 'empty'; pos: DeploymentPosition }
 		| { kind: 'occupied'; pos: DeploymentPosition; pi: number; pti: number }
 		| { kind: 'measurement'; mi: number }
-		| { kind: 'objective'; oi: number };
+		| { kind: 'objective'; oi: number }
+		| { kind: 'zone'; pi: number; zi: number };
 
 	// Card dimensions (landscape)
 	const CARD_W = 915;
@@ -41,6 +42,9 @@
 	let showRunemarks = $state(true);
 	let measurementMode = $state(false);
 	let measurementStart = $state<DeploymentPosition | undefined>(undefined);
+	let zoneMode = $state(false);
+	let zoneStart = $state<DeploymentPosition | undefined>(undefined);
+	let zoneModePlayerIndex = $state(-1);
 	let activePlayerIndex = $state(0);
 	let popover = $state<{ mode: PopoverMode; x: number; y: number } | null>(null);
 	let popoverIcon = $state<DeploymentIconType>('dagger');
@@ -136,7 +140,7 @@
 		return () => { clearTimeout(id); document.removeEventListener('click', close); };
 	});
 
-	// Header 61px: py-3 (12) + h-9 (36) + py-3 (12) + border-b (1)
+// Header 61px: py-3 (12) + h-9 (36) + py-3 (12) + border-b (1)
 	const HEADER_H = 61;
 	const cardScale = $derived(
 		Math.min(
@@ -194,6 +198,21 @@
 	function closePopover() { popover = null; }
 
 	function handlePositionClick(pos: DeploymentPosition, clientX: number, clientY: number) {
+		if (zoneMode) {
+			if (zoneStart === undefined) {
+				zoneStart = pos;
+			} else if (pos !== zoneStart) {
+				data.players[zoneModePlayerIndex].zones = [
+					...(data.players[zoneModePlayerIndex].zones ?? []),
+					{ startPos: zoneStart, endPos: pos },
+				];
+				data.players = [...data.players];
+				zoneMode = false;
+				zoneStart = undefined;
+				zoneModePlayerIndex = -1;
+			}
+			return;
+		}
 		if (measurementMode) {
 			if (measurementStart && pos !== measurementStart) {
 				data.measurements = [...data.measurements, {
@@ -245,6 +264,18 @@
 		if (!popover || popover.mode.kind !== 'empty') return;
 		measurementStart = popover.mode.pos;
 		measurementMode = true;
+		closePopover();
+	}
+
+	function confirmAddZone() {
+		if (!popover || popover.mode.kind !== 'empty') return;
+		if (data.players.length === 0) {
+			data.players = [{ color: 'red', zones: [], points: [] }];
+			activePlayerIndex = 0;
+		}
+		zoneStart = popover.mode.pos;
+		zoneMode = true;
+		zoneModePlayerIndex = Math.min(activePlayerIndex, data.players.length - 1);
 		closePopover();
 	}
 
@@ -303,14 +334,47 @@
 		data.measurements = data.measurements.filter((_, i) => i !== mi);
 	}
 
-	function addZone(pi: number) {
-		data.players[pi].zones = [...(data.players[pi].zones ?? []), { preset: 'top-half' }];
-		data.players = [...data.players];
-	}
-
 	function removeZone(pi: number, zi: number) {
 		data.players[pi].zones = data.players[pi].zones.filter((_, i) => i !== zi);
 		data.players = [...data.players];
+	}
+
+	function handleZoneClick(pi: number, zi: number, clientX: number, clientY: number) {
+		popover = { mode: { kind: 'zone', pi, zi }, x: clientX, y: clientY };
+	}
+
+	function removeZoneFromPopover() {
+		if (!popover || popover.mode.kind !== 'zone') return;
+		const { pi, zi } = popover.mode;
+		removeZone(pi, zi);
+		closePopover();
+	}
+
+	function redrawZoneFromPopover() {
+		if (!popover || popover.mode.kind !== 'zone') return;
+		const { pi, zi } = popover.mode;
+		removeZone(pi, zi);
+		zoneMode = true;
+		zoneStart = undefined;
+		zoneModePlayerIndex = pi;
+		activePlayerIndex = pi;
+		closePopover();
+	}
+
+	function reassignZoneToColor(color: DeploymentColor) {
+		if (!popover || popover.mode.kind !== 'zone') return;
+		const { pi, zi } = popover.mode;
+		if (data.players[pi].color === color) return;
+		const zone = data.players[pi].zones[zi];
+		let newPi = data.players.findIndex(p => p.color === color);
+		if (newPi === -1) {
+			data.players = [...data.players, { color, zones: [], points: [] }];
+			newPi = data.players.length - 1;
+		}
+		data.players[pi].zones = data.players[pi].zones.filter((_, i) => i !== zi);
+		data.players[newPi].zones = [...data.players[newPi].zones, zone];
+		data.players = [...data.players];
+		popover = { ...popover, mode: { kind: 'zone', pi: newPi, zi: data.players[newPi].zones.length - 1 } };
 	}
 
 	function makeSlug() {
@@ -558,7 +622,16 @@
 
 	</header>
 
-	<!-- Measurement hint bar -->
+	<!-- Hint bars for zone and measurement mode -->
+	{#if zoneMode}
+		<div class="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2 flex items-center justify-between gap-4">
+			<span class="text-xs text-zinc-400">{zoneStart ? t('ui.zone-pick-end') : t('ui.zone-pick-start')}</span>
+			<button
+				onclick={() => { zoneMode = false; zoneStart = undefined; zoneModePlayerIndex = -1; }}
+				class="text-xs text-zinc-400 hover:text-white transition"
+			>{t('ui.measurement-cancel')}</button>
+		</div>
+	{/if}
 	{#if measurementMode}
 		<div class="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2 flex items-center justify-between gap-4">
 			<span class="text-xs text-zinc-400">{t('ui.measurement-pick-end')}</span>
@@ -586,10 +659,12 @@
 					{showMatchedPlay}
 					{showOrientation}
 					{showRunemarks}
-					showPositionDots={showMarkers && !exporting}
+					showPositionDots={(showMarkers || zoneMode || measurementMode) && !exporting}
 					measurementStartPos={measurementMode ? measurementStart : undefined}
+					zoneStartPos={zoneMode ? zoneStart : undefined}
 					onPositionClick={exporting ? undefined : handlePositionClick}
 					onMeasurementClick={showMarkers && !exporting && !measurementMode ? handleMeasurementClick : undefined}
+					onZoneClick={!exporting && !zoneMode && !measurementMode ? handleZoneClick : undefined}
 				/>
 			</div>
 		</div>
@@ -645,9 +720,10 @@
 			<!-- RND -->
 			<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" />
 
-			<!-- Point + measurement actions -->
+			<!-- Point + measurement + zone actions -->
 			<button onclick={confirmAddPoint} class="w-full rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>
 			<button onclick={confirmAddMeasurement} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-measurement')}</button>
+			<button onclick={confirmAddZone} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-zone')}</button>
 
 			<!-- Objective section -->
 			<div class="border-t border-zinc-700 pt-3 flex flex-col gap-2">
@@ -775,6 +851,31 @@
 				</div>
 
 				<button onclick={removeObjectiveFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-objective')}</button>
+			{/if}
+
+		<!-- Zone -->
+		{:else if popover.mode.kind === 'zone'}
+			{@const { pi, zi } = popover.mode}
+			{@const player = data.players[pi]}
+			{#if player && player.zones[zi]}
+				<div class="popover-title" style="color:{COLORS[player.color]}">{t('ui.color-' + player.color)}</div>
+				<span class="text-xs text-zinc-400 font-mono">{player.zones[zi].startPos} → {player.zones[zi].endPos}</span>
+				<div>
+					<div class="popover-label">{t('ui.form-players')}</div>
+					<div class="flex gap-1.5">
+						{#each COLOR_ORDER as color}
+							{@const isActive = player.color === color}
+							<button
+								onclick={() => reassignZoneToColor(color)}
+								style="background:{COLORS[color]}; outline-color:{isActive ? COLORS[color] : 'transparent'}"
+								class="w-7 h-7 rounded-full outline outline-2 outline-offset-1 transition-[outline-color]"
+								title={t('ui.color-' + color)}
+							></button>
+						{/each}
+					</div>
+				</div>
+				<button onclick={redrawZoneFromPopover} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-zone-redraw')}</button>
+				<button onclick={removeZoneFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-zone')}</button>
 			{/if}
 		{/if}
 
