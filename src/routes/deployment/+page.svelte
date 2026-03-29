@@ -165,6 +165,8 @@
 	};
 	const COLOR_ORDER: DeploymentColor[] = ['red', 'blue', 'green', 'yellow'];
 	const ICONS: DeploymentIconType[] = ['dagger', 'hammer', 'shield'];
+	// Mask circle snap radii — multiples of one horizontal grid step (BF_W/8 = 715/8 ≈ 89)
+	const MASK_RADII: [number, string][] = [[89, 'S'], [179, 'M']];
 	function nextColor(): DeploymentColor {
 		const used = new Set(data.players.map(p => p.color));
 		return COLOR_ORDER.find(c => !used.has(c)) ?? 'red';
@@ -277,6 +279,24 @@
 		zoneMode = true;
 		zoneModePlayerIndex = Math.min(activePlayerIndex, data.players.length - 1);
 		closePopover();
+	}
+
+	function confirmAddMask() {
+		if (!popover || popover.mode.kind !== 'empty') return;
+		if (data.players.length === 0) {
+			data.players = [{ color: 'red', zones: [], points: [] }];
+			activePlayerIndex = 0;
+		}
+		const pi = Math.min(activePlayerIndex, data.players.length - 1);
+		const pos = popover.mode.pos;
+		data.players[pi].zones = [...(data.players[pi].zones ?? []), { startPos: pos, endPos: pos, mask: true, radius: 89 }];
+		data.players = [...data.players];
+		closePopover();
+	}
+
+	function setZoneRadius(pi: number, zi: number, radius: number) {
+		data.players[pi].zones[zi] = { ...data.players[pi].zones[zi], radius };
+		data.players = [...data.players];
 	}
 
 	function confirmAddObjective() {
@@ -724,6 +744,7 @@
 			<button onclick={confirmAddPoint} class="w-full rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>
 			<button onclick={confirmAddMeasurement} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-measurement')}</button>
 			<button onclick={confirmAddZone} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-zone')}</button>
+			<button onclick={confirmAddMask} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-mask')}</button>
 
 			<!-- Objective section -->
 			<div class="border-t border-zinc-700 pt-3 flex flex-col gap-2">
@@ -857,25 +878,42 @@
 		{:else if popover.mode.kind === 'zone'}
 			{@const { pi, zi } = popover.mode}
 			{@const player = data.players[pi]}
-			{#if player && player.zones[zi]}
-				<div class="popover-title" style="color:{COLORS[player.color]}">{t('ui.color-' + player.color)}</div>
-				<span class="text-xs text-zinc-400 font-mono">{player.zones[zi].startPos} → {player.zones[zi].endPos}</span>
-				<div>
-					<div class="popover-label">{t('ui.form-players')}</div>
-					<div class="flex gap-1.5">
-						{#each COLOR_ORDER as color}
-							{@const isActive = player.color === color}
-							<button
-								onclick={() => reassignZoneToColor(color)}
-								style="background:{COLORS[color]}; outline-color:{isActive ? COLORS[color] : 'transparent'}"
-								class="w-7 h-7 rounded-full outline outline-2 outline-offset-1 transition-[outline-color]"
-								title={t('ui.color-' + color)}
-							></button>
-						{/each}
+			{@const zone = player?.zones[zi]}
+			{#if player && zone}
+				{#if zone.mask}
+					<div class="popover-title">{t('ui.popover-mask-title')}</div>
+					<div>
+						<div class="popover-label">{t('ui.popover-mask-radius')}</div>
+						<div class="flex gap-1">
+							{#each MASK_RADII as [r, label]}
+								<button
+									onclick={() => setZoneRadius(pi, zi, r)}
+									class="flex-1 h-7 rounded text-xs font-semibold transition {(zone.radius ?? 89) === r ? 'bg-red-800 text-white' : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
+								>{label}</button>
+							{/each}
+						</div>
 					</div>
-				</div>
-				<button onclick={redrawZoneFromPopover} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-zone-redraw')}</button>
-				<button onclick={removeZoneFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-zone')}</button>
+					<button onclick={removeZoneFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-zone')}</button>
+				{:else}
+					<div class="popover-title" style="color:{COLORS[player.color]}">{t('ui.color-' + player.color)}</div>
+					<span class="text-xs text-zinc-400 font-mono">{zone.startPos} → {zone.endPos}</span>
+					<div>
+						<div class="popover-label">{t('ui.form-players')}</div>
+						<div class="flex gap-1.5">
+							{#each COLOR_ORDER as color}
+								{@const isActive = player.color === color}
+								<button
+									onclick={() => reassignZoneToColor(color)}
+									style="background:{COLORS[color]}; outline-color:{isActive ? COLORS[color] : 'transparent'}"
+									class="w-7 h-7 rounded-full outline outline-2 outline-offset-1 transition-[outline-color]"
+									title={t('ui.color-' + color)}
+								></button>
+							{/each}
+						</div>
+					</div>
+					<button onclick={redrawZoneFromPopover} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-zone-redraw')}</button>
+					<button onclick={removeZoneFromPopover} class="text-xs text-zinc-400 underline hover:text-white transition">{t('ui.popover-remove-zone')}</button>
+				{/if}
 			{/if}
 		{/if}
 

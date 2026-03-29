@@ -223,17 +223,38 @@
 		<!-- Deployment zone fills (behind dashed lines) -->
 		{#each data.players as player, pi}
 			{#each (player.zones ?? []) as zone, zi}
-				{@const r = zoneRect(zone)}
-				<rect
-					x={r.x} y={r.y} width={r.w} height={r.h}
-					fill={printerFriendly ? '#000' : COLORS[player.color]}
-					fill-opacity={printerFriendly ? (PF_ZONE_OPACITIES[pi] ?? 0.08) : ZONE_OPACITY}
-					stroke={printerFriendly ? '#000' : 'none'}
-					stroke-width={printerFriendly ? '1' : '0'}
-					stroke-dasharray={printerFriendly ? '4 3' : ''}
-					style={onZoneClick ? 'cursor: pointer;' : ''}
-					onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
-				/>
+				{#if !zone.mask}
+					{@const r = zoneRect(zone)}
+					<rect
+						x={r.x} y={r.y} width={r.w} height={r.h}
+						fill={printerFriendly ? '#000' : COLORS[player.color]}
+						fill-opacity={printerFriendly ? (PF_ZONE_OPACITIES[pi] ?? 0.08) : ZONE_OPACITY}
+						stroke={printerFriendly ? '#000' : 'none'}
+						stroke-width={printerFriendly ? '1' : '0'}
+						stroke-dasharray={printerFriendly ? '4 3' : ''}
+						style={onZoneClick ? 'cursor: pointer;' : ''}
+						onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
+					/>
+				{/if}
+			{/each}
+		{/each}
+
+		<!-- Mask zone circles — painted on top of regular fills, before dashed lines -->
+		{#each data.players as player, pi}
+			{#each (player.zones ?? []) as zone, zi}
+				{#if zone.mask}
+					{@const [cx, cy] = getCoords(zone.startPos)}
+					{@const r = zone.radius ?? 89}
+					<circle
+						cx={cx} cy={cy} r={r}
+						fill={printerFriendly ? 'white' : '#d9b8a8'}
+						stroke={printerFriendly ? '#000' : 'none'}
+						stroke-width={printerFriendly ? '1' : '0'}
+						stroke-dasharray={printerFriendly ? '4 3' : ''}
+						style={onZoneClick ? 'cursor: pointer;' : ''}
+						onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
+					/>
+				{/if}
 			{/each}
 		{/each}
 

@@ -81,6 +81,8 @@ export type DeploymentPosition =
 export interface DeploymentZone {
 	startPos: DeploymentPosition;
 	endPos: DeploymentPosition;
+	mask?: boolean;   // if true: circular cutout; startPos = center; endPos unused
+	radius?: number;  // SVG units; only when mask=true; defaults to 100
 }
 
 export interface DeploymentMeasurement {
