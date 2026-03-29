@@ -88,14 +88,15 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 **Deployment card** (portrait 574×915px, SVG-based rendering):
 
 - Full-bleed battlefield SVG at card centre; dashed centre lines from the midpoint
-- Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as geometric shapes — triangle (dagger), diamond (hammer), circle (shield) — filled with player colour, white icon via SVG fill inheritance; optional RND label above shape
+- Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as geometric shapes — triangle (dagger), diamond (hammer), circle (shield) — filled with player colour, white icon via SVG fill inheritance; optional RND label above shape (clamped inside card bounds, flips below shape if clipped at top edge)
 - 99 snap positions: 63 inside (7×9 grid, R1C1–R7C9, outermost row/col sits exactly on the battlefield boundary) + 36 outside (9 top + 9 bottom + 7 left + 7 right + 4 corners)
-- Two-point measurement lines: tap start position → tap end position; start/end cap picker (arrow/tick/dot/none); text label at midpoint
+- Perimeter snap points: 8 points per mask circle at cardinal/intercardinal angles, encoded as `` `PRM-{x}-{y}` `` positions in `DeploymentPosition` union; only valid as measurement endpoints
+- Two-point measurement lines: tap start position → tap end position; start/end cap picker (arrow/tick/dot/none); text label at midpoint; midpoint dot rendered when line length > 60 SVG units
 - Objective markers: black circle with text label
 - Corner runemarks: Orientation SVG (top-left) and Matched Play SVG (top-right); fall back to `↑` / `MP` text when Show Runemarks is off
 - Zone overlays: rectangular shaded areas; drawn by tapping a start snap position ("Zone from here") then an end position; each zone belongs to a player colour; tap to edit colour, redraw, or remove
 - Mask circles: `mask: true` on a `DeploymentZone`; single-tap placement ("Mask circle here"); `startPos` = centre, `radius` snaps to S=89/M=179 SVG units (multiples of `BF_W/8`); rendered as a fully-opaque circle filled with the battlefield background colour (`#d9b8a8`/white in PF), painted on top of regular zone fills to create a visual cutout
-- Printer-friendly mode: strictly B&W, player badges left of each shape, white battlefield fill
+- Printer-friendly mode: strictly B&W, player badges left of each shape, white battlefield fill; zones rendered with per-player SVG hatch patterns (forward-diagonal, back-diagonal, crosshatch, horizontal) + circled player numbers inside each zone; no dotted zone borders
 - Card name rendered as an Alegreya caption below the SVG
 - `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
 
