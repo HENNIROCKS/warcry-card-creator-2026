@@ -2114,16 +2114,18 @@
               <span class="badge badge-blue">2026-03-29</span>
               <span class="badge badge-green">Grid-based zone drawing</span>
               <span class="badge badge-green">Click-to-edit zones</span>
-              <span class="badge badge-green">Example JSON — Be'lakor</span>
+              <span class="badge badge-green">Mask circle cutouts</span>
             </div>
-            <h1>Deployment Zones — Grid-Based Drawing</h1>
+            <h1>Deployment Zones — Grid Drawing &amp; Mask Circles</h1>
             <p>
               Deployment card zones are now drawn interactively on the snap grid — the same
               grid used for measurement lines and deployment points. Click a position and
               choose "Zone from here", then click a second corner; the bounding rectangle
               becomes the zone. Clicking an existing zone opens a popover to reassign its
-              player colour, redraw it, or remove it. The preset-based system (half/quarter/
-              third/strip) was removed entirely in favour of the free-form approach.
+              player colour, redraw it, or remove it. Zones can also be drawn as circular
+              mask cutouts ("Mask circle here") — rendered in the battlefield background
+              colour to visually carve out an exclusion area through any coloured zones beneath.
+              The preset-based system (half/quarter/third/strip) was removed entirely.
             </p>
           </div>
 
@@ -2155,6 +2157,16 @@
               <li>Added: <code>ui.popover-zone</code>, <code>ui.popover-zone-redraw</code>, <code>ui.popover-remove-zone</code>, <code>ui.zone-pick-start</code>, <code>ui.zone-pick-end</code> in both locales.</li>
               <li>Removed: all <code>deployment.zone-*</code> preset label keys (14 keys) and <code>ui.form-zones</code>, <code>ui.form-add-zone</code> from both locales — no longer referenced.</li>
               <li>Zones dropdown removed from the header toolbar entirely.</li>
+              <li>Example JSON: <code>_work/deployments/agents-of-belakor-battlefield-edge.json</code> — approximation of the Be'lakor: Battlefield Edge deployment card.</li>
+            </ul>
+            <h3>Mask Zone Cutouts</h3>
+            <ul>
+              <li><strong>Data model extended</strong>: <code>DeploymentZone</code> gains <code>mask?: boolean</code> and <code>radius?: number</code> (SVG units, defaults to 89). When <code>mask: true</code>, <code>startPos</code> is the circle centre; <code>endPos</code> is unused.</li>
+              <li><strong>Rendering</strong>: zone rendering split into two passes — regular zone rects first, then mask circles on top (before dashed centre lines). Mask circles are filled with the battlefield background colour (<code>#d9b8a8</code> / white in printer-friendly), fully opaque, visually punching a hole through any coloured zones beneath. No SVG clip-paths needed.</li>
+              <li><strong>"Mask circle here"</strong> button added to the empty-position popover (below "Zone from here"). Single-tap creation — no second click needed; circle is placed immediately centred on the tapped position with the default radius.</li>
+              <li><strong>Mask zone popover</strong>: shows S / M size buttons (89 / 179 SVG units — 1 and 2 horizontal grid steps) and a Remove link. No colour picker (mask is always battlefield background). Regular zone popover (colour picker, Redraw, Remove) unchanged.</li>
+              <li><strong>Snap-only radius</strong>: radius is constrained to discrete grid-step multiples. S = 89 px (one horizontal grid step = <code>BF_W / 8</code>), M = 179 px (two steps). Fluid slider rejected in favour of discrete buttons.</li>
+              <li>Added i18n keys: <code>ui.popover-mask</code>, <code>ui.popover-mask-title</code>, <code>ui.popover-mask-radius</code> in both locales.</li>
             </ul>
           </section>
 
@@ -2171,6 +2183,18 @@
             <div class="decision">
               <p class="decision-q">Why show position dots automatically during zone mode even when "Show Markers" is off?</p>
               <p class="decision-a">Without visible snap targets the user has no way to know where to click for the end corner. Forcing dots during zone mode (and measurement mode) gives the necessary visual feedback while keeping the toggle preference intact for normal card viewing.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why store mask zones inside <code>player.zones[]</code> rather than as a separate top-level array on the card data?</p>
+              <p class="decision-a">Mask zones are an extension of the zone concept ("a zone option") as the user described. Storing them on the existing player array reuses all zone infrastructure — <code>onZoneClick</code>, <code>removeZone</code>, <code>reassignZoneToColor</code> — without new popover mode kinds or card data fields. The player colour is irrelevant for rendering but harmless to store.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why paint the mask circle with the battlefield background colour instead of using SVG clip-paths?</p>
+              <p class="decision-a">Clip-paths require wrapping the entire zone layer in a <code>&lt;clipPath&gt;</code> definition that excludes each mask circle, which is complex and fragile with dynamic content. Painting an opaque circle on top achieves the identical visual result with a single <code>&lt;circle&gt;</code> element and no SVG structural changes. The battlefield background is a flat colour, so overpaint is indistinguishable from a true cutout.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why snap the mask radius to discrete grid steps rather than allowing a fluid slider?</p>
+              <p class="decision-a">A fluid radius produces arbitrary pixel values that have no meaningful relationship to the deployment grid. Snapping to multiples of one horizontal grid step (89 px = <code>BF_W / 8</code>) keeps the mask aligned to the same coordinate system as all other card elements. Two sizes (S and M) cover the practical range for standard Warcry exclusion circles.</p>
             </div>
           </section>
 
@@ -2192,10 +2216,10 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code> type; <code>DeploymentZone</code> changed to <code>{ startPos, endPos: DeploymentPosition }</code></td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Replaced <code>zoneRect(preset)</code> with position-based computation; added <code>zoneStartPos</code> and <code>onZoneClick</code> props; zone rects clickable with pointer cursor</td></tr>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Added <code>zoneMode</code>, <code>zoneStart</code>, <code>zoneModePlayerIndex</code> state; <code>confirmAddZone</code>, <code>handleZoneClick</code>, <code>removeZoneFromPopover</code>, <code>redrawZoneFromPopover</code>, <code>reassignZoneToColor</code> functions; zone popover with colour picker; zone hint bar; removed Zones dropdown and all preset-related code</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added 5 zone UI keys; removed 16 stale zone preset + dropdown keys</td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code> type; <code>DeploymentZone</code> changed to <code>{ startPos, endPos: DeploymentPosition }</code>; added <code>mask?: boolean</code> and <code>radius?: number</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Replaced <code>zoneRect(preset)</code> with position-based computation; added <code>zoneStartPos</code> and <code>onZoneClick</code> props; zone rendering split into two passes — regular rects then mask circles (filled with BF background colour, fully opaque)</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Added <code>zoneMode</code>, <code>zoneStart</code>, <code>zoneModePlayerIndex</code> state; <code>confirmAddZone</code>, <code>confirmAddMask</code>, <code>setZoneRadius</code>, <code>handleZoneClick</code>, <code>removeZoneFromPopover</code>, <code>redrawZoneFromPopover</code>, <code>reassignZoneToColor</code>; zone/mask popovers; zone hint bar; removed Zones dropdown</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added 5 zone UI keys + 3 mask UI keys; removed 16 stale zone preset + dropdown keys</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
                 <tr><td><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></td><td>New example JSON for the Be'lakor Battlefield Edge deployment layout</td></tr>
               </tbody>
