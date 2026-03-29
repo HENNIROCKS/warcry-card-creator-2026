@@ -609,6 +609,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-29">
+              <span class="session-date">2026-03-29</span>
+              <span class="session-title">Deployment Zones — Grid-Based Drawing</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-28">
               <span class="session-date">2026-03-28</span>
               <span class="session-title">Hierarchy, Tags Row &amp; JSON Save/Load</span>
@@ -2098,6 +2104,105 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-03-29 — Deployment Zones
+    ══════════════════════════════════════════ -->
+        <div id="session-march-29" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-29</span>
+              <span class="badge badge-green">Grid-based zone drawing</span>
+              <span class="badge badge-green">Click-to-edit zones</span>
+              <span class="badge badge-green">Example JSON — Be'lakor</span>
+            </div>
+            <h1>Deployment Zones — Grid-Based Drawing</h1>
+            <p>
+              Deployment card zones are now drawn interactively on the snap grid — the same
+              grid used for measurement lines and deployment points. Click a position and
+              choose "Zone from here", then click a second corner; the bounding rectangle
+              becomes the zone. Clicking an existing zone opens a popover to reassign its
+              player colour, redraw it, or remove it. The preset-based system (half/quarter/
+              third/strip) was removed entirely in favour of the free-form approach.
+            </p>
+          </div>
+
+          <section id="march-29-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Zone Data Model</h3>
+            <ul>
+              <li><strong><code>ZonePreset</code> type removed</strong> from <code>types.ts</code>. <code>DeploymentZone</code> changed from <code>{ preset: ZonePreset }</code> to <code>{ startPos: DeploymentPosition; endPos: DeploymentPosition }</code>.</li>
+              <li><strong>Zone rect computation</strong>: <code>zoneRect(zone)</code> in <code>DeploymentCard.svelte</code> now calls <code>getCoords(startPos)</code> and <code>getCoords(endPos)</code> and returns the bounding rectangle. Any two grid positions produce a valid zone.</li>
+            </ul>
+            <h3>Zone Drawing UI</h3>
+            <ul>
+              <li><strong>Entry point</strong>: "Zone from here" button in the empty-position popover (same popover as Add Point / Measurement). Auto-creates a red player if none exist, matching the behaviour of Add Point.</li>
+              <li><strong>Two-step flow</strong>: first click → zone start (highlighted with a ring on the dot, same as measurement start); second click → zone created for the active player. A hint bar shows the current step ("Click a position to set the zone start corner" / "…end corner").</li>
+              <li><strong>Position dots shown automatically</strong> during zone mode even if "Show Markers" is toggled off: <code>showPositionDots</code> is <code>showMarkers || zoneMode || measurementMode</code>.</li>
+            </ul>
+            <h3>Zone Click-to-Edit</h3>
+            <ul>
+              <li><strong>Zone rects are clickable</strong>: <code>onZoneClick</code> prop added to <code>DeploymentCard</code>; each zone <code>&lt;rect&gt;</code> gets <code>onclick</code> + <code>cursor: pointer</code> when the prop is set. Disabled during zone/measurement mode and export.</li>
+              <li><strong>Zone popover</strong>: shows player colour title, position coordinates (<code>R1C1 → R4C6</code>), colour picker row (all 4 colours, active highlighted), "Redraw" button (removes + re-enters zone mode for that player), and "Remove zone" link.</li>
+              <li><strong><code>reassignZoneToColor</code></strong>: moves a zone from one player to another, auto-creating the target player if needed. Updates the popover mode to point at the new player/zone indices.</li>
+            </ul>
+            <h3>Example JSON</h3>
+            <ul>
+              <li><strong><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></strong>: approximation of the "Agents of Be'lakor: Battlefield Edge" deployment card. Red zone <code>R1C4 → R4C6</code> (top-centre area); blue zone <code>R6C1 → R7C9</code> (bottom row). Three "Ritual Point" objectives at <code>R2C5</code>, <code>R4C3</code>, <code>R4C7</code>. Two 8" measurements radiating vertically from centre <code>R4C5</code>.</li>
+            </ul>
+            <h3>i18n &amp; Cleanup</h3>
+            <ul>
+              <li>Added: <code>ui.popover-zone</code>, <code>ui.popover-zone-redraw</code>, <code>ui.popover-remove-zone</code>, <code>ui.zone-pick-start</code>, <code>ui.zone-pick-end</code> in both locales.</li>
+              <li>Removed: all <code>deployment.zone-*</code> preset label keys (14 keys) and <code>ui.form-zones</code>, <code>ui.form-add-zone</code> from both locales — no longer referenced.</li>
+              <li>Zones dropdown removed from the header toolbar entirely.</li>
+            </ul>
+          </section>
+
+          <section id="march-29-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why replace the preset system entirely rather than keeping it alongside position-based zones?</p>
+              <p class="decision-a">The preset approach required a dropdown in the header and produced zones that didn't snap to the grid the user sees. Position-based zones are more precise, more flexible, and use the same interaction model already established for measurements. Keeping both would double the complexity for no additional capability — any preset shape can be reproduced by picking two corners.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why enter zone mode from the position popover rather than from a header button?</p>
+              <p class="decision-a">The original header "Zones" dropdown was unintuitive — users expected to interact with the card directly. Moving zone creation into the position popover ("Zone from here") is consistent with how measurements and objectives are added: click a position, pick an action, then click the end point. The first click becomes the start corner, eliminating the need for a separate "pick start" step.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why show position dots automatically during zone mode even when "Show Markers" is off?</p>
+              <p class="decision-a">Without visible snap targets the user has no way to know where to click for the end corner. Forcing dots during zone mode (and measurement mode) gives the necessary visual feedback while keeping the toggle preference intact for normal card viewing.</p>
+            </div>
+          </section>
+
+          <section id="march-29-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead><tr><th>Status</th><th>Item</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge badge-amber">open</span></td><td><strong>Dark spots on printer-friendly export image area</strong> — brownish bleed at the torn-paper SVG mask edge; <code>dom-to-image-more</code> inlines all <code>url()</code> CSS refs regardless of cascade override. Needs a non-CSS strategy.</td></tr>
+                <tr><td><span class="badge badge-amber">low</span></td><td>Deployment: measurement line tap discoverability — no visual affordance on measurement lines.</td></tr>
+                <tr><td><span class="badge badge-amber">low</span></td><td>Deployment: iOS virtual keyboard may obscure popover inputs — fix: <code>scrollIntoView</code> on focus.</td></tr>
+                <tr><td><span class="badge badge-amber">low</span></td><td>Verify card back <code>color/fill: var(--card-text-color)</code> resolves correctly in dom-to-image-more export for all 3 colour options.</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="march-29-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code> type; <code>DeploymentZone</code> changed to <code>{ startPos, endPos: DeploymentPosition }</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Replaced <code>zoneRect(preset)</code> with position-based computation; added <code>zoneStartPos</code> and <code>onZoneClick</code> props; zone rects clickable with pointer cursor</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Added <code>zoneMode</code>, <code>zoneStart</code>, <code>zoneModePlayerIndex</code> state; <code>confirmAddZone</code>, <code>handleZoneClick</code>, <code>removeZoneFromPopover</code>, <code>redrawZoneFromPopover</code>, <code>reassignZoneToColor</code> functions; zone popover with colour picker; zone hint bar; removed Zones dropdown and all preset-related code</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added 5 zone UI keys; removed 16 stale zone preset + dropdown keys</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
+                <tr><td><code>_work/deployments/agents-of-belakor-battlefield-edge.json</code></td><td>New example JSON for the Be'lakor Battlefield Edge deployment layout</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-29 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-28 — Independent Hierarchy & Tags Row
@@ -8399,6 +8504,7 @@
 
     <script>
       const sessions = [
+        "march-29",
         "march-28",
         "march-27",
         "march-26",
