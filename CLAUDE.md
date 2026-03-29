@@ -93,7 +93,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Two-point measurement lines: tap start position → tap end position; start/end cap picker (arrow/tick/dot/none); text label at midpoint
 - Objective markers: black circle with text label
 - Corner runemarks: Orientation SVG (top-left) and Matched Play SVG (top-right); fall back to `↑` / `MP` text when Show Runemarks is off
-- Zone overlays: shaded half/quarter presets over the battlefield (UI not yet wired)
+- Zone overlays: rectangular shaded areas; drawn by tapping a start snap position ("Zone from here" in the empty-position popover) then tapping an end position; each zone belongs to a player colour; tap an existing zone to edit colour, redraw, or remove
 - Printer-friendly mode: strictly B&W, player badges left of each shape, white battlefield fill
 - Card name rendered as an Alegreya caption below the SVG
 - `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
