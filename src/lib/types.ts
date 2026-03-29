@@ -76,7 +76,8 @@ export type DeploymentPosition =
 	| 'OUT-B1' | 'OUT-B2' | 'OUT-B3' | 'OUT-B4' | 'OUT-B5' | 'OUT-B6' | 'OUT-B7' | 'OUT-B8' | 'OUT-B9'
 	| 'OUT-L1' | 'OUT-L2' | 'OUT-L3' | 'OUT-L4' | 'OUT-L5' | 'OUT-L6' | 'OUT-L7'
 	| 'OUT-R1' | 'OUT-R2' | 'OUT-R3' | 'OUT-R4' | 'OUT-R5' | 'OUT-R6' | 'OUT-R7'
-	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR';
+	| 'OUT-CNR-TL' | 'OUT-CNR-TR' | 'OUT-CNR-BL' | 'OUT-CNR-BR'
+	| `PRM-${string}`; // perimeter snap on a mask circle edge: PRM-{x}-{y}
 
 export interface DeploymentZone {
 	startPos: DeploymentPosition;

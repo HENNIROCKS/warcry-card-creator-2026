@@ -127,7 +127,6 @@
 	}
 
 	const ZONE_OPACITY = 0.38;
-	const PF_ZONE_OPACITIES = [0.08, 0.18, 0.28, 0.38];
 
 	const ARROW_LEN = 14;
 	const DOT_R     = 5;
@@ -154,6 +153,9 @@
 	};
 
 	function getCoords(pos: DeploymentPosition): [number, number] {
+		// Perimeter snap point — coords encoded directly in the ID
+		const prm = pos.match(/^PRM-(-?\d+)-(-?\d+)$/);
+		if (prm) return [Number(prm[1]), Number(prm[2])];
 		// Inside 7×9 grid — outermost positions land exactly on BF boundary.
 		// C1=BF_L, C9=BF_R (step = BF_W/8); R1=BF_T, R7=BF_B (step = BF_H/6).
 		const inside = pos.match(/^R(\d)C(\d)$/);
@@ -176,6 +178,26 @@
 		if (pos === 'OUT-CNR-BR') return [CNR_R, CNR_B];
 		return [CNR_L, CNR_T]; // OUT-CNR-TL
 	}
+
+	// Perimeter snap points — 8 cardinal/intercardinal points on each mask circle edge
+	const PERIM_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
+	const perimeterSnaps = $derived.by(() => {
+		const snaps: Array<{ id: DeploymentPosition; x: number; y: number }> = [];
+		for (const player of data.players) {
+			for (const zone of (player.zones ?? [])) {
+				if (!zone.mask) continue;
+				const [cx, cy] = getCoords(zone.startPos);
+				const r = zone.radius ?? 89;
+				for (const angle of PERIM_ANGLES) {
+					const rad = angle * Math.PI / 180;
+					const x = Math.round(cx + r * Math.cos(rad));
+					const y = Math.round(cy + r * Math.sin(rad));
+					snaps.push({ id: `PRM-${x}-${y}` as DeploymentPosition, x, y });
+				}
+			}
+		}
+		return snaps;
+	});
 </script>
 
 <div class="card" class:is-printer-friendly={printerFriendly}>
@@ -186,6 +208,26 @@
 			<marker id="dep-tick" viewBox="0 0 2 14" refX="1" refY="7" markerWidth="5" markerHeight="14" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
 				<path d="M1,0 L1,14" stroke="#222" stroke-width="2.5" fill="none"/>
 			</marker>
+
+			{#if printerFriendly}
+				<!-- Hatch patterns for printer-friendly zone fills -->
+				<!-- ① forward diagonal / -->
+				<pattern id="hatch-0" patternUnits="userSpaceOnUse" width="8" height="8">
+					<path d="M0,8 L8,0 M-2,2 L2,-2 M6,10 L10,6" stroke="#000" stroke-width="1.5" fill="none"/>
+				</pattern>
+				<!-- ② backward diagonal \ -->
+				<pattern id="hatch-1" patternUnits="userSpaceOnUse" width="8" height="8">
+					<path d="M0,0 L8,8 M-2,6 L2,10 M6,-2 L10,2" stroke="#000" stroke-width="1.5" fill="none"/>
+				</pattern>
+				<!-- ③ crosshatch -->
+				<pattern id="hatch-2" patternUnits="userSpaceOnUse" width="8" height="8">
+					<path d="M0,8 L8,0 M-2,2 L2,-2 M6,10 L10,6 M0,0 L8,8 M-2,6 L2,10 M6,-2 L10,2" stroke="#000" stroke-width="1" fill="none"/>
+				</pattern>
+				<!-- ④ horizontal lines -->
+				<pattern id="hatch-3" patternUnits="userSpaceOnUse" width="8" height="8">
+					<line x1="0" y1="4" x2="8" y2="4" stroke="#000" stroke-width="1.5"/>
+				</pattern>
+			{/if}
 		</defs>
 
 		<!-- Printer-friendly: fill entire SVG with white -->
@@ -227,17 +269,35 @@
 					{@const r = zoneRect(zone)}
 					<rect
 						x={r.x} y={r.y} width={r.w} height={r.h}
-						fill={printerFriendly ? '#000' : COLORS[player.color]}
-						fill-opacity={printerFriendly ? (PF_ZONE_OPACITIES[pi] ?? 0.08) : ZONE_OPACITY}
-						stroke={printerFriendly ? '#000' : 'none'}
-						stroke-width={printerFriendly ? '1' : '0'}
-						stroke-dasharray={printerFriendly ? '4 3' : ''}
+						fill={printerFriendly ? `url(#hatch-${pi})` : COLORS[player.color]}
+						fill-opacity={printerFriendly ? 1 : ZONE_OPACITY}
+						stroke="none"
 						style={onZoneClick ? 'cursor: pointer;' : ''}
 						onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
 					/>
 				{/if}
 			{/each}
 		{/each}
+
+		<!-- Zone player number labels — printer-friendly only -->
+		{#if printerFriendly}
+			{#each data.players as player, pi}
+				{#each (player.zones ?? []) as zone}
+					{#if !zone.mask}
+						{@const r = zoneRect(zone)}
+						{@const lx = r.x + r.w / 2}
+						{@const ly = r.y + r.h / 2}
+						<circle cx={lx} cy={ly} r="13" fill="white" pointer-events="none"/>
+						<text
+							x={lx} y={ly}
+							text-anchor="middle" dominant-baseline="central"
+							font-family="'Germania One', serif" font-size="18" fill="#000"
+							pointer-events="none"
+						>{PLAYER_BADGES[pi]}</text>
+					{/if}
+				{/each}
+			{/each}
+		{/if}
 
 		<!-- Mask zone circles — painted on top of regular fills, before dashed lines -->
 		{#each data.players as player, pi}
@@ -248,9 +308,7 @@
 					<circle
 						cx={cx} cy={cy} r={r}
 						fill={printerFriendly ? 'white' : '#d9b8a8'}
-						stroke={printerFriendly ? '#000' : 'none'}
-						stroke-width={printerFriendly ? '1' : '0'}
-						stroke-dasharray={printerFriendly ? '4 3' : ''}
+						stroke="none"
 						style={onZoneClick ? 'cursor: pointer;' : ''}
 						onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}
 					/>
@@ -316,6 +374,11 @@
 				>{m.label}</text>
 			{/if}
 
+			<!-- Midpoint tap affordance — only when line is long enough to avoid overlap -->
+			{#if len > 60}
+				<circle cx={mx} cy={my} r="4" fill="#222" pointer-events="none"/>
+			{/if}
+
 			<!-- Full-line tap target -->
 			{#if onMeasurementClick}
 				<line
@@ -328,31 +391,30 @@
 		{/each}
 
 		<!-- Objective markers — rendered below deployment point shapes -->
-	{#each (data.objectives ?? []) as obj}
-		{@const [cx, cy] = getCoords(obj.position)}
-		<circle cx={cx} cy={cy} r={OBJECTIVE_R} fill="#000"/>
-	{/each}
+		{#each (data.objectives ?? []) as obj}
+			{@const [cx, cy] = getCoords(obj.position)}
+			<circle cx={cx} cy={cy} r={OBJECTIVE_R} fill="#000"/>
+		{/each}
 
-	<!-- Deployment point shapes -->
+		<!-- Deployment point shapes -->
 		{#each data.players as player, pi}
 			{#each player.points as point}
 				{@const [cx, cy] = getCoords(point.position)}
 				{@const fillColor   = printerFriendly ? 'white' : COLORS[player.color]}
-				{@const strokeColor = printerFriendly ? '#000' : 'none'}
+				{@const strokeColor = printerFriendly ? '#000' : 'rgba(255,255,255,0.6)'}
 				{@const iconColor   = printerFriendly || player.color === 'yellow' ? '#000' : 'white'}
 
-	
 				<!-- Shape -->
 				{#if point.icon === 'shield'}
-					<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+					<circle cx={cx} cy={cy} r={CIRCLE_R} fill={fillColor} stroke={strokeColor} stroke-width="1"/>
 				{:else if point.icon === 'hammer'}
 					<polygon
 						points="{cx},{cy - CIRCLE_R} {cx + CIRCLE_R},{cy} {cx},{cy + CIRCLE_R} {cx - CIRCLE_R},{cy}"
-						fill={fillColor} stroke={strokeColor} stroke-width="1.5"
+						fill={fillColor} stroke={strokeColor} stroke-width="1"
 					/>
 				{:else}
 					<!-- dagger = triangle, point down -->
-					<polygon points={triPoints(cx, cy)} fill={fillColor} stroke={strokeColor} stroke-width="1.5"/>
+					<polygon points={triPoints(cx, cy)} fill={fillColor} stroke={strokeColor} stroke-width="1"/>
 				{/if}
 
 				<!-- Icon centered inside shape -->
@@ -417,6 +479,18 @@
 					/>
 				</g>
 			{/each}
+
+			<!-- Perimeter snap dots — on mask circle edges, only valid as measurement endpoints -->
+			{#each perimeterSnaps as snap}
+				<g
+					class="pos-group"
+					class:pos-group--interactive={!!onPositionClick}
+					onclick={(e) => onPositionClick?.(snap.id, e.clientX, e.clientY)}
+				>
+					<circle cx={snap.x} cy={snap.y} r="22" fill="transparent"/>
+					<circle cx={snap.x} cy={snap.y} r="5" class="pos-dot pos-dot--perimeter"/>
+				</g>
+			{/each}
 		{/if}
 
 	<!-- Player badges — printer-friendly, rendered last to sit above all shapes and lines -->
@@ -445,7 +519,10 @@
 		{#each player.points as point}
 			{#if point.rnd}
 				{@const [cx, cy] = getCoords(point.position)}
-				<div class="rnd-label" class:rnd-label--pf={printerFriendly} style="left:{cx}px; top:{cy - SHAPE_R - RND_OFF - 4}px">{point.rnd}</div>
+				{@const labelAbove = cy - SHAPE_R - RND_OFF - 4}
+				{@const labelTop = labelAbove < 24 ? cy + SHAPE_R + RND_OFF + 4 : labelAbove}
+				{@const labelLeft = Math.max(50, Math.min(865, cx))}
+				<div class="rnd-label" class:rnd-label--pf={printerFriendly} style="left:{labelLeft}px; top:{labelTop}px">{point.rnd}</div>
 			{/if}
 		{/each}
 	{/each}
@@ -536,6 +613,11 @@
 		pointer-events: none;
 	}
 
+	.objective-label--pf {
+		background: white;
+		color: #000;
+	}
+
 	.pos-dot--objective {
 		fill: #000;
 		stroke: #faf6f3;
@@ -546,6 +628,13 @@
 		stroke: rgba(0, 0, 0, 0.5);
 		stroke-width: 1.5;
 		pointer-events: none;
+	}
+
+	.pos-dot--perimeter {
+		fill: rgba(255, 255, 255, 0.4);
+		stroke: rgba(0, 0, 0, 0.35);
+		stroke-width: 1.5;
+		stroke-dasharray: 2 2;
 	}
 
 	.pos-group {

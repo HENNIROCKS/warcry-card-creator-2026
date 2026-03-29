@@ -140,6 +140,13 @@
 		return () => { clearTimeout(id); document.removeEventListener('click', close); };
 	});
 
+	$effect(() => {
+		if (!showJsonDropdown) return;
+		const close = () => { showJsonDropdown = false; };
+		const id = setTimeout(() => document.addEventListener('click', close), 0);
+		return () => { clearTimeout(id); document.removeEventListener('click', close); };
+	});
+
 // Header 61px: py-3 (12) + h-9 (36) + py-3 (12) + border-b (1)
 	const HEADER_H = 61;
 	const cardScale = $derived(
@@ -200,6 +207,8 @@
 	function closePopover() { popover = null; }
 
 	function handlePositionClick(pos: DeploymentPosition, clientX: number, clientY: number) {
+		// Perimeter snaps are only valid as the end of a measurement line
+		if (pos.startsWith('PRM-') && !measurementMode) return;
 		if (zoneMode) {
 			if (zoneStart === undefined) {
 				zoneStart = pos;
@@ -462,6 +471,10 @@
 		fileInput.click();
 	}
 
+	function scrollIntoView(e: FocusEvent) {
+		(e.target as HTMLElement).scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+	}
+
 	function handleFileLoad(e: Event) {
 		const file = (e.target as HTMLInputElement).files?.[0];
 		if (!file) return;
@@ -477,9 +490,7 @@
 </script>
 
 <div class="relative flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden">
-	<div class="wip-watermark" aria-hidden="true"></div>
-
-	<!-- Header toolbar — single scrollable row; dropdowns use position:fixed to escape overflow clipping -->
+<!-- Header toolbar — single scrollable row; dropdowns use position:fixed to escape overflow clipping -->
 	<header class="flex items-center gap-3 border-b border-zinc-800 shrink-0 overflow-x-auto px-4 py-3">
 
 		<a href="{base}/" class="flex items-center h-9 px-3 rounded text-sm font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition shrink-0">{t('ui.back')}</a>
@@ -738,7 +749,7 @@
 			</div>
 
 			<!-- RND -->
-			<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" />
+			<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" onfocus={scrollIntoView} />
 
 			<!-- Point + measurement + zone actions -->
 			<button onclick={confirmAddPoint} class="w-full rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>
@@ -749,7 +760,7 @@
 			<!-- Objective section -->
 			<div class="border-t border-zinc-700 pt-3 flex flex-col gap-2">
 				<div class="popover-label">{t('deployment.objective')}</div>
-				<input type="text" bind:value={popoverObjectiveLabel} placeholder={t('ui.form-objective-label')} class="popover-input" />
+				<input type="text" bind:value={popoverObjectiveLabel} placeholder={t('ui.form-objective-label')} class="popover-input" onfocus={scrollIntoView} />
 				<button onclick={confirmAddObjective} class="w-full rounded bg-zinc-700 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-600 transition">{t('ui.popover-add-objective')}</button>
 			</div>
 
@@ -799,6 +810,7 @@
 						oninput={(e) => { data.players[pi].points[pti] = { ...point, rnd: (e.target as HTMLInputElement).value }; data.players = [...data.players]; }}
 						placeholder={t('ui.form-round-placeholder')}
 						class="popover-input"
+						onfocus={scrollIntoView}
 					/>
 				</div>
 
@@ -847,6 +859,7 @@
 						oninput={(e) => { data.measurements[mi] = { ...m, label: (e.target as HTMLInputElement).value }; data.measurements = [...data.measurements]; }}
 						placeholder={t('ui.form-measurement-label')}
 						class="popover-input"
+						onfocus={scrollIntoView}
 					/>
 				</div>
 
@@ -868,6 +881,7 @@
 						oninput={(e) => { const arr = [...(data.objectives ?? [])]; arr[oi] = { ...obj, label: (e.target as HTMLInputElement).value }; data.objectives = arr; }}
 						placeholder={t('ui.form-objective-label')}
 						class="popover-input"
+						onfocus={scrollIntoView}
 					/>
 				</div>
 

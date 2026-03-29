@@ -185,9 +185,6 @@
 		min-height: 120px;
 		margin: 5px 5px 0;
 		position: relative;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.image-inner {
@@ -198,8 +195,6 @@
 		mask-repeat: no-repeat;
 		-webkit-mask-size: 100% 100%;
 		-webkit-mask-repeat: no-repeat;
-		border: 0;
-		outline: none;
 	}
 
 	.model-img {
@@ -207,9 +202,6 @@
 		height: 100%;
 		object-fit: cover;
 		display: block;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.model-placeholder {
@@ -237,8 +229,6 @@
 		line-height: 1.5;
 		color: #FAF6F3;
 		background: rgba(0, 0, 0, 0.35);
-		border: 0;
-		outline: none;
 	}
 
 	.image-caption {
@@ -251,9 +241,6 @@
 		font-size: 13px;
 		color: #000;
 		opacity: 0.5;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.is-printer-friendly .image-caption {
@@ -266,9 +253,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.runemarks-left { left: 38px; }
@@ -281,8 +265,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0;
-		outline: none;
 		mask-image: var(--rm-mask);
 		-webkit-mask-image: var(--rm-mask);
 		mask-size: 100% 100%;
@@ -298,8 +280,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0;
-		outline: none;
 		mask-image: var(--rm-mask);
 		-webkit-mask-image: var(--rm-mask);
 		mask-size: 100% 100%;
@@ -307,7 +287,6 @@
 		mask-repeat: no-repeat;
 		-webkit-mask-repeat: no-repeat;
 	}
-
 
 	.runemark-badge :global(svg),
 	.runemark-badge :global(svg *) {
@@ -317,9 +296,6 @@
 	.runemark-badge :global(svg) {
 		width: 56px;
 		height: 56px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	/* ── PARCHMENT SECTION ─────────────────────── */
@@ -330,16 +306,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.chevron {
 		display: inline;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.fighter-name {
@@ -348,13 +318,9 @@
 		font-size: 42px;
 		text-transform: uppercase;
 		color: #000;
-
 		line-height: 1.1;
 		margin: 0;
 		text-align: center;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.fighter-subtitle {
@@ -368,11 +334,7 @@
 		margin: -12px 0 0;
 		white-space: normal;
 		overflow-wrap: break-word;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
-
 
 	/* ── SHARED BOX STYLE ──────────────────────── */
 
@@ -394,8 +356,6 @@
 		display: flex;
 		flex-direction: column;
 		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
-		border: 0;
-		outline: none;
 		background: rgba(255, 255, 255, 0.25);
 	}
 
@@ -415,8 +375,6 @@
 	.stats-header {
 		background: #5a0a14;
 		border-radius: 6.5px 6.5px 0 0;
-		border: 0;
-		outline: none;
 	}
 
 	.stat-col {
@@ -425,11 +383,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
-
 
 	.label-col {
 		flex-direction: column;
@@ -444,14 +398,6 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
-		border: 0;
-		outline: none;
-	}
-
-	.label-col span {
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.stat-val {
@@ -467,10 +413,8 @@
 		justify-content: center;
 		white-space: nowrap;
 		padding: 0 10px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
+
 	.stat-val-narrow {
 		font-size: 22px;
 	}
@@ -479,7 +423,6 @@
 		font-size: 16px;
 	}
 
-
 	/* ── WEAPONS BOX ───────────────────────────── */
 
 	.weapons-header {
@@ -487,8 +430,6 @@
 		border-radius: 6.5px 6.5px 0 0;
 		display: flex;
 		height: 55px;
-		border: 0;
-		outline: none;
 	}
 
 	.wcol {
@@ -497,19 +438,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
-
 
 	.weapon-row {
 		display: flex;
 		align-items: center;
 		height: 55px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-row:nth-child(odd) {
@@ -527,9 +461,6 @@
 		align-items: center;
 		justify-content: center;
 		padding: 4px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.header-text {
@@ -538,10 +469,6 @@
 		font-weight: 400;
 		font-size: 18px;
 		text-transform: uppercase;
-
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.header-runemark {
@@ -549,18 +476,12 @@
 		align-items: center;
 		justify-content: center;
 		height: 28px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.header-runemark :global(svg) {
 		height: 28px;
 		width: 28px;
 		fill: #FAF6F3;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-runemark {
@@ -568,18 +489,12 @@
 		align-items: center;
 		justify-content: center;
 		height: 44px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-runemark :global(svg) {
 		height: 44px;
 		width: auto;
 		fill: #000;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-name {
@@ -590,11 +505,7 @@
 		color: #000;
 		text-align: center;
 		text-transform: uppercase;
-
 		line-height: 1.2;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-val {
@@ -608,9 +519,6 @@
 		height: 100%;
 		white-space: nowrap;
 		padding: 0 10px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.weapon-val.is-empty {
@@ -622,9 +530,6 @@
 	.damage-row {
 		display: flex;
 		height: 28px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.damage-row:nth-child(even) {
@@ -640,9 +545,6 @@
 		align-items: center;
 		justify-content: center;
 		height: 100%;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.dcol-wide {
@@ -652,9 +554,6 @@
 		font-weight: 400;
 		color: #000;
 		padding: 0 8px;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	.dcol-stat {
@@ -663,9 +562,6 @@
 		font-size: 17px;
 		font-weight: 400;
 		color: #000;
-		border: 0;
-		outline: none;
-		background: transparent;
 	}
 
 	/* ── PRINTER-FRIENDLY OVERRIDES ────────────── */
