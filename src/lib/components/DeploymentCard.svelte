@@ -238,27 +238,27 @@
 		<!-- Battlefield rectangle -->
 		<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill={printerFriendly ? 'white' : '#d9b8a8'} stroke={printerFriendly ? '#000' : 'none'} stroke-width="1"/>
 
-		<!-- Orientation runemark — top-left corner, 20px inset matching caption spacing -->
+		<!-- Orientation runemark — top-right corner, 20px inset matching caption spacing -->
 		{#if showOrientation}
 			{@const rmFill = printerFriendly ? '#000' : '#5a0a14'}
 			{#if showRunemarks}
-				<svg x="20" y="20" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
+				<svg x="863" y="20" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
 					{@html orientationInner}
 				</svg>
 			{:else}
-				<text x="36" y="36" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="22" fill={rmFill}>↑</text>
+				<text x="879" y="36" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="22" fill={rmFill}>↑</text>
 			{/if}
 		{/if}
 
-		<!-- Matched Play runemark — top-right corner, 20px inset matching caption spacing -->
+		<!-- Matched Play runemark — below Orientation on the right, 20px inset matching caption spacing -->
 		{#if showMatchedPlay}
 			{@const rmFill = printerFriendly ? '#000' : '#5a0a14'}
 			{#if showRunemarks}
-				<svg x="863" y="20" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
+				<svg x="863" y="60" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
 					{@html matchedPlayInner}
 				</svg>
 			{:else}
-				<text x="879" y="36" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="14" fill={rmFill}>MP</text>
+				<text x="879" y="76" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="14" fill={rmFill}>MP</text>
 			{/if}
 		{/if}
 
@@ -278,26 +278,6 @@
 				{/if}
 			{/each}
 		{/each}
-
-		<!-- Zone player number labels — printer-friendly only -->
-		{#if printerFriendly}
-			{#each data.players as player, pi}
-				{#each (player.zones ?? []) as zone}
-					{#if !zone.mask}
-						{@const r = zoneRect(zone)}
-						{@const lx = r.x + r.w / 2}
-						{@const ly = r.y + r.h / 2}
-						<circle cx={lx} cy={ly} r="13" fill="white" pointer-events="none"/>
-						<text
-							x={lx} y={ly}
-							text-anchor="middle" dominant-baseline="central"
-							font-family="'Germania One', serif" font-size="18" fill="#000"
-							pointer-events="none"
-						>{PLAYER_BADGES[pi]}</text>
-					{/if}
-				{/each}
-			{/each}
-		{/if}
 
 		<!-- Mask zone circles — painted on top of regular fills, before dashed lines -->
 		{#each data.players as player, pi}
@@ -370,6 +350,9 @@
 					font-family="'Germania One', serif"
 					font-size="16"
 					fill="#222"
+					stroke="white"
+					stroke-width="4"
+					paint-order="stroke fill"
 					text-anchor="middle"
 				>{m.label}</text>
 			{/if}
@@ -389,6 +372,26 @@
 				/>
 			{/if}
 		{/each}
+
+		<!-- Zone player number labels — printer-friendly only; rendered after lines so they sit on top -->
+		{#if printerFriendly}
+			{#each data.players as player, pi}
+				{#each (player.zones ?? []) as zone}
+					{#if !zone.mask}
+						{@const r = zoneRect(zone)}
+						{@const lx = r.x + r.w / 2}
+						{@const ly = r.y + r.h / 2}
+						<circle cx={lx} cy={ly} r="13" fill="white" pointer-events="none"/>
+						<text
+							x={lx} y={ly}
+							text-anchor="middle" dominant-baseline="central"
+							font-family="'Germania One', serif" font-size="18" fill="#000"
+							pointer-events="none"
+						>{PLAYER_BADGES[pi]}</text>
+					{/if}
+				{/each}
+			{/each}
+		{/if}
 
 		<!-- Objective markers — rendered below deployment point shapes -->
 		{#each (data.objectives ?? []) as obj}
@@ -559,8 +562,7 @@
 	.card-name {
 		position: absolute;
 		bottom: 20px;
-		left: 20px;
-		right: 0;
+		left: 28px;
 		text-align: left;
 		font-family: 'Alegreya', serif;
 		font-size: 13px;
@@ -569,6 +571,9 @@
 		border: 0;
 		outline: none;
 		background: transparent;
+		white-space: nowrap;
+		transform-origin: left bottom;
+		transform: rotate(-90deg);
 	}
 
 	.card.is-printer-friendly .card-name {
