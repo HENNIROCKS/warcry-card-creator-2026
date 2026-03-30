@@ -2237,7 +2237,7 @@
             <ul>
               <li><strong>SVG <code>&lt;pattern&gt;</code> defs</strong>: four distinct hatch patterns defined inside <code>&lt;defs&gt;</code> — forward-diagonal (<code>/</code>), back-diagonal (<code>\</code>), crosshatch (<code>×</code>), and horizontal lines. Each maps to one player index 0–3.</li>
               <li><strong>Zone rects</strong>: fill switches to <code>url(#hatch-N)</code> with <code>fill-opacity=1</code> in PF mode (was flat grey at varying opacity). Dotted zone borders removed entirely (<code>stroke="none"</code>).</li>
-              <li><strong>Player number badges</strong>: white filled circle (r=13) + player number text centred inside each zone in PF mode — unambiguous per-player attribution even when hatches overlap.</li>
+              <li><strong>Player number badges</strong>: white filled circle (r=13) + player number text centred inside each zone in PF mode — unambiguous per-player attribution even when hatches overlap. Badge block moved after the measurement lines in SVG paint order so badges always render on top of lines.</li>
               <li><strong>Mask circles</strong>: <code>stroke="none"</code> (dotted border removed in all modes).</li>
             </ul>
             <h3>Perimeter Snap Points</h3>
@@ -2249,12 +2249,15 @@
             <h3>Measurement Line UX</h3>
             <ul>
               <li><strong>Midpoint dot</strong>: a small filled circle (r=4) rendered at the midpoint of each measurement line when the Euclidean length exceeds 60 SVG units. Guard prevents the dot overlapping the cap icons on very short lines.</li>
+              <li><strong>Label white halo (printer-friendly)</strong>: measurement line label <code>&lt;text&gt;</code> gains <code>stroke="white" stroke-width="4" paint-order="stroke fill"</code>. The white stroke acts as a knockout background, keeping the label legible over hatched zones without a separate <code>&lt;rect&gt;</code>.</li>
             </ul>
             <h3>Shape &amp; Layout Fixes</h3>
             <ul>
               <li><strong>Shape stroke</strong>: colour changed from <code>white</code> to <code>rgba(255,255,255,0.6)</code>, width reduced to 1px. Prevents the yellow shape (on yellow zone) from becoming invisible while keeping the stroke subtle everywhere else.</li>
               <li><strong>RND label clamping</strong>: label position flips below the shape when it would be clipped at the top card edge (<code>labelAbove &lt; 24</code>); also clamped horizontally to stay inside card bounds (<code>Math.max(50, Math.min(865, cx))</code>).</li>
               <li><strong><code>.objective-label--pf</code> CSS rule</strong>: added missing rule (<code>background: white; color: #000</code>) so objective labels render correctly in printer-friendly mode.</li>
+              <li><strong>Corner runemarks consolidated to the right</strong>: Orientation moved from top-left to top-right (<code>x=863 y=20</code>); Matched Play placed directly below it (<code>x=863 y=60</code>). Top-left corner is now clear.</li>
+              <li><strong>Card name rotated upward</strong>: <code>.card-name</code> gains <code>transform: rotate(-90deg); transform-origin: left bottom; white-space: nowrap</code> so the caption reads upward along the left edge, anchored at <code>left: 28px; bottom: 20px</code>. <code>right: 0</code> removed.</li>
             </ul>
             <h3>Mobile &amp; Editor UX</h3>
             <ul>
@@ -2322,7 +2325,7 @@
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
                 <tr><td><code>src/lib/types.ts</code></td><td>Removed <code>ZonePreset</code>; <code>DeploymentZone</code> → <code>{ startPos, endPos, mask?, radius? }</code>; added <code>`PRM-${string}`</code> to <code>DeploymentPosition</code> union</td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Position-based zone rects; mask circle rendering; SVG hatch <code>&lt;pattern&gt;</code> defs; player number badges; perimeter snap dots; midpoint dot; shape stroke; RND label clamping; <code>.objective-label--pf</code> rule; indent fixes</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Position-based zone rects; mask circle rendering; SVG hatch <code>&lt;pattern&gt;</code> defs; player number badges (paint order fixed); perimeter snap dots; midpoint dot; measurement label white halo; shape stroke; RND label clamping; corner runemarks to right column; card name rotate 90°; <code>.objective-label--pf</code> rule; indent fixes</td></tr>
                 <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Zone/mask drawing flow; zone click-to-edit; JSON dropdown click-outside; <code>scrollIntoView</code> on all popover inputs; PRM guard in <code>handlePositionClick</code>; WIP watermark removed</td></tr>
                 <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Removed ~100 redundant <code>border/outline/background</code> resets from individual CSS rules (all covered by <code>.card *</code>)</td></tr>
                 <tr><td><code>src/app.d.ts</code></td><td>Removed SvelteKit boilerplate comments and commented-out interface stubs</td></tr>
@@ -8711,7 +8714,7 @@
       });
 
       const hash = location.hash.slice(1);
-      activateSession(sessions.includes(hash) ? hash : sessions[0]);
+      activateSession(sessions.includes(hash) ? hash : "intro");
 
       window
         .matchMedia("(prefers-color-scheme: light)")
