@@ -2255,6 +2255,11 @@
               <li><strong>Split rendering</strong>: mask circle is two <code>&lt;circle&gt;</code> elements — a masked visual circle (<code>pointer-events="none"</code>) and a transparent full-size hit target, so the circle remains clickable anywhere within its radius.</li>
               <li><strong>Radius labels</strong>: <code>MASK_RADII</code> labels changed from <code>S</code>/<code>M</code> to <code>Small</code>/<code>Large</code>.</li>
             </ul>
+            <h3>Deployment Card — Popup Position Fix</h3>
+            <ul>
+              <li><strong>Bug</strong>: clicking a marker near the bottom of the card opened the popup out of frame — the overflow correction in <code>$effect</code> used <code>pv.y</code> (the raw click Y) instead of <code>rect.top</code> (the popup's actual rendered top). Subtracting overflow from the click position pushed the popup back below the viewport instead of up.</li>
+              <li><strong>Fix</strong>: replaced <code>pv.y - overflowBottom</code> → <code>rect.top - overflowBottom</code> and <code>pv.x - overflowRight</code> → <code>rect.left - overflowRight</code> — now the adjustment shifts from the current rendered position, placing the popup flush with the edge.</li>
+            </ul>
             <h3>Deployment Card — Wording</h3>
             <ul>
               <li><code>form-icon</code>: "Icon" → "Runemark"</li>
@@ -2308,7 +2313,7 @@
                 <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New Reference Card page; added Group Runemarks toggle (filler cells, always <code>repeat(8,1fr)</code> grid) and grouped pagination</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Added Reference Card button (zinc, below Card Back)</td></tr>
                 <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>SVG mask to clip mask circles to battlefield interior; split into masked visual + transparent hit-target circle; renamed mask ID to <code>inside-bf-mask</code></td></tr>
-                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Radius labels S/M → Small/Large; Round label added to creation popup</td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Radius labels S/M → Small/Large; Round label added to creation popup; popup overflow correction now uses <code>rect.top</code>/<code>rect.left</code> instead of raw click coords</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Reference card keys; wording cleanup for deployment popup, mask circle, zone instructions; "Circle type"/"Banderole type" → "Circles"/"Banderole"; form-separators → form-new-line "Group Runemarks"</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json; form-new-line "Runenzeichen gruppieren"</td></tr>
               </tbody>
