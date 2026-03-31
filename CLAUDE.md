@@ -96,10 +96,19 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Objective markers: black circle with text label
 - Corner runemarks: Orientation SVG (top-left) and Matched Play SVG (top-right); fall back to `↑` / `MP` text when Show Runemarks is off
 - Zone overlays: rectangular shaded areas; drawn by tapping a start snap position ("Zone from here") then an end position; each zone belongs to a player colour; tap to edit colour, redraw, or remove
-- Mask circles: `mask: true` on a `DeploymentZone`; single-tap placement ("Mask circle here"); `startPos` = centre, `radius` snaps to S=89/M=179 SVG units (multiples of `BF_W/8`); rendered as a fully-opaque circle filled with the battlefield background colour (`#d9b8a8`/white in PF), painted on top of regular zone fills to create a visual cutout
+- Mask circles: `mask: true` on a `DeploymentZone`; single-tap placement ("Place mask circle"); `startPos` = centre, `radius` snaps to Small=89/Large=179 SVG units (multiples of `BF_W/8`); rendered as a fully-opaque circle filled with the battlefield background colour (`#d9b8a8`/white in PF), painted on top of regular zone fills to create a visual cutout. Clipped to the battlefield interior via SVG `<mask id="inside-bf-mask">` (black full-SVG rect, white battlefield rect) — rendered as two `<circle>` elements: a masked visual (pointer-events off) + a transparent full-size hit target
 - Printer-friendly mode: strictly B&W, player badges left of each shape, white battlefield fill; zones rendered with per-player SVG hatch patterns (forward-diagonal, back-diagonal, crosshatch, horizontal) + circled player numbers inside each zone; no dotted zone borders
 - Card name rendered as an Alegreya caption below the SVG
 - `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
+
+**Reference card** (portrait 574×915px):
+
+- Full runemark library browsable via sidebar checkboxes split into Card Elements (core categories) and Card Design
+- 5×8 CSS grid filling the full card; `cardPages` returns `RmItem[][][]` (pages → groups → items); pagination at 40 items per page
+- Card Design toggles: **Circles** — fills each runemark with the maroon blob mask (same as Fighter Card); **Separators** — draws a 1 px category divider between groups
+- Separators use dynamic `grid-template-rows` per page: `1fr` per item row, `12px` per separator row, padded to 8 item rows — icons never move when toggling separators
+- Printer-friendly: white background, black ring circle style, dark separator line
+- Multi-card export: numbered suffix `_1`, `_2`, … when more than one page
 
 **Card back** (portrait, same 574×915px):
 
