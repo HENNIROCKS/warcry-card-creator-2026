@@ -60,11 +60,11 @@
 			const rect = el.getBoundingClientRect();
 			const overflowBottom = rect.bottom - (viewportHeight - 8);
 			if (overflowBottom > 0) {
-				el.style.top = `${Math.max(8, pv.y - overflowBottom)}px`;
+				el.style.top = `${Math.max(8, rect.top - overflowBottom)}px`;
 			}
 			const overflowRight = rect.right - (viewportWidth - 8);
 			if (overflowRight > 0) {
-				el.style.left = `${Math.max(8, pv.x - overflowRight)}px`;
+				el.style.left = `${Math.max(8, rect.left - overflowRight)}px`;
 			}
 		});
 	});
