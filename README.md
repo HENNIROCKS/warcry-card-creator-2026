@@ -16,7 +16,9 @@ Browser-based tool for creating custom Warcry cards. No backend, no login, every
 
 **Card back editor** — create a matching card back with optional name text, a large runemark chosen from the full library (with live search), a custom background image (pan and pinch-to-zoom on mobile), and configurable text/runemark colour. A "mirrored name" option repeats the name upside-down for a symmetrical playing-card style. Export as a print-ready PNG; printer-friendly mode forces black on white.
 
-All four editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens), and can be **installed as a PWA** from the browser.
+**Reference card editor** — browse the full runemark library laid out in a 5×8 grid on exportable cards. Sidebar checkboxes select which categories to show (weapons, fighters, characteristics, deployments, card decks, treasures, twists, plus all four grand alliances with factions and bladeborn merged inline). A "Circle type" toggle renders icons in the Fighter Card blob-circle style. When more than 40 icons are selected, extra cards are generated automatically and exported as numbered PNGs.
+
+All five editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens), and can be **installed as a PWA** from the browser.
 
 ## Developing
 
