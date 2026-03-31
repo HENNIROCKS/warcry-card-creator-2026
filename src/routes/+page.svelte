@@ -49,6 +49,9 @@
 		<a href="{base}/card-back" class="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 rounded text-zinc-300 hover:text-white font-semibold text-lg text-center transition">
 			{t('ui.card-back')}
 		</a>
+		<a href="{base}/reference" class="px-8 py-4 bg-zinc-700 hover:bg-zinc-600 rounded text-zinc-300 hover:text-white font-semibold text-lg text-center transition">
+			{t('ui.reference-card')}
+		</a>
 	</div>
 	<p class="text-zinc-500 text-sm text-center max-w-sm px-6">
 		{t('ui.tagline')}
