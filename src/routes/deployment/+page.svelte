@@ -173,7 +173,7 @@
 	const COLOR_ORDER: DeploymentColor[] = ['red', 'blue', 'green', 'yellow'];
 	const ICONS: DeploymentIconType[] = ['dagger', 'hammer', 'shield'];
 	// Mask circle snap radii — multiples of one horizontal grid step (BF_W/8 = 715/8 ≈ 89)
-	const MASK_RADII: [number, string][] = [[89, 'S'], [179, 'M']];
+	const MASK_RADII: [number, string][] = [[89, 'Small'], [179, 'Large']];
 	function nextColor(): DeploymentColor {
 		const used = new Set(data.players.map(p => p.color));
 		return COLOR_ORDER.find(c => !used.has(c)) ?? 'red';
@@ -749,7 +749,10 @@
 			</div>
 
 			<!-- RND -->
-			<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" onfocus={scrollIntoView} />
+			<div>
+				<div class="popover-label">{t('ui.form-round-label')}</div>
+				<input type="text" bind:value={popoverRnd} placeholder={t('ui.form-round-placeholder')} class="popover-input" onfocus={scrollIntoView} />
+			</div>
 
 			<!-- Point + measurement + zone actions -->
 			<button onclick={confirmAddPoint} class="w-full rounded bg-red-800 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition">{t('ui.popover-add-point')}</button>

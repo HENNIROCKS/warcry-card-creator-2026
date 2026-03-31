@@ -209,6 +209,12 @@
 				<path d="M1,0 L1,14" stroke="#222" stroke-width="2.5" fill="none"/>
 			</marker>
 
+			<!-- Mask circles are only visible inside the battlefield rectangle -->
+			<mask id="inside-bf-mask" maskUnits="userSpaceOnUse">
+				<rect x="0" y="0" width="915" height="574" fill="black"/>
+				<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill="white"/>
+			</mask>
+
 			{#if printerFriendly}
 				<!-- Hatch patterns for printer-friendly zone fills -->
 				<!-- ① forward diagonal / -->
@@ -285,9 +291,18 @@
 				{#if zone.mask}
 					{@const [cx, cy] = getCoords(zone.startPos)}
 					{@const r = zone.radius ?? 89}
+					<!-- Visual: clipped to inside battlefield, no pointer events -->
 					<circle
 						cx={cx} cy={cy} r={r}
 						fill={printerFriendly ? 'white' : '#d9b8a8'}
+						stroke="none"
+						mask="url(#inside-bf-mask)"
+						pointer-events="none"
+					/>
+					<!-- Hit target: full circle, transparent, handles clicks -->
+					<circle
+						cx={cx} cy={cy} r={r}
+						fill="transparent"
 						stroke="none"
 						style={onZoneClick ? 'cursor: pointer;' : ''}
 						onclick={onZoneClick ? (e) => { e.stopPropagation(); onZoneClick(pi, zi, e.clientX, e.clientY); } : undefined}

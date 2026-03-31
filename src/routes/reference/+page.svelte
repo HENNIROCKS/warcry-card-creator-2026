@@ -51,19 +51,20 @@
 
 	// ── State ─────────────────────────────────────────────────────────────────
 
-	// Fixed 5×8 grid. Rows and columns each 1fr so the grid always fills the full card area.
+	// 5×8 grid per card page; separator rows are 12px, item rows are 1fr.
 	const ITEMS_PER_CARD = 40;
 
-	let checked     = $state<Set<string>>(new Set(['weapons']));
-	let showCircle  = $state(false);
-	let exporting = $state(false);
-	let showDropdown = $state(false);
-	let printerFriendly = $state(false);
-	let activeTab = $state<'edit' | 'preview'>('edit');
+	let checked        = $state<Set<string>>(new Set(['weapons']));
+	let showCircle     = $state(false);
+	let showSeparators = $state(false);
+	let exporting      = $state(false);
+	let showDropdown   = $state(false);
+	let printerFriendly  = $state(false);
+	let activeTab        = $state<'edit' | 'preview'>('edit');
 	let exportedImageUrl = $state<string | null>(null);
-	let viewportHeight = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
-	let viewportWidth  = $state(typeof window !== 'undefined' ? window.innerWidth  : 1024);
-	let cardEls = $state<HTMLElement[]>([]);
+	let viewportHeight   = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
+	let viewportWidth    = $state(typeof window !== 'undefined' ? window.innerWidth  : 1024);
+	let cardEls          = $state<HTMLElement[]>([]);
 
 	const isRealMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -80,24 +81,55 @@
 		return () => { clearTimeout(id); document.removeEventListener('click', close); };
 	});
 
-	const isMobile  = $derived(viewportWidth < 1024);
+	const isMobile = $derived(viewportWidth < 1024);
 	const cardScale = $derived(
 		isMobile
 			? Math.min(1, (viewportWidth - 32) / 574)
 			: Math.min(1, (viewportHeight - 64) / 915)
 	);
 
-	const visibleItems = $derived(
-		allCats.filter(c => checked.has(c.id)).flatMap(c => c.items)
+	const visibleGroups = $derived(
+		allCats.filter(c => checked.has(c.id)).map(c => c.items)
 	);
 
+	// cardPages: each page is an array of groups (RmItem[][]).
+	// Separators are rendered between groups in the template; item rows stay 1fr always.
 	const cardPages = $derived((() => {
-		const pages: RmItem[][] = [];
-		for (let i = 0; i < visibleItems.length; i += ITEMS_PER_CARD) {
-			pages.push(visibleItems.slice(i, i + ITEMS_PER_CARD));
+		const pages: RmItem[][][] = [];
+		let currentGroups: RmItem[][] = [];
+		let count = 0;
+		for (const group of visibleGroups) {
+			let start = 0;
+			while (start < group.length) {
+				const chunk = group.slice(start, start + (ITEMS_PER_CARD - count));
+				currentGroups.push(chunk);
+				count += chunk.length;
+				start += chunk.length;
+				if (count >= ITEMS_PER_CARD) {
+					pages.push(currentGroups);
+					currentGroups = [];
+					count = 0;
+				}
+			}
 		}
-		return pages.length > 0 ? pages : [[]];
+		if (currentGroups.length > 0 || pages.length === 0) pages.push(currentGroups);
+		return pages;
 	})());
+
+	// Compute grid-template-rows for a page: 1fr per item row, 12px per separator.
+	// Pads to 8 item rows so the grid always fills the card height.
+	function pageGridRows(groups: RmItem[][]): string {
+		const tracks: string[] = [];
+		let itemRows = 0;
+		for (let i = 0; i < groups.length; i++) {
+			if (showSeparators && i > 0) tracks.push('12px');
+			const rows = Math.ceil(groups[i].length / 5);
+			for (let r = 0; r < rows; r++) tracks.push('1fr');
+			itemRows += rows;
+		}
+		for (let r = itemRows; r < 8; r++) tracks.push('1fr');
+		return tracks.join(' ');
+	}
 
 	function toggle(id: string) {
 		const next = new Set(checked);
@@ -321,10 +353,16 @@
 			<!-- Right: Card Design -->
 			<div class="w-40 shrink-0">
 				<p class="field-label mb-3">{t('ui.form-card-design')}</p>
-				<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-					<input type="checkbox" class="accent-red-700" bind:checked={showCircle} />
-					{t('ui.form-circle-type')}
-				</label>
+				<div class="flex flex-col gap-1">
+					<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+						<input type="checkbox" class="accent-red-700" bind:checked={showCircle} />
+						{t('ui.form-circle-type')}
+					</label>
+					<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+						<input type="checkbox" class="accent-red-700" bind:checked={showSeparators} />
+						{t('ui.form-separators')}
+					</label>
+				</div>
 			</div>
 
 		</div>
@@ -385,31 +423,38 @@
 							/>
 						{/if}
 
-						<!-- Fixed 5×8 grid filling the full card area -->
-						<div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(8,1fr);gap:8px 6px;padding:20px;height:100%;box-sizing:border-box;border:0;outline:none;background:transparent;">
-							{#each page as item}
-								<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:0;min-width:0;border:0;outline:none;background:transparent;">
-									<div class="rm-cell">
-										{#if showCircle}
-											{#if printerFriendly}
-												<div class="rm-border-pf" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
-													<div class="rm-badge rm-badge-pf" style="mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
+						<!-- 5×8 grid; grid-template-rows computed per page to keep item rows 1fr with 12px separator rows -->
+						<div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:{pageGridRows(page)};gap:8px 6px;padding:20px;height:100%;box-sizing:border-box;border:0;outline:none;background:transparent;">
+							{#each page as group, gi}
+								{#if showSeparators && gi > 0}
+									<div style="grid-column:1/-1;display:flex;align-items:center;border:0;outline:none;background:transparent;">
+										<div style="width:100%;height:1px;background:{printerFriendly ? 'rgba(0,0,0,0.35)' : 'rgba(90,10,20,0.35)'};border:0;outline:none;"></div>
+									</div>
+								{/if}
+								{#each group as item}
+									<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:0;min-width:0;border:0;outline:none;background:transparent;">
+										<div class="rm-cell">
+											{#if showCircle}
+												{#if printerFriendly}
+													<div class="rm-border-pf" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
+														<div class="rm-badge rm-badge-pf" style="mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
+															{@html item.svg}
+														</div>
+													</div>
+												{:else}
+													<div class="rm-badge" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
 														{@html item.svg}
 													</div>
-												</div>
+												{/if}
 											{:else}
-												<div class="rm-badge" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
-													{@html item.svg}
-												</div>
+												{@html item.svg}
 											{/if}
-										{:else}
-											{@html item.svg}
-										{/if}
+										</div>
+										<span style="font-family:'Alegreya';font-size:8.5px;text-transform:uppercase;text-align:center;line-height:1.3;color:#000;word-break:break-word;width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;flex-shrink:0;border:0;outline:none;background:transparent;">
+											{item.label}
+										</span>
 									</div>
-									<span style="font-family:'Alegreya';font-size:8.5px;text-transform:uppercase;text-align:center;line-height:1.3;color:#000;word-break:break-word;width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;flex-shrink:0;border:0;outline:none;background:transparent;">
-										{item.label}
-									</span>
-								</div>
+								{/each}
 							{/each}
 						</div>
 					</div>
