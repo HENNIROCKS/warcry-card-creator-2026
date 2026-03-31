@@ -617,7 +617,7 @@
           <li>
             <button class="session-btn" data-session="march-31">
               <span class="session-date">2026-03-31</span>
-              <span class="session-title">Reference Card</span>
+              <span class="session-title">Reference Card + Separators, Deployment Polish</span>
             </button>
           </li>
           <li>
@@ -2186,24 +2186,23 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-31</span>
-              <span class="badge badge-green">Reference card page</span>
-              <span class="badge badge-green">Circle type design</span>
-              <span class="badge badge-green">Multi-card export</span>
+              <span class="badge badge-green">Reference card + separators</span>
+              <span class="badge badge-green">Deployment mask fix</span>
+              <span class="badge badge-green">UI wording cleanup</span>
             </div>
-            <h1>Reference Card</h1>
+            <h1>Reference Card + Separators, Deployment Polish</h1>
             <p>
-              A new <code>/reference</code> route lets users browse the full runemark library on
-              exportable cards — 5 columns × 8 rows per card, with sidebar checkboxes to choose
-              which categories to show. Core categories cover weapons, fighters, characteristics,
-              deployments, card decks, treasures, and twists. Alliance categories merge each
-              alliance icon, its factions, and their bladeborn warbands into a single flat
-              checkbox with all items inline.
+              A new <code>/reference</code> route was built for browsing and exporting the full
+              runemark library as 5×8 cards. A "Separators" toggle was added to draw category
+              dividers between runemark groups without moving icons, using a dynamic
+              <code>grid-template-rows</code> approach with <code>12px</code> separator tracks
+              alongside <code>1fr</code> item tracks.
             </p>
             <p>
-              A "Circle type" checkbox fills icons with the same maroon blob circle used on Fighter
-              Cards — printer-friendly mode renders a 1 px black ring with a white fill instead.
-              When more than 40 items are selected, additional cards are generated automatically
-              and exported as numbered PNGs.
+              The Deployment Card received several fixes and wording improvements: mask circles
+              are now clipped to the battlefield interior via an SVG <code>&lt;mask&gt;</code>,
+              deployment popup labels were clarified throughout, and the Reference/Text card
+              "…type" checkbox labels were cleaned up.
             </p>
           </div>
 
@@ -2244,6 +2243,35 @@
               <li>Removed unused keys from a scrapped group-header phase: <code>ui.form-core</code>, <code>ui.form-factions</code>, <code>ui.form-bladeborn</code>, <code>ui.form-grand-alliances</code>.</li>
               <li>Removed unused <code>miscRunemarks</code> import from <code>reference/+page.svelte</code>.</li>
             </ul>
+            <h3>Separators (Reference Card)</h3>
+            <ul>
+              <li><strong>Checkbox</strong>: "Separators" added under Card Design in the Reference Card sidebar (i18n: <code>ui.form-separators</code>).</li>
+              <li><strong>Pagination</strong>: <code>cardPages</code> now returns <code>RmItem[][][]</code> (pages → groups → items). Groups can split across pages at the <code>ITEMS_PER_CARD</code> boundary.</li>
+              <li><strong>Dynamic grid rows</strong>: <code>pageGridRows(groups)</code> builds a <code>grid-template-rows</code> string per page — <code>1fr</code> for each item row, <code>12px</code> for each separator row, padded to 8 total item rows. Icons do not move when separators are toggled.</li>
+              <li><strong>Separator element</strong>: <code>grid-column: 1 / -1</code> div with a flexbox-centred 1 px inner div (<code>height: 1px; background: …</code>). Uses <code>border: 0; outline: none; background: transparent</code> to prevent export frame artifacts.</li>
+              <li><strong>Checkbox spacing</strong>: Card Design labels wrapped in <code>flex flex-col gap-1</code> to match the Card Elements section.</li>
+            </ul>
+            <h3>Deployment Card — Mask Circle Fix</h3>
+            <ul>
+              <li><strong>SVG mask</strong>: added <code>&lt;mask id="inside-bf-mask"&gt;</code> in <code>&lt;defs&gt;</code> — black rect over full SVG, white rect over battlefield. Mask circles are now invisible outside the battlefield boundary.</li>
+              <li><strong>Split rendering</strong>: mask circle is two <code>&lt;circle&gt;</code> elements — a masked visual circle (<code>pointer-events="none"</code>) and a transparent full-size hit target, so the circle remains clickable anywhere within its radius.</li>
+              <li><strong>Radius labels</strong>: <code>MASK_RADII</code> labels changed from <code>S</code>/<code>M</code> to <code>Small</code>/<code>Large</code>.</li>
+            </ul>
+            <h3>Deployment Card — Wording</h3>
+            <ul>
+              <li><code>form-icon</code>: "Icon" → "Runemark"</li>
+              <li><code>form-round-label</code>: "Round" → "Round label" (added label to creation popup for consistency)</li>
+              <li><code>popover-zone</code>: "Zone from here" → "Draw zone from here"</li>
+              <li><code>popover-mask</code>: "Mask circle here" → "Place mask circle"</li>
+              <li><code>popover-mask-title</code>: "Mask zone" → "Mask Circle"</li>
+              <li><code>zone-pick-start/end</code> and <code>measurement-pick-end</code>: shortened instruction strings</li>
+              <li><code>popover-add-to-position</code>: "Add to position" → "Place here"</li>
+            </ul>
+            <h3>Reference &amp; Text Card — Wording</h3>
+            <ul>
+              <li><code>form-circle-type</code>: "Circle type" → "Circles" (DE: "Kreise")</li>
+              <li><code>form-layout-banderole</code>: "Banderole type" → "Banderole" (already correct in DE)</li>
+            </ul>
           </section>
 
           <section id="march-31-decisions" data-nav="Key Decisions">
@@ -2253,7 +2281,7 @@
               <p class="decision-a"><code>grid-template-rows: repeat(8, 1fr)</code> with <code>height: 100%</code> distributes rows evenly across the card, using every square centimetre of parchment. A top-anchored grid would leave empty space at the bottom for most selection sets.</p>
             </div>
             <div class="decision">
-              <p class="decision-q">Why a checkbox for "Circle type" rather than a select with Filled/Outlined options?</p>
+              <p class="decision-q">Why a checkbox for "Circles" rather than a select with Filled/Outlined options?</p>
               <p class="decision-a">The Text Card editor uses a checkbox for its "Card Design" toggle. Matching that pattern keeps the two sidebars consistent — a checkbox is faster for a binary choice, and the maroon circle already has a clear on/off state.</p>
             </div>
             <div class="decision">
@@ -2264,6 +2292,14 @@
               <p class="decision-q">Why merge bladeborn into their alliance category rather than keeping a separate group?</p>
               <p class="decision-a">Separate groups added UI noise — users think of bladeborn warbands as belonging to a faction, not a standalone category. Merging them inline (alliance icon → factions → subfactions per faction) makes the hierarchy readable without extra headers, and one checkbox controls the whole alliance block.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">Why use dynamic <code>grid-template-rows</code> for separators instead of injecting separator items into the flat grid?</p>
+              <p class="decision-a">Injecting separators as grid items into a <code>repeat(8, 1fr)</code> grid causes overflow — extra rows push items into implicit <code>auto</code> rows, breaking layout. Computing the row template per page (<code>1fr</code> per item row, <code>12px</code> per separator row) keeps item rows exactly <code>1fr</code> regardless of how many separators exist. Icons never move when toggling separators.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why use an SVG <code>&lt;mask&gt;</code> instead of <code>clipPath</code> to clip mask circles to the battlefield?</p>
+              <p class="decision-a"><code>clipPath</code> with <code>clip-rule="evenodd"</code> proved unreliable in browser rendering. An SVG <code>&lt;mask&gt;</code> with two simple rects (black full SVG, white battlefield area) is more robust and easier to reason about. The mask circle is additionally split into a masked visual element and a transparent hit-target so pointer events work across the full circle radius regardless of where the visual is clipped.</p>
+            </div>
           </section>
 
           <section id="march-31-files" data-nav="Files Changed">
@@ -2271,9 +2307,11 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New — Reference Card page with sidebar checkboxes, 5×8 grid, circle type design, multi-card export</td></tr>
+                <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New Reference Card page; added Separators toggle with dynamic grid-template-rows and grouped pagination</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Added Reference Card button (zinc, below Card Back)</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added reference card keys; pluralised deployment-group/treasure-group; removed 4 unused form-* keys</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>SVG mask to clip mask circles to battlefield interior; split into masked visual + transparent hit-target circle; renamed mask ID to <code>inside-bf-mask</code></td></tr>
+                <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Radius labels S/M → Small/Large; Round label added to creation popup</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Reference card keys; wording cleanup for deployment popup, mask circle, zone instructions; "Circle type"/"Banderole type" → "Circles"/"Banderole"; added form-separators</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
               </tbody>
             </table>
