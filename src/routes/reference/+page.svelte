@@ -51,12 +51,12 @@
 
 	// ── State ─────────────────────────────────────────────────────────────────
 
-	// 5×8 grid per card page; separator rows are 12px, item rows are 1fr.
+	// 5×8 grid per card page; item rows are 1fr.
 	const ITEMS_PER_CARD = 40;
 
 	let checked        = $state<Set<string>>(new Set(['weapons']));
-	let showCircle     = $state(false);
-	let showSeparators = $state(false);
+	let showCircle   = $state(false);
+	let showNewLine  = $state(false);
 	let exporting      = $state(false);
 	let showDropdown   = $state(false);
 	let printerFriendly  = $state(false);
@@ -116,19 +116,11 @@
 		return pages;
 	})());
 
-	// Compute grid-template-rows for a page: 1fr per item row, 12px per separator.
-	// Pads to 8 item rows so the grid always fills the card height.
+	// Compute grid-template-rows for a page: 1fr per item row, padded to 8 rows.
 	function pageGridRows(groups: RmItem[][]): string {
-		const tracks: string[] = [];
 		let itemRows = 0;
-		for (let i = 0; i < groups.length; i++) {
-			if (showSeparators && i > 0) tracks.push('12px');
-			const rows = Math.ceil(groups[i].length / 5);
-			for (let r = 0; r < rows; r++) tracks.push('1fr');
-			itemRows += rows;
-		}
-		for (let r = itemRows; r < 8; r++) tracks.push('1fr');
-		return tracks.join(' ');
+		for (const group of groups) itemRows += Math.ceil(group.length / 5);
+		return Array.from({ length: Math.max(8, itemRows) }, () => '1fr').join(' ');
 	}
 
 	function toggle(id: string) {
@@ -359,8 +351,8 @@
 						{t('ui.form-circle-type')}
 					</label>
 					<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-						<input type="checkbox" class="accent-red-700" bind:checked={showSeparators} />
-						{t('ui.form-separators')}
+						<input type="checkbox" class="accent-red-700" bind:checked={showNewLine} />
+						{t('ui.form-new-line')}
 					</label>
 				</div>
 			</div>
@@ -426,10 +418,10 @@
 						<!-- 5×8 grid; grid-template-rows computed per page to keep item rows 1fr with 12px separator rows -->
 						<div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:{pageGridRows(page)};gap:8px 6px;padding:20px;height:100%;box-sizing:border-box;border:0;outline:none;background:transparent;">
 							{#each page as group, gi}
-								{#if showSeparators && gi > 0}
-									<div style="grid-column:1/-1;display:flex;align-items:center;border:0;outline:none;background:transparent;">
-										<div style="width:100%;height:1px;background:{printerFriendly ? 'rgba(0,0,0,0.35)' : 'rgba(90,10,20,0.35)'};border:0;outline:none;"></div>
-									</div>
+								{#if showNewLine && gi > 0 && page[gi - 1].length % 5 !== 0}
+									{#each { length: 5 - (page[gi - 1].length % 5) } as _, fi (fi)}
+										<div style="border:0;outline:none;background:transparent;"></div>
+									{/each}
 								{/if}
 								{#each group as item}
 									<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:0;min-width:0;border:0;outline:none;background:transparent;">

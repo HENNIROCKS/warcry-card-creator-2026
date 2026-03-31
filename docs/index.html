@@ -2186,17 +2186,16 @@
           <div class="hero">
             <div class="meta">
               <span class="badge badge-blue">2026-03-31</span>
-              <span class="badge badge-green">Reference card + separators</span>
+              <span class="badge badge-green">Reference card + group runemarks</span>
               <span class="badge badge-green">Deployment mask fix</span>
               <span class="badge badge-green">UI wording cleanup</span>
             </div>
-            <h1>Reference Card + Separators, Deployment Polish</h1>
+            <h1>Reference Card + Group Runemarks, Deployment Polish</h1>
             <p>
               A new <code>/reference</code> route was built for browsing and exporting the full
-              runemark library as 5×8 cards. A "Separators" toggle was added to draw category
-              dividers between runemark groups without moving icons, using a dynamic
-              <code>grid-template-rows</code> approach with <code>12px</code> separator tracks
-              alongside <code>1fr</code> item tracks.
+              runemark library as 5×8 cards. A "Group Runemarks" toggle was added to force each
+              category to start at column 1 of a new row — implemented via invisible filler cells
+              that pad each group to a multiple of 5 before the next group begins.
             </p>
             <p>
               The Deployment Card received several fixes and wording improvements: mask circles
@@ -2243,13 +2242,12 @@
               <li>Removed unused keys from a scrapped group-header phase: <code>ui.form-core</code>, <code>ui.form-factions</code>, <code>ui.form-bladeborn</code>, <code>ui.form-grand-alliances</code>.</li>
               <li>Removed unused <code>miscRunemarks</code> import from <code>reference/+page.svelte</code>.</li>
             </ul>
-            <h3>Separators (Reference Card)</h3>
+            <h3>Group Runemarks (Reference Card)</h3>
             <ul>
-              <li><strong>Checkbox</strong>: "Separators" added under Card Design in the Reference Card sidebar (i18n: <code>ui.form-separators</code>).</li>
-              <li><strong>Pagination</strong>: <code>cardPages</code> now returns <code>RmItem[][][]</code> (pages → groups → items). Groups can split across pages at the <code>ITEMS_PER_CARD</code> boundary.</li>
-              <li><strong>Dynamic grid rows</strong>: <code>pageGridRows(groups)</code> builds a <code>grid-template-rows</code> string per page — <code>1fr</code> for each item row, <code>12px</code> for each separator row, padded to 8 total item rows. Icons do not move when separators are toggled.</li>
-              <li><strong>Separator element</strong>: <code>grid-column: 1 / -1</code> div with a flexbox-centred 1 px inner div (<code>height: 1px; background: …</code>). Uses <code>border: 0; outline: none; background: transparent</code> to prevent export frame artifacts.</li>
-              <li><strong>Checkbox spacing</strong>: Card Design labels wrapped in <code>flex flex-col gap-1</code> to match the Card Elements section.</li>
+              <li><strong>Checkbox</strong>: "Group Runemarks" added under Card Design in the Reference Card sidebar (i18n key: <code>ui.form-new-line</code>; DE: "Runenzeichen gruppieren").</li>
+              <li><strong>Pagination</strong>: <code>cardPages</code> returns <code>RmItem[][][]</code> (pages → groups → items). Groups can split across pages at the <code>ITEMS_PER_CARD</code> boundary.</li>
+              <li><strong>Filler cells</strong>: when enabled, invisible filler <code>&lt;div&gt;</code>s are injected after each group (except the last on a page) to pad the group's item count to the next multiple of 5. The next group then starts at column 1 with no gap penalty.</li>
+              <li><strong>Grid rows</strong>: <code>pageGridRows</code> simplified to always return <code>repeat(8, 1fr)</code> — no 12 px separator tracks needed.</li>
             </ul>
             <h3>Deployment Card — Mask Circle Fix</h3>
             <ul>
@@ -2293,8 +2291,8 @@
               <p class="decision-a">Separate groups added UI noise — users think of bladeborn warbands as belonging to a faction, not a standalone category. Merging them inline (alliance icon → factions → subfactions per faction) makes the hierarchy readable without extra headers, and one checkbox controls the whole alliance block.</p>
             </div>
             <div class="decision">
-              <p class="decision-q">Why use dynamic <code>grid-template-rows</code> for separators instead of injecting separator items into the flat grid?</p>
-              <p class="decision-a">Injecting separators as grid items into a <code>repeat(8, 1fr)</code> grid causes overflow — extra rows push items into implicit <code>auto</code> rows, breaking layout. Computing the row template per page (<code>1fr</code> per item row, <code>12px</code> per separator row) keeps item rows exactly <code>1fr</code> regardless of how many separators exist. Icons never move when toggling separators.</p>
+              <p class="decision-q">Why use filler cells to start groups on a new row rather than a separator line or a zero-height <code>grid-column: 1/-1</code> div?</p>
+              <p class="decision-a">A 1 px separator line between groups required a dynamic <code>grid-template-rows</code> with 12 px separator tracks — complex and fragile. A zero-height full-span div avoids that but still consumes the grid's <code>row-gap</code>, adding unwanted space between groups. Filler cells pad the previous group to a multiple of 5 columns so the next group starts at column 1 naturally, with no extra rows and no gap penalty. The grid stays a simple <code>repeat(8, 1fr)</code>.</p>
             </div>
             <div class="decision">
               <p class="decision-q">Why use an SVG <code>&lt;mask&gt;</code> instead of <code>clipPath</code> to clip mask circles to the battlefield?</p>
@@ -2307,12 +2305,12 @@
             <table>
               <thead><tr><th>File</th><th>Change</th></tr></thead>
               <tbody>
-                <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New Reference Card page; added Separators toggle with dynamic grid-template-rows and grouped pagination</td></tr>
+                <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New Reference Card page; added Group Runemarks toggle (filler cells, always <code>repeat(8,1fr)</code> grid) and grouped pagination</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Added Reference Card button (zinc, below Card Back)</td></tr>
                 <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>SVG mask to clip mask circles to battlefield interior; split into masked visual + transparent hit-target circle; renamed mask ID to <code>inside-bf-mask</code></td></tr>
                 <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Radius labels S/M → Small/Large; Round label added to creation popup</td></tr>
-                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Reference card keys; wording cleanup for deployment popup, mask circle, zone instructions; "Circle type"/"Banderole type" → "Circles"/"Banderole"; added form-separators</td></tr>
-                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Reference card keys; wording cleanup for deployment popup, mask circle, zone instructions; "Circle type"/"Banderole type" → "Circles"/"Banderole"; form-separators → form-new-line "Group Runemarks"</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json; form-new-line "Runenzeichen gruppieren"</td></tr>
               </tbody>
             </table>
           </section>
