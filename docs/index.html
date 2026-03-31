@@ -2187,10 +2187,10 @@
             <div class="meta">
               <span class="badge badge-blue">2026-03-31</span>
               <span class="badge badge-green">Reference card + group runemarks</span>
-              <span class="badge badge-green">Deployment mask fix</span>
-              <span class="badge badge-green">UI wording cleanup</span>
+              <span class="badge badge-green">Deployment polish</span>
+              <span class="badge badge-green">Fighter card export fix</span>
             </div>
-            <h1>Reference Card + Group Runemarks, Deployment Polish</h1>
+            <h1>Reference Card, Deployment Polish &amp; Fighter Card Export Fix</h1>
             <p>
               A new <code>/reference</code> route was built for browsing and exporting the full
               runemark library as 5×8 cards. A "Group Runemarks" toggle was added to force each
@@ -2200,8 +2200,15 @@
             <p>
               The Deployment Card received several fixes and wording improvements: mask circles
               are now clipped to the battlefield interior via an SVG <code>&lt;mask&gt;</code>,
-              deployment popup labels were clarified throughout, and the Reference/Text card
-              "…type" checkbox labels were cleaned up.
+              deployment popup labels were clarified throughout, and Matched Play now slides up
+              into Orientation's corner slot when Orientation is toggled off.
+            </p>
+            <p>
+              A long-standing Fighter Card export regression was diagnosed and fixed: the March 29
+              cleanup commit had removed ~30 per-element <code>border: 0</code> declarations,
+              trusting a blanket <code>.card *</code> rule that dom-to-image-more does not reliably
+              serialise. Restoring explicit resets on every selector also eliminated the
+              printer-friendly "dark spots" artifact.
             </p>
           </div>
 
@@ -2275,6 +2282,17 @@
               <li><code>form-circle-type</code>: "Circle type" → "Circles" (DE: "Kreise")</li>
               <li><code>form-layout-banderole</code>: "Banderole type" → "Banderole" (already correct in DE)</li>
             </ul>
+            <h3>Deployment Card — Matched Play Position</h3>
+            <ul>
+              <li>When <strong>Orientation is toggled off</strong> and Matched Play is on, the Matched Play runemark/text now renders at <code>y=20</code> (Orientation's slot) instead of <code>y=60</code>. Controlled by a derived <code>mpY = showOrientation ? 60 : 20</code> constant.</li>
+            </ul>
+            <h3>Fighter Card — Export Border &amp; Dark-Spots Fix</h3>
+            <ul>
+              <li><strong>Root cause</strong>: the March 29 "Finalize deployment card" commit removed ~30 per-element <code>border: 0</code> declarations from <code>FighterCard.svelte</code>, replacing them with a single <code>.card * { border-width: 0; border-style: solid }</code> blanket rule. dom-to-image-more's CSS serializer preserves <code>border-style: solid</code> but silently drops <code>border-width: 0</code>, leaving every element with the UA-default border width — producing visible black frames in all exports.</li>
+              <li><strong>Secondary cause</strong>: the split <code>border-width/border-style</code> form was also wrong — the shorthand <code>border: 0</code> additionally sets <code>border-style: none</code>, which survives serialization. <code>border-width: 0</code> alone does not.</li>
+              <li><strong>Fix</strong>: changed the blanket rule to <code>border: 0</code> and restored <code>border: 0; outline: none; background: transparent</code> on every individual selector — matching the TextCard pattern that has always worked. This mirrors rule #2 in the dom-to-image-more memory.</li>
+              <li><strong>Dark-spots bonus fix</strong>: the same per-element <code>background: transparent</code> resets also eliminated the printer-friendly "brownish bleed at SVG mask edge" artifact — leaked <code>background: url('/background.jpg')</code> from ancestor rules is now properly overridden on each element.</li>
+            </ul>
           </section>
 
           <section id="march-31-decisions" data-nav="Key Decisions">
@@ -2303,6 +2321,10 @@
               <p class="decision-q">Why use an SVG <code>&lt;mask&gt;</code> instead of <code>clipPath</code> to clip mask circles to the battlefield?</p>
               <p class="decision-a"><code>clipPath</code> with <code>clip-rule="evenodd"</code> proved unreliable in browser rendering. An SVG <code>&lt;mask&gt;</code> with two simple rects (black full SVG, white battlefield area) is more robust and easier to reason about. The mask circle is additionally split into a masked visual element and a transparent hit-target so pointer events work across the full circle radius regardless of where the visual is clipped.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">Why restore per-element <code>border: 0</code> rather than strengthening the blanket <code>.card *</code> rule (e.g. with <code>!important</code>)?</p>
+              <p class="decision-a"><code>!important</code> on the blanket rule made things worse — it prevented intentional borders (<code>.stats-box</code>) from rendering and broke masked runemark backgrounds. TextCard has always used per-element resets alongside the blanket rule, and it has never shown export artifacts. That pattern is the proven one: the blanket rule acts as a comment and a fallback; the per-element declarations are what dom-to-image-more actually reads.</p>
+            </div>
           </section>
 
           <section id="march-31-files" data-nav="Files Changed">
@@ -2312,8 +2334,9 @@
               <tbody>
                 <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New Reference Card page; added Group Runemarks toggle (filler cells, always <code>repeat(8,1fr)</code> grid) and grouped pagination</td></tr>
                 <tr><td><code>src/routes/+page.svelte</code></td><td>Added Reference Card button (zinc, below Card Back)</td></tr>
-                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>SVG mask to clip mask circles to battlefield interior; split into masked visual + transparent hit-target circle; renamed mask ID to <code>inside-bf-mask</code></td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>SVG mask to clip mask circles to battlefield interior; split into masked visual + transparent hit-target circle; renamed mask ID to <code>inside-bf-mask</code>; Matched Play slides to <code>y=20</code> when Orientation is off</td></tr>
                 <tr><td><code>src/routes/deployment/+page.svelte</code></td><td>Radius labels S/M → Small/Large; Round label added to creation popup; popup overflow correction now uses <code>rect.top</code>/<code>rect.left</code> instead of raw click coords</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Blanket <code>.card *</code> rule changed from <code>border-width:0;border-style:solid</code> to <code>border:0</code>; per-element <code>border:0;outline:none;background:transparent</code> restored on every selector — fixes black export frames and PF dark-spots artifact</td></tr>
                 <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Reference card keys; wording cleanup for deployment popup, mask circle, zone instructions; "Circle type"/"Banderole type" → "Circles"/"Banderole"; form-separators → form-new-line "Group Runemarks"</td></tr>
                 <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json; form-new-line "Runenzeichen gruppieren"</td></tr>
               </tbody>
