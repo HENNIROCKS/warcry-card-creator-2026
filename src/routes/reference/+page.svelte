@@ -258,6 +258,19 @@
 	.rm-badge-pf :global(svg *) {
 		fill: #000;
 	}
+
+	.two-col {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+
+	@media (max-width: 1023px) {
+		.two-col {
+			grid-template-columns: 1fr;
+			row-gap: 28px;
+		}
+	}
 </style>
 
 <div class="flex flex-col h-dvh bg-zinc-900 text-white overflow-hidden lg:flex-row">
@@ -321,42 +334,44 @@
 		</div>
 
 		<!-- Sidebar body: two columns -->
-		<div class="flex-1 overflow-y-auto p-5 flex gap-6">
+		<div class="flex-1 overflow-y-auto p-5">
+			<div class="two-col">
 
-			<!-- Left: Card Elements -->
-			<div class="flex-1 min-w-0">
-				<p class="field-label mb-3">{t('ui.form-card-elements')}</p>
-				<div class="flex flex-col gap-1">
-					{#each coreCats as cat}
-						<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-							<input type="checkbox" class="accent-red-700" checked={checked.has(cat.id)} onchange={() => toggle(cat.id)} />
-							{t('ui.form-show')} {t(cat.labelKey)}
-						</label>
-					{/each}
-					{#each factionCats as cat}
-						<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-							<input type="checkbox" class="accent-red-700" checked={checked.has(cat.id)} onchange={() => toggle(cat.id)} />
-							{t('ui.form-show')} {cat.labelText}
-						</label>
-					{/each}
+				<!-- Left: Card Elements -->
+				<div>
+					<p class="field-label mb-3">{t('ui.form-card-elements')}</p>
+					<div class="flex flex-col gap-1">
+						{#each coreCats as cat}
+							<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+								<input type="checkbox" class="accent-red-700" checked={checked.has(cat.id)} onchange={() => toggle(cat.id)} />
+								{t('ui.form-show')} {t(cat.labelKey)}
+							</label>
+						{/each}
+						{#each factionCats as cat}
+							<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+								<input type="checkbox" class="accent-red-700" checked={checked.has(cat.id)} onchange={() => toggle(cat.id)} />
+								{t('ui.form-show')} {cat.labelText}
+							</label>
+						{/each}
+					</div>
 				</div>
-			</div>
 
-			<!-- Right: Card Design -->
-			<div class="w-40 shrink-0">
-				<p class="field-label mb-3">{t('ui.form-card-design')}</p>
-				<div class="flex flex-col gap-1">
-					<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-						<input type="checkbox" class="accent-red-700" bind:checked={showCircle} />
-						{t('ui.form-circle-type')}
-					</label>
-					<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
-						<input type="checkbox" class="accent-red-700" bind:checked={showNewLine} />
-						{t('ui.form-new-line')}
-					</label>
+				<!-- Right: Card Design -->
+				<div>
+					<p class="field-label mb-3">{t('ui.form-card-design')}</p>
+					<div class="flex flex-col gap-1">
+						<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+							<input type="checkbox" class="accent-red-700" bind:checked={showCircle} />
+							{t('ui.form-circle-type')}
+						</label>
+						<label class="flex items-center gap-2 py-0.5 cursor-pointer text-sm text-zinc-300 hover:text-white">
+							<input type="checkbox" class="accent-red-700" bind:checked={showNewLine} />
+							{t('ui.form-new-line')}
+						</label>
+					</div>
 				</div>
-			</div>
 
+			</div>
 		</div>
 	</aside>
 
