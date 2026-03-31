@@ -615,6 +615,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="march-31">
+              <span class="session-date">2026-03-31</span>
+              <span class="session-title">Reference Card</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-29">
               <span class="session-date">2026-03-29</span>
               <span class="session-title">Deployment Polish — PF Hatching, Perimeter Snaps &amp; Mobile</span>
@@ -761,17 +767,18 @@
         <div id="session-intro" class="session-panel">
           <div class="hero">
             <div class="meta">
-              <span class="badge badge-blue">Mar 11 – Mar 29, 2026</span>
-              <span class="badge badge-purple">19 sessions</span>
+              <span class="badge badge-blue">Mar 11 – Mar 31, 2026</span>
+              <span class="badge badge-purple">20 sessions</span>
             </div>
             <h1>About This Log</h1>
             <p>
               Warcry Card Creator 2026 is a browser-based fan tool for building custom Warcry
-              cards — fighter cards, text/ability cards, deployment cards, and card backs.
-              No backend, no login; everything runs client-side and exports as a print-ready PNG.
+              cards — fighter cards, text/ability cards, deployment cards, card backs, and a
+              runemark reference card. No backend, no login; everything runs client-side and
+              exports as a print-ready PNG.
             </p>
             <p>
-              It was built over 19 sessions in March 2026 by the project owner with Claude Code
+              It was built over 20 sessions in March 2026 by the project owner with Claude Code
               as the coding partner. These logs document what was built each day, the reasoning
               behind key decisions, and what remains open.
             </p>
@@ -788,6 +795,7 @@
                 <tr><td>Mar 23</td><td><strong>Card back</strong> — background image, centred name + runemark, text colour, mirrored name</td></tr>
                 <tr><td>Mar 23–29</td><td><strong>Deployment card</strong> — SVG card, 99 snap positions, markers, measurements, zones, mask circles, perimeter snaps, PF hatch patterns; rebuilt once from form-based to card-first tap UI</td></tr>
                 <tr><td>Mar 27–29</td><td><strong>Cross-editor</strong> — inline runemark markup, independent faction selects, tags row, JSON save/load, banderole label</td></tr>
+                <tr><td>Mar 31</td><td><strong>Reference card</strong> — 5×8 runemark grid, category checkboxes, circle type design, multi-card export</td></tr>
               </tbody>
             </table>
           </section>
@@ -2170,6 +2178,108 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-03-31 — Reference Card
+    ══════════════════════════════════════════ -->
+        <div id="session-march-31" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-03-31</span>
+              <span class="badge badge-green">Reference card page</span>
+              <span class="badge badge-green">Circle type design</span>
+              <span class="badge badge-green">Multi-card export</span>
+            </div>
+            <h1>Reference Card</h1>
+            <p>
+              A new <code>/reference</code> route lets users browse the full runemark library on
+              exportable cards — 5 columns × 8 rows per card, with sidebar checkboxes to choose
+              which categories to show. Core categories cover weapons, fighters, characteristics,
+              deployments, card decks, treasures, and twists. Alliance categories merge each
+              alliance icon, its factions, and their bladeborn warbands into a single flat
+              checkbox with all items inline.
+            </p>
+            <p>
+              A "Circle type" checkbox fills icons with the same maroon blob circle used on Fighter
+              Cards — printer-friendly mode renders a 1 px black ring with a white fill instead.
+              When more than 40 items are selected, additional cards are generated automatically
+              and exported as numbered PNGs.
+            </p>
+          </div>
+
+          <section id="march-31-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Reference Card Page</h3>
+            <ul>
+              <li><strong><code>src/routes/reference/+page.svelte</code></strong> — new page; shares the same sidebar + card preview layout as the other editors.</li>
+              <li><strong>Sidebar checkboxes</strong>: two-column layout (<em>Card Elements</em> / <em>Card Design</em>). Core categories first (Show Weapons, Show Fighters, Show Characteristics, Show Deployments, Show Card Decks, Show Treasures, Show Twists), alliance categories below. "Circle type" checkbox in the Card Design column.</li>
+              <li><strong>Faction category merging</strong>: each alliance entry includes the alliance SVG icon first, then all faction icons, then each faction's subfaction (bladeborn) icons inline — no separate Bladeborn group.</li>
+              <li><strong>Landing page button</strong>: <em>Reference Card</em> added to <code>src/routes/+page.svelte</code> below Card Back, styled in zinc (secondary).</li>
+            </ul>
+            <h3>Card Layout</h3>
+            <ul>
+              <li><strong>5 × 8 grid</strong>: <code>grid-template-columns: repeat(5, 1fr)</code> + <code>grid-template-rows: repeat(8, 1fr)</code> with <code>height: 100%</code> on the grid — icons fill the full card space without wasted margins.</li>
+              <li><strong>Fixed cell size</strong>: <code>.rm-cell</code> is 70 × 70 px with <code>display: flex; align-items: center; justify-content: center</code>. SVG icons are 72 % of cell width in both raw and circle-type designs so position never jumps when switching design.</li>
+              <li><strong>Labels</strong>: small text below each icon, always <code>color: #000</code> regardless of design or printer-friendly state.</li>
+            </ul>
+            <h3>Circle Type Design</h3>
+            <ul>
+              <li><strong>Standard mode</strong>: <code>.rm-badge</code> — <code>position: absolute; inset: 0</code>, maroon <code>#5a0a14</code> background, SVG <code>fill: #FAF6F3</code>, masked with <code>runemark-shape.svg</code> (same blob as Fighter Card).</li>
+              <li><strong>Printer-friendly mode</strong>: outer <code>.rm-border-pf</code> (black, full size, same mask) wrapping inner <code>.rm-badge-pf</code> (<code>calc(100% - 2px)</code>, white background, black SVG fill) — 1 px ring, matching the Fighter Card PF approach.</li>
+            </ul>
+            <h3>Multi-Card Export</h3>
+            <ul>
+              <li><strong>Pagination</strong>: <code>ITEMS_PER_CARD = 40</code>; <code>cardPages</code> derived store chunks <code>visibleItems</code> into groups of 40. Each chunk renders its own scaled card element.</li>
+              <li><strong>Export loop</strong>: iterates over <code>cardEls</code>; 200 ms pause between desktop downloads; numbered suffix (<em>_1</em>, <em>_2</em>, …) appended when more than one card.</li>
+            </ul>
+            <h3>Export Artifact Fixes</h3>
+            <ul>
+              <li>Every card element, grid, cell, and label carries explicit <code>border: 0; outline: none; background: transparent</code> on its own CSS rule (no wildcard) — prevents dom-to-image-more from emitting black frames.</li>
+              <li><code>overflow: hidden</code> removed from <code>.rm-cell</code> and <code>.rm-badge</code> — a known cause of white-box artifacts in dom-to-image-more.</li>
+            </ul>
+            <h3>i18n &amp; Cleanup</h3>
+            <ul>
+              <li>Added: <code>ui.reference-card</code>, <code>ui.form-show</code>, <code>ui.form-weapon-runemarks</code>, <code>ui.form-circle-type</code> in both locales.</li>
+              <li>Pluralised: <code>ui.deployment-group</code> "Deployment" → "Deployments" (DE: "Aufstellungen"); <code>ui.treasure-group</code> "Treasure" → "Treasures" (DE: "Schätze").</li>
+              <li>Removed unused keys from a scrapped group-header phase: <code>ui.form-core</code>, <code>ui.form-factions</code>, <code>ui.form-bladeborn</code>, <code>ui.form-grand-alliances</code>.</li>
+              <li>Removed unused <code>miscRunemarks</code> import from <code>reference/+page.svelte</code>.</li>
+            </ul>
+          </section>
+
+          <section id="march-31-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why fill the full card height with the grid rather than stacking from the top?</p>
+              <p class="decision-a"><code>grid-template-rows: repeat(8, 1fr)</code> with <code>height: 100%</code> distributes rows evenly across the card, using every square centimetre of parchment. A top-anchored grid would leave empty space at the bottom for most selection sets.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why a checkbox for "Circle type" rather than a select with Filled/Outlined options?</p>
+              <p class="decision-a">The Text Card editor uses a checkbox for its "Card Design" toggle. Matching that pattern keeps the two sidebars consistent — a checkbox is faster for a binary choice, and the maroon circle already has a clear on/off state.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why fix icon size at 72 % of cell width in both designs?</p>
+              <p class="decision-a">Initially the raw SVG filled 100 % of the cell while the badged version was 72 % — switching designs caused a visible jump. Matching both to 72 % and centering the cell with flexbox eliminates the jump. The badge uses <code>position: absolute</code> and doesn't participate in flex layout, so centering applies cleanly to both designs.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why merge bladeborn into their alliance category rather than keeping a separate group?</p>
+              <p class="decision-a">Separate groups added UI noise — users think of bladeborn warbands as belonging to a faction, not a standalone category. Merging them inline (alliance icon → factions → subfactions per faction) makes the hierarchy readable without extra headers, and one checkbox controls the whole alliance block.</p>
+            </div>
+          </section>
+
+          <section id="march-31-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead><tr><th>File</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/routes/reference/+page.svelte</code></td><td>New — Reference Card page with sidebar checkboxes, 5×8 grid, circle type design, multi-card export</td></tr>
+                <tr><td><code>src/routes/+page.svelte</code></td><td>Added Reference Card button (zinc, below Card Back)</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code></td><td>Added reference card keys; pluralised deployment-group/treasure-group; removed 4 unused form-* keys</td></tr>
+                <tr><td><code>src/lib/i18n/locales/de.json</code></td><td>Same as en.json</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-march-31 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-29 — Deployment Zones & Polish
@@ -8638,6 +8748,7 @@
 
     <script>
       const sessions = [
+        "march-31",
         "march-29",
         "march-28",
         "march-27",
