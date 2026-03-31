@@ -34,11 +34,12 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 
 ### Routes
 
-- `/` — landing page, links to all four card editors
+- `/` — landing page, links to all five card editors
 - `/fighter` — fighter card editor
 - `/text` — text/ability card editor
 - `/deployment` — deployment card editor
 - `/card-back` — card back editor
+- `/reference` — reference card editor (runemark library grid, exportable)
 
 ### Key files
 
