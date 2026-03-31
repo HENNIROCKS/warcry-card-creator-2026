@@ -256,15 +256,16 @@
 			{/if}
 		{/if}
 
-		<!-- Matched Play runemark — below Orientation on the right, 20px inset matching caption spacing -->
+		<!-- Matched Play runemark — below Orientation (or in Orientation's spot if it's hidden) -->
 		{#if showMatchedPlay}
 			{@const rmFill = printerFriendly ? '#000' : '#5a0a14'}
+			{@const mpY = showOrientation ? 60 : 20}
 			{#if showRunemarks}
-				<svg x="863" y="60" width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
+				<svg x="863" y={mpY} width="32" height="32" viewBox="0 0 300 300" fill={rmFill} overflow="visible">
 					{@html matchedPlayInner}
 				</svg>
 			{:else}
-				<text x="879" y="76" text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="14" fill={rmFill}>MP</text>
+				<text x="879" y={mpY + 16} text-anchor="middle" dominant-baseline="central" font-family="'Germania One', serif" font-size="14" fill={rmFill}>MP</text>
 			{/if}
 		{/if}
 
