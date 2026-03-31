@@ -1,5 +1,5 @@
 {
-  "name": "Warcry Card Creator 2026",
+  "name": "WCC26",
   "short_name": "WCC26",
   "icons": [
     {
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#5a0a14",
-  "background_color": "#5a0a14",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone"
 }
