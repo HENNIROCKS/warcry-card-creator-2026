@@ -14,6 +14,7 @@ assignees: ''
 - [ ] Text card editor
 - [ ] Deployment card editor
 - [ ] Card back editor
+- [ ] Reference card editor
 - [ ] Both / landing page
 
 **Which feature area?**
