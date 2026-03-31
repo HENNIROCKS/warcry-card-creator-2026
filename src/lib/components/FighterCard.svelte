@@ -156,12 +156,11 @@
 <style>
 	/* 2× scale: 1mm = 7.559px (2 × 96/25.4) */
 
-	/* dom-to-image-more fix: Tailwind preflight sets border-style:solid on *,
-	   but drops border-width:0 during serialization → every element gets a
-	   UA-default border in the SVG foreignObject context. Reset explicitly. */
+	/* dom-to-image-more fix: serialization preserves border-style:solid (from
+	   Tailwind preflight) but drops border-width:0, so UA-default width kicks in.
+	   border:0 sets style:none too, which survives. Mirrors TextCard approach. */
 	.card * {
-		border-width: 0;
-		border-style: solid;
+		border: 0;
 		outline: none;
 		background: transparent;
 	}
@@ -185,12 +184,17 @@
 		min-height: 120px;
 		margin: 5px 5px 0;
 		position: relative;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.image-inner {
 		position: absolute;
 		inset: 0;
 		background: #2a1810;
+		border: 0;
+		outline: none;
 		mask-size: 100% 100%;
 		mask-repeat: no-repeat;
 		-webkit-mask-size: 100% 100%;
@@ -202,6 +206,9 @@
 		height: 100%;
 		object-fit: cover;
 		display: block;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.model-placeholder {
@@ -213,6 +220,9 @@
 		color: #5a4030;
 		font-family: system-ui, sans-serif;
 		font-size: 28px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.tags-row {
@@ -229,6 +239,8 @@
 		line-height: 1.5;
 		color: #FAF6F3;
 		background: rgba(0, 0, 0, 0.35);
+		border: 0;
+		outline: none;
 	}
 
 	.image-caption {
@@ -241,6 +253,9 @@
 		font-size: 13px;
 		color: #000;
 		opacity: 0.5;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.is-printer-friendly .image-caption {
@@ -253,6 +268,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.runemarks-left { left: 38px; }
@@ -265,6 +283,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
 		mask-image: var(--rm-mask);
 		-webkit-mask-image: var(--rm-mask);
 		mask-size: 100% 100%;
@@ -280,6 +300,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
 		mask-image: var(--rm-mask);
 		-webkit-mask-image: var(--rm-mask);
 		mask-size: 100% 100%;
@@ -291,11 +313,16 @@
 	.runemark-badge :global(svg),
 	.runemark-badge :global(svg *) {
 		fill: #FAF6F3;
+		border: 0;
+		outline: none;
 	}
 
 	.runemark-badge :global(svg) {
 		width: 56px;
 		height: 56px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	/* ── PARCHMENT SECTION ─────────────────────── */
@@ -306,10 +333,15 @@
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.chevron {
 		display: inline;
+		border: 0;
+		outline: none;
 	}
 
 	.fighter-name {
@@ -321,6 +353,9 @@
 		line-height: 1.1;
 		margin: 0;
 		text-align: center;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.fighter-subtitle {
@@ -334,6 +369,9 @@
 		margin: -12px 0 0;
 		white-space: normal;
 		overflow-wrap: break-word;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	/* ── SHARED BOX STYLE ──────────────────────── */
@@ -357,6 +395,8 @@
 		flex-direction: column;
 		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
 		background: rgba(255, 255, 255, 0.25);
+		border: 0;
+		outline: none;
 	}
 
 	/* ── CHARACTERISTICS BOX ───────────────────── */
@@ -365,6 +405,8 @@
 	.stats-values {
 		display: flex;
 		height: 55px;
+		border: 0;
+		outline: none;
 	}
 
 	.stats-values {
@@ -383,6 +425,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.label-col {
@@ -398,6 +443,8 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		border: 0;
+		outline: none;
 	}
 
 	.stat-val {
@@ -413,6 +460,9 @@
 		justify-content: center;
 		white-space: nowrap;
 		padding: 0 10px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.stat-val-narrow {
@@ -430,6 +480,8 @@
 		border-radius: 6.5px 6.5px 0 0;
 		display: flex;
 		height: 55px;
+		border: 0;
+		outline: none;
 	}
 
 	.wcol {
@@ -438,12 +490,18 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-row {
 		display: flex;
 		align-items: center;
 		height: 55px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-row:nth-child(odd) {
@@ -460,6 +518,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 0;
+		outline: none;
 		padding: 4px;
 	}
 
@@ -469,6 +529,9 @@
 		font-weight: 400;
 		font-size: 18px;
 		text-transform: uppercase;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.header-runemark {
@@ -476,12 +539,18 @@
 		align-items: center;
 		justify-content: center;
 		height: 28px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.header-runemark :global(svg) {
 		height: 28px;
 		width: 28px;
 		fill: #FAF6F3;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-runemark {
@@ -489,12 +558,18 @@
 		align-items: center;
 		justify-content: center;
 		height: 44px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-runemark :global(svg) {
 		height: 44px;
 		width: auto;
 		fill: #000;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-name {
@@ -506,6 +581,9 @@
 		text-align: center;
 		text-transform: uppercase;
 		line-height: 1.2;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-val {
@@ -519,6 +597,9 @@
 		height: 100%;
 		white-space: nowrap;
 		padding: 0 10px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.weapon-val.is-empty {
@@ -530,6 +611,9 @@
 	.damage-row {
 		display: flex;
 		height: 28px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.damage-row:nth-child(even) {
@@ -545,6 +629,9 @@
 		align-items: center;
 		justify-content: center;
 		height: 100%;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.dcol-wide {
@@ -554,6 +641,9 @@
 		font-weight: 400;
 		color: #000;
 		padding: 0 8px;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	.dcol-stat {
@@ -562,6 +652,9 @@
 		font-size: 17px;
 		font-weight: 400;
 		color: #000;
+		border: 0;
+		outline: none;
+		background: transparent;
 	}
 
 	/* ── PRINTER-FRIENDLY OVERRIDES ────────────── */
