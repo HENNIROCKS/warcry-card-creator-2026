@@ -12,6 +12,7 @@
 
 	let cardEl: HTMLElement;
 	let rmKeys = $state(['', '']);
+	let formKey = $state(0);
 	let exporting = $state(false);
 	let exportedImageUrl = $state<string | null>(null);
 	let printerFriendly = $state(false);
@@ -154,6 +155,7 @@
 					);
 				}
 				data = parsed;
+				formKey++;
 			} catch { /* ignore malformed JSON */ }
 		};
 		reader.readAsText(file);
@@ -224,7 +226,9 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto p-5">
-			<TextForm {data} bind:rmKeys />
+			{#key formKey}
+				<TextForm {data} bind:rmKeys />
+			{/key}
 		</div>
 	</aside>
 
