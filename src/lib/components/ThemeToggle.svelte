@@ -36,7 +36,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		background: none;
+		background: var(--ui-surface);
 		border: 1px solid var(--ui-border);
 		border-radius: 20px;
 		padding: 6px 14px 6px 10px;

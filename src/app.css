@@ -18,6 +18,7 @@
 	--ui-sel-border:    rgba(127, 29, 29, 0.4);
 	--ui-sel-text:      #fca5a5;
 	--ui-sel-row:       rgba(127, 29, 29, 0.25);
+	--landing-overlay:  rgba(24, 24, 27, 0.88);
 }
 
 [data-theme="light"] {
@@ -35,6 +36,7 @@
 	--ui-sel-border:    rgba(127, 29, 29, 0.3);
 	--ui-sel-text:      #7f1d1d;
 	--ui-sel-row:       rgba(127, 29, 29, 0.12);
+	--landing-overlay:  rgba(228, 221, 209, 0.88);
 }
 
 /* ── Tailwind class overrides for light theme ─────────────────────────────── */
