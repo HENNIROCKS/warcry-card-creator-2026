@@ -63,38 +63,51 @@
 		{/if}
 	</section>
 
-	<!-- Card Elements -->
+	<!-- Card Elements / Card Design -->
 	<section>
-		<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
-		<div class="flex flex-col gap-3">
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-named-fighter')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-monster-damage-table')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" checked={data.freeHierarchy} class="h-4 w-4 rounded accent-red-800"
-					onchange={(e) => {
-						data.freeHierarchy = (e.target as HTMLInputElement).checked;
-						if (!data.freeHierarchy) { data.grandAlliance = ''; data.faction = ''; data.bladeborn = ''; }
-					}} />
-				<span class="text-zinc-200">{t('ui.form-free-hierarchy')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showSubtitle} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-subtitle')}</span>
-			</label>
-			<label class="flex cursor-pointer items-center gap-3">
-				<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
-				<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
-			</label>
+		<div class="two-col">
+			<div>
+				<p class="field-label mb-2">{t('ui.form-card-elements')}</p>
+				<div class="flex flex-col gap-3">
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.isNamedCharacter} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-named-fighter')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.isMonster} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-monster-damage-table')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showRunemarks} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-runemarks')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" checked={data.freeHierarchy} class="h-4 w-4 rounded accent-red-800"
+							onchange={(e) => {
+								data.freeHierarchy = (e.target as HTMLInputElement).checked;
+								if (!data.freeHierarchy) { data.grandAlliance = ''; data.faction = ''; data.bladeborn = ''; }
+							}} />
+						<span class="text-zinc-200">{t('ui.form-free-hierarchy')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showSubtitle} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-subtitle')}</span>
+					</label>
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.showCaption} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-show-caption')}</span>
+					</label>
+				</div>
+			</div>
+			<div>
+				<p class="field-label mb-2">{t('ui.form-card-design')}</p>
+				<div class="flex flex-col gap-3">
+					<label class="flex cursor-pointer items-center gap-3">
+						<input type="checkbox" bind:checked={data.classicFormat} class="h-4 w-4 rounded accent-red-800" />
+						<span class="text-zinc-200">{t('ui.form-classic-format')}</span>
+					</label>
+				</div>
+			</div>
 		</div>
 	</section>
 

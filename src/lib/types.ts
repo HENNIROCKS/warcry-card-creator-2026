@@ -42,6 +42,7 @@ export interface FighterCardData {
 	freeHierarchy: boolean;
 	showSubtitle: boolean;
 	showCaption: boolean;
+	classicFormat: boolean;
 	damageBrackets: DamageBracket[]; // typically 5 rows
 }
 
