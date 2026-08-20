@@ -73,6 +73,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Torn paper edge divider (SVG mask)
 - Bottom ~45%: parchment area — fighter name, characteristics table, weapons table
 - If `isMonster: true`: damage bracket table appended below weapons
+- `classicFormat: boolean` — landscape layout (1150×750) modeled on Warcry's 2019 card design, as an alternative to the portrait layout above: name/characteristics/weapons/damage-table stacked in a left column (fixed 576px, sized to fit the unmodified 500px stats/weapons row plus padding), full-height model image with runemarks on the right. Faction hierarchy (alliance/faction/bladeborn) sits on the image's right edge, fighter runemarks on its left — swapped from portrait. The characteristics/weapons/damage-table group is bottom-anchored via `margin-top: auto` on `.stats-box`; the damage table's slot is a fixed 168px height regardless of `isMonster`, so the group's position never shifts. Tags row and caption (when runemarks are hidden) stack at the bottom of the image instead of spanning the parchment. Rendered as a fully separate markup branch in `FighterCard.svelte` (not a CSS reflow of the portrait tree) — keep both branches in sync when adding a field. `routes/fighter/+page.svelte` mirrors the layout's `576`/`5` magic numbers for the mobile touch-drag overlay; comments cross-reference both files.
 
 **Text card** (portrait, same ratio):
 
