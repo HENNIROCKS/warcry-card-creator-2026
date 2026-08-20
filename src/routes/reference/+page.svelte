@@ -4,7 +4,9 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import {
 		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
 		fighterRunemarks, hierarchy, treasureRunemarks,
@@ -84,8 +86,8 @@
 	const isMobile = $derived(viewportWidth < 1024);
 	const cardScale = $derived(
 		isMobile
-			? Math.min(1, (viewportWidth - 32) / 574)
-			: Math.min(1, (viewportHeight - 64) / 915)
+			? Math.min(1, (viewportWidth - 32) / cardSize.portrait.w)
+			: Math.min(1, (viewportHeight - 64) / cardSize.portrait.h)
 	);
 
 	const visibleGroups = $derived(
@@ -138,7 +140,7 @@
 			if (isRealMobile) {
 				const { domToPng } = await import('modern-screenshot');
 				for (let i = 0; i < cardEls.length; i++) {
-					const dataUrl = await domToPng(cardEls[i], { width: 574, height: 915, scale: 2 });
+					const dataUrl = await domToPng(cardEls[i], { width: cardSize.portrait.w, height: cardSize.portrait.h, scale: EXPORT_SCALE });
 					const pageSuffix = multi ? `${suffix}-${i + 1}` : suffix;
 					const res  = await fetch(dataUrl);
 					const blob = await res.blob();
@@ -152,7 +154,7 @@
 			} else {
 				const domtoimage = (await import('dom-to-image-more')).default;
 				for (let i = 0; i < cardEls.length; i++) {
-					const dataUrl = await domtoimage.toPng(cardEls[i], { scale: 2 });
+					const dataUrl = await domtoimage.toPng(cardEls[i], { scale: EXPORT_SCALE });
 					const pageSuffix = multi ? `${suffix}-${i + 1}` : suffix;
 					const a = document.createElement('a');
 					a.href = dataUrl;
@@ -328,6 +330,8 @@
 						>
 							{t('ui.export-printer-friendly')}
 						</button>
+						<hr class="border-zinc-700 my-1">
+						<CardSizeSelect />
 					</div>
 				{/if}
 			</div>
@@ -408,6 +412,8 @@
 						>
 							{t('ui.export-printer-friendly')}
 						</button>
+						<hr class="border-zinc-700 my-1">
+						<CardSizeSelect />
 					</div>
 				{/if}
 			</div>
@@ -415,11 +421,11 @@
 
 		<!-- One scaled card per page -->
 		{#each cardPages as page, i}
-			<div style="width: {574 * cardScale}px; height: {915 * cardScale}px; position: relative; flex-shrink: 0; {i > 0 ? `margin-top: ${16 * cardScale}px;` : ''}">
+			<div style="width: {cardSize.portrait.w * cardScale}px; height: {cardSize.portrait.h * cardScale}px; position: relative; flex-shrink: 0; {i > 0 ? `margin-top: ${16 * cardScale}px;` : ''}">
 				<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
 					<div
 						bind:this={cardEls[i]}
-						style="width:574px;height:915px;overflow:hidden;position:relative;display:block;border:0;outline:none;{printerFriendly ? 'background:#fff;' : 'background:transparent;'}"
+						style="width:{cardSize.portrait.w}px;height:{cardSize.portrait.h}px;overflow:hidden;position:relative;display:block;border:0;outline:none;{printerFriendly ? 'background:#fff;' : 'background:transparent;'}"
 					>
 						<!-- Parchment background -->
 						{#if !printerFriendly}

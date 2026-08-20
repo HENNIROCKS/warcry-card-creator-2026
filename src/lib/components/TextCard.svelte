@@ -6,6 +6,7 @@
 		cardDecksRunemarks, deploymentRunemarks, miscRunemarks,
 		treasureRunemarks, twistsRunemarks,
 	} from '$lib/runemarks/index';
+	import { cardSize } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
@@ -63,7 +64,7 @@
 
 </script>
 
-<div class="card" class:is-printer-friendly={printerFriendly} class:is-banderole={isBanderole} style="--rm-mask: {runemarkMaskUrl}">
+<div class="card" class:is-printer-friendly={printerFriendly} class:is-banderole={isBanderole} style="--card-w: {cardSize.portrait.w}px; --card-h: {cardSize.portrait.h}px; --rm-mask: {runemarkMaskUrl}">
 
 	<!-- IMAGE SECTION -->
 	<div class="image-section">
@@ -201,9 +202,10 @@
 		box-sizing: border-box;
 	}
 
+	/* Dimensions come from the card-size store (bridge/poker) via inline vars. */
 	.card {
-		width: 574px;
-		height: 915px;
+		width: var(--card-w);
+		height: var(--card-h);
 		position: relative;
 		overflow: hidden;
 		display: flex;

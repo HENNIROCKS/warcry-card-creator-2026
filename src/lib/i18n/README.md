@@ -37,6 +37,17 @@ Official localised names exist for most factions in languages where Games Worksh
 
 The `TODO` suffix is not stripped in display — it will appear on screen. It is only a marker for other translators that the string still needs attention.
 
+## Placeholders
+
+Some values carry `{name}` placeholders that the app fills in at runtime. Keep every placeholder from the English source in your translation, spelled exactly the same — a missing one renders as an empty string, and a misspelled one renders as literal text:
+
+```json
+"form-weapon": "Waffe {n}",
+"card-size-info": "{mm} mm · exportiert {px} px"
+```
+
+Their position in the sentence can move freely; only the spelling has to match.
+
 ## Line breaks in card text
 
 Values in the `card` and `weapons` namespaces are rendered directly on the card. Use `|` to insert a line break when a translated string is too long to fit in a column header or weapon name cell:

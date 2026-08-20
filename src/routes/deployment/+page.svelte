@@ -4,8 +4,10 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import DeploymentCard from '$lib/components/DeploymentCard.svelte';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
+	import DeploymentCard from '$lib/components/DeploymentCard.svelte';
 	import type {
 		DeploymentCardData,
 		DeploymentColor,
@@ -22,8 +24,8 @@
 		| { kind: 'zone'; pi: number; zi: number };
 
 	// Card dimensions (landscape)
-	const CARD_W = 915;
-	const CARD_H = 574;
+	const CARD_W = $derived(cardSize.landscape.w);
+	const CARD_H = $derived(cardSize.landscape.h);
 
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
@@ -420,7 +422,7 @@
 			let dataUrl: string;
 			if (isRealMobile) {
 				const { domToPng } = await import('modern-screenshot');
-				dataUrl = await domToPng(cardEl, { width: CARD_W, height: CARD_H, scale: 2 });
+				dataUrl = await domToPng(cardEl, { width: CARD_W, height: CARD_H, scale: EXPORT_SCALE });
 				if (navigator.share && navigator.canShare) {
 					const blob = await (await fetch(dataUrl)).blob();
 					const file = new File([blob], `${makeSlug()}${suffix}.png`, { type: 'image/png' });
@@ -430,7 +432,7 @@
 				}
 			} else {
 				const domtoimage = (await import('dom-to-image-more')).default;
-				dataUrl = await domtoimage.toPng(cardEl, { width: CARD_W, height: CARD_H, scale: 2 });
+				dataUrl = await domtoimage.toPng(cardEl, { width: CARD_W, height: CARD_H, scale: EXPORT_SCALE });
 				const a = document.createElement('a');
 				a.href = dataUrl;
 				a.download = `${makeSlug()}${suffix}.png`;
@@ -647,6 +649,8 @@
 					onmouseleave={() => showDropdown = false}
 				>
 					<button onclick={exportPrinterFriendly} class="w-full text-left px-4 py-2.5 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.export-printer-friendly')}</button>
+					<hr class="border-zinc-700 my-1">
+					<CardSizeSelect layout="landscape" />
 				</div>
 			{/if}
 		</div>

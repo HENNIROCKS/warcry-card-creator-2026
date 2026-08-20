@@ -615,6 +615,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="august-20">
+              <span class="session-date">2026-08-20</span>
+              <span class="session-title">Classic Format + Standard Card Sizes</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="march-31">
               <span class="session-date">2026-03-31</span>
               <span class="session-title">Reference Card + Separators, Deployment Polish</span>
@@ -1649,6 +1655,36 @@
                 <tr>
                   <td>
                     <a
+                      href="#august-20-built"
+                      onclick="activateSession('august-20')"
+                      >Card sizes: bridge 57×89mm / poker 63×88mm</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-20-decisions"
+                      onclick="activateSession('august-20')"
+                      >Why portrait varies width but classic varies height</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-20-built"
+                      onclick="activateSession('august-20')"
+                      >Classic Format landscape fighter layout</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
                       href="#march-11-cards"
                       onclick="activateSession('march-11')"
                       >Card types: Fighter vs Ability</a
@@ -1661,7 +1697,7 @@
                     <a
                       href="#march-11-cards"
                       onclick="activateSession('march-11')"
-                      >Card dimensions: 76×121mm → 574×915px at 2× scale</a
+                      >Card dimensions: original 76×121mm → 574×915px sizing</a
                     >
                   </td>
                   <td>Mar 11</td>
@@ -1713,8 +1749,9 @@
                     <a
                       href="#march-15-built"
                       onclick="activateSession('march-15')"
-                      >Ability card: 574×915px, torn-edge image area (no image
-                      upload), runemarks row + activation badge + card label</a
+                      >Ability card: original 574×915px sizing, torn-edge image
+                      area (no image upload), runemarks row + activation badge +
+                      card label</a
                     >
                   </td>
                   <td>Mar 15</td>
@@ -2178,6 +2215,138 @@
           </section>
         </div>
         <!-- /session-index -->
+
+        <!-- ══════════════════════════════════════════
+         2026-08-20 — Classic Format & Standard Card Sizes
+    ══════════════════════════════════════════ -->
+        <div id="session-august-20" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-08-20</span>
+              <span class="badge badge-green">Classic Format landscape layout</span>
+              <span class="badge badge-green">Bridge &amp; poker card sizes</span>
+              <span class="badge badge-green">Card-size store</span>
+            </div>
+            <h1>Classic Format &amp; Standard Playing-Card Sizes</h1>
+            <p>
+              The Fighter Card gained a <strong>Classic Format</strong> option — a landscape
+              layout modelled on Warcry's 2019 card design, with name, characteristics, weapons
+              and damage table stacked in a fixed left column and a full-height model image on
+              the right. It ships as a fully separate markup branch in
+              <code>FighterCard.svelte</code> rather than a CSS reflow, since the runemark sides
+              swap between the two layouts.
+            </p>
+            <p>
+              The rest of the day went to card geometry. All five card types were checked against
+              the standard playing-card sizes and turned out to sit at no recognised proportion at
+              all. They were nudged onto <strong>bridge</strong> (57 × 89 mm), and a second
+              <strong>poker</strong> (63 × 88 mm) option was added behind a shared, persisted
+              store — retiring roughly two dozen hardcoded pixel literals in the process.
+            </p>
+          </div>
+
+          <section id="august-20-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Classic Format (Fighter Card)</h3>
+            <ul>
+              <li><strong>Landscape layout</strong> toggled by <code>classicFormat</code> on <code>FighterCardData</code>: parchment column fixed at 576px (500px stats/weapons row + 2×38px padding), image column takes the remainder.</li>
+              <li><strong>Swapped runemark sides</strong>: faction hierarchy on the image's right edge, fighter runemarks on its left — the opposite of portrait. This is why the markup is a separate branch rather than a reflow.</li>
+              <li><strong>Bottom-anchoring</strong>: <code>margin-top: auto</code> on <code>.stats-box</code> plus a fixed 168px <code>.damage-slot</code> wrapper, so the characteristics/weapons group sits at the same height whether or not the fighter is a monster.</li>
+              <li><strong>Mobile touch-drag</strong>: <code>routes/fighter/+page.svelte</code> mirrors the layout's <code>576</code>/<code>5</code> magic numbers for the drag overlay; comments cross-reference both files.</li>
+            </ul>
+            <h3>Card Size Store</h3>
+            <ul>
+              <li><strong><code>src/lib/card-size.svelte.ts</code></strong> — dimension table for both sizes plus a <code>localStorage</code>-persisted store (key <code>warcry-card-size</code>). Exports <code>cardSize</code>, <code>CARD_SIZES</code>, <code>EXPORT_SCALE</code>.</li>
+              <li><strong>Restored in the constructor</strong>, not from <code>onMount</code>, so the first client render already uses the saved size instead of resizing after hydration.</li>
+              <li><strong>Global, not per-editor</strong>: someone printing a deck needs the fighter, text and back cards at one size; a per-editor setting would invite mismatched decks.</li>
+            </ul>
+            <h3>Geometry</h3>
+            <ul>
+              <li><strong>Portrait</strong> (fighter, text, card back, reference): 574×915 → <strong>588×915</strong> at bridge, <strong>654×915</strong> at poker. Height is held and width varies, because the parchment column is vertically tight.</li>
+              <li><strong>Classic</strong>: 1150×750 → <strong>1167×750</strong> at bridge, <strong>1167×834</strong> at poker. Width is held and height varies, because the parchment column is pinned at 576px.</li>
+              <li><strong>Deployment</strong>: 915×574 → <strong>915×588</strong> / <strong>915×654</strong>.</li>
+              <li><strong>CSS custom properties</strong>: cards set <code>--card-w</code> / <code>--card-h</code> inline from the store and their CSS reads <code>width: var(--card-w)</code>. Route files read the store for export dimensions and the preview <code>cardScale</code> divisor.</li>
+            </ul>
+            <h3>Deployment Card — Derived Centring</h3>
+            <ul>
+              <li>The battlefield rectangle now derives its vertical offset from the card height: <code>BF_T = round((CARD_H − BF_H) / 2)</code>, <code>BF_B = BF_T + BF_H</code>, <code>CNR_T/B = BF_T/B ∓ CNR_GAP_Y</code>.</li>
+              <li>All 99 snap positions derive from those constants via <code>posToXY</code>, so the whole grid re-centres for free. Saved JSON stores position IDs rather than coordinates — existing layouts still load.</li>
+              <li>Verified in a production preview: bridge centres the battlefield at <code>y=67</code>, poker at <code>y=100</code>, both exactly symmetric.</li>
+            </ul>
+            <h3>Column Widths</h3>
+            <ul>
+              <li><code>.stat-col</code> / <code>.stat-val</code> / <code>.wcol</code> changed from <code>flex: 0 0 100px</code> to <code>flex: 1 1 0</code> — the rows previously left dead space at the right edge once the box grew past 500px.</li>
+              <li><code>.dcol-stat</code> changed to <code>flex: 0 0 20%</code> so the damage table's Move/Damage columns stay aligned with the weapons columns above them at any card width.</li>
+            </ul>
+            <h3>UI &amp; i18n</h3>
+            <ul>
+              <li><strong><code>CardSizeSelect.svelte</code></strong> — two-button picker plus a live info line (<em>"57 × 89 mm · exports 1176 × 1830 px"</em>), sitting at the bottom of every editor's export dropdown.</li>
+              <li>Takes a <code>layout</code> prop (<code>portrait</code> / <code>classic</code> / <code>landscape</code>) so the quoted pixel size matches what that editor actually exports.</li>
+              <li>Four keys added to both locales: <code>ui.card-size</code>, <code>ui.card-size-bridge</code>, <code>ui.card-size-poker</code>, <code>ui.card-size-info</code>.</li>
+            </ul>
+          </section>
+
+          <section id="august-20-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why bridge as the default rather than poker, when poker is the more supported size?</p>
+              <p class="decision-a">The existing cards were already at 1:1.594, which is within 2.4 % of bridge (1:1.5556) and 14 % off poker (1:1.400). Bridge was a nudge the existing CSS absorbs; poker would have been a relayout. Poker still ships as the second option for anyone printing through a service that defaults to it.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why widen the cards rather than shorten them?</p>
+              <p class="decision-a">Both reach the same ratio, but shortening 915 → 893 takes 22px away from an already-tight parchment column, while widening 574 → 588 hands it 14px of slack. Growth is the direction that cannot break a layout.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why does portrait vary its width while classic varies its height?</p>
+              <p class="decision-a">Each layout has slack on a different axis. Portrait's parchment content is vertically tight, so height is held. Classic's parchment column is pinned at 576px horizontally, and shrinking the card's width would squeeze the model image by 20 % — so width is held and the extra goes into vertical slack instead.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why CSS custom properties instead of a second set of size constants?</p>
+              <p class="decision-a">The dimensions were hardcoded in roughly two dozen places across eight files. Adding a second size by duplicating literals would have doubled that. Routing everything through <code>--card-w</code>/<code>--card-h</code> plus the store means a third size is one table entry.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why hand-written millimetre labels instead of rounding the exact values?</p>
+              <p class="decision-a"><code>Math.round(63.5)</code> gives 64, so poker displayed as "64 × 89 mm" while every print service quotes it as 63 × 88. In a label whose whole job is to be informative, matching the trade's numbers beats matching the arithmetic.</p>
+            </div>
+          </section>
+
+          <section id="august-20-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead>
+                <tr><th>Status</th><th>Item</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>PDF export — embed the existing PNG at exact mm page size, so print shops and browsers stop rescaling cards. The highest-value remaining export feature.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>Multi-up print sheet (same card 2×/4× on A4), built on the same PDF machinery.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>Bleed and crop marks for print-on-demand services (poker with bleed = 69 × 94 mm).</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>Classic format at poker (1167 × 834) has not been checked visually — the extra height lands as slack in the parchment column.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>Deployment card is genuinely SVG internally, so a real vector export is cheap there — unlike the other four, where <code>dom-to-image</code>'s SVG output is a <code>foreignObject</code> wrapper that breaks outside browsers.</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="august-20-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead>
+                <tr><th>File</th><th>Change</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>src/lib/card-size.svelte.ts</code></td><td>New — dimension table + persisted store</td></tr>
+                <tr><td><code>src/lib/components/CardSizeSelect.svelte</code></td><td>New — size picker + live info line</td></tr>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Classic Format branch; <code>--card-w/h</code> vars; fractional stat/weapon/damage column widths</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td><code>--card-w/h</code> vars from the store</td></tr>
+                <tr><td><code>src/lib/components/DeploymentCard.svelte</code></td><td>Derived battlefield centring; dynamic SVG viewBox; <code>CNR_GAP_Y</code></td></tr>
+                <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Classic Format toggle + touch-drag overlay; store-driven dimensions</td></tr>
+                <tr><td><code>src/routes/{text,deployment,card-back,reference}/+page.svelte</code></td><td>Store-driven dimensions; <code>CardSizeSelect</code> in the export dropdown; import order normalised</td></tr>
+                <tr><td><code>src/lib/i18n/locales/{en,de}.json</code></td><td>Four <code>ui.card-size*</code> keys</td></tr>
+                <tr><td><code>README.md</code> / <code>CLAUDE.md</code></td><td>Classic Format + Card size sections</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+        <!-- /session-august-20 -->
 
         <!-- ══════════════════════════════════════════
          2026-03-31 — Reference Card
@@ -8812,6 +8981,7 @@
 
     <script>
       const sessions = [
+        "august-20",
         "march-31",
         "march-29",
         "march-28",
