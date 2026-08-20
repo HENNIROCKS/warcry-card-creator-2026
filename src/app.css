@@ -67,6 +67,21 @@
 [data-theme="light"] .bg-red-900.text-white,
 [data-theme="light"] .bg-red-800.text-white { color: #ffffff; }
 
+/* ── Form two-column layout (Fighter/Text form "Card Elements" + "Card Design") ── */
+
+.two-col {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+@media (max-width: 1023px) {
+	.two-col {
+		grid-template-columns: 1fr;
+		row-gap: 28px;
+	}
+}
+
 /* ── Work in progress watermark ──────────────────────────────────────────── */
 
 .wip-watermark {

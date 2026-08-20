@@ -27,6 +27,143 @@
 	}
 </script>
 
+{#if data.classicFormat}
+<!-- Classic (landscape) layout: markup is duplicated rather than reflowing the
+     portrait tree below, since the two diverge in more than CSS position —
+     the runemark hierarchy/fighter sides swap. Keep both branches in sync
+     when adding a field. -->
+<div class="card classic-format" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--rm-mask: {runemarkMaskUrl}">
+	<!-- PARCHMENT SECTION -->
+	<div class="parchment">
+		<h1 class="fighter-name">
+			{#if data.isNamedCharacter}<span class="chevron">«</span>{/if}
+			{#each (data.name || t('card.fighter-name-placeholder')).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}
+			{#if data.isNamedCharacter}<span class="chevron">»</span>{/if}
+		</h1>
+		{#if data.showSubtitle && data.subtitle}
+			<p class="fighter-subtitle">{data.subtitle}</p>
+		{/if}
+
+		<!-- Characteristics box -->
+		<div class="stats-box">
+			<div class="stats-header">
+				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-base-size').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
+				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-points').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+			</div>
+			<div class="stats-values">
+				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
+				<div class="stat-val" class:stat-val-empty={!data.points} use:fittext={data.points}>{data.points || '—'}</div>
+				<div class="stat-val" class:stat-val-empty={!data.isMonster && !data.move} use:fittext={data.move}>{data.isMonster ? '*' : (data.move || '—')}</div>
+				<div class="stat-val" class:stat-val-empty={!data.toughness} use:fittext={data.toughness}>{data.toughness || '—'}</div>
+				<div class="stat-val" class:stat-val-empty={!data.wounds} use:fittext={data.wounds}>{data.wounds || '—'}</div>
+			</div>
+		</div>
+
+		<!-- Weapons box -->
+		<div class="weapons-box">
+			<div class="weapons-header">
+				<div class="wcol label-col"></div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+			</div>
+			{#each data.weapons as weapon}
+				<div class="weapon-row">
+					<div class="wcol">
+						<div class="weapon-art-placeholder">
+							{#if data.showRunemarks && weapon.name}
+								<span class="weapon-runemark">{@html weaponRunemarks[weapon.name]}</span>
+							{:else}
+								<span class="weapon-name" use:fittext={weapon.name}>{#if weapon.name}{#each t('weapons.' + weapon.name).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}{:else}—{/if}</span>
+							{/if}
+						</div>
+					</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.range} use:fittext={weapon.range}>{weapon.range || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.attacks} use:fittext={weapon.attacks}>{weapon.attacks || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={!weapon.strength} use:fittext={weapon.strength}>{weapon.strength || "—"}</div>
+					<div class="wcol weapon-val" class:is-empty={(!weapon.damage && !data.isMonster) || (data.isMonster && !weapon.range && !weapon.attacks && !weapon.strength)} use:fittext={weapon.damage}>{data.isMonster ? (!weapon.range && !weapon.attacks && !weapon.strength ? '—' : '*/*') : (weapon.damage || '—')}</div>
+				</div>
+			{/each}
+		</div>
+
+		<!-- Monster damage brackets: slot is always reserved (empty when not a
+		     monster) so the characteristics/weapons boxes above stay fixed. -->
+		<div class="damage-slot">
+			{#if data.isMonster}
+				<div class="damage-box">
+					<div class="damage-row">
+						<div class="dcol dcol-wide">{t('card.col-damage-points-allocated')}</div>
+						<div class="dcol dcol-stat">{t('card.col-move')}</div>
+						<div class="dcol dcol-stat">{t('card.col-damage')}</div>
+					</div>
+					{#each data.damageBrackets.slice(0, 5) as bracket, i}
+						<div class="damage-row">
+							<div class="dcol dcol-wide">{bracket.damageRange}</div>
+							<div class="dcol dcol-stat">{bracket.move}</div>
+							<div class="dcol dcol-stat">{bracket.damage}</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	</div>
+
+	<!-- IMAGE SECTION -->
+	<div class="image-section">
+		<div class="image-inner" style="mask-image: {maskUrl}; -webkit-mask-image: {maskUrl};">
+			{#if data.modelImage}
+				<img class="model-img" src={data.modelImage} alt="Fighter" style="object-position: {data.imageOffsetX}% {data.imageOffsetY}%; transform: scale({data.imageZoom}); transform-origin: {data.imageOffsetX}% {data.imageOffsetY}%" />
+			{:else}
+				<div class="model-placeholder">
+					{#if !exporting && !printerFriendly}<span>{t('card.upload-model-image')}</span>{/if}
+				</div>
+			{/if}
+		</div>
+
+		<!-- RUNEMARKS: fighter runemarks stay left, faction hierarchy moves to the right edge -->
+		{#if data.showRunemarks}
+			<div class="runemarks runemarks-left">
+				{#each data.rightRunemarks as rm}
+					<div class="runemark-border"><div class="runemark-badge">{@html rm.svg}</div></div>
+				{/each}
+			</div>
+
+			<div class="runemarks runemarks-right">
+				{#if data.grandAlliance}
+					<div class="runemark-border"><div class="runemark-badge">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
+				{/if}
+				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
+					<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
+				{/if}
+				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
+					<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
+				{/if}
+			</div>
+		{/if}
+
+		<div class="image-bottom-classic">
+			{#if !data.showRunemarks}
+				{@const tags = [
+					data.grandAlliance && t(`alliances.${data.grandAlliance}`),
+					(data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)) && t(`factions.${data.faction}`),
+					(data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)) && t(`subfactions.${data.bladeborn}`),
+					...data.rightRunemarks.map(rm => rm.label),
+				].filter((x): x is string => !!x)}
+				{#if tags.length > 0}
+					<div class="tags-row tags-row-classic">{tags.join(' • ')}</div>
+				{/if}
+			{/if}
+			{#if data.showCaption && data.imageCaption}
+				<div class="image-caption image-caption-classic">{data.imageCaption}</div>
+			{/if}
+		</div>
+	</div>
+</div>
+{:else}
 <div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--rm-mask: {runemarkMaskUrl}">
 	<!-- IMAGE SECTION -->
 	<div class="image-section">
@@ -152,6 +289,7 @@
 		<div class="image-caption">{data.imageCaption}</div>
 	{/if}
 </div>
+{/if}
 
 <style>
 	/* 2× scale: 1mm = 7.559px (2 × 96/25.4) */
@@ -716,5 +854,76 @@
 	.is-printer-friendly .damage-row:nth-child(even),
 	.is-printer-friendly .stats-values {
 		background: transparent;
+	}
+
+	/* ── CLASSIC FORMAT (landscape) ────────────── */
+	/* 1150×750 keeps the reference card's aspect ratio while sizing the
+	   parchment column to fit the unmodified stats/weapons row (500px) plus
+	   its 2×38px padding = 576px; the image column takes the remainder.
+	   576px and the image-section's 5px right margin are also depended on by
+	   the mobile touch-drag overlay in routes/fighter/+page.svelte
+	   (imageAreaLeft/imageAreaWidth) — keep both in sync. */
+
+	.card.classic-format {
+		width: 1150px;
+		height: 750px;
+		flex-direction: row;
+	}
+
+	.card.classic-format .parchment {
+		flex: 0 0 576px;
+		width: 576px;
+		height: 100%;
+	}
+
+	/* Pushes the stats/weapons/damage-slot group to the column's bottom edge,
+	   flush under the name/subtitle. The damage-slot below is a fixed height
+	   regardless of isMonster, so this group sits at the same position either
+	   way. */
+	.card.classic-format .stats-box {
+		margin-top: auto;
+	}
+
+	/* Height matches .damage-box's natural content: 1 header + 5 bracket rows
+	   at 28px each = 168px. */
+	.card.classic-format .damage-slot {
+		height: 168px;
+		flex-shrink: 0;
+	}
+
+	.card.classic-format .image-section {
+		flex: 1 1 auto;
+		height: 100%;
+		margin: 5px 5px 5px 0;
+	}
+
+	.image-bottom-classic {
+		position: absolute;
+		bottom: 36px;
+		left: 0;
+		right: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		border: 0;
+		outline: none;
+		background: transparent;
+	}
+
+	.tags-row-classic {
+		position: static;
+		width: 100%;
+	}
+
+	.image-caption-classic {
+		position: static;
+		width: max-content;
+		max-width: calc(100% - 40px);
+		color: #000;
+		opacity: 1;
+		background: #fff;
+		padding: 10px;
+		border-radius: 999px;
 	}
 </style>

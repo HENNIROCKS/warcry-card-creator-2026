@@ -396,19 +396,6 @@
 </div>
 
 <style>
-	.two-col {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-	}
-
-	@media (max-width: 1023px) {
-		.two-col {
-			grid-template-columns: 1fr;
-			row-gap: 28px;
-		}
-	}
-
 	.field-label {
 		display: block;
 		font-size: 0.7rem;

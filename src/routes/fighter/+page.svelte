@@ -32,15 +32,6 @@
 		const id = setTimeout(() => document.addEventListener('click', close), 0);
 		return () => { clearTimeout(id); document.removeEventListener('click', close); };
 	});
-	const cardScale = $derived(
-		isMobile
-			? Math.min(1, (viewportWidth - 32) / 574)
-			: Math.min(1, (viewportHeight - 64) / 915)
-	);
-
-	// Image area is ~55% of card height (503px at 915px card)
-	const imageAreaHeight = 503;
-
 	interface TouchState {
 		mode: 'idle' | 'drag' | 'pinch';
 		startX: number;
@@ -70,7 +61,7 @@
 		if (touchState.mode === 'drag' && e.touches.length === 1) {
 			const dx = (e.touches[0].clientX - touchState.startX) / cardScale;
 			const dy = (e.touches[0].clientY - touchState.startY) / cardScale;
-			data.imageOffsetX = Math.max(0, Math.min(100, touchState.startOffsetX - dx * (50 / 574)));
+			data.imageOffsetX = Math.max(0, Math.min(100, touchState.startOffsetX - dx * (50 / imageAreaWidth)));
 			data.imageOffsetY = Math.max(0, Math.min(100, touchState.startOffsetY - dy * (50 / imageAreaHeight)));
 		} else if (touchState.mode === 'pinch' && e.touches.length === 2) {
 			const newDist = getTouchDist(e.touches);
@@ -113,6 +104,7 @@
 		freeHierarchy: false,
 		showSubtitle: false,
 		showCaption: false,
+		classicFormat: false,
 		damageBrackets: [
 			{ damageRange: '0–3', move: '6', damage: '6/12' },
 			{ damageRange: '4–7', move: '5', damage: '5/10' },
@@ -121,6 +113,24 @@
 			{ damageRange: '16+', move: '2', damage: '2/4' }
 		]
 	});
+
+	const cardWidth = $derived(data.classicFormat ? 1150 : 574);
+	const cardHeight = $derived(data.classicFormat ? 750 : 915);
+
+	const cardScale = $derived(
+		isMobile
+			? Math.min(1, (viewportWidth - 32) / cardWidth)
+			: Math.min(1, (viewportHeight - 64) / cardHeight)
+	);
+
+	// Image area is ~55% of card height (503px at 915px card); in classic format
+	// the image fills the full card height instead of a top strip
+	const imageAreaHeight = $derived(data.classicFormat ? cardHeight : 503);
+	// In classic format the image sits in the right column. 576 (parchment column
+	// width) and 5 (image-section right margin) must match FighterCard.svelte's
+	// `.card.classic-format .parchment`/`.image-section` rules — keep both in sync.
+	const imageAreaLeft = $derived(data.classicFormat ? 576 : 0);
+	const imageAreaWidth = $derived(data.classicFormat ? cardWidth - 576 - 5 : cardWidth);
 
 	function makeSlug() {
 		const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, '-');
@@ -140,7 +150,7 @@
 			let dataUrl: string;
 			if (isRealMobile) {
 				const { domToPng } = await import('modern-screenshot');
-				dataUrl = await domToPng(cardEl, { width: 574, height: 915, scale: 2 });
+				dataUrl = await domToPng(cardEl, { width: cardWidth, height: cardHeight, scale: 2 });
 				if (navigator.share && navigator.canShare) {
 					const blob = await (await fetch(dataUrl)).blob();
 					const file = new File([blob], `${makeSlug()}${suffix}.png`, { type: 'image/png' });
@@ -343,8 +353,8 @@
 			{/if}
 		</div>
 
-		<!-- Explicit-dimension wrapper so flex sees the visual size, not the 915px layout box -->
-		<div style="width: {574 * cardScale}px; height: {915 * cardScale}px; position: relative; flex-shrink: 0;">
+		<!-- Explicit-dimension wrapper so flex sees the visual size, not the full-scale layout box -->
+		<div style="width: {cardWidth * cardScale}px; height: {cardHeight * cardScale}px; position: relative; flex-shrink: 0;">
 			<div style="transform: scale({cardScale}); transform-origin: top left; position: absolute; top: 0; left: 0; display: inline-block; line-height: 0;">
 				<div bind:this={cardEl} style="display:inline-block; line-height:0; border:0; outline:none; background:transparent;">
 					<FighterCard {data} {printerFriendly} {exporting} />
@@ -355,7 +365,7 @@
 			{#if adjustMode && data.modelImage}
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div
-					style="position: absolute; top: 0; left: 0; width: 100%; height: {imageAreaHeight * cardScale}px; z-index: 10; touch-action: none; cursor: grab;"
+					style="position: absolute; top: 0; left: {imageAreaLeft * cardScale}px; width: {imageAreaWidth * cardScale}px; height: {imageAreaHeight * cardScale}px; z-index: 10; touch-action: none; cursor: grab;"
 					ontouchstart={handleTouchStart}
 					ontouchmove={handleTouchMove}
 					ontouchend={handleTouchEnd}
