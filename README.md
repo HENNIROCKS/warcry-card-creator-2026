@@ -32,6 +32,17 @@ make build    # production build
 make preview  # preview production build
 ```
 
+Runemark SVGs are optimised with SVGO. After adding one, run `npm run svgo` to
+re-optimise `src/lib/runemarks/svg/`.
+
+Fonts ship as subset woff2. If one is ever replaced, regenerate it with
+[fonttools](https://github.com/fonttools/fonttools):
+
+```bash
+pyftsubset Font.ttf --output-file=static/fonts/Font.woff2 --flavor=woff2 \
+  --unicodes='*' --desubroutinize
+```
+
 ### Testing on a phone or other device
 
 The dev server listens on all network interfaces. Start `make dev` and use the **Network** URL printed by Vite (e.g. `http://192.168.x.x:5173`) from any device on the same Wi-Fi network. If port 5173 is occupied, Vite will increment it — use whichever port appears in the terminal.

@@ -53,6 +53,6 @@ Do not use the Svelte 4 Options API (`export let`, reactive statements with
 
 - Bug fixes with a clear description of the problem and how it's reproduced
 - Visual improvements backed by a screenshot of the card in both preview and export
-- Runemark additions (SVGs in `src/lib/runemarks/svg/` + entry in `src/lib/runemarks/index.ts`)
+- Runemark additions (SVG in `src/lib/runemarks/svg/`, then its **file basename** — not the SVG source — in `src/lib/runemarks/index.ts` or `hierarchy.ts`, then `npm run svgo`)
 - Translations — a single JSON file, no code changes needed (see [`src/lib/i18n/README.md`](src/lib/i18n/README.md))
 - Keep scope small — one concern per PR
