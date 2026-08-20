@@ -12,19 +12,21 @@
 		fighterRunemarks, hierarchy, treasureRunemarks,
 		twistsRunemarks, weaponRunemarks,
 	} from '$lib/runemarks/index';
+	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
+	import Runemark from '$lib/components/Runemark.svelte';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
 
 	// ── Category data ─────────────────────────────────────────────────────────
 
-	type RmItem = { label: string; svg: string };
+	type RmItem = { label: string; file: string };
 
 	type CoreCat = { id: string; labelKey: string; items: RmItem[] };
 	type HierarchyCat = { id: string; labelText: string; items: RmItem[] };
 
 	function fromRecord(rec: Record<string, string>): RmItem[] {
-		return Object.entries(rec).map(([label, svg]) => ({ label, svg }));
+		return Object.entries(rec).map(([label, file]) => ({ label, file }));
 	}
 
 	const coreCats: CoreCat[] = [
@@ -41,10 +43,10 @@
 		id: `factions-${alliance.id}`,
 		labelText: alliance.label,
 		items: [
-			{ label: alliance.label, svg: alliance.svg },
+			{ label: alliance.label, file: alliance.file },
 			...alliance.factions.flatMap(f => [
-				...(f.svg !== null ? [{ label: f.label, svg: f.svg }] : []),
-				...f.subfactions.filter(s => s.svg !== null).map(s => ({ label: s.label, svg: s.svg! })),
+				...(f.file !== null ? [{ label: f.label, file: f.file }] : []),
+				...f.subfactions.filter(s => s.file !== null).map(s => ({ label: s.label, file: s.file! })),
 			]),
 		],
 	}));
@@ -138,6 +140,7 @@
 		try {
 			const multi = cardEls.length > 1;
 			if (isRealMobile) {
+				await runemarksSettled();
 				const { domToPng } = await import('modern-screenshot');
 				for (let i = 0; i < cardEls.length; i++) {
 					const dataUrl = await domToPng(cardEls[i], { width: cardSize.portrait.w, height: cardSize.portrait.h, scale: EXPORT_SCALE });
@@ -152,6 +155,7 @@
 					}
 				}
 			} else {
+				await runemarksSettled();
 				const domtoimage = (await import('dom-to-image-more')).default;
 				for (let i = 0; i < cardEls.length; i++) {
 					const dataUrl = await domtoimage.toPng(cardEls[i], { scale: EXPORT_SCALE });
@@ -451,16 +455,16 @@
 												{#if printerFriendly}
 													<div class="rm-border-pf" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
 														<div class="rm-badge rm-badge-pf" style="mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
-															{@html item.svg}
+															<Runemark file={item.file} />
 														</div>
 													</div>
 												{:else}
 													<div class="rm-badge" style="position:absolute;inset:0;width:100%;height:100%;mask-image:{runemarkMaskUrl};-webkit-mask-image:{runemarkMaskUrl};">
-														{@html item.svg}
+														<Runemark file={item.file} />
 													</div>
 												{/if}
 											{:else}
-												{@html item.svg}
+												<Runemark file={item.file} />
 											{/if}
 										</div>
 										<span style="font-family:'Alegreya';font-size:8.5px;text-transform:uppercase;text-align:center;line-height:1.3;color:#000;word-break:break-word;width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;flex-shrink:0;border:0;outline:none;background:transparent;">

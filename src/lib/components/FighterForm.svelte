@@ -21,7 +21,7 @@
 		data.rightRunemarks = rmKeys
 			.filter(k => k !== '')
 			.sort((a, b) => priority(a) - priority(b))
-			.map(k => ({ id: k, label: t('runemarks.' + k), svg: fighterRunemarks[k] }));
+			.map(k => ({ id: k, label: t('runemarks.' + k), file: fighterRunemarks[k] }));
 	});
 
 	function handleImageUpload(e: Event) {

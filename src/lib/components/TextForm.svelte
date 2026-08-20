@@ -71,11 +71,11 @@
 			.forEach(o => opts.push(o));
 		for (const alliance of hierarchy) {
 			const groupLabel = t('alliances.' + alliance.id);
-			if (alliance.svg) opts.push({ slug: alliance.id, label: groupLabel, group: groupLabel });
+			if (alliance.file) opts.push({ slug: alliance.id, label: groupLabel, group: groupLabel });
 			for (const faction of alliance.factions) {
-				if (faction.svg) opts.push({ slug: faction.id, label: t('factions.' + faction.id), group: groupLabel });
+				if (faction.file) opts.push({ slug: faction.id, label: t('factions.' + faction.id), group: groupLabel });
 				for (const sub of faction.subfactions) {
-					if (sub.svg) opts.push({ slug: sub.id, label: t('subfactions.' + sub.id), group: groupLabel });
+					if (sub.file) opts.push({ slug: sub.id, label: t('subfactions.' + sub.id), group: groupLabel });
 				}
 			}
 		}
@@ -129,7 +129,7 @@
 		data.fighterRunemarks = rmKeys
 			.filter(k => k !== '')
 			.sort((a, b) => (a === 'Hero' || a === 'Monster' ? -1 : 0) - (b === 'Hero' || b === 'Monster' ? -1 : 0))
-			.map(k => ({ id: k, label: t('runemarks.' + k), svg: fighterRunemarks[k] }));
+			.map(k => ({ id: k, label: t('runemarks.' + k), file: fighterRunemarks[k] }));
 	});
 </script>
 

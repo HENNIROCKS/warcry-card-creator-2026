@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
-	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, findFactionSvg, findSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import { weaponRunemarks, characteristicRunemarks, getAllianceFile, getFactionFile, getSubfactionFile, findFactionFile, findSubfactionFile } from '$lib/runemarks/index';
+	import Runemark from './Runemark.svelte';
 	import { cardSize } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
@@ -52,9 +53,9 @@
 			<div class="stats-header">
 				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-base-size').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
 				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-points').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.move} /></span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.toughness} /></span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.wounds} /></span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			<div class="stats-values">
 				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
@@ -69,17 +70,17 @@
 		<div class="weapons-box">
 			<div class="weapons-header">
 				<div class="wcol label-col"></div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.range} /></span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.attacks} /></span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.strength} /></span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.damage} /></span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			{#each data.weapons as weapon}
 				<div class="weapon-row">
 					<div class="wcol">
 						<div class="weapon-art-placeholder">
 							{#if data.showRunemarks && weapon.name}
-								<span class="weapon-runemark">{@html weaponRunemarks[weapon.name]}</span>
+								<span class="weapon-runemark"><Runemark file={weaponRunemarks[weapon.name]} /></span>
 							{:else}
 								<span class="weapon-name" use:fittext={weapon.name}>{#if weapon.name}{#each t('weapons.' + weapon.name).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}{:else}—{/if}</span>
 							{/if}
@@ -131,19 +132,19 @@
 		{#if data.showRunemarks}
 			<div class="runemarks runemarks-left">
 				{#each data.rightRunemarks as rm}
-					<div class="runemark-border"><div class="runemark-badge">{@html rm.svg}</div></div>
+					<div class="runemark-border"><div class="runemark-badge"><Runemark file={rm.file} /></div></div>
 				{/each}
 			</div>
 
 			<div class="runemarks runemarks-right">
 				{#if data.grandAlliance}
-					<div class="runemark-border"><div class="runemark-badge">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
+					<div class="runemark-border"><div class="runemark-badge"><Runemark file={getAllianceFile(data.grandAlliance)} fallback /></div></div>
 				{/if}
 				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
-					<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
+					<div class="runemark-border"><div class="runemark-badge"><Runemark file={data.freeHierarchy ? findFactionFile(data.faction) : getFactionFile(data.grandAlliance, data.faction)} fallback /></div></div>
 				{/if}
 				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
-					<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
+					<div class="runemark-border"><div class="runemark-badge"><Runemark file={data.freeHierarchy ? findSubfactionFile(data.bladeborn) : getSubfactionFile(data.grandAlliance, data.faction, data.bladeborn)} fallback /></div></div>
 				{/if}
 			</div>
 		{/if}
@@ -196,19 +197,19 @@
 	{#if data.showRunemarks}
 		<div class="runemarks runemarks-left">
 			{#if data.grandAlliance}
-				<div class="runemark-border"><div class="runemark-badge">{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge"><Runemark file={getAllianceFile(data.grandAlliance)} fallback /></div></div>
 			{/if}
 			{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
-				<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge"><Runemark file={data.freeHierarchy ? findFactionFile(data.faction) : getFactionFile(data.grandAlliance, data.faction)} fallback /></div></div>
 			{/if}
 			{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
-				<div class="runemark-border"><div class="runemark-badge">{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}</div></div>
+				<div class="runemark-border"><div class="runemark-badge"><Runemark file={data.freeHierarchy ? findSubfactionFile(data.bladeborn) : getSubfactionFile(data.grandAlliance, data.faction, data.bladeborn)} fallback /></div></div>
 			{/if}
 		</div>
 
 		<div class="runemarks runemarks-right">
 			{#each data.rightRunemarks as rm}
-				<div class="runemark-border"><div class="runemark-badge">{@html rm.svg}</div></div>
+				<div class="runemark-border"><div class="runemark-badge"><Runemark file={rm.file} /></div></div>
 			{/each}
 		</div>
 	{/if}
@@ -229,9 +230,9 @@
 			<div class="stats-header">
 				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-base-size').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
 				<div class="stat-col label-col"><span class="header-text">{#each t('card.col-points').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span></div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.move}</span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.toughness}</span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.wounds}</span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.move} /></span>{:else}<span class="header-text">{#each t('card.col-move').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.toughness} /></span>{:else}<span class="header-text">{#each t('card.col-toughness').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="stat-col label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.wounds} /></span>{:else}<span class="header-text">{#each t('card.col-wounds').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			<div class="stats-values">
 				<div class="stat-val" class:stat-val-narrow={data.baseSize.includes('×')} use:fittext={data.baseSize}>{data.baseSize}</div>
@@ -246,17 +247,17 @@
 		<div class="weapons-box">
 			<div class="weapons-header">
 				<div class="wcol label-col"></div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.range}</span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.attacks}</span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.strength}</span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
-				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark">{@html characteristicRunemarks.damage}</span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.range} /></span>{:else}<span class="header-text">{#each t('card.col-range').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.attacks} /></span>{:else}<span class="header-text">{#each t('card.col-attacks').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.strength} /></span>{:else}<span class="header-text">{#each t('card.col-strength').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
+				<div class="wcol label-col">{#if data.showRunemarks}<span class="header-runemark"><Runemark file={characteristicRunemarks.damage} /></span>{:else}<span class="header-text">{#each t('card.col-damage').split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}</span>{/if}</div>
 			</div>
 			{#each data.weapons as weapon}
 				<div class="weapon-row">
 					<div class="wcol">
 						<div class="weapon-art-placeholder">
 							{#if data.showRunemarks && weapon.name}
-								<span class="weapon-runemark">{@html weaponRunemarks[weapon.name]}</span>
+								<span class="weapon-runemark"><Runemark file={weaponRunemarks[weapon.name]} /></span>
 							{:else}
 								<span class="weapon-name" use:fittext={weapon.name}>{#if weapon.name}{#each t('weapons.' + weapon.name).split('|') as part, i}{#if i > 0}<br>{/if}{part}{/each}{:else}—{/if}</span>
 							{/if}
