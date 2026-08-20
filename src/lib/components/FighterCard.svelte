@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FighterCardData } from '$lib/types';
 	import { weaponRunemarks, characteristicRunemarks, getAllianceSvg, getFactionSvg, getSubfactionSvg, findFactionSvg, findSubfactionSvg, PLACEHOLDER_SVG } from '$lib/runemarks/index';
+	import { cardSize } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
@@ -9,6 +10,8 @@
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
 
 	let { data, printerFriendly = false, exporting = false }: { data: FighterCardData; printerFriendly?: boolean; exporting?: boolean } = $props();
+
+	const dim = $derived(data.classicFormat ? cardSize.classic : cardSize.portrait);
 
 	function fittext(node: HTMLElement, _value?: unknown) {
 		function fit() {
@@ -32,7 +35,7 @@
      portrait tree below, since the two diverge in more than CSS position —
      the runemark hierarchy/fighter sides swap. Keep both branches in sync
      when adding a field. -->
-<div class="card classic-format" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--rm-mask: {runemarkMaskUrl}">
+<div class="card classic-format" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--card-w: {dim.w}px; --card-h: {dim.h}px; --rm-mask: {runemarkMaskUrl}">
 	<!-- PARCHMENT SECTION -->
 	<div class="parchment">
 		<h1 class="fighter-name">
@@ -164,7 +167,7 @@
 	</div>
 </div>
 {:else}
-<div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--rm-mask: {runemarkMaskUrl}">
+<div class="card" class:is-monster={data.isMonster} class:is-printer-friendly={printerFriendly} style="--card-w: {dim.w}px; --card-h: {dim.h}px; --rm-mask: {runemarkMaskUrl}">
 	<!-- IMAGE SECTION -->
 	<div class="image-section">
 		<div class="image-inner" style="mask-image: {maskUrl}; -webkit-mask-image: {maskUrl};">
@@ -303,9 +306,10 @@
 		background: transparent;
 	}
 
+	/* Dimensions come from the card-size store (bridge/poker) via inline vars. */
 	.card {
-		width: 574px;
-		height: 915px;
+		width: var(--card-w);
+		height: var(--card-h);
 		position: relative;
 		overflow: hidden;
 		display: flex;
@@ -557,8 +561,7 @@
 	}
 
 	.stat-col {
-		flex: 0 0 100px;
-		width: 100px;
+		flex: 1 1 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -585,8 +588,7 @@
 	}
 
 	.stat-val {
-		flex: 0 0 100px;
-		width: 100px;
+		flex: 1 1 0;
 		font-family: 'Germania One', serif;
 		font-size: 34px;
 		font-weight: 400;
@@ -622,8 +624,7 @@
 	}
 
 	.wcol {
-		flex: 0 0 100px;
-		width: 100px;
+		flex: 1 1 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -793,7 +794,8 @@
 	}
 
 	.dcol-stat {
-		flex: 0 0 100px;
+		/* Same 1/5 share as the weapons columns above, so the two tables align. */
+		flex: 0 0 20%;
 		font-family: 'Alegreya', serif;
 		font-size: 17px;
 		font-weight: 400;
@@ -877,16 +879,14 @@
 	}
 
 	/* ── CLASSIC FORMAT (landscape) ────────────── */
-	/* 1150×750 keeps the reference card's aspect ratio while sizing the
-	   parchment column to fit the unmodified stats/weapons row (500px) plus
-	   its 2×38px padding = 576px; the image column takes the remainder.
+	/* The parchment column is pinned at 576px so the stats/weapons row lands at
+	   500px (5 columns of 100) plus its 2×38px padding; the image column takes
+	   whatever the selected card size leaves over.
 	   576px and the image-section's 5px right margin are also depended on by
 	   the mobile touch-drag overlay in routes/fighter/+page.svelte
 	   (imageAreaLeft/imageAreaWidth) — keep both in sync. */
 
 	.card.classic-format {
-		width: 1150px;
-		height: 750px;
 		flex-direction: row;
 	}
 

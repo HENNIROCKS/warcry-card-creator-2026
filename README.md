@@ -8,7 +8,7 @@ An updated version of my original card creator for Warhammer Age of Sigmar: Warc
 
 Browser-based tool for creating custom Warcry cards. No backend, no login, everything runs client-side.
 
-**Fighter card editor** — upload a model photo, set name and characteristics (Move, Toughness, Wounds), build a weapon profile table, add a damage bracket for monsters, and assign runemarks. On mobile, pan and pinch-to-zoom the model image directly on the preview. Export as a print-ready PNG.
+**Fighter card editor** — upload a model photo, set name and characteristics (Move, Toughness, Wounds), build a weapon profile table, add a damage bracket for monsters, and assign runemarks. A **Classic Format** option switches to a landscape layout modelled on Warcry's 2019 card design, with the stats stacked in a left column and a full-height model image on the right. On mobile, pan and pinch-to-zoom the model image directly on the preview. Export as a print-ready PNG.
 
 **Text card editor** — set card name, card type (Ability, Reaction, Heroic Trait, Battle Trait, Divine Blessing, Lesser/Greater Artefact, or a custom label), and use the Card Elements checkboxes to toggle which sections appear on the card: runemarks, activation cost (Double / Triple / Quad), flavour text, a points cost increases table (Regular/Elite rows), prerequisite text (framed box), body text with bold/italic markup, and an optional caption at the bottom of the card. A **Card Design** option switches the type label to a full-width banderole — a maroon torn-edge ribbon that spans slightly beyond the card edges. The body/flavor/prerequisite text markup toolbar includes an **A↓ font size toggle** for denser cards, and a **[⊕] runemark picker** to insert inline runemark icons directly into text using `[slug]` syntax. Export as a print-ready PNG.
 
@@ -17,6 +17,8 @@ Browser-based tool for creating custom Warcry cards. No backend, no login, every
 **Card back editor** — create a matching card back with optional name text, a large runemark chosen from the full library (with live search), a custom background image (pan and pinch-to-zoom on mobile), and configurable text/runemark colour. A "mirrored name" option repeats the name upside-down for a symmetrical playing-card style. Export as a print-ready PNG; printer-friendly mode forces black on white.
 
 **Reference card editor** — browse the full runemark library laid out in a 5×8 grid on exportable cards. Sidebar checkboxes select which categories to show (weapons, fighters, characteristics, deployments, card decks, treasures, twists, plus all four grand alliances with factions and bladeborn merged inline). A "Circle type" toggle renders icons in the Fighter Card blob-circle style. When more than 40 icons are selected, extra cards are generated automatically and exported as numbered PNGs.
+
+**Card size** — every editor exports at standard playing-card proportions, chosen from the export dropdown: **Bridge** (57 × 89 mm) or **Poker** (63 × 88 mm). An info line shows the physical size and the exact pixel dimensions the export will produce. The choice is shared across all five editors and remembered between visits, so a deck comes out at one consistent size.
 
 All five editors support **light and dark theme**, work on **desktop and mobile** (tab-based layout on small screens), and can be **installed as a PWA** from the browser.
 

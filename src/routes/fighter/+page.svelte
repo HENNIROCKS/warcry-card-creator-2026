@@ -6,7 +6,9 @@
 	import { base } from '$app/paths';
 	import type { FighterCardData } from '$lib/types';
 	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import FighterCard from '$lib/components/FighterCard.svelte';
 	import FighterForm from '$lib/components/FighterForm.svelte';
 	let cardEl: HTMLElement;
@@ -114,8 +116,9 @@
 		]
 	});
 
-	const cardWidth = $derived(data.classicFormat ? 1150 : 574);
-	const cardHeight = $derived(data.classicFormat ? 750 : 915);
+	const cardDim = $derived(data.classicFormat ? cardSize.classic : cardSize.portrait);
+	const cardWidth = $derived(cardDim.w);
+	const cardHeight = $derived(cardDim.h);
 
 	const cardScale = $derived(
 		isMobile
@@ -150,7 +153,7 @@
 			let dataUrl: string;
 			if (isRealMobile) {
 				const { domToPng } = await import('modern-screenshot');
-				dataUrl = await domToPng(cardEl, { width: cardWidth, height: cardHeight, scale: 2 });
+				dataUrl = await domToPng(cardEl, { width: cardWidth, height: cardHeight, scale: EXPORT_SCALE });
 				if (navigator.share && navigator.canShare) {
 					const blob = await (await fetch(dataUrl)).blob();
 					const file = new File([blob], `${makeSlug()}${suffix}.png`, { type: 'image/png' });
@@ -160,7 +163,7 @@
 				}
 			} else {
 				const domtoimage = (await import('dom-to-image-more')).default;
-				dataUrl = await domtoimage.toPng(cardEl, { scale: 2 });
+				dataUrl = await domtoimage.toPng(cardEl, { scale: EXPORT_SCALE });
 				const a = document.createElement('a');
 				a.href = dataUrl;
 				a.download = `${makeSlug()}${suffix}.png`;
@@ -287,6 +290,8 @@
 						<hr class="border-zinc-700 my-1">
 						<button onclick={saveLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.save-json')}</button>
 						<button onclick={loadLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md">{t('ui.load-json')}</button>
+						<hr class="border-zinc-700 my-1">
+						<CardSizeSelect layout={data.classicFormat ? 'classic' : 'portrait'} />
 					</div>
 				{/if}
 			</div>
@@ -334,6 +339,8 @@
 						<hr class="border-zinc-700 my-1">
 						<button onclick={saveLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700">{t('ui.save-json')}</button>
 						<button onclick={loadLayout} class="w-full text-left px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-700 rounded-md">{t('ui.load-json')}</button>
+						<hr class="border-zinc-700 my-1">
+						<CardSizeSelect layout={data.classicFormat ? 'classic' : 'portrait'} />
 					</div>
 				{/if}
 			</div>

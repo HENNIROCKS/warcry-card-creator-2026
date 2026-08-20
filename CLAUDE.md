@@ -43,6 +43,7 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 
 ### Key files
 
+- `src/lib/card-size.svelte.ts` — card size store; exports `cardSize`, `CARD_SIZES`, `EXPORT_SCALE`
 - `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `TextCardData`, `DeploymentCardData`, `Weapon`, `Runemark`, etc.)
 - `src/lib/i18n/index.svelte.ts` — i18n store; exports `t(key)` function and `i18n` reactive object
 - `src/lib/i18n/locales/en.json` — source locale (en + de ship); all user-visible strings live here
@@ -55,6 +56,7 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 - `FighterCard.svelte` / `FighterForm.svelte` — fighter card visual + form
 - `TextCard.svelte` / `TextForm.svelte` — text/ability card visual + form
 - `DeploymentCard.svelte` / `DeploymentForm.svelte` — deployment card visual (SVG-based) + form
+- `CardSizeSelect.svelte` — bridge/poker picker + live size info line; sits in every export dropdown
 - `FactionSelect.svelte` — filterable grouped select for Grand Alliance / Faction / Subfaction (used on Fighter + Text editors)
 - `LangSwitch.svelte` — language switcher
 - `ThemeToggle.svelte` — light/dark theme toggle
@@ -65,7 +67,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 
 ### Card structure
 
-**Fighter card** (portrait ~600×940px preview):
+**Fighter card** (portrait, `cardSize.portrait` — 588×915 at bridge):
 
 - Top ~55%: model image area with runemarks overlaid at left/right columns (up to 3 each side)
 - When `showRunemarks` is false: a tags row inside `.image-inner` (Alegreya uppercase, ` • ` separator) shows alliance/faction/subfaction names + fighter runemark labels; semi-transparent background strip is clipped by the SVG mask
@@ -73,7 +75,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Torn paper edge divider (SVG mask)
 - Bottom ~45%: parchment area — fighter name, characteristics table, weapons table
 - If `isMonster: true`: damage bracket table appended below weapons
-- `classicFormat: boolean` — landscape layout (1150×750) modeled on Warcry's 2019 card design, as an alternative to the portrait layout above: name/characteristics/weapons/damage-table stacked in a left column (fixed 576px, sized to fit the unmodified 500px stats/weapons row plus padding), full-height model image with runemarks on the right. Faction hierarchy (alliance/faction/bladeborn) sits on the image's right edge, fighter runemarks on its left — swapped from portrait. The characteristics/weapons/damage-table group is bottom-anchored via `margin-top: auto` on `.stats-box`; the damage table's slot is a fixed 168px height regardless of `isMonster`, so the group's position never shifts. Tags row and caption (when runemarks are hidden) stack at the bottom of the image instead of spanning the parchment. Rendered as a fully separate markup branch in `FighterCard.svelte` (not a CSS reflow of the portrait tree) — keep both branches in sync when adding a field. `routes/fighter/+page.svelte` mirrors the layout's `576`/`5` magic numbers for the mobile touch-drag overlay; comments cross-reference both files.
+- `classicFormat: boolean` — landscape layout (`cardSize.classic` — 1167×750 at bridge) modeled on Warcry's 2019 card design, as an alternative to the portrait layout above: name/characteristics/weapons/damage-table stacked in a left column (fixed 576px, sized so the stats/weapons row lands at 500px plus padding), full-height model image with runemarks on the right. Faction hierarchy (alliance/faction/bladeborn) sits on the image's right edge, fighter runemarks on its left — swapped from portrait. The characteristics/weapons/damage-table group is bottom-anchored via `margin-top: auto` on `.stats-box`; the damage table's slot is a fixed 168px height regardless of `isMonster`, so the group's position never shifts. Tags row and caption (when runemarks are hidden) stack at the bottom of the image instead of spanning the parchment. Rendered as a fully separate markup branch in `FighterCard.svelte` (not a CSS reflow of the portrait tree) — keep both branches in sync when adding a field. `routes/fighter/+page.svelte` mirrors the layout's `576`/`5` magic numbers for the mobile touch-drag overlay; comments cross-reference both files.
 
 **Text card** (portrait, same ratio):
 
@@ -87,7 +89,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - `smallBodyText: boolean` — when true, reduces body text 20→16 px, flavor text 18→15 px, prerequisite text 18→14 px via `.small-body` class on `.parchment`
 - Inline runemark markup: `[slug]` in body/prerequisite text renders the matching SVG inline as `(<span class="inline-rm">…</span>)`; slugs cover all runemark groups + full faction hierarchy. Markup toolbar has B / I / A↓ / [⊕] buttons (bold, italic, font-size toggle, runemark picker)
 
-**Deployment card** (portrait 574×915px, SVG-based rendering):
+**Deployment card** (landscape, `cardSize.landscape` — 915×588 at bridge, SVG-based rendering):
 
 - Full-bleed battlefield SVG at card centre; dashed centre lines from the midpoint
 - Up to 4 player colours (red/blue/green/yellow); each player has deployment points rendered as geometric shapes — triangle (dagger), diamond (hammer), circle (shield) — filled with player colour, white icon via SVG fill inheritance; optional RND label above shape (clamped inside card bounds, flips below shape if clipped at top edge)
@@ -102,7 +104,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Card name rendered as an Alegreya caption below the SVG
 - `DeploymentCardData`: `name`, `players[]` (each `{ color, zones[], points[] }`), `measurements[]`
 
-**Reference card** (portrait 574×915px):
+**Reference card** (portrait, `cardSize.portrait`):
 
 - Full runemark library browsable via sidebar checkboxes split into Card Elements (core categories) and Card Design
 - 5×8 CSS grid filling the full card; `cardPages` returns `RmItem[][][]` (pages → groups → items); pagination at 40 items per page
@@ -111,13 +113,33 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Printer-friendly: white background, black ring circle style, dark separator line
 - Multi-card export: numbered suffix `_1`, `_2`, … when more than one page
 
-**Card back** (portrait, same 574×915px):
+**Card back** (portrait, same `cardSize.portrait`):
 
 - Full-card background: `static/background.jpg` texture by default; replaced entirely when a custom background image is uploaded (no double-layering)
 - Centred overlay: optional name (Germania One, large, uppercase) + optional runemark (280×280px SVG) + optional mirrored name (rotated 180°) for playing-card symmetry
 - `showFlippedName` flag on `CardBackData` controls the mirrored duplicate
 - `textColor` (`'white' | 'black' | 'red'`) drives a `--card-text-color` CSS variable for both name and SVG fill; printer-friendly export always forces black
 - Custom background image: pan/zoom via sliders on desktop, touch drag + pinch-to-zoom on mobile (`adjustMode` toggle)
+
+### Card size
+
+Two output sizes ship, both standard playing-card proportions: **bridge** (57 × 89 mm, 1:1.5556) and **poker** (63 × 88 mm, 1:1.400). `src/lib/card-size.svelte.ts` holds the dimension table and a `localStorage`-persisted store (`warcry-card-size`), restored in the store's constructor rather than from `onMount`, so the first client render already uses the saved size.
+
+| | bridge | poker |
+| --- | --- | --- |
+| `portrait` — fighter, text, card back, reference | 588×915 | 654×915 |
+| `classic` — classic-format fighter | 1167×750 | 1167×834 |
+| `landscape` — deployment | 915×588 | 915×654 |
+
+Portrait holds its 915px height and varies width (the parchment column is vertically tight); classic holds its 1167px width and varies height (the parchment column is pinned at 576px).
+
+Card components never hardcode dimensions — they set `--card-w` / `--card-h` inline from the store and their CSS reads `width: var(--card-w)`. Route files read `cardSize.portrait` / `.classic` / `.landscape` for export dimensions and the preview `cardScale` divisor, and `EXPORT_SCALE` (2) for the PNG scale factor.
+
+The deployment card derives its battlefield offset from the card height (`BF_T = round((CARD_H − BF_H) / 2)`, `CNR_T/B = BF_T/B ∓ CNR_GAP_Y`) so the battlefield re-centres at any size; all 99 snap positions derive from those constants, and saved JSON stores position IDs rather than coordinates, so old layouts still load.
+
+Stats, weapons and damage-table columns use fractional widths (`flex: 1 1 0` on `.stat-col`/`.stat-val`/`.wcol`, `flex: 0 0 20%` on `.dcol-stat`) so the two tables stay column-aligned at any card width.
+
+`CardSizeSelect.svelte` renders the picker plus a live info line, and sits at the bottom of every editor's export dropdown. It takes a `layout` prop so the quoted pixel size matches what that editor exports. Its click handler calls `stopPropagation()` — the routes close their dropdown on any document click.
 
 ### Fonts
 

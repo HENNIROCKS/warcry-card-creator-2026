@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { DeploymentCardData, DeploymentColor, DeploymentObjective, DeploymentPosition, DeploymentZone } from '$lib/types';
+	import { cardSize } from '$lib/card-size.svelte';
 	import daggerRaw      from '$lib/runemarks/svg/deployment-dagger.svg?raw';
 	import hammerRaw      from '$lib/runemarks/svg/deployment-hammer.svg?raw';
 	import matchedPlayRaw from '$lib/runemarks/svg/card-decks-symmetrical.svg?raw';
@@ -85,23 +86,28 @@
 		shield: '0 0 300 300',
 	};
 
-	// Battlefield rectangle (inside the 915×574 card)
+	const CARD_W = $derived(cardSize.landscape.w);
+	const CARD_H = $derived(cardSize.landscape.h);
+
+	// Battlefield rectangle, vertically centred in the card at any card size
 	const BF_L = 100;
-	const BF_T = 60;
 	const BF_R = 815;
-	const BF_B = 514;
 	const BF_W = BF_R - BF_L;
-	const BF_H = BF_B - BF_T;
+	const BF_H = 454;
+	const BF_T = $derived(Math.round((CARD_H - BF_H) / 2));
+	const BF_B = $derived(BF_T + BF_H);
 	const BF_CX = BF_L + BF_W / 2;
-	const BF_CY = BF_T  + BF_H / 2;
+	const BF_CY = $derived(BF_T + BF_H / 2);
 
 	// Outer snap rail — corners of the zone just outside the battlefield.
 	// Outside top/bottom have 9 edge dots (matching 9 inside columns); left/right
 	// have 7 edge dots (matching 7 inside rows). Corners bridge the gaps evenly.
+	// Vertical gap is slightly tighter than the horizontal one (73/842 sit 27 out)
+	const CNR_GAP_Y = 26;
 	const CNR_L = 73;
 	const CNR_R = 842;
-	const CNR_T = 34;
-	const CNR_B = 540;
+	const CNR_T = $derived(BF_T - CNR_GAP_Y);
+	const CNR_B = $derived(BF_B + CNR_GAP_Y);
 
 	// Shape geometry
 	const OBJECTIVE_R    = 16;  // objective circle radius
@@ -200,8 +206,8 @@
 	});
 </script>
 
-<div class="card" class:is-printer-friendly={printerFriendly}>
-	<svg width="915" height="574" viewBox="0 0 915 574" xmlns="http://www.w3.org/2000/svg" style="display:block;border:none;outline:none;" overflow="hidden">
+<div class="card" class:is-printer-friendly={printerFriendly} style="--card-w: {CARD_W}px; --card-h: {CARD_H}px">
+	<svg width={CARD_W} height={CARD_H} viewBox="0 0 {CARD_W} {CARD_H}" xmlns="http://www.w3.org/2000/svg" style="display:block;border:none;outline:none;" overflow="hidden">
 
 		<defs>
 			<!-- Tick — perpendicular stroke -->
@@ -211,7 +217,7 @@
 
 			<!-- Mask circles are only visible inside the battlefield rectangle -->
 			<mask id="inside-bf-mask" maskUnits="userSpaceOnUse">
-				<rect x="0" y="0" width="915" height="574" fill="black"/>
+				<rect x="0" y="0" width={CARD_W} height={CARD_H} fill="black"/>
 				<rect x={BF_L} y={BF_T} width={BF_W} height={BF_H} fill="white"/>
 			</mask>
 
@@ -238,7 +244,7 @@
 
 		<!-- Printer-friendly: fill entire SVG with white -->
 		{#if printerFriendly}
-			<rect x="0" y="0" width="915" height="574" fill="white"/>
+			<rect x="0" y="0" width={CARD_W} height={CARD_H} fill="white"/>
 		{/if}
 
 		<!-- Battlefield rectangle -->
@@ -559,9 +565,10 @@
 	{/if}
 </div>
 <style>
+	/* Dimensions come from the card-size store (bridge/poker) via inline vars. */
 	.card {
-		width: 915px;
-		height: 574px;
+		width: var(--card-w);
+		height: var(--card-h);
 		position: relative;
 		display: block;
 		line-height: 0;
