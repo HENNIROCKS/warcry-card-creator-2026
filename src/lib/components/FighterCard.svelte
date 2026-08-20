@@ -95,7 +95,7 @@
 		<div class="damage-slot">
 			{#if data.isMonster}
 				<div class="damage-box">
-					<div class="damage-row">
+					<div class="damage-header">
 						<div class="dcol dcol-wide">{t('card.col-damage-points-allocated')}</div>
 						<div class="dcol dcol-stat">{t('card.col-move')}</div>
 						<div class="dcol dcol-stat">{t('card.col-damage')}</div>
@@ -270,7 +270,7 @@
 		<!-- Monster damage brackets -->
 		{#if data.isMonster}
 			<div class="damage-box">
-				<div class="damage-row">
+				<div class="damage-header">
 					<div class="dcol dcol-wide">{t('card.col-damage-points-allocated')}</div>
 					<div class="dcol dcol-stat">{t('card.col-move')}</div>
 					<div class="dcol dcol-stat">{t('card.col-damage')}</div>
@@ -531,10 +531,9 @@
 		flex-shrink: 0;
 		display: flex;
 		flex-direction: column;
-		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
+		border-radius: 7.5px;
+		border: 1px solid #5a0a14;
 		background: rgba(255, 255, 255, 0.25);
-		border: 0;
-		outline: none;
 	}
 
 	/* ── CHARACTERISTICS BOX ───────────────────── */
@@ -746,6 +745,15 @@
 
 	/* ── DAMAGE BRACKETS ───────────────────────── */
 
+	.damage-header {
+		background: #5a0a14;
+		border-radius: 6.5px 6.5px 0 0;
+		display: flex;
+		height: 28px;
+		border: 0;
+		outline: none;
+	}
+
 	.damage-row {
 		display: flex;
 		height: 28px;
@@ -754,12 +762,12 @@
 		background: transparent;
 	}
 
-	.damage-row:nth-child(even) {
-		background: rgba(90, 10, 20, 0.06);
+	.damage-row:nth-child(odd) {
+		background: rgba(90, 10, 20, 0.08);
 	}
 
-	.damage-row:not(:first-child) {
-		box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4);
+	.damage-row:last-child {
+		border-radius: 0 0 6.5px 6.5px;
 	}
 
 	.dcol {
@@ -795,6 +803,11 @@
 		background: transparent;
 	}
 
+	.damage-header .dcol-wide,
+	.damage-header .dcol-stat {
+		color: #FAF6F3;
+	}
+
 	/* ── PRINTER-FRIENDLY OVERRIDES ────────────── */
 
 	.is-printer-friendly {
@@ -806,13 +819,20 @@
 	}
 
 	.is-printer-friendly .stats-box,
-	.is-printer-friendly .weapons-box {
+	.is-printer-friendly .weapons-box,
+	.is-printer-friendly .damage-box {
 		border-color: #000;
 	}
 
 	.is-printer-friendly .stats-header,
-	.is-printer-friendly .weapons-header {
+	.is-printer-friendly .weapons-header,
+	.is-printer-friendly .damage-header {
 		background: transparent;
+	}
+
+	.is-printer-friendly .damage-header .dcol-wide,
+	.is-printer-friendly .damage-header .dcol-stat {
+		color: #000;
 	}
 
 	.is-printer-friendly .label-col {
@@ -851,7 +871,7 @@
 	.is-printer-friendly .weapons-box,
 	.is-printer-friendly .weapon-row:nth-child(odd),
 	.is-printer-friendly .damage-box,
-	.is-printer-friendly .damage-row:nth-child(even),
+	.is-printer-friendly .damage-row:nth-child(odd),
 	.is-printer-friendly .stats-values {
 		background: transparent;
 	}
