@@ -1,11 +1,14 @@
 <script lang="ts">
-	import type { FighterCardData } from '$lib/types';
-	import { weaponRunemarks, characteristicRunemarks, getAllianceFile, getFactionFile, getSubfactionFile, findFactionFile, findSubfactionFile } from '$lib/runemarks/index';
-	import Runemark from './Runemark.svelte';
 	import { cardSize } from '$lib/card-size.svelte';
+	import {
+		characteristicRunemarks, findFactionFile, findSubfactionFile,
+		getAllianceFile, getFactionFile, getSubfactionFile, weaponRunemarks,
+	} from '$lib/runemarks/index';
 	import { t } from '$lib/i18n/index.svelte';
+	import Runemark from './Runemark.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
+	import type { FighterCardData } from '$lib/types';
 
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;

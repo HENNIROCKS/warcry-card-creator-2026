@@ -4,14 +4,14 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { TextCardData } from '$lib/types';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { fighterRunemarks } from '$lib/runemarks/index';
 	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
-	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import TextCard from '$lib/components/TextCard.svelte';
 	import TextForm from '$lib/components/TextForm.svelte';
+	import type { TextCardData } from '$lib/types';
 
 	let cardEl: HTMLElement;
 	let rmKeys = $state(['', '']);

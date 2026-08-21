@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { TextCardData } from '$lib/types';
 	import {
-		getAllianceFile, getFactionFile, getSubfactionFile, findFactionFile, findSubfactionFile, hierarchy,
-		fighterRunemarks, weaponRunemarks, characteristicRunemarks,
-		cardDecksRunemarks, deploymentRunemarks, miscRunemarks,
-		treasureRunemarks, twistsRunemarks,
+		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
+		fighterRunemarks, findFactionFile, findSubfactionFile, getAllianceFile,
+		getFactionFile, getSubfactionFile, hierarchy, miscRunemarks,
+		treasureRunemarks, twistsRunemarks, weaponRunemarks,
 	} from '$lib/runemarks/index';
-	import { runemarkSvg } from '$lib/runemarks/loader.svelte';
-	import Runemark from './Runemark.svelte';
 	import { cardSize } from '$lib/card-size.svelte';
+	import { runemarkSvg } from '$lib/runemarks/loader.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import Runemark from './Runemark.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
+	import type { TextCardData } from '$lib/types';
 
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;

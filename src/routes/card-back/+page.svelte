@@ -4,13 +4,17 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { CardBackData } from '$lib/types';
-	import { fighterRunemarks, weaponRunemarks, characteristicRunemarks, hierarchy, cardDecksRunemarks, deploymentRunemarks, miscRunemarks, treasureRunemarks, twistsRunemarks } from '$lib/runemarks/index';
-	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
-	import Runemark from '$lib/components/Runemark.svelte';
+	import {
+		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
+		fighterRunemarks, hierarchy, miscRunemarks, treasureRunemarks,
+		twistsRunemarks, weaponRunemarks,
+	} from '$lib/runemarks/index';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
-	import { t, i18n } from '$lib/i18n/index.svelte';
+	import { i18n, t } from '$lib/i18n/index.svelte';
+	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
+	import Runemark from '$lib/components/Runemark.svelte';
+	import type { CardBackData } from '$lib/types';
 
 	let cardEl: HTMLElement;
 	let exporting = $state(false);

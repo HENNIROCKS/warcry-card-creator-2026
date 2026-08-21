@@ -4,14 +4,14 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { FighterCardData } from '$lib/types';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { fighterRunemarks } from '$lib/runemarks/index';
 	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
-	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import FighterCard from '$lib/components/FighterCard.svelte';
 	import FighterForm from '$lib/components/FighterForm.svelte';
+	import type { FighterCardData } from '$lib/types';
 	let cardEl: HTMLElement;
 	let rmKeys = $state(['', '', '']);
 	let exporting = $state(false);

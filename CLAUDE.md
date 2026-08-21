@@ -183,6 +183,7 @@ Light/dark theme uses CSS custom properties declared on `:root` (dark) and `[dat
 ## Code style
 
 - **Import groups**: sorted alphabetically by the name the variable represents (not by variable name prefix). Each logical group has one header comment; no orphan imports between groups.
+- **Import order**: value imports, then components, then `?raw` assets, then `import type` as a trailing group. Type imports are erased at compile time, so they sit last rather than leading the block. Named specifiers inside one import are sorted the same way, case-insensitively.
 - **Object key quoting**: only quote keys that require it — keys containing spaces or hyphens. Single-word plain-identifier keys are unquoted.
 - **On-touch cleanup**: when editing any file, also fix incremental-accumulation artifacts in that file — unsorted imports, duplicate or `(additional)`-suffixed section headers, unnecessary quotes. Do not audit unrelated files speculatively.
 

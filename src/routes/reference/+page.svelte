@@ -4,15 +4,15 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
-	import { t } from '$lib/i18n/index.svelte';
-	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import {
 		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
 		fighterRunemarks, hierarchy, treasureRunemarks,
 		twistsRunemarks, weaponRunemarks,
 	} from '$lib/runemarks/index';
+	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
+	import { t } from '$lib/i18n/index.svelte';
+	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import Runemark from '$lib/components/Runemark.svelte';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
