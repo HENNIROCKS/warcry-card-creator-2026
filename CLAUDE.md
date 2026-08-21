@@ -24,6 +24,10 @@ make build     # production build
 make preview   # preview production build
 ```
 
+```bash
+npm run svgo   # re-optimise src/lib/runemarks/svg/ after adding runemarks
+```
+
 Or directly with the correct Node:
 
 ```bash
@@ -143,8 +147,10 @@ Stats, weapons and damage-table columns use fractional widths (`flex: 1 1 0` on 
 
 ### Fonts
 
-- **Germania One** (`static/fonts/GermaniaOne-Regular.ttf`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
-- **Alegreya** (`static/fonts/Alegreya-Regular.ttf` + `Alegreya-Italic.ttf`, family `'Alegreya'`, SIL OFL) — damage table, text card body/flavor text
+- **Germania One** (`static/fonts/GermaniaOne-Regular.woff2`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
+- **Alegreya** (`static/fonts/Alegreya-Regular.woff2` + `Alegreya-Italic.woff2`, family `'Alegreya'`, SIL OFL) — damage table, text card body/flavor text
+
+Fonts ship as woff2 subset with `pyftsubset --unicodes='*' --no-hinting --desubroutinize`, declared with `font-display: swap`. Character coverage is deliberately left intact — only unused OpenType alternates (small caps, oldstyle/tabular numerals, stylistic sets) are dropped — hinting is kept, since it costs nothing and dropping it shifted glyph rasterisation, so adding a locale in any script the original fonts covered still renders. `kern` and `liga` are retained. Re-run the same command if a font is ever replaced.
 
 ### Background / textures
 
@@ -154,7 +160,17 @@ Stats, weapons and damage-table columns use fractional widths (`flex: 1 1 0` on 
 
 ### Runemark library
 
-SVGs live in `src/lib/runemarks/svg/` (234 files). Library metadata in `src/lib/runemarks/index.ts`.
+SVGs live in `src/lib/runemarks/svg/` (233 files), optimised with SVGO. Library metadata in `src/lib/runemarks/index.ts` and `hierarchy.ts`.
+
+**Metadata is split from content.** The records in `index.ts` (`weaponRunemarks`, `fighterRunemarks`, `characteristicRunemarks`, …) and the `file` field on hierarchy entries hold an SVG **basename**, not SVG source. Content is resolved through `src/lib/runemarks/loader.svelte.ts`, which globs `./svg/*.svg` lazily and caches each file in a rune-backed store. The pickers render labels only, so a route pulls just the handful of icons its card actually shows.
+
+- **`<Runemark file={…} />`** (`src/lib/components/Runemark.svelte`) is the only place runemark SVG is injected. Pass `fallback` to render `PLACEHOLDER_SVG` when the entry has no runemark; a file that is merely still loading renders nothing, so badges do not flicker.
+- **Getters return basenames**: `getAllianceFile`, `getFactionFile`, `getSubfactionFile`, `findFactionFile`, `findSubfactionFile`.
+- **Export handlers must `await settled()`** (imported as `runemarksSettled`) before snapshotting, or a PNG can capture a card whose icons are still in flight. `/deployment` is exempt — it imports its five icons directly.
+- **The seven characteristic runemarks are bundled**, not fetched: they head every fighter card's stat tables. They are seeded into the loader cache, so callers still address them by basename like any other runemark.
+- **Adding a runemark**: drop the SVG in `svg/`, add its basename to the right record or hierarchy entry, then run `npm run svgo`.
+
+SVGO config lives in `svgo.config.mjs` (`multipass`, `floatPrecision: 1`, `preset-default`). Precision is the lever that matters — `preset-default` alone saves 0.3%, because the files carry no ids, styles or fill attributes and all their weight is path-coordinate precision. Do not raise precision without re-checking rendering; do not lower it below 1.
 
 ### i18n
 
@@ -167,6 +183,7 @@ Light/dark theme uses CSS custom properties declared on `:root` (dark) and `[dat
 ## Code style
 
 - **Import groups**: sorted alphabetically by the name the variable represents (not by variable name prefix). Each logical group has one header comment; no orphan imports between groups.
+- **Import order**: value imports, then components, then `?raw` assets, then `import type` as a trailing group. Type imports are erased at compile time, so they sit last rather than leading the block. Named specifiers inside one import are sorted the same way, case-insensitively.
 - **Object key quoting**: only quote keys that require it — keys containing spaces or hyphens. Single-word plain-identifier keys are unquoted.
 - **On-touch cleanup**: when editing any file, also fix incremental-accumulation artifacts in that file — unsorted imports, duplicate or `(additional)`-suffixed section headers, unnecessary quotes. Do not audit unrelated files speculatively.
 

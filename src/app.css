@@ -131,7 +131,9 @@ input[type="range"]::-moz-range-thumb {
 	border: 2px solid #7f1d1d;
 }
 
-/* Custom fonts */
+/* Custom fonts — subset to woff2 with pyftsubset (see README). Character
+ * coverage is unchanged; only unused OpenType alternates and hinting are
+ * dropped, so a future locale in any script the original covered still works. */
 
 /*
  * Germania One — SIL Open Font License 1.1
@@ -140,9 +142,10 @@ input[type="range"]::-moz-range-thumb {
  */
 @font-face {
 	font-family: 'Germania One';
-	src: url('/fonts/GermaniaOne-Regular.ttf') format('truetype');
+	src: url('/fonts/GermaniaOne-Regular.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
+	font-display: swap;
 }
 
 /*
@@ -153,14 +156,16 @@ input[type="range"]::-moz-range-thumb {
  */
 @font-face {
 	font-family: 'Alegreya';
-	src: url('/fonts/Alegreya-Regular.ttf') format('truetype');
+	src: url('/fonts/Alegreya-Regular.woff2') format('woff2');
 	font-weight: 100 900;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
 	font-family: 'Alegreya';
-	src: url('/fonts/Alegreya-Italic.ttf') format('truetype');
+	src: url('/fonts/Alegreya-Italic.woff2') format('woff2');
 	font-weight: 100 900;
 	font-style: italic;
+	font-display: swap;
 }

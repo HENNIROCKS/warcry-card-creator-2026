@@ -4,11 +4,17 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { CardBackData } from '$lib/types';
-	import { fighterRunemarks, weaponRunemarks, characteristicRunemarks, hierarchy, cardDecksRunemarks, deploymentRunemarks, miscRunemarks, treasureRunemarks, twistsRunemarks } from '$lib/runemarks/index';
+	import {
+		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
+		fighterRunemarks, hierarchy, miscRunemarks, treasureRunemarks,
+		twistsRunemarks, weaponRunemarks,
+	} from '$lib/runemarks/index';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
-	import { t, i18n } from '$lib/i18n/index.svelte';
+	import { i18n, t } from '$lib/i18n/index.svelte';
+	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
+	import Runemark from '$lib/components/Runemark.svelte';
+	import type { CardBackData } from '$lib/types';
 
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
@@ -58,12 +64,12 @@
 
 	const titleLines = $derived(data.title.split('|'));
 
-	// Combined SVG lookup across all runemark categories
-	const allRunemarkSvgs: Record<string, string> = (() => {
+	// Combined file lookup across all runemark categories
+	const allRunemarkFiles: Record<string, string> = (() => {
 		const map: Record<string, string> = {
 			...fighterRunemarks,
 			...weaponRunemarks,
-			...(characteristicRunemarks as Record<string, string>),
+			...characteristicRunemarks,
 			...cardDecksRunemarks,
 			...deploymentRunemarks,
 			...miscRunemarks,
@@ -71,11 +77,11 @@
 			...twistsRunemarks,
 		};
 		for (const alliance of hierarchy) {
-			map[alliance.id] = alliance.svg;
+			map[alliance.id] = alliance.file;
 			for (const faction of alliance.factions) {
-				if (faction.svg) map[faction.id] = faction.svg;
+				if (faction.file) map[faction.id] = faction.file;
 				for (const sub of faction.subfactions) {
-					if (sub.svg) map[sub.id] = sub.svg;
+					if (sub.file) map[sub.id] = sub.file;
 				}
 			}
 		}
@@ -197,9 +203,9 @@
 			const groupLabel = t('alliances.' + alliance.id);
 			entries.push({ id: alliance.id, label: groupLabel, group: alliance.id, groupLabel });
 			for (const faction of alliance.factions) {
-				if (faction.svg) entries.push({ id: faction.id, label: t('factions.' + faction.id), group: alliance.id, groupLabel });
+				if (faction.file) entries.push({ id: faction.id, label: t('factions.' + faction.id), group: alliance.id, groupLabel });
 				for (const sub of faction.subfactions) {
-					if (sub.svg) entries.push({ id: sub.id, label: t('subfactions.' + sub.id), group: alliance.id, groupLabel });
+					if (sub.file) entries.push({ id: sub.id, label: t('subfactions.' + sub.id), group: alliance.id, groupLabel });
 				}
 			}
 		}
@@ -254,6 +260,7 @@
 		try {
 			let dataUrl: string;
 			if (isRealMobile) {
+				await runemarksSettled();
 				const { domToPng } = await import('modern-screenshot');
 				dataUrl = await domToPng(cardEl, { width: cardSize.portrait.w, height: cardSize.portrait.h, scale: EXPORT_SCALE });
 				if (navigator.share && navigator.canShare) {
@@ -264,6 +271,7 @@
 					exportedImageUrl = dataUrl;
 				}
 			} else {
+				await runemarksSettled();
 				const domtoimage = (await import('dom-to-image-more')).default;
 				dataUrl = await domtoimage.toPng(cardEl, { scale: EXPORT_SCALE });
 				const a = document.createElement('a');
@@ -540,14 +548,14 @@
 								style="position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; object-position:{data.imageOffsetX}% {data.imageOffsetY}%; transform:scale({data.imageZoom}); transform-origin:{data.imageOffsetX}% {data.imageOffsetY}%; border:0; outline:none; background:transparent;"
 							/>
 						{/if}
-						<div class="name-overlay" class:name-overlay-text-only={data.title && data.showFlippedName && !(data.runemark && allRunemarkSvgs[data.runemark])}>
+						<div class="name-overlay" class:name-overlay-text-only={data.title && data.showFlippedName && !(data.runemark && allRunemarkFiles[data.runemark])}>
 							{#if data.title}
 								<p class="card-name">
 									{#each titleLines as line, i}{#if i > 0}<br>{/if}{line}{/each}
 								</p>
 							{/if}
-							{#if data.runemark && allRunemarkSvgs[data.runemark]}
-								<div class="card-runemark">{@html allRunemarkSvgs[data.runemark]}</div>
+							{#if data.runemark && allRunemarkFiles[data.runemark]}
+								<div class="card-runemark"><Runemark file={allRunemarkFiles[data.runemark]} /></div>
 							{/if}
 							{#if data.title && data.showFlippedName}
 								<p class="card-name card-name-flipped">

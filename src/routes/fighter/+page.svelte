@@ -4,13 +4,14 @@
 
 <script lang="ts">
 	import { base } from '$app/paths';
-	import type { FighterCardData } from '$lib/types';
-	import { fighterRunemarks } from '$lib/runemarks/index';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
+	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import FighterCard from '$lib/components/FighterCard.svelte';
 	import FighterForm from '$lib/components/FighterForm.svelte';
+	import type { FighterCardData } from '$lib/types';
 	let cardEl: HTMLElement;
 	let rmKeys = $state(['', '', '']);
 	let exporting = $state(false);
@@ -152,6 +153,7 @@
 		try {
 			let dataUrl: string;
 			if (isRealMobile) {
+				await runemarksSettled();
 				const { domToPng } = await import('modern-screenshot');
 				dataUrl = await domToPng(cardEl, { width: cardWidth, height: cardHeight, scale: EXPORT_SCALE });
 				if (navigator.share && navigator.canShare) {
@@ -162,6 +164,7 @@
 					exportedImageUrl = dataUrl;
 				}
 			} else {
+				await runemarksSettled();
 				const domtoimage = (await import('dom-to-image-more')).default;
 				dataUrl = await domtoimage.toPng(cardEl, { scale: EXPORT_SCALE });
 				const a = document.createElement('a');
@@ -220,7 +223,7 @@
 					rmKeys = [...parsed.rightRunemarks.map((r: { id: string }) => r.id), '', '', ''].slice(0, 3);
 					parsed.rightRunemarks = parsed.rightRunemarks.map(
 						({ id, label }: { id: string; label: string }) => ({
-							id, label, svg: fighterRunemarks[id] ?? ''
+							id, label, file: fighterRunemarks[id] ?? ''
 						})
 					);
 				}

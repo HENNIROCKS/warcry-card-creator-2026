@@ -1,15 +1,17 @@
 <script lang="ts">
-	import type { TextCardData } from '$lib/types';
 	import {
-		getAllianceSvg, getFactionSvg, getSubfactionSvg, findFactionSvg, findSubfactionSvg, PLACEHOLDER_SVG, hierarchy,
-		fighterRunemarks, weaponRunemarks, characteristicRunemarks,
-		cardDecksRunemarks, deploymentRunemarks, miscRunemarks,
-		treasureRunemarks, twistsRunemarks,
+		cardDecksRunemarks, characteristicRunemarks, deploymentRunemarks,
+		fighterRunemarks, findFactionFile, findSubfactionFile, getAllianceFile,
+		getFactionFile, getSubfactionFile, hierarchy, miscRunemarks,
+		treasureRunemarks, twistsRunemarks, weaponRunemarks,
 	} from '$lib/runemarks/index';
 	import { cardSize } from '$lib/card-size.svelte';
+	import { runemarkSvg } from '$lib/runemarks/loader.svelte';
 	import { t } from '$lib/i18n/index.svelte';
+	import Runemark from './Runemark.svelte';
 	import maskSvgRaw from '$lib/image-mask.svg?raw';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
+	import type { TextCardData } from '$lib/types';
 
 	const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(maskSvgRaw)}")`;
 	const runemarkMaskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(runemarkShapeRaw)}")`;
@@ -32,18 +34,18 @@
 		const m: Record<string, string> = {};
 		for (const [k, v] of Object.entries(fighterRunemarks)) m[slugify(k)] = v;
 		for (const [k, v] of Object.entries(weaponRunemarks)) m[slugify(k)] = v;
-		for (const [k, v] of Object.entries(characteristicRunemarks as Record<string, string>)) m[k] = v;
+		for (const [k, v] of Object.entries(characteristicRunemarks)) m[k] = v;
 		for (const [k, v] of Object.entries(cardDecksRunemarks)) m[k] = v;
 		for (const [k, v] of Object.entries(deploymentRunemarks)) m[k] = v;
 		for (const [k, v] of Object.entries(miscRunemarks)) m[k] = v;
 		for (const [k, v] of Object.entries(treasureRunemarks)) m[k] = v;
 		for (const [k, v] of Object.entries(twistsRunemarks)) m[k] = v;
 		for (const alliance of hierarchy) {
-			if (alliance.svg) m[alliance.id] = alliance.svg;
+			if (alliance.file) m[alliance.id] = alliance.file;
 			for (const faction of alliance.factions) {
-				if (faction.svg) m[faction.id] = faction.svg;
+				if (faction.file) m[faction.id] = faction.file;
 				for (const sub of faction.subfactions) {
-					if (sub.svg) m[sub.id] = sub.svg;
+					if (sub.file) m[sub.id] = sub.file;
 				}
 			}
 		}
@@ -55,7 +57,7 @@
 			.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 			.replace(/\*(.+?)\*/g, '<em>$1</em>')
 			.replace(/\[([a-z0-9][a-z0-9 -]*)\]/gi, (match, key) => {
-				const svg = inlineRmMap[slugify(key.trim())];
+				const svg = runemarkSvg(inlineRmMap[slugify(key.trim())]);
 				if (!svg) return match;
 				const styledSvg = svg.replace(/(<svg\b)/, '$1 style="display:block;border:none;outline:none;"');
 				return `(<span class="inline-rm">${styledSvg}</span>)`;
@@ -77,28 +79,28 @@
 				{#if data.grandAlliance}
 					<div class="runemark-border">
 						<div class="runemark-badge">
-							{@html getAllianceSvg(data.grandAlliance) ?? PLACEHOLDER_SVG}
+							<Runemark file={getAllianceFile(data.grandAlliance)} fallback />
 						</div>
 					</div>
 				{/if}
 				{#if data.freeHierarchy ? data.faction : (data.grandAlliance && data.faction)}
 					<div class="runemark-border">
 						<div class="runemark-badge">
-							{@html (data.freeHierarchy ? findFactionSvg(data.faction) : getFactionSvg(data.grandAlliance, data.faction)) ?? PLACEHOLDER_SVG}
+							<Runemark file={data.freeHierarchy ? findFactionFile(data.faction) : getFactionFile(data.grandAlliance, data.faction)} fallback />
 						</div>
 					</div>
 				{/if}
 				{#if data.freeHierarchy ? data.bladeborn : (data.grandAlliance && data.faction && data.bladeborn)}
 					<div class="runemark-border">
 						<div class="runemark-badge">
-							{@html (data.freeHierarchy ? findSubfactionSvg(data.bladeborn) : getSubfactionSvg(data.grandAlliance, data.faction, data.bladeborn)) ?? PLACEHOLDER_SVG}
+							<Runemark file={data.freeHierarchy ? findSubfactionFile(data.bladeborn) : getSubfactionFile(data.grandAlliance, data.faction, data.bladeborn)} fallback />
 						</div>
 					</div>
 				{/if}
 				{#each data.fighterRunemarks as rm}
 					<div class="runemark-border">
 						<div class="runemark-badge">
-							{@html rm.svg}
+							<Runemark file={rm.file} />
 						</div>
 					</div>
 				{/each}

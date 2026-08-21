@@ -1685,6 +1685,36 @@
                 <tr>
                   <td>
                     <a
+                      href="#august-20-built"
+                      onclick="activateSession('august-20')"
+                      >On-demand runemark loading (1544 KB &rarr; 187 KB per route)</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-20-decisions"
+                      onclick="activateSession('august-20')"
+                      >Why 0 ms Total Blocking Time meant the fix was bytes, not parse cost</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-20-built"
+                      onclick="activateSession('august-20')"
+                      >SVGO: floatPrecision is the only lever that matters</a
+                    >
+                  </td>
+                  <td>Aug 20</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
                       href="#march-11-cards"
                       onclick="activateSession('march-11')"
                       >Card types: Fighter vs Ability</a
@@ -2225,9 +2255,9 @@
               <span class="badge badge-blue">2026-08-20</span>
               <span class="badge badge-green">Classic Format landscape layout</span>
               <span class="badge badge-green">Bridge &amp; poker card sizes</span>
-              <span class="badge badge-green">Card-size store</span>
+              <span class="badge badge-green">Runemark payload &minus;90%</span>
             </div>
-            <h1>Classic Format &amp; Standard Playing-Card Sizes</h1>
+            <h1>Classic Format, Card Sizes &amp; Runemark Payload</h1>
             <p>
               The Fighter Card gained a <strong>Classic Format</strong> option — a landscape
               layout modelled on Warcry's 2019 card design, with name, characteristics, weapons
@@ -2242,6 +2272,15 @@
               all. They were nudged onto <strong>bridge</strong> (57 × 89 mm), and a second
               <strong>poker</strong> (63 × 88 mm) option was added behind a shared, persisted
               store — retiring roughly two dozen hardcoded pixel literals in the process.
+            </p>
+            <p>
+              A PageSpeed run on <code>/fighter</code> then scored <strong>67</strong> on mobile
+              with a 4.6&nbsp;s First Contentful Paint but a <strong>0&nbsp;ms</strong> Total
+              Blocking Time — a network-bound page, not a CPU-bound one. The cause was a single
+              580&nbsp;KB chunk holding all 233 runemark SVGs, preloaded ahead of the
+              render-blocking stylesheets. Optimising the SVGs and then loading them on demand
+              took the critical path from roughly <strong>650&nbsp;KB to 66&nbsp;KB</strong>
+              gzipped.
             </p>
           </div>
 
@@ -2284,6 +2323,29 @@
               <li>Takes a <code>layout</code> prop (<code>portrait</code> / <code>classic</code> / <code>landscape</code>) so the quoted pixel size matches what that editor actually exports.</li>
               <li>Four keys added to both locales: <code>ui.card-size</code>, <code>ui.card-size-bridge</code>, <code>ui.card-size-poker</code>, <code>ui.card-size-info</code>.</li>
             </ul>
+            <h3>SVG Optimisation</h3>
+            <ul>
+              <li><strong><code>svgo.config.mjs</code></strong> at the repo root plus an <code>npm run svgo</code> script, so new runemarks can be optimised the same way. SVGO 4 is a devDependency.</li>
+              <li><strong><code>floatPrecision: 1</code> is the whole win.</strong> <code>preset-default</code> on its own saves 0.3% — the files carry no ids, styles or fill attributes and are already structurally minimal. All the weight is path-coordinate precision.</li>
+              <li>233 files: <strong>1442&nbsp;KB &rarr; 720&nbsp;KB</strong> raw, <strong>579&nbsp;KB &rarr; 280&nbsp;KB</strong> gzipped.</li>
+              <li>Verified by rendering every icon before and after at 300&nbsp;px and 600&nbsp;px and diffing per icon — every difference is a one-pixel contour shift from antialiasing, with no change to shape or topology.</li>
+            </ul>
+            <h3>On-Demand Runemark Loading</h3>
+            <ul>
+              <li><strong><code>src/lib/runemarks/loader.svelte.ts</code></strong> — resolves SVG basenames through <code>import.meta.glob</code> and caches each file in a rune-backed store, so a card re-renders once its icons arrive. Exports <code>runemarkSvg</code>, <code>preload</code> and <code>settled</code>.</li>
+              <li><strong><code>src/lib/components/Runemark.svelte</code></strong> — wraps the lookup and preserves the placeholder behaviour the <code>?? PLACEHOLDER_SVG</code> call sites had. Replaced roughly 30 <code>{@html}</code> sites.</li>
+              <li><strong>Metadata split from content</strong>: records in <code>index.ts</code> and the hierarchy entries now carry an SVG basename instead of inlined source. The pickers only ever rendered labels, so almost none of the payload was needed up front.</li>
+              <li><strong>The seven characteristic runemarks stay bundled</strong> and are seeded into the loader cache, so callers treat every runemark alike while the stat-table icons stay in the prerendered markup.</li>
+              <li><strong>Export safety</strong>: handlers <code>await runemarksSettled()</code> before snapshotting, so a PNG can never capture a card whose icons are still in flight.</li>
+              <li>Per-route initial JS: <strong>fighter and text 1544&nbsp;KB &rarr; 187&nbsp;KB</strong>, reference 1535 &rarr; 179, card back 1529 &rarr; 172. Deployment was already lean at 127&nbsp;KB — it imports its five icons directly.</li>
+            </ul>
+            <h3>Fonts</h3>
+            <ul>
+              <li><strong>TTF &rarr; subset woff2</strong> via <code>pyftsubset --unicodes='*' --desubroutinize</code>, declared with <code>font-display: swap</code>. <strong>445&nbsp;KB &rarr; 224&nbsp;KB</strong>, a 50% cut — now the largest item on the critical path at 3&times; the JS.</li>
+              <li><strong>Character coverage is deliberately untouched</strong> (1254 codepoints, Cyrillic and Greek included), because the project invites new locales through an issue template. Only unused OpenType alternates go — small caps, oldstyle and tabular numerals, stylistic sets. <code>kern</code> and <code>liga</code> are kept.</li>
+              <li>Dropping the alternates beats dropping Cyrillic and Greek: 224&nbsp;KB against 235&nbsp;KB, with none of the coverage loss.</li>
+              <li>Hinting is kept — it costs 80 bytes and turned out not to be the cause of the rasterisation shift first blamed on it.</li>
+            </ul>
           </section>
 
           <section id="august-20-decisions" data-nav="Key Decisions">
@@ -2308,6 +2370,22 @@
               <p class="decision-q">Why hand-written millimetre labels instead of rounding the exact values?</p>
               <p class="decision-a"><code>Math.round(63.5)</code> gives 64, so poker displayed as "64 × 89 mm" while every print service quotes it as 63 × 88. In a label whose whole job is to be informative, matching the trade's numbers beats matching the arithmetic.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">A 67 performance score with a 1.4&nbsp;MB JS chunk — why was the fix about bytes rather than parse cost?</p>
+              <p class="decision-a">Total Blocking Time was <strong>0&nbsp;ms</strong> and Cumulative Layout Shift 0, while FCP sat at 4.6&nbsp;s. That combination rules out CPU entirely: the main thread was idle, waiting on the network. The chunk hurt because SvelteKit emits its <code>modulepreload</code> hints <em>before</em> the render-blocking stylesheets, so 580&nbsp;KB of icons competed with the 9&nbsp;KB of CSS that would have allowed a paint.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why <code>floatPrecision: 1</code> rather than SVGO's defaults?</p>
+              <p class="decision-a">The defaults save 0.3% here. These files have no ids, no styles and no fill attributes, so there is no structural cruft to strip — the payload <em>is</em> coordinate precision. At precision 1 on a 300-unit viewBox a coordinate rounds to 0.1 units, roughly 0.02&nbsp;px at the size a runemark is actually drawn, and pixel-diffing all 233 icons at 600&nbsp;px confirmed only antialiasing moved.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">How does an export avoid snapshotting a card whose icons have not loaded?</p>
+              <p class="decision-a">Computing which runemarks a card needs would duplicate render logic in every editor. Instead the loader tracks in-flight requests: by export time the card is already on screen, so every icon it needs has been requested, and <code>await settled()</code> simply waits for the outstanding promises. It also covers an icon swapped moments before the click.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why keep the characteristic runemarks bundled when everything else is lazy?</p>
+              <p class="decision-a">They head every fighter card's stat tables, so fetching them would pop them in on first paint and drop them from the prerendered HTML. The first attempt gave them a separate eager record, which produced a data model where some records held SVG source and others held file keys — a distinction easy to mix up, and it caused two bugs during the refactor. Seeding them into the loader cache keeps one uniform model and the same eagerness.</p>
+            </div>
           </section>
 
           <section id="august-20-pending" data-nav="Still Pending">
@@ -2322,6 +2400,9 @@
                 <tr><td><span class="badge badge-amber">Todo</span></td><td>Bleed and crop marks for print-on-demand services (poker with bleed = 69 × 94 mm).</td></tr>
                 <tr><td><span class="badge badge-amber">Todo</span></td><td>Classic format at poker (1167 × 834) has not been checked visually — the extra height lands as slack in the parchment column.</td></tr>
                 <tr><td><span class="badge badge-amber">Note</span></td><td>Deployment card is genuinely SVG internally, so a real vector export is cheap there — unlike the other four, where <code>dom-to-image</code>'s SVG output is a <code>foreignObject</code> wrapper that breaks outside browsers.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>Deploy and re-run PageSpeed. The <code>modulepreload</code>-before-CSS ordering is emitted by SvelteKit and is not a config knob, but at 66&nbsp;KB it should no longer matter.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>PageSpeed's "efficient cache lifetime" audit (788&nbsp;KiB) cannot be fixed on GitHub Pages: it serves <code>cache-control: max-age=600</code> on everything, including hashed immutable assets. It will stay red short of moving to a CDN.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>Lazy loading means up to 233 separate icon requests on <code>/reference</code> with every category enabled. Fine over HTTP/2, but worth watching if a bundling strategy is ever revisited.</td></tr>
               </tbody>
             </table>
           </section>
@@ -2341,7 +2422,16 @@
                 <tr><td><code>src/routes/fighter/+page.svelte</code></td><td>Classic Format toggle + touch-drag overlay; store-driven dimensions</td></tr>
                 <tr><td><code>src/routes/{text,deployment,card-back,reference}/+page.svelte</code></td><td>Store-driven dimensions; <code>CardSizeSelect</code> in the export dropdown; import order normalised</td></tr>
                 <tr><td><code>src/lib/i18n/locales/{en,de}.json</code></td><td>Four <code>ui.card-size*</code> keys</td></tr>
-                <tr><td><code>README.md</code> / <code>CLAUDE.md</code></td><td>Classic Format + Card size sections</td></tr>
+                <tr><td><code>svgo.config.mjs</code></td><td>New — <code>multipass</code>, <code>floatPrecision: 1</code>, <code>preset-default</code></td></tr>
+                <tr><td><code>src/lib/runemarks/loader.svelte.ts</code></td><td>New — glob-based lazy loader, rune-backed cache, <code>settled()</code></td></tr>
+                <tr><td><code>src/lib/components/Runemark.svelte</code></td><td>New — renders a runemark by file basename, keeps placeholder behaviour</td></tr>
+                <tr><td><code>src/lib/runemarks/svg/*.svg</code></td><td>All 233 optimised; 1442&nbsp;KB &rarr; 720&nbsp;KB</td></tr>
+                <tr><td><code>src/lib/runemarks/{index,hierarchy}.ts</code></td><td>233 <code>?raw</code> imports replaced by file basenames; getters renamed to <code>*File</code></td></tr>
+                <tr><td><code>src/lib/types.ts</code></td><td><code>Runemark.svg</code> &rarr; <code>Runemark.file</code></td></tr>
+                <tr><td><code>src/lib/components/{FighterCard,TextCard,FighterForm,TextForm}.svelte</code></td><td><code>{@html}</code> sites replaced by <code>&lt;Runemark&gt;</code>; hierarchy field renamed</td></tr>
+                <tr><td><code>src/routes/{fighter,text,card-back,reference}/+page.svelte</code></td><td><code>await runemarksSettled()</code> before export; <code>&lt;Runemark&gt;</code> rendering</td></tr>
+                <tr><td><code>package.json</code></td><td><code>svgo</code> devDependency + <code>npm run svgo</code> script</td></tr>
+                <tr><td><code>README.md</code> / <code>CLAUDE.md</code></td><td>Classic Format + Card size sections; runemark library architecture</td></tr>
               </tbody>
             </table>
           </section>

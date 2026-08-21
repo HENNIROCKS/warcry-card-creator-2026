@@ -1,7 +1,7 @@
 export interface Runemark {
 	id: string;
 	label: string;
-	svg: string; // raw SVG string
+	file: string; // runemark svg basename, resolved via the runemark loader
 }
 
 export interface Weapon {
