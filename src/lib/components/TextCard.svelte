@@ -490,17 +490,18 @@
 		flex-direction: column;
 		width: 100%;
 		flex-shrink: 0;
-		border: 0;
+		border: 1px solid #5a0a14;
+		border-radius: 7.5px;
 		outline: none;
 		background: rgba(255, 255, 255, 0.25);
-		box-shadow: inset 0 1px 0 0 #000, inset 0 -1px 0 0 #000;
 	}
 
 	.points-header {
 		display: flex;
 		align-items: center;
 		height: 28px;
-		background: transparent;
+		background: #5a0a14;
+		border-radius: 6.5px 6.5px 0 0;
 		border: 0;
 		outline: none;
 	}
@@ -510,7 +511,7 @@
 		font-family: 'Alegreya', serif;
 		font-size: 17px;
 		font-weight: 400;
-		color: #000;
+		color: #FAF6F3;
 		text-align: center;
 		padding: 0 8px;
 		border: 0;
@@ -523,7 +524,7 @@
 		font-family: 'Alegreya', serif;
 		font-size: 17px;
 		font-weight: 400;
-		color: #000;
+		color: #FAF6F3;
 		text-align: center;
 		padding: 0 8px;
 		border: 0;
@@ -535,14 +536,17 @@
 		display: flex;
 		align-items: center;
 		height: 28px;
-		box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.4);
 		border: 0;
 		outline: none;
 		background: transparent;
 	}
 
-	.points-table > *:nth-child(even) {
-		background: rgba(90, 10, 20, 0.06);
+	.points-row:nth-child(odd) {
+		background: rgba(90, 10, 20, 0.08);
+	}
+
+	.points-row:last-child {
+		border-radius: 0 0 6.5px 6.5px;
 	}
 
 	.points-label {
@@ -680,13 +684,22 @@
 		border-color: #000;
 	}
 
-	.is-printer-friendly .points-table,
-	.is-printer-friendly .points-table > *:nth-child(even) {
+	.is-printer-friendly .points-table {
+		border-color: #000;
+		background: transparent;
+	}
+
+	.is-printer-friendly .points-row:nth-child(odd) {
 		background: transparent;
 	}
 
 	.is-printer-friendly .points-header {
 		background: transparent;
+	}
+
+	.is-printer-friendly .points-col-label,
+	.is-printer-friendly .points-col-value {
+		color: #000;
 	}
 
 	.is-printer-friendly .image-section {
