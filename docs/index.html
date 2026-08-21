@@ -2339,12 +2339,26 @@
               <li><strong>Export safety</strong>: handlers <code>await runemarksSettled()</code> before snapshotting, so a PNG can never capture a card whose icons are still in flight.</li>
               <li>Per-route initial JS: <strong>fighter and text 1544&nbsp;KB &rarr; 187&nbsp;KB</strong>, reference 1535 &rarr; 179, card back 1529 &rarr; 172. Deployment was already lean at 127&nbsp;KB — it imports its five icons directly.</li>
             </ul>
+            <h3>Loader Failure Handling</h3>
+            <ul>
+              <li><strong>On-demand loading adds a failure mode the bundle could not have</strong>: the fetch can fail. <code>load()</code> attached no rejection handler and never cleared <code>inFlight</code>, so a single 404 left a rejected promise in the map permanently — <code>settled()</code> then rejected on that export <em>and every one after it</em>, silently, because each <code>doExport</code> swallows it in a bare <code>catch</code>.</li>
+              <li><strong>The realistic trigger is a tab left open across a redeploy.</strong> The static adapter emits hashed chunk names and there is no service worker, so the file an open page asks for is simply gone from the server.</li>
+              <li><strong>Failed chunks now cache an empty string</strong>, exactly as the unknown-key branch already did, and the entry is deleted in <code>finally</code>. A missing icon degrades to a blank badge and the export still runs; <code>runemarkSvg</code> sees the cached empty value and stops re-requesting, so a failure cannot become a refetch storm.</li>
+              <li><strong>The early <code>break</code> in <code>settled()</code> went with it.</strong> It existed to terminate a map that never emptied; now that entries drain, <code>while (inFlight.size)</code> is the whole condition. Keeping it would have been worse than redundant — a batch queueing exactly as many loads as it finished would satisfy <code>pending.length === inFlight.size</code> and exit with those loads un-awaited.</li>
+              <li>Verified against a replica of <code>load()</code>/<code>settled()</code> driven by a deliberately rejecting chunk: before, <code>settled()</code> rejects on both exports and skips a load queued mid-batch; after, both exports complete, the failing chunk is fetched once, <code>inFlight</code> drains to zero and chained loads are awaited.</li>
+            </ul>
             <h3>Fonts</h3>
             <ul>
               <li><strong>TTF &rarr; subset woff2</strong> via <code>pyftsubset --unicodes='*' --desubroutinize</code>, declared with <code>font-display: swap</code>. <strong>445&nbsp;KB &rarr; 224&nbsp;KB</strong>, a 50% cut — now the largest item on the critical path at 3&times; the JS.</li>
               <li><strong>Character coverage is deliberately untouched</strong> (1254 codepoints, Cyrillic and Greek included), because the project invites new locales through an issue template. Only unused OpenType alternates go — small caps, oldstyle and tabular numerals, stylistic sets. <code>kern</code> and <code>liga</code> are kept.</li>
               <li>Dropping the alternates beats dropping Cyrillic and Greek: 224&nbsp;KB against 235&nbsp;KB, with none of the coverage loss.</li>
               <li>Hinting is kept — it costs 80 bytes and turned out not to be the cause of the rasterisation shift first blamed on it.</li>
+            </ul>
+            <h3>Import Order</h3>
+            <ul>
+              <li><strong>Swept the seven files this work rewrote</strong>: value imports, then components, then <code>?raw</code> assets, then <code>import type</code> as a trailing group, each run alphabetical by the name the variable represents.</li>
+              <li>Two accumulation artifacts went with it — <code>card-back/+page.svelte</code>'s nine runemark records on one 200-character line, now wrapped in the shape <code>reference/+page.svelte</code> already used, and the unsorted specifier lists in <code>card-back</code>, <code>FighterCard</code> and <code>TextCard</code>, where the <code>find*</code> getters trailed the <code>get*</code> ones.</li>
+              <li><strong>Verified as formatting only.</strong> Reordering imports can change module initialisation order, so all six prerendered pages were diffed against the previous commit: byte-identical once chunk hashes and the random <code>__sveltekit_*</code> hydration token are normalised. <code>deployment.html</code> and <code>index.html</code>, untouched by the sweep, act as controls for build nondeterminism.</li>
             </ul>
           </section>
 
@@ -2386,6 +2400,14 @@
               <p class="decision-q">Why keep the characteristic runemarks bundled when everything else is lazy?</p>
               <p class="decision-a">They head every fighter card's stat tables, so fetching them would pop them in on first paint and drop them from the prerendered HTML. The first attempt gave them a separate eager record, which produced a data model where some records held SVG source and others held file keys — a distinction easy to mix up, and it caused two bugs during the refactor. Seeding them into the loader cache keeps one uniform model and the same eagerness.</p>
             </div>
+            <div class="decision">
+              <p class="decision-q">What should happen when a lazily loaded icon never arrives?</p>
+              <p class="decision-a">The failed chunk caches an empty string and the badge renders blank, rather than retrying. Retrying on every render would turn one dead chunk into a request storm, and the honest options for a 404 are "blank icon" or "broken export" — the first degrades, the second does not. It also matches what the loader already did for an unknown key, so there is one behaviour for "no SVG available" instead of two.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Where do <code>import type</code> lines belong?</p>
+              <p class="decision-a">Last. The repo demonstrated both — <code>deployment/+page.svelte</code> closed its block with the type import, <code>DeploymentCard</code> opened with it — so this needed deciding rather than copying. <code>import type</code> is erased at compile time, making it the one group that cannot affect runtime behaviour or initialisation order; leading with it puts the least consequential line in the most prominent position. <code>deployment/+page.svelte</code> is also the stronger precedent, with a full block sorted correctly end to end, against a single type line that reads as incidental. CLAUDE.md now records the rule so the next sweep does not re-litigate it.</p>
+            </div>
           </section>
 
           <section id="august-20-pending" data-nav="Still Pending">
@@ -2402,6 +2424,7 @@
                 <tr><td><span class="badge badge-amber">Note</span></td><td>Deployment card is genuinely SVG internally, so a real vector export is cheap there — unlike the other four, where <code>dom-to-image</code>'s SVG output is a <code>foreignObject</code> wrapper that breaks outside browsers.</td></tr>
                 <tr><td><span class="badge badge-amber">Todo</span></td><td>Deploy and re-run PageSpeed. The <code>modulepreload</code>-before-CSS ordering is emitted by SvelteKit and is not a config knob, but at 66&nbsp;KB it should no longer matter.</td></tr>
                 <tr><td><span class="badge badge-amber">Note</span></td><td>PageSpeed's "efficient cache lifetime" audit (788&nbsp;KiB) cannot be fixed on GitHub Pages: it serves <code>cache-control: max-age=600</code> on everything, including hashed immutable assets. It will stay red short of moving to a CDN.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>The bare <code>catch {}</code> in all four export handlers hides every export failure, including the loader bug above. Narrowing them to at least log would have turned an invisible bug into an obvious one — worth an issue.</td></tr>
                 <tr><td><span class="badge badge-amber">Note</span></td><td>Lazy loading means up to 233 separate icon requests on <code>/reference</code> with every category enabled. Fine over HTTP/2, but worth watching if a bundling strategy is ever revisited.</td></tr>
               </tbody>
             </table>
@@ -2423,15 +2446,16 @@
                 <tr><td><code>src/routes/{text,deployment,card-back,reference}/+page.svelte</code></td><td>Store-driven dimensions; <code>CardSizeSelect</code> in the export dropdown; import order normalised</td></tr>
                 <tr><td><code>src/lib/i18n/locales/{en,de}.json</code></td><td>Four <code>ui.card-size*</code> keys</td></tr>
                 <tr><td><code>svgo.config.mjs</code></td><td>New — <code>multipass</code>, <code>floatPrecision: 1</code>, <code>preset-default</code></td></tr>
-                <tr><td><code>src/lib/runemarks/loader.svelte.ts</code></td><td>New — glob-based lazy loader, rune-backed cache, <code>settled()</code></td></tr>
+                <tr><td><code>src/lib/runemarks/loader.svelte.ts</code></td><td>New — glob-based lazy loader, rune-backed cache, <code>settled()</code>; failed chunks cache empty and drain <code>inFlight</code></td></tr>
                 <tr><td><code>src/lib/components/Runemark.svelte</code></td><td>New — renders a runemark by file basename, keeps placeholder behaviour</td></tr>
                 <tr><td><code>src/lib/runemarks/svg/*.svg</code></td><td>All 233 optimised; 1442&nbsp;KB &rarr; 720&nbsp;KB</td></tr>
                 <tr><td><code>src/lib/runemarks/{index,hierarchy}.ts</code></td><td>233 <code>?raw</code> imports replaced by file basenames; getters renamed to <code>*File</code></td></tr>
                 <tr><td><code>src/lib/types.ts</code></td><td><code>Runemark.svg</code> &rarr; <code>Runemark.file</code></td></tr>
                 <tr><td><code>src/lib/components/{FighterCard,TextCard,FighterForm,TextForm}.svelte</code></td><td><code>{@html}</code> sites replaced by <code>&lt;Runemark&gt;</code>; hierarchy field renamed</td></tr>
                 <tr><td><code>src/routes/{fighter,text,card-back,reference}/+page.svelte</code></td><td><code>await runemarksSettled()</code> before export; <code>&lt;Runemark&gt;</code> rendering</td></tr>
+                <tr><td><code>src/lib/components/{FighterCard,TextCard}.svelte</code>, <code>src/routes/{fighter,text,card-back,reference}/+page.svelte</code></td><td>Import order swept — values, components, <code>?raw</code>, then <code>import type</code></td></tr>
                 <tr><td><code>package.json</code></td><td><code>svgo</code> devDependency + <code>npm run svgo</code> script</td></tr>
-                <tr><td><code>README.md</code> / <code>CLAUDE.md</code></td><td>Classic Format + Card size sections; runemark library architecture</td></tr>
+                <tr><td><code>README.md</code> / <code>CLAUDE.md</code></td><td>Classic Format + Card size sections; runemark library architecture; import order convention</td></tr>
               </tbody>
             </table>
           </section>
