@@ -951,20 +951,29 @@
 		border-radius: 999px;
 	}
 
-	/* Classic format's 1167px-wide column renders at 13.1px/mm vs portrait's
-	   10.3px/mm — a ×1.27 font-size scale keeps physical text size equal. */
+	/* Classic renders at 13.1px/mm against portrait's 10.3px/mm, so type scales
+	   up to keep the printed size comparable. The row heights stay at portrait's
+	   pixel values and are physically smaller here, which caps how far that
+	   scale can go: single-line display type runs at full parity, while type
+	   that can wrap to a second line is held back to keep headroom inside the
+	   55px rows, and the damage table is sized so Alegreya's line box still
+	   fits its 28px row. */
+
+	/* Display type — single line, full parity. */
 	.card.classic-format .fighter-name { font-size: 53px; }
-	.card.classic-format .fighter-subtitle { font-size: 23px; }
-	.card.classic-format .label-col { font-size: 23px; }
 	.card.classic-format .stat-val { font-size: 43px; }
 	.card.classic-format .stat-val-narrow { font-size: 28px; }
 	.card.classic-format .stat-val-empty { font-size: 20px; }
-	.card.classic-format .header-text { font-size: 23px; }
-	.card.classic-format .weapon-name { font-size: 23px; }
 	.card.classic-format .weapon-val { font-size: 43px; }
 	.card.classic-format .weapon-val.is-empty { font-size: 20px; }
+
+	/* Label type — wraps to two lines, held back for headroom. */
+	.card.classic-format .fighter-subtitle { font-size: 22px; }
+	.card.classic-format .label-col { font-size: 21px; }
+	.card.classic-format .header-text { font-size: 21px; }
+	.card.classic-format .weapon-name { font-size: 21px; }
 	.card.classic-format .dcol-wide,
-	.card.classic-format .dcol-stat { font-size: 22px; }
-	.card.classic-format .tags-row-classic { font-size: 18px; }
-	.card.classic-format .image-caption-classic { font-size: 17px; }
+	.card.classic-format .dcol-stat { font-size: 21px; }
+	.card.classic-format .tags-row-classic { font-size: 17px; }
+	.card.classic-format .image-caption-classic { font-size: 16px; }
 </style>
