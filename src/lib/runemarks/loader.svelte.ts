@@ -37,7 +37,15 @@ function load(file: string): Promise<void> {
 		return Promise.resolve();
 	}
 
-	const promise = loader().then(svg => { cache[file] = svg; });
+	const promise = loader()
+		.then(svg => { cache[file] = svg; })
+		.catch(() => {
+			// A chunk that never arrives — a tab left open across a redeploy asks
+			// for a hashed file the server no longer has — caches empty like an
+			// unknown key. The badge stays blank and export still runs.
+			cache[file] = '';
+		})
+		.finally(() => { inFlight.delete(file); });
 	inFlight.set(file, promise);
 	return promise;
 }
@@ -57,11 +65,10 @@ export function runemarkSvg(file: string | null | undefined): string | undefined
 
 /** Resolves once every runemark requested so far has loaded. */
 export async function settled(): Promise<void> {
-	// Loads started by the awaited batch can queue further loads.
+	// Entries drain as they settle, so the map empties unless the awaited batch
+	// queued further loads — those are picked up by the next pass.
 	while (inFlight.size) {
-		const pending = [...inFlight.values()];
-		await Promise.all(pending);
-		if (pending.length === inFlight.size) break;
+		await Promise.all([...inFlight.values()]);
 	}
 }
 
