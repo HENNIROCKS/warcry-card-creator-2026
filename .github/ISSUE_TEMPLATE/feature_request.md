@@ -14,7 +14,8 @@ assignees: ''
 - [ ] Text card editor
 - [ ] Deployment card editor
 - [ ] Card back editor
-- [ ] Both / general
+- [ ] Reference card editor
+- [ ] General / cross-editor
 
 **What would you like?**
 A clear description of the feature or improvement you have in mind.

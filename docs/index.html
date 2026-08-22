@@ -615,6 +615,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="august-21">
+              <span class="session-date">2026-08-21</span>
+              <span class="session-title">Classic Type Scale &amp; Print Legibility</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="august-20">
               <span class="session-date">2026-08-20</span>
               <span class="session-title">Classic Format + Standard Card Sizes</span>
@@ -1655,6 +1661,36 @@
                 <tr>
                   <td>
                     <a
+                      href="#august-21-built"
+                      onclick="activateSession('august-21')"
+                      >Card text density: 10.3 px/mm portrait, 13.1 px/mm classic</a
+                    >
+                  </td>
+                  <td>Aug 21</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-21-decisions"
+                      onclick="activateSession('august-21')"
+                      >Why classic type scales in two tiers, not one factor</a
+                    >
+                  </td>
+                  <td>Aug 21</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-21-built"
+                      onclick="activateSession('august-21')"
+                      >Points cost table styled like the damage bracket table</a
+                    >
+                  </td>
+                  <td>Aug 21</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
                       href="#august-20-built"
                       onclick="activateSession('august-20')"
                       >Card sizes: bridge 57×89mm / poker 63×88mm</a
@@ -2249,6 +2285,117 @@
         <!-- ══════════════════════════════════════════
          2026-08-20 — Classic Format & Standard Card Sizes
     ══════════════════════════════════════════ -->
+        <div id="session-august-21" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-08-21</span>
+              <span class="badge badge-green">Two-tier classic type scale</span>
+              <span class="badge badge-green">Points table restyled</span>
+              <span class="badge badge-green">Backlog on GitHub</span>
+            </div>
+            <h1>Classic Type Scale &amp; Print Legibility</h1>
+            <p>
+              A measurement pass over every card text size, in physical units rather than
+              CSS pixels. Portrait renders at <strong>10.3&nbsp;px/mm</strong> and classic at
+              <strong>13.1&nbsp;px/mm</strong>, so the same CSS pixel value prints at
+              <strong>78 %</strong> of the portrait size in classic — the damage table landed at
+              3.7&nbsp;pt, the tags row at 3.0&nbsp;pt. Bridge and poker are identical within a
+              layout, so card size never changes text size; only the layout does.
+            </p>
+            <p>
+              Fixing classic took two passes. The first scaled type by the exact density ratio
+              (×1.27) and left a two-line header <strong>2.1&nbsp;px</strong> of slack in its
+              55&nbsp;px row; the second split the scale into two tiers and got that back to
+              6.7&nbsp;px. Portrait's own sizes are still below the print floor and stay open as
+              issue&nbsp;#13, because raising them moves hard-coded geometry.
+            </p>
+            <p>
+              The rest of the day: the text card's points cost table picked up the fighter card's
+              damage-table styling, and the accumulated backlog moved out of the session notes
+              into <strong>five GitHub issues</strong>.
+            </p>
+          </div>
+
+          <section id="august-21-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Classic Format Type Scale</h3>
+            <ul>
+              <li><strong>Densities measured</strong> in headless Chrome against both locales: portrait 10.289&nbsp;px/mm (1&nbsp;pt = 3.63&nbsp;px), classic 13.127&nbsp;px/mm (1&nbsp;pt = 4.63&nbsp;px). Ratio <strong>1.2758</strong>, constant across bridge and poker.</li>
+              <li><strong>First pass (PR&nbsp;#16, issue&nbsp;#12)</strong> — a flat ×1.27 on every size inside the <code>.card.classic-format</code> block. Arithmetically exact, and it closed the 78 % gap, but it scaled only the <em>type</em>: classic's row heights are portrait's pixel values and are therefore physically smaller.</li>
+              <li><strong>Second pass (PR&nbsp;#17)</strong> — the scale split into two tiers. Single-line display type (name, stat and weapon values) stays at full physical parity; anything that can wrap to a second line (labels, headers, weapon names, damage table, tags, caption) is held below it. Two-line header headroom <strong>2.1&nbsp;px &rarr; 6.7&nbsp;px</strong>.</li>
+              <li><strong>The damage table's ceiling was measured, not guessed.</strong> A sweep from 17 to 23&nbsp;px puts the boundary exactly between 21 and 22: at 22&nbsp;px Alegreya needs a 28.4&nbsp;px line box and overflows the fixed 28&nbsp;px row by 1&nbsp;px. <strong>21&nbsp;px is the largest value that fits.</strong></li>
+              <li><strong>Three values were printing larger than portrait</strong> — damage column ×1.294, tags row ×1.286, caption ×1.308 — from rounding the ratio to nearest. They now round down.</li>
+              <li><strong>Portrait is untouched</strong> by both PRs. The <code>.damage-box</code> overhanging its 168&nbsp;px <code>.damage-slot</code> by 2&nbsp;px is structural (168&nbsp;px of rows plus 1&nbsp;px borders), independent of type size, and older than either change — left as is.</li>
+            </ul>
+            <h3>Points Cost Table (Text Card)</h3>
+            <ul>
+              <li>The "Points Cost Increases" table now matches the fighter card's damage bracket table: <strong>maroon <code>#5a0a14</code> header</strong> with cream text, a 1&nbsp;px bordered and rounded box, and alternating row stripes — replacing its own plain black-on-transparent look with inset rules.</li>
+              <li>Both tables are 2-column Alegreya at 17&nbsp;px on 28&nbsp;px rows, so they were already the same object structurally; only the paint differed.</li>
+            </ul>
+            <h3>Backlog Filed as Issues</h3>
+            <ul>
+              <li><strong>#11</strong> — accessibility: unlabelled <code>select</code> elements, contrast, touch targets, missing <code>main</code> landmark. At 81, accessibility is now the weakest Lighthouse score; SEO's 90 (no meta description) rides along with the same fixes.</li>
+              <li><strong>#12</strong> — classic format at 78 % physical size. <em>Closed</em> by PR&nbsp;#16.</li>
+              <li><strong>#13</strong> — portrait text below the ~6&nbsp;pt print floor.</li>
+              <li><strong>#14</strong> — reference card pages get 8/10/9/8 rows instead of 8 when grouping is on: <code>cardPages</code> paginates by item count while the template pads each group to a full row of five.</li>
+              <li><strong>#15</strong> — the bare <code>catch {}</code> in all four export handlers. Good-first-issue sized: four one-line changes.</li>
+            </ul>
+          </section>
+
+          <section id="august-21-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why two tiers instead of one clean scale factor?</p>
+              <p class="decision-a">Because only half the layout scales. Type at full parity fills 96 % of a classic row against portrait's 75 %, since the rows kept portrait's pixel heights and are physically smaller here. Single-line type can afford that — it has nowhere to overflow to. Type that wraps cannot: a second line is what eats the remaining 4 %. Holding the wrapping tier back is the smallest change that makes both cases fit, and flattening it back to one factor reintroduces the overflow.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why fix classic first when portrait has the same problem?</p>
+              <p class="decision-a">They are not the same size of job. Classic is a self-contained font-size block with no portrait regression risk. Portrait (#13) moves hard-coded geometry — <code>.damage-slot { height: 168px }</code>, the 576&nbsp;px parchment column, and a parchment that is vertically tight to begin with. Filing them as one issue would have stalled the cheap fix behind the expensive one.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">What should #13 actually change, when it is tackled?</p>
+              <p class="decision-a">Not a <code>--card-fs-small</code> floor token — that leaves two independent size systems, and classic's hard-coded pixel values do not follow a portrait change. The measured trap: raising portrait's 18&nbsp;px labels to ~22&nbsp;px makes a classic two-line header 64.4&nbsp;px in a 55&nbsp;px row, a 9.4&nbsp;px overflow. The fix is to author sizes in a density-derived unit — <code>--pt: 3.63px</code> on portrait, <code>4.63px</code> on <code>.card.classic-format</code>, every size as <code>calc(N * var(--pt))</code> — which makes both layouts correct by construction and deletes the ×1.27 block. Rows would then need roughly 55 &rarr; 86&nbsp;px, against about 120&nbsp;px of vertical slack in bridge classic's parchment column.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why move the backlog to GitHub issues at all, for a solo project?</p>
+              <p class="decision-a">The session notes were the only record, and they are written newest-first as narrative — fine for "what happened", useless for "what is open". Issues also give the two contributor-facing items (#11 accessibility, #15 the bare catch) somewhere a stranger can find them. The rationale that does not fit an issue — ordering, and the four items deliberately <em>not</em> filed — stays in the notes.</p>
+            </div>
+          </section>
+
+          <section id="august-21-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead>
+                <tr><th>Status</th><th>Item</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="badge badge-amber">#11</span></td><td>Accessibility: labelled selects, contrast, touch targets, <code>main</code> landmark — plus the meta description that lifts SEO from 90.</td></tr>
+                <tr><td><span class="badge badge-amber">#13</span></td><td>Portrait card text below the ~6&nbsp;pt print floor. Needs the density-derived unit above, not a floor token.</td></tr>
+                <tr><td><span class="badge badge-amber">#14</span></td><td>Reference card: paginate by rows when grouping is on (8 rows per card, block size <code>remainingRows × 5</code>) and let <code>pageGridRows</code> count what actually renders.</td></tr>
+                <tr><td><span class="badge badge-amber">#15</span></td><td>Narrow the bare <code>catch {}</code> in the four export handlers to at least log.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>PDF export — the PNG placed in a jsPDF page at exact mm size. Still the highest value per unit of effort of anything outstanding; multi-up sheets and bleed/crop marks both ride on the same machinery.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>Classic format at poker (1167 × 834) has still not been checked visually — the extra height lands as slack in the parchment column.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>PageSpeed on the deployed site now reads <strong>100</strong> on <code>/fighter</code> mobile (FCP and LCP both 1.5&nbsp;s, TBT 0&nbsp;ms, CLS 0). Do not re-optimise the payload without a fresh measurement showing a regression.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>The "efficient cache lifetime" audit is down to 263&nbsp;KiB purely because the assets shrank. GitHub Pages serves <code>max-age=600</code> on everything including hashed assets, so it stays red short of a CDN.</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="august-21-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead>
+                <tr><th>File</th><th>Change</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>src/lib/components/FighterCard.svelte</code></td><td>Classic font sizes scaled, then split into two tiers; damage table capped at 21&nbsp;px; tags row and caption rounded down</td></tr>
+                <tr><td><code>src/lib/components/TextCard.svelte</code></td><td>Points cost table restyled to match the damage bracket table</td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Classic's two-tier scale documented as a rule, with the 21&nbsp;px measurement</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
         <div id="session-august-20" class="session-panel">
           <div class="hero">
             <div class="meta">
@@ -9095,6 +9242,7 @@
 
     <script>
       const sessions = [
+        "august-21",
         "august-20",
         "march-31",
         "march-29",

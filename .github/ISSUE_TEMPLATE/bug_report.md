@@ -15,14 +15,16 @@ assignees: ''
 - [ ] Deployment card editor
 - [ ] Card back editor
 - [ ] Reference card editor
-- [ ] Both / landing page
+- [ ] Landing page / general
 
 **Which feature area?**
 - [ ] Card preview (in-browser)
 - [ ] Exported PNG
 - [ ] Image upload / pan / zoom
 - [ ] Form field / input
-- [ ] Runemarks / pills
+- [ ] Runemarks
+- [ ] Card size / print output
+- [ ] Save / load JSON
 - [ ] Other: ___
 
 **Describe the bug**

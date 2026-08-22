@@ -28,6 +28,12 @@ components styled with CSS. Export uses `dom-to-image-more` (desktop) and
 `modern-screenshot` (mobile). Both must be dynamically imported inside click
 handlers — importing them at module top-level crashes SvelteKit SSR.
 
+**Runemarks load on demand.** The records in `src/lib/runemarks/index.ts` and
+`hierarchy.ts` hold SVG **file basenames**, not SVG source; content is resolved
+through `loader.svelte.ts`. Render a runemark with `<Runemark file={…} />` — never
+inject SVG with `{@html}` — and `await settled()` in an export handler before
+snapshotting, or the PNG can capture a card whose icons are still in flight.
+
 **Svelte 5 runes syntax only.** Use `$state`, `$derived`, `$effect`, `$props`.
 Do not use the Svelte 4 Options API (`export let`, reactive statements with
 `$:`, `on:event` directives).
