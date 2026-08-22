@@ -48,6 +48,7 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 ### Key files
 
 - `src/lib/card-size.svelte.ts` — card size store; exports `cardSize`, `CARD_SIZES`, `EXPORT_SCALE`
+- `src/lib/export.ts` — export helpers; exports `isShareAbort(err)`, which tells a dismissed share sheet apart from a real failure
 - `src/lib/types.ts` — all TypeScript interfaces (`FighterCardData`, `TextCardData`, `DeploymentCardData`, `Weapon`, `Runemark`, etc.)
 - `src/lib/i18n/index.svelte.ts` — i18n store; exports `t(key)` function and `i18n` reactive object
 - `src/lib/i18n/locales/en.json` — source locale (en + de ship); all user-visible strings live here
@@ -61,6 +62,7 @@ PATH="$HOME/Library/Application Support/Herd/config/nvm/versions/node/v22.22.0/b
 - `TextCard.svelte` / `TextForm.svelte` — text/ability card visual + form
 - `DeploymentCard.svelte` / `DeploymentForm.svelte` — deployment card visual (SVG-based) + form
 - `CardSizeSelect.svelte` — bridge/poker picker + live size info line; sits in every export dropdown
+- `ExportError.svelte` — alert shown when a PNG export fails; `bind:show` from each editor's export handler, auto-dismisses after 8 s
 - `FactionSelect.svelte` — filterable grouped select for Grand Alliance / Faction / Subfaction (used on Fighter + Text editors)
 - `LangSwitch.svelte` — language switcher
 - `ThemeToggle.svelte` — light/dark theme toggle

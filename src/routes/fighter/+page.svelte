@@ -6,9 +6,11 @@
 	import { base } from '$app/paths';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
 	import { fighterRunemarks } from '$lib/runemarks/index';
+	import { isShareAbort } from '$lib/export';
 	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
+	import ExportError from '$lib/components/ExportError.svelte';
 	import FighterCard from '$lib/components/FighterCard.svelte';
 	import FighterForm from '$lib/components/FighterForm.svelte';
 	import type { FighterCardData } from '$lib/types';
@@ -16,6 +18,7 @@
 	let rmKeys = $state(['', '', '']);
 	let exporting = $state(false);
 	let exportedImageUrl = $state<string | null>(null);
+	let exportError = $state(false);
 	let printerFriendly = $state(false);
 	let showDropdown = $state(false);
 	let activeTab = $state<'edit' | 'preview'>('edit');
@@ -150,6 +153,7 @@
 	async function doExport(suffix: string) {
 		if (!cardEl || exporting) return;
 		exporting = true;
+		exportError = false;
 		try {
 			let dataUrl: string;
 			if (isRealMobile) {
@@ -172,7 +176,10 @@
 				a.download = `${makeSlug()}${suffix}.png`;
 				a.click();
 			}
-		} catch {
+		} catch (err) {
+			if (isShareAbort(err)) return;
+			console.error('Export failed', err);
+			exportError = true;
 		} finally {
 			exporting = false;
 		}
@@ -396,6 +403,8 @@
 
 <!-- Hidden file input for JSON load -->
 <input bind:this={fileInput} type="file" accept=".json,application/json" class="hidden" onchange={handleFileLoad} />
+
+<ExportError bind:show={exportError} />
 
 {#if exportedImageUrl}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
