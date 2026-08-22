@@ -205,16 +205,16 @@ Single-file, multi-session format. All sessions live in one file with a sidebar 
 
 **One session per day.** If multiple conversations happen on the same date, merge them into one panel.
 
-**Session IDs** use `march-DD` format (e.g. `march-12`). Panel element: `id="session-march-DD"`. Section IDs inside: `march-DD-sectionname`.
+**Session IDs** use `<month>-DD` format, lowercase English month name of the session date (e.g. `march-12`, `august-21`). Panel element: `id="session-<month>-DD"`. Section IDs inside: `<month>-DD-sectionname`.
 
 **Adding a session:**
 
-1. Add a `<button class="session-btn" data-session="march-DD">` entry at the top of the `#session-list` ul (newest first).
-2. Add the panel `<div id="session-march-DD" class="session-panel">` before the previous session's panel.
+1. Add a `<button class="session-btn" data-session="<month>-DD">` entry at the top of the `#session-list` ul (newest first).
+2. Add the panel `<div id="session-<month>-DD" class="session-panel">` before the previous session's panel.
 3. Add the new ID at the front of `const sessions = [...]` in the script block.
 4. Update the Topic Index (`session-index`) with links to notable new sections.
 
-**Every `<section>` inside a panel must have both** `id="march-DD-sectionname"` and `data-nav="Label"` attributes — `data-nav` populates the sidebar nav.
+**Every `<section>` inside a panel must have both** `id="<month>-DD-sectionname"` and `data-nav="Label"` attributes — `data-nav` populates the sidebar nav.
 
 **Standard panel structure:**
 
@@ -226,6 +226,6 @@ Single-file, multi-session format. All sessions live in one file with a sidebar 
 
 **Badges:** `badge-blue` = date, `badge-green` = done, `badge-amber` = pending/todo, `badge-purple` = reference.
 
-**Index links** use `onclick="activateSession('march-DD')"` alongside the `href="#section-id"` to switch to the correct panel.
+**Index links** use `onclick="activateSession('<month>-DD')"` alongside the `href="#section-id"` to switch to the correct panel.
 
 **After every edit to `docs/index.html`:** read back the changed area and verify HTML structure — all new content sits inside a `<section>`, no orphaned tags, no mismatched `</section>` closers.

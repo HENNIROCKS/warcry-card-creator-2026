@@ -615,6 +615,12 @@
             </button>
           </li>
           <li>
+            <button class="session-btn" data-session="august-22">
+              <span class="session-date">2026-08-22</span>
+              <span class="session-title">Export Failures Made Visible</span>
+            </button>
+          </li>
+          <li>
             <button class="session-btn" data-session="august-21">
               <span class="session-date">2026-08-21</span>
               <span class="session-title">Classic Type Scale &amp; Print Legibility</span>
@@ -2213,6 +2219,18 @@
                   </td>
                   <td>Mar 20</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-22-decisions"
+                      onclick="activateSession('august-22')"
+                      >Notification contrast: <code>--ui-surface</code> sits at
+                      1.19:1 against the page — measure the panel, not just the
+                      text</a
+                    >
+                  </td>
+                  <td>Aug 22</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -2276,6 +2294,28 @@
                   </td>
                   <td>Mar 18</td>
                 </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-22-decisions"
+                      onclick="activateSession('august-22')"
+                      >Export error handling: why a dismissed share sheet is
+                      not a failure</a
+                    >
+                  </td>
+                  <td>Aug 22</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="#august-22-built"
+                      onclick="activateSession('august-22')"
+                      >Baseline <code>svelte-check</code> via
+                      <code>git archive</code>, not <code>git worktree</code></a
+                    >
+                  </td>
+                  <td>Aug 22</td>
+                </tr>
               </tbody>
             </table>
           </section>
@@ -2283,7 +2323,114 @@
         <!-- /session-index -->
 
         <!-- ══════════════════════════════════════════
-         2026-08-20 — Classic Format & Standard Card Sizes
+         2026-08-22 — Export Failures Made Visible
+    ══════════════════════════════════════════ -->
+        <div id="session-august-22" class="session-panel">
+          <div class="hero">
+            <div class="meta">
+              <span class="badge badge-blue">2026-08-22</span>
+              <span class="badge badge-green">Export errors surfaced</span>
+              <span class="badge badge-green">Shared alert component</span>
+              <span class="badge badge-green">Contrast measured</span>
+            </div>
+            <h1>Export Failures Made Visible</h1>
+            <p>
+              Issue&nbsp;#15: all five export handlers discarded every error in a bare
+              <code>catch {}</code>. A failed export was indistinguishable from a dead
+              button — which is exactly how the runemark-loader rejection bug stayed
+              invisible through an entire session.
+            </p>
+            <p>
+              The floor the issue asked for was <code>console.error</code>. That alone still
+              leaves the user staring at a button that does nothing, so the failure now shows
+              on screen too. Two things only surfaced once the fix was written: a dismissed
+              iOS share sheet arrives as a rejection and must <em>not</em> be reported, and
+              the first draft of the alert measured <strong>1.19:1</strong> against the page
+              background — an error notice visible only through its drop shadow.
+            </p>
+            <p>
+              A <code>/self-review</code> pass produced seven findings on the first
+              implementation; all seven were applied before the commit.
+            </p>
+          </div>
+
+          <section id="august-22-built" data-nav="What Was Built">
+            <h2><span class="icon" style="background:rgba(52,211,153,0.15)">✓</span> What Was Built</h2>
+            <h3>Error Handling</h3>
+            <ul>
+              <li><strong>All five handlers</strong> — <code>fighter</code>, <code>text</code>, <code>card-back</code>, <code>reference</code>, <code>deployment</code> — now log the real error and raise an <code>exportError</code> flag. The issue named four; <code>deployment</code> had the same shape and was included.</li>
+              <li><strong><code>isShareAbort()</code></strong> in the new <code>src/lib/export.ts</code> filters a dismissed share sheet out before anything is reported. It matches on <code>err.name</code>, not <code>instanceof DOMException</code>: the latter fails cross-realm and against polyfilled errors, and that failure would produce exactly the false alarm the check exists to prevent.</li>
+              <li><strong>The deliberate <code>catch { /* ignore malformed JSON */ }</code> blocks</strong> on the three JSON load handlers are untouched.</li>
+            </ul>
+            <h3>ExportError Component</h3>
+            <ul>
+              <li><strong>One component instead of five copies</strong> — <code>src/lib/components/ExportError.svelte</code>, <code>role="alert"</code>, driven by <code>bind:show</code> from each editor.</li>
+              <li><strong>Contrast computed, not eyeballed.</strong> White on the <code>red-800</code> panel is <strong>8.31:1</strong>, the close button <strong>5.49:1</strong>, and the <code>red-600</code> border <strong>3.67:1</strong> (dark) / <strong>3.58:1</strong> (light) against the page — over the 3:1 non-text threshold.</li>
+              <li><strong>Caps its width</strong> at <code>calc(100vw - 2rem)</code> and clears itself after eight seconds.</li>
+              <li>One new i18n key, <code>ui.export-failed</code>, in <code>en.json</code> and <code>de.json</code>.</li>
+            </ul>
+            <h3>Reference Card Side Fixes</h3>
+            <ul>
+              <li><strong>Per-page share handling</strong> — the mobile export loops over every page, so the share call is now wrapped individually. Cancelling one page's sheet skips that page instead of silently killing the rest of the export.</li>
+              <li><strong><code>if (exporting) return</code></strong> added — the guard the other four editors already had.</li>
+            </ul>
+          </section>
+
+          <section id="august-22-decisions" data-nav="Key Decisions">
+            <h2><span class="icon" style="background:rgba(196,144,108,0.15)">💡</span> Key Decisions</h2>
+            <div class="decision">
+              <p class="decision-q">Why more than the <code>console.error</code> the issue asked for?</p>
+              <p class="decision-a">Because the reported symptom is a dead button, and a console line does not fix that — it only helps whoever has devtools open. The user-visible failure is the part that closes the actual complaint. The console line stays as well: it carries the error object, which the alert deliberately does not.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why is a rejected <code>navigator.share()</code> not an error?</p>
+              <p class="decision-a">Because that is how iOS reports the user dismissing the share sheet. Announcing "export failed" for a deliberate cancel would be worse than the silence it replaces — it invents a failure that did not happen. Hence the name-based check: an <code>instanceof</code> miss falls on the wrong side, turning every cancel into a false alarm.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why was the first alert design rejected?</p>
+              <p class="decision-a">It used <code>--ui-surface</code>, the same token as the editor chrome. Measured against the page background that is <strong>1.19:1</strong> in dark and <strong>1.11:1</strong> in light — the box was defined almost entirely by its drop shadow. The text contrast was fine; the panel was not, and an error notice that reads as neutral chrome fails at the one job it has. Red-800 with white text carries its own meaning before a word is read.</p>
+            </div>
+            <div class="decision">
+              <p class="decision-q">Why does the baseline check no longer use <code>git worktree</code>?</p>
+              <p class="decision-a"><code>svelte-check</code> reports 10 errors on this repo, all pre-existing, so a review has to measure the base ref before calling anything a regression. The <code>self-review</code> skill prescribed <code>git worktree add</code> for that — but that writes into the repo, and every git operation here belongs to the user. <code>git archive | tar -x</code> into the scratchpad is read-only and gives the identical figure. The skill was updated.</p>
+            </div>
+          </section>
+
+          <section id="august-22-pending" data-nav="Still Pending">
+            <h2><span class="icon" style="background:rgba(251,191,36,0.15)">⏳</span> Still Pending</h2>
+            <table>
+              <thead>
+                <tr><th>Status</th><th>Item</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="badge badge-amber">#11</span></td><td>Accessibility: labelled selects, contrast, touch targets, <code>main</code> landmark — plus the meta description that lifts SEO from 90. Note: <code>&lt;main&gt;</code> is in fact already present on all six routes, so that finding needs re-measuring rather than fixing.</td></tr>
+                <tr><td><span class="badge badge-amber">#13</span></td><td>Portrait card text below the ~6&nbsp;pt print floor. Needs the density-derived unit, not a floor token.</td></tr>
+                <tr><td><span class="badge badge-amber">#14</span></td><td>Reference card: paginate by rows when grouping is on (8 rows per card, block size <code>remainingRows × 5</code>) and let <code>pageGridRows</code> count what actually renders. Next up.</td></tr>
+                <tr><td><span class="badge badge-amber">Todo</span></td><td>PDF export — still the highest value per unit of effort of anything outstanding.</td></tr>
+                <tr><td><span class="badge badge-amber">Note</span></td><td>The alert's failure path was only rendered with the flag forced on. No genuinely failing export was reproduced.</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="august-22-files" data-nav="Files Changed">
+            <h2><span class="icon" style="background:rgba(212,112,112,0.12)">📁</span> Files Changed</h2>
+            <table>
+              <thead>
+                <tr><th>File</th><th>Change</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>src/lib/export.ts</code></td><td>New — <code>isShareAbort()</code></td></tr>
+                <tr><td><code>src/lib/components/ExportError.svelte</code></td><td>New — shared alert, <code>bind:show</code>, auto-dismiss</td></tr>
+                <tr><td><code>src/routes/*/+page.svelte</code></td><td>All five: error logged and surfaced; reference also gets per-page share handling and the double-click guard</td></tr>
+                <tr><td><code>src/lib/i18n/locales/en.json</code>, <code>de.json</code></td><td><code>ui.export-failed</code></td></tr>
+                <tr><td><code>CLAUDE.md</code></td><td>Two new files listed; session ID convention generalised from <code>march-DD</code> to <code>&lt;month&gt;-DD</code></td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+         2026-08-21 — Classic Type Scale & Print Legibility
     ══════════════════════════════════════════ -->
         <div id="session-august-21" class="session-panel">
           <div class="hero">
@@ -9242,6 +9389,7 @@
 
     <script>
       const sessions = [
+        "august-22",
         "august-21",
         "august-20",
         "march-31",
