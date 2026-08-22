@@ -86,7 +86,7 @@ Cards are rendered as **CSS/HTML components** (not Canvas). Export uses `dom-to-
 - Top ~28%: dark maroon header — runemarks row + activation badge (DOUBLE/TRIPLE/QUAD) + card label (preset slugs: ability, reaction, heroic-trait, battle-trait, lesser-artefact, greater-artefact, divine-blessing — or custom text)
 - `layoutVariant?: 'standard' | 'banderole'` — banderole mode replaces the standard label with a full-width maroon torn-edge ribbon (`<div class="banderole">`) that overhangs the card edges; runemarks invert to black-on-cream; printer-friendly renders a stroke outline SVG instead of the filled shape
 - Torn paper edge divider
-- Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows), prerequisite text (framed box), body text
+- Bottom ~72%: parchment area — card name, then (each independently toggled): flavor text (italic), points cost increases table (2-col, Regular/Elite rows; same maroon header, bordered box and alternating row stripes as the fighter card's damage table), prerequisite text (framed box), body text
 - When `showRunemarks` is false: a tags row (Alegreya uppercase, ` • ` separator) shows alliance/faction/subfaction names + fighter runemark labels + activation label; no background needed (dark header behind)
 - `freeHierarchy: boolean` — same independent hierarchy behaviour as fighter card
 - Show/hide flags on `TextCardData`: `showRunemarks`, `showActivation`, `showFlavorText`, `showPrerequisite`, `showPointsTable`, `showCaption` — collapsing both the card element and its form field
@@ -150,7 +150,7 @@ Stats, weapons and damage-table columns use fractional widths (`flex: 1 1 0` on 
 - **Germania One** (`static/fonts/GermaniaOne-Regular.woff2`, family `'Germania One'`, weight 400, SIL OFL) — card names, stats values, activation badge, all block-style text
 - **Alegreya** (`static/fonts/Alegreya-Regular.woff2` + `Alegreya-Italic.woff2`, family `'Alegreya'`, SIL OFL) — damage table, text card body/flavor text
 
-Fonts ship as woff2 subset with `pyftsubset --unicodes='*' --no-hinting --desubroutinize`, declared with `font-display: swap`. Character coverage is deliberately left intact — only unused OpenType alternates (small caps, oldstyle/tabular numerals, stylistic sets) are dropped — hinting is kept, since it costs nothing and dropping it shifted glyph rasterisation, so adding a locale in any script the original fonts covered still renders. `kern` and `liga` are retained. Re-run the same command if a font is ever replaced.
+Fonts ship as woff2 subset with `pyftsubset --unicodes='*' --desubroutinize`, declared with `font-display: swap`. Character coverage is deliberately left intact — only unused OpenType alternates (small caps, oldstyle/tabular numerals, stylistic sets) are dropped — hinting is kept, since it costs nothing and dropping it shifted glyph rasterisation, so adding a locale in any script the original fonts covered still renders. `kern` and `liga` are retained. Re-run the same command if a font is ever replaced.
 
 ### Background / textures
 
