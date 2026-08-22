@@ -10,9 +10,11 @@
 		twistsRunemarks, weaponRunemarks,
 	} from '$lib/runemarks/index';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
+	import { isShareAbort } from '$lib/export';
 	import { settled as runemarksSettled } from '$lib/runemarks/loader.svelte';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
+	import ExportError from '$lib/components/ExportError.svelte';
 	import Runemark from '$lib/components/Runemark.svelte';
 	import runemarkShapeRaw from '$lib/runemark-shape.svg?raw';
 
@@ -66,6 +68,7 @@
 	let printerFriendly  = $state(false);
 	let activeTab        = $state<'edit' | 'preview'>('edit');
 	let exportedImageUrl = $state<string | null>(null);
+	let exportError      = $state(false);
 	let viewportHeight   = $state(typeof window !== 'undefined' ? window.innerHeight : 900);
 	let viewportWidth    = $state(typeof window !== 'undefined' ? window.innerWidth  : 1024);
 	let cardEls          = $state<HTMLElement[]>([]);
@@ -136,7 +139,9 @@
 	// ── Export ────────────────────────────────────────────────────────────────
 
 	async function doExport(suffix: string) {
+		if (exporting) return;
 		exporting = true;
+		exportError = false;
 		try {
 			const multi = cardEls.length > 1;
 			if (isRealMobile) {
@@ -148,10 +153,15 @@
 					const res  = await fetch(dataUrl);
 					const blob = await res.blob();
 					const file = new File([blob], `warcry-reference${pageSuffix}.png`, { type: 'image/png' });
-					if (navigator.canShare?.({ files: [file] })) {
-						await navigator.share({ files: [file] });
-					} else {
-						exportedImageUrl = dataUrl;
+					try {
+						if (navigator.canShare?.({ files: [file] })) {
+							await navigator.share({ files: [file] });
+						} else {
+							exportedImageUrl = dataUrl;
+						}
+					} catch (err) {
+						// Dismissing one page's share sheet skips that page, not the rest of the export.
+						if (!isShareAbort(err)) throw err;
 					}
 				}
 			} else {
@@ -168,7 +178,10 @@
 					if (i < cardEls.length - 1) await new Promise(r => setTimeout(r, 200));
 				}
 			}
-		} catch {
+		} catch (err) {
+			if (isShareAbort(err)) return;
+			console.error('Export failed', err);
+			exportError = true;
 		} finally {
 			exporting = false;
 		}
@@ -481,6 +494,8 @@
 	</main>
 
 </div>
+
+<ExportError bind:show={exportError} />
 
 {#if exportedImageUrl}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->

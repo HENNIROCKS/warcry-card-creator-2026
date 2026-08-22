@@ -198,6 +198,7 @@
     "color-yellow": "Gelb",
     "export-png": "PNG exportieren",
     "export-printer-friendly": "Druckfreundliches PNG exportieren",
+    "export-failed": "Export fehlgeschlagen. Bitte erneut versuchen.",
     "card-size": "Kartenformat",
     "card-size-bridge": "Bridge",
     "card-size-poker": "Poker",

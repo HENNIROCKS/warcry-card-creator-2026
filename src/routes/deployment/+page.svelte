@@ -5,9 +5,11 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { cardSize, EXPORT_SCALE } from '$lib/card-size.svelte';
+	import { isShareAbort } from '$lib/export';
 	import { t } from '$lib/i18n/index.svelte';
 	import CardSizeSelect from '$lib/components/CardSizeSelect.svelte';
 	import DeploymentCard from '$lib/components/DeploymentCard.svelte';
+	import ExportError from '$lib/components/ExportError.svelte';
 	import type {
 		DeploymentCardData,
 		DeploymentColor,
@@ -30,6 +32,7 @@
 	let cardEl: HTMLElement;
 	let exporting = $state(false);
 	let exportedImageUrl = $state<string | null>(null);
+	let exportError = $state(false);
 	let printerFriendly = $state(false);
 	let showDropdown = $state(false);
 	let showJsonDropdown = $state(false);
@@ -418,6 +421,7 @@
 	async function doExport(suffix: string) {
 		if (!cardEl || exporting) return;
 		exporting = true;
+		exportError = false;
 		try {
 			let dataUrl: string;
 			if (isRealMobile) {
@@ -438,7 +442,10 @@
 				a.download = `${makeSlug()}${suffix}.png`;
 				a.click();
 			}
-		} catch {
+		} catch (err) {
+			if (isShareAbort(err)) return;
+			console.error('Export failed', err);
+			exportError = true;
 		} finally {
 			exporting = false;
 		}
@@ -940,6 +947,8 @@
 
 	</div>
 {/if}
+
+<ExportError bind:show={exportError} />
 
 {#if exportedImageUrl}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
